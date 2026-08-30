@@ -452,5 +452,12 @@
   "Installing {title}": "Installing {title}",
   "Legacy app (To be rebuilt).": "Legacy app (To be rebuilt).",
   "To be rebuilt.": "To be rebuilt.",
-  "launch-and-open": "Launch and open"
+  "launch-and-open": "Launch and open",
+  "App launching": "App launching",
+  "Configure": "Configure",
+  "Open apps inside CasaOS": "Open apps inside CasaOS",
+  "When this is off, every app opens in a new browser tab.": "When this is off, every app opens in a new browser tab.",
+  "Always open these apps in a new tab:": "Always open these apps in a new tab:",
+  "The list of installed apps could not be loaded.": "The list of installed apps could not be loaded.",
+  "No app is installed yet.": "No app is installed yet."
 }

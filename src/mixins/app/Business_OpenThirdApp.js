@@ -8,19 +8,17 @@
  */
 
 import events from '@/events/events'
-
-const OPEN_IN_NEW_WINDOW_APP_IDS = new Set([
-	'qbittorrent',
-	'org.icewhale.qbittorrent',
-])
+import { shouldOpenInNewWindow } from '@/mixins/app/appLaunchPreference'
 
 export default {
 	methods: {
+		// The exception list used to be hardcoded here. It is now a setting, so an
+		// app that will not render in a frame can be excepted without a release.
 		shouldOpenInNewWindow(appInfo) {
-			return [appInfo.id, appInfo.name]
-				.filter(Boolean)
-				.map(identifier => String(identifier).toLowerCase())
-				.some(identifier => OPEN_IN_NEW_WINDOW_APP_IDS.has(identifier))
+			return shouldOpenInNewWindow(appInfo, {
+				inIframe: this.$store.state.appLaunchInIframe,
+				exceptions: this.$store.state.appLaunchExceptions,
+			})
 		},
 		openAppToNewWindow(appInfo) {
 			this.hasNewTag(appInfo.name) ? this.firstOpenThirdApp(appInfo) : this.openThirdApp(appInfo);

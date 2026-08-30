@@ -4,6 +4,7 @@ import TerminalPanel from './logsAndTerminal/TerminalPanel.vue'
 import PortPanel from './settings/PortPanel.vue'
 import UpdateModal from './settings/UpdateModal.vue'
 import SystemPackageUpdateModal from './settings/SystemPackageUpdateModal.vue'
+import AppLaunchModal from './settings/AppLaunchModal.vue'
 import { mixin } from '@/mixins/mixin'
 import messages from '@/assets/lang'
 
@@ -349,6 +350,23 @@ export default {
       this.$buefy.modal.open({
         parent: this,
         component: SystemPackageUpdateModal,
+        hasModalCard: true,
+        customClass: 'network-storage-modal',
+        trapFocus: true,
+        canCancel: ['escape'],
+        scroll: 'keep',
+        animation: 'zoom-in',
+      })
+    },
+
+    /**
+     * @description: Open the app launching settings modal
+     * @return {*} void
+     */
+    showAppLaunchModal() {
+      this.$buefy.modal.open({
+        parent: this,
+        component: AppLaunchModal,
         hasModalCard: true,
         customClass: 'network-storage-modal',
         trapFocus: true,
@@ -812,6 +830,19 @@ export default {
             </div>
           </div>
           <!-- System Package Update End -->
+
+          <!-- App Launching Start -->
+          <div class="setting-item">
+            <div class="is-flex is-align-items-center is-justify-content-end update-container pl-5">
+              <div class="is-flex-grow-1 is-size-7">
+                {{ $t("App launching") }}
+              </div>
+              <b-button class="ml-2" rounded size="is-small" type="is-dark" @click.stop="showAppLaunchModal">
+                {{ $t("Configure") }}
+              </b-button>
+            </div>
+          </div>
+          <!-- App Launching End -->
 
           <!-- Restart or Shutdown Start -->
           <div
