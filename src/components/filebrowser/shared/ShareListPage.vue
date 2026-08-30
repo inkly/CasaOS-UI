@@ -74,7 +74,10 @@ export default {
 						date: "",
 						isSelected: false,
 						is_dir: true,
-						name: name,
+						// A protected share is unusable to anyone who does not know
+						// which account opens it, so the account is surfaced here
+						// rather than dropped with the rest of the response.
+						name: item.username ? `${name} (${item.username})` : name,
 						path: item.path,
 						size: 0,
 						write: false,

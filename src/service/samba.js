@@ -43,5 +43,29 @@ const samba = {
 	deleteShare(id) {
 		return api.delete(`${PREFIX}/shares/${id}`);
 	},
+
+	// Share accounts
+	// These are separate from CasaOS logins: Samba keeps its own password
+	// database and cannot use the web credentials.
+
+	// get the share accounts CasaOS created
+	getUsers() {
+		return api.get(`${PREFIX}/users`);
+	},
+
+	// create a share account
+	createUser(data) {
+		return api.post(`${PREFIX}/users`, data);
+	},
+
+	// change the password of a share account
+	setUserPassword(username, password) {
+		return api.put(`${PREFIX}/users/${encodeURIComponent(username)}/password`, { password });
+	},
+
+	// delete a share account
+	deleteUser(username) {
+		return api.delete(`${PREFIX}/users/${encodeURIComponent(username)}`);
+	},
 }
 export default samba;
