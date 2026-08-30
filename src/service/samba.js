@@ -39,6 +39,11 @@ const samba = {
 		return api.post(`${PREFIX}/shares`, data);
 	},
 
+	// change who can open a share; an empty username hands it back to guests
+	updateShare(id, data) {
+		return api.put(`${PREFIX}/shares/${id}`, data);
+	},
+
 	// delete a share
 	deleteShare(id) {
 		return api.delete(`${PREFIX}/shares/${id}`);

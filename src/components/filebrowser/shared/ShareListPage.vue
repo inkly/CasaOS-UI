@@ -15,7 +15,7 @@
 		</header>
 		<!-- Header End -->
 
-		<share-list-view :isLoading="isLoading" :listData="list">
+		<share-list-view :isLoading="isLoading" :listData="list" @change-access="changeAccess">
 			<div>
 				<div class="buttons is-justify-content-center">
 					<b-image
@@ -41,7 +41,8 @@
 </template>
 
 <script>
-import ShareListView from "./ShareListView.vue";
+import ShareListView    from "./ShareListView.vue";
+import ShareAccessModal from "./ShareAccessModal.vue";
 import events        from "@/events/events";
 
 export default {
@@ -62,6 +63,26 @@ export default {
 	},
 
 	methods: {
+		/**
+		 * @description: Change who can open a shared folder
+		 * @return {*}
+		 */
+		changeAccess(item) {
+			this.$buefy.modal.open({
+				parent: this,
+				component: ShareAccessModal,
+				hasModalCard: true,
+				trapFocus: true,
+				canCancel: ["escape"],
+				scroll: "keep",
+				animation: "zoom-in",
+				props: { share: item },
+				events: {
+					reload: () => this.getSharedList()
+				}
+			});
+		},
+
 		async getSharedList() {
 			this.isLoading = true;
 			try {
@@ -79,6 +100,7 @@ export default {
 						// rather than dropped with the rest of the response.
 						name: item.username ? `${name} (${item.username})` : name,
 						path: item.path,
+						username: item.username || "",
 						size: 0,
 						write: false,
 					};
