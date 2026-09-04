@@ -185,9 +185,6 @@ importers:
       uuid-validate:
         specifier: ^0.0.3
         version: 0.0.3
-      v-animate-css:
-        specifier: ^0.0.6
-        version: 0.0.6
       v-viewer:
         specifier: ^1.7.1
         version: 1.7.4(viewerjs@1.11.7)(vue@2.7.16)
@@ -6951,9 +6948,6 @@ packages:
     resolution: {integrity: sha512-9BakfsO2aUQN2K9Fdbj87RJIEZ82Q9IGim7FqM5OsebfoFC6ZHXgDq/KvniuLTPdeM8wY2o6Dj3WQ7KeQCj3cA==}
     engines: {node: '>=0.10.0'}
 
-  scrollmonitor@1.2.11:
-    resolution: {integrity: sha512-M2BKxme/eYq6mEIWUvILdyKI6kv8m3c787WUFNKqZdtyBcvSn/VKI9c9owuNGq84tcjg5inCCmpRIEQN17b8ag==}
-
   scslre@0.3.0:
     resolution: {integrity: sha512-3A6sD0WYP7+QrjbfNA2FN3FsOaGGFoekCVgTyypy53gPxhbkCIjtO6YWgdrfM+n/8sI8JeXZOIxsHjMTNxQ4nQ==}
     engines: {node: ^14.0.0 || >=16.0.0}
@@ -7689,9 +7683,6 @@ packages:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
-
-  v-animate-css@0.0.6:
-    resolution: {integrity: sha512-xzuWuavsB1LcaUy418QjuwoJBNKqe8Pp8Z/WdDjsVyy393DV+xL9liquCOwOh6qe9duHJrdiQFXsJFKnpKBjVA==}
 
   v-viewer@1.7.4:
     resolution: {integrity: sha512-K3PQ8utnVXXBCa5IRXRAhk/m83fNIsK77gTSXqAmPJe8eDTaSY1nifAOWPUmQDjzuCxYfa14UjGftHR9MFV70Q==}
@@ -15762,8 +15753,6 @@ snapshots:
 
   screenfull@5.2.0: {}
 
-  scrollmonitor@1.2.11: {}
-
   scslre@0.3.0:
     dependencies:
       '@eslint-community/regexpp': 4.12.1
@@ -16549,10 +16538,6 @@ snapshots:
   uuid-validate@0.0.3: {}
 
   uuid@8.3.2: {}
-
-  v-animate-css@0.0.6:
-    dependencies:
-      scrollmonitor: 1.2.11
 
   v-viewer@1.7.4(viewerjs@1.11.7)(vue@2.7.16):
     dependencies:

@@ -17,7 +17,7 @@ import VueDOMPurifyHTML from 'vue-dompurify-html'
 
 // Import Styles
 import '@/assets/scss/app.scss'
-import VAnimateCss from 'v-animate-css';
+import VAnimateCss from '@/plugins/animate-css';
 
 const io = require("socket.io-client");
 

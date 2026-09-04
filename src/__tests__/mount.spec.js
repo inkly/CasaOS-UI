@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import Vue from 'vue'
 import Buefy from 'buefy'
-import VAnimateCss from 'v-animate-css'
+import VAnimateCss from '@/plugins/animate-css'
 import VueDOMPurifyHTML from 'vue-dompurify-html'
 import { shallowMount } from '@vue/test-utils'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
