@@ -452,5 +452,18 @@
   "Installing {title}": "Installing {title}",
   "Legacy app (To be rebuilt).": "Legacy app (To be rebuilt).",
   "To be rebuilt.": "To be rebuilt.",
-  "launch-and-open": "Launch and open"
+  "launch-and-open": "Launch and open",
+  "Compose": "Compose",
+  "Discard": "Discard",
+  "Edit the Docker Compose file of this app directly. Changes are validated before being applied.": "Edit the Docker Compose file of this app directly. Changes are validated before being applied.",
+  "Unsaved changes.": "Unsaved changes.",
+  "Changes are being applied.": "Changes are being applied.",
+  "You have unapplied Compose changes. Leaving this tab discards them.": "You have unapplied Compose changes. Leaving this tab discards them.",
+  "The server rejected this Compose file.": "The server rejected this Compose file.",
+  "The Compose file is empty.": "The Compose file is empty.",
+  "This is not valid YAML.": "This is not valid YAML.",
+  "A Compose file must be a mapping, starting with keys such as \"name\" and \"services\".": "A Compose file must be a mapping, starting with keys such as \"name\" and \"services\".",
+  "This Compose file declares no services.": "This Compose file declares no services.",
+  "The top-level \"name\" must match one of the services, to designate the main application.": "The top-level \"name\" must match one of the services, to designate the main application.",
+  "Environment variables are shown resolved: saving from here stores the resolved values and the variables are lost.": "Environment variables are shown resolved: saving from here stores the resolved values and the variables are lost."
 }

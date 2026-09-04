@@ -17,6 +17,7 @@ import AppStoreSourceManagement from '@/components/Apps/AppStoreSourceManagement
 import { ice_i18n } from '@/mixins/base/common-i18n'
 import AppDetailInfo from '@/components/Apps/AppDetailInfo.vue'
 import ComposeConfig from '@/components/Apps/ComposeConfig.vue'
+import ComposeEditor from '@/components/Apps/ComposeEditor.vue'
 import business_OpenThirdApp from '@/mixins/app/Business_OpenThirdApp'
 import business_ShowNewAppTag from '@/mixins/app/Business_ShowNewAppTag'
 import AppsInstallationLocation from '@/components/Apps/AppsInstallationLocation'
@@ -61,6 +62,7 @@ export default {
     SwiperSlide,
     AppsInstallationLocation,
     ComposeConfig,
+    ComposeEditor,
     ValidationObserver,
     ValidationProvider,
   },
@@ -120,6 +122,8 @@ export default {
       capArray: data,
       errInfo: {},
       dockerComposeCommands: '',
+      composeEditorOpen: false,
+      composeEditorState: { canApply: false, isApplying: false, isDirty: false },
       dockerComposeServiceName: '',
 
       pageIndex: 1,
@@ -1123,6 +1127,38 @@ export default {
       }
     },
 
+    onComposeEditorState(state) {
+      this.composeEditorState = state
+    },
+
+    setComposeEditorOpen(open) {
+      // Leaving the Compose tab throws the draft away: the form and the raw YAML
+      // are deliberately not synchronised, so an unapplied draft cannot survive.
+      if (!open && this.composeEditorState.isDirty) {
+        this.$buefy.dialog.confirm({
+          message: this.$t('You have unapplied Compose changes. Leaving this tab discards them.'),
+          confirmText: this.$t('Discard'),
+          cancelText: this.$t('Cancel'),
+          type: 'is-warning',
+          onConfirm: () => {
+            if (this.$refs.composeEditor)
+              this.$refs.composeEditor.reset()
+
+            this.composeEditorOpen = false
+          },
+        })
+        return
+      }
+
+      this.composeEditorOpen = open
+    },
+
+    onComposeApplied(composeYAML) {
+      this.dockerComposeConfig = composeYAML
+      this.$emit('updateState')
+      this.$emit('close')
+    },
+
     updateDockerComposeCommands(val) {
       this.dockerComposeCommands = val
     },
@@ -1673,8 +1709,38 @@ export default {
 
       <!-- App Install Form Start -->
       <template v-if="currentSlide == 1">
+        <!-- Settings / raw Compose switch, on installed CasaOS apps only -->
+        <div v-if="isCasa && state == 'update'" class="is-flex px-4 pt-3 compose-mode-switch">
+          <b-button
+            :type="composeEditorOpen ? 'is-text' : 'is-primary'"
+            class="mr-2"
+            rounded
+            size="is-small"
+            @click="setComposeEditorOpen(false)"
+          >
+            {{ $t('Settings') }}
+          </b-button>
+          <b-button
+            :type="composeEditorOpen ? 'is-primary' : 'is-text'"
+            rounded
+            size="is-small"
+            @click="setComposeEditorOpen(true)"
+          >
+            {{ $t('Compose') }}
+          </b-button>
+        </div>
+
+        <ComposeEditor
+          v-if="isCasa && state == 'update' && composeEditorOpen"
+          ref="composeEditor"
+          :app-id="id"
+          :value="dockerComposeConfig"
+          @applied="onComposeApplied"
+          @state="onComposeEditorState"
+        />
+
         <ComposeConfig
-          v-if="isCasa"
+          v-if="isCasa && !composeEditorOpen"
           ref="ComposeConfig"
           :cap-array="capArray"
           :docker-compose-commands="dockerComposeConfig"
@@ -1687,7 +1753,7 @@ export default {
           @updateMainName="name => (currentInstallId = name)"
         />
 
-        <section v-else :class="{ _hideOverflow: !isCasa }" class="modal-card-body pt-3">
+        <section v-else-if="!isCasa && !composeEditorOpen" :class="{ _hideOverflow: !isCasa }" class="modal-card-body pt-3">
           <!--	导入"已存在的容器"，进行初始化操作	-->
           <ValidationObserver ref="containerValida">
             <ValidationProvider v-slot="{ errors, valid }" name="appName" rules="required">
@@ -1806,12 +1872,21 @@ export default {
             @click="checkComposeAppAndInstallComposeApp(dockerComposeCommands, currentInstallId)"
           />
           <b-button
-            v-if="isCasa && currentSlide == 1 && state == 'update'"
+            v-if="isCasa && currentSlide == 1 && state == 'update' && !composeEditorOpen"
             :label="$t('Save')"
             :loading="isLoading"
             rounded
             type="is-primary"
             @click="updateApp()"
+          />
+          <b-button
+            v-if="isCasa && currentSlide == 1 && state == 'update' && composeEditorOpen"
+            :disabled="!composeEditorState.canApply"
+            :label="$t('Apply')"
+            :loading="composeEditorState.isApplying"
+            rounded
+            type="is-primary"
+            @click="$refs.composeEditor.apply()"
           />
           <b-button
             v-if="!isCasa && currentSlide == 1 && state == 'update'"
