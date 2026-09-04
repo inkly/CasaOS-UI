@@ -21,6 +21,25 @@ module.exports = {
 	},
 
 	chainWebpack: (config) => {
+		// @vue/compat is a SCAFFOLD, not a destination. It lets the app boot while
+		// the call sites are still Vue-2-shaped; part 2 turns the flags off feature
+		// by feature and then deletes this block, the devDependency and the
+		// configureCompat() call in main.js.
+		//
+		// `vue$`, not `vue`: @vue/cli-service's own base.js already registers an
+		// exact-match `vue$` alias, and enhanced-resolve takes the first match, so
+		// a plain `vue` alias would be silently inert. Setting the same key
+		// replaces cli-service's value. The runtime-only build is deliberate —
+		// runtimeCompiler is off and nothing in src/ compiles a template string.
+		config.resolve.alias.set("vue$", "@vue/compat/dist/vue.runtime.esm-bundler.js");
+		config.module
+			.rule("vue")
+			.use("vue-loader")
+			.tap((options) => ({
+				...options,
+				compilerOptions: { ...options.compilerOptions, compatConfig: { MODE: 2 } },
+			}));
+
 		config.module
 			.rule("mjs")
 			.test(/\.mjs$/)
