@@ -62,6 +62,7 @@
     "markdown-it": "^13.0.1",
     "marked": "^4.3.0",
     "mime": "^3.0.0",
+    "mitt": "^3.0.1",
     "music-metadata-browser": "^2.5.10",
     "nanoid": "^4.0.2",
     "qs": "^6.11.2",

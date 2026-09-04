@@ -10,6 +10,7 @@ import Buefy from 'buefy'
 import VueFullscreen from 'vue-fullscreen'
 import VueSocialSharing from 'vue-social-sharing'
 import VueSocketIOExt from 'vue-socket.io-extended';
+import createEventBus from '@/events/eventBus.js'
 import messageBus from '@/events/index.js'
 import VueDOMPurifyHTML from 'vue-dompurify-html'
 
@@ -57,7 +58,7 @@ Vue.prototype.$wsProtocol = wsProtocol;
 
 
 // Create an EventBus
-Vue.prototype.$EventBus = new Vue();
+Vue.prototype.$EventBus = createEventBus();
 Vue.prototype.$messageBus = messageBus;
 
 new Vue({
