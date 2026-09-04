@@ -20,6 +20,9 @@ framework changes carries as little as possible.
 - An app's memory limit that is not one of the slider's marks (a compose file
   edited by hand) no longer displays as 256 MB. The slider snaps to the nearest
   mark instead of falling back to the first.
+- The rightmost tooltip of the contact bar no longer hangs off the right edge of
+  the window.
+- Leaving the drop page within a second of opening it no longer throws.
 
 ### Changed
 
@@ -28,9 +31,8 @@ framework changes carries as little as possible.
   animation directive, the share links and the CodeMirror wrapper. Eight more
   were removed as unused. Two visible differences came with that, both
   deliberate: the "start sharing your files" hint now stays until its close
-  button is used rather than disappearing on any click elsewhere (which is also
-  the only way it stops coming back), and tooltips no longer flip themselves to
-  stay inside the window, so a long one near the right edge can be clipped.
+  button is used rather than disappearing on any click elsewhere, which is also
+  the only way it stops coming back.
 - The event bus is a plain emitter rather than a Vue instance, with the same
   `$on`/`$off`/`$emit` surface and each subscriber still isolated from a
   neighbour that throws.
