@@ -121,7 +121,9 @@ export default {
 		window.removeEventListener("resize", this.resize);
 		document.ondragover = null; // 拖拽进入
 
-		this.peersManager.destory();
+		// mounted() only builds it after a one second timer, so leaving the page
+		// straight away used to throw here.
+		this.peersManager?.destory();
 		this.peersManager = null;
 		this.webscoketServer = null;
 		this.peersArray = [];
