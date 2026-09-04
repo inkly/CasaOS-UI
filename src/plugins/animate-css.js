@@ -12,9 +12,9 @@
  * element mounts.
  */
 export default {
-	install(Vue) {
-		Vue.directive('animate-css', {
-			bind(el, binding) {
+	install(app) {
+		app.directive('animate-css', {
+			beforeMount(el, binding) {
 				const value = typeof binding.value === 'string' ? { classes: binding.value } : binding.value;
 				if (!value || !value.classes) {
 					return;

@@ -8,11 +8,11 @@
 			<div class="base-bar is-flex"
 				 style="background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);">
 				<!-- BrandBar Start -->
-				<brand-bar v-if="!$store.state.isMobile && $router.currentRoute.path === '/'"
+				<brand-bar v-if="!$store.state.isMobile && $route.path === '/'"
 						   v-animate-css="brandAni"></brand-bar>
 				<!-- BrandBar End -->
 				<!-- ContactBar Start -->
-				<contact-bar v-if="!$store.state.isMobile && $router.currentRoute.path === '/'"
+				<contact-bar v-if="!$store.state.isMobile && $route.path === '/'"
 							 v-animate-css="contactAni"></contact-bar>
 				<!-- ContactBar End -->
 			</div>

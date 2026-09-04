@@ -7,26 +7,25 @@
  * Copyright (c) 2022 by IceWhale, All Rights Reserved.
  */
 
-import Vue       from 'vue'
-import VueRouter from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import api       from '@/service/api'
 import store     from '@/store'
 import route     from './route.js'
 
-Vue.use(VueRouter)
-
 const routes = route
 
-const router = new VueRouter({
-	mode: 'hash',
-	base: process.env.BASE_URL,
+// `mode: 'hash'` + `base` collapse into the history factory. Keep the argument:
+// publicPath is "/", so BASE_URL is "/" and URLs stay /#/login. With no
+// argument the base falls back to location.pathname, which differs under a
+// test runner where BASE_URL is undefined.
+const router = createRouter({
+	history: createWebHashHistory(process.env.BASE_URL),
 	routes
 })
 
-const originalPush = VueRouter.prototype.push
-VueRouter.prototype.push = function push(location) {
-	return originalPush.call(this, location).catch((err) => err)
-}
+// The VueRouter.prototype.push catch-monkeypatch that used to live here is
+// gone: v4 has no prototype to patch, and it resolves with a NavigationFailure
+// instead of rejecting on a duplicate navigation.
 
 const needInit = async () => {
 	if (store.state.needInitialization) {
@@ -65,10 +64,15 @@ router.beforeEach(async (to, from, next) => {
 			if (requireAuth && !accessToken) {
 				next('/login');
 			} else {
+				// The `return`s matter: all three of these used to fall through to
+				// the unconditional next() below. v4 applies only the first call,
+				// so behaviour is unchanged, but it warns `The "next" callback was
+				// called more than once` on every login, logout and version-less
+				// boot.
 				switch (to.path) {
 					case "/login":
 						if (accessToken) {
-							next('/');
+							return next('/');
 						}
 						break;
 
@@ -77,13 +81,12 @@ router.beforeEach(async (to, from, next) => {
 						localStorage.removeItem("refresh_token");
 						localStorage.removeItem("wallpaper");
 						localStorage.removeItem("user");
-						next('/login');
-						break;
+						return next('/login');
 
 					default:
 						if (version == null) {
 							localStorage.removeItem("access_token");
-							next('/login');
+							return next('/login');
 						}
 						break;
 				}

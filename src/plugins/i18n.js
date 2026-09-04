@@ -1,15 +1,19 @@
 
-import Vue      from 'vue'
-import VueI18n  from 'vue-i18n'
-import messages from '@/assets/lang'
+import { createI18n } from 'vue-i18n'
+import messages       from '@/assets/lang'
 
-Vue.use(VueI18n)
-
-const i18n = new VueI18n({
-	// Define defalut language
+// legacy: true keeps $t / $i18n injected on every component, so none of the
+// 710 call sites change. silentFallbackWarn is new and necessary: 86 keys
+// exist only in en_US, and v9 warns on the fallback separately from the
+// missing key. warnHtmlInMessage silences a dev-only warning on the 94
+// messages that carry HTML on purpose (AppCard.vue injects the uninstall
+// dialog's checkbox that way) — do not "fix" those by escaping them.
+export default createI18n({
+	legacy: true,
 	locale: localStorage.getItem('lang') || 'en_us',
 	fallbackLocale: 'en_us',
 	silentTranslationWarn: true,
+	silentFallbackWarn: true,
+	warnHtmlInMessage: 'off',
 	messages
 })
-export default i18n

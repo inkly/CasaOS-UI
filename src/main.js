@@ -1,5 +1,5 @@
 import 'intersection-observer'
-import Vue from 'vue'
+import { createApp, configureCompat } from 'vue'
 import App from '@/App.vue'
 import router from '@/router'
 import store from '@/store'
@@ -17,6 +17,19 @@ import VueDOMPurifyHTML from 'vue-dompurify-html'
 // Import Styles
 import '@/assets/scss/app.scss'
 import VAnimateCss from '@/plugins/animate-css';
+
+// The @vue/compat scaffold. MODE 2 keeps the Vue-2 idioms this app still
+// carries (.native, .sync, $set/$delete, beforeDestroy, functional and async
+// components, the old transition class names) working while they are migrated.
+//
+// COMPONENT_V_MODEL is the one flag that must be OFF. With it on, compat
+// rewrites every component `v-model` from `modelValue`/`update:modelValue`
+// back to Vue 2's `value`/`input` — which Buefy 3.1 does not read, silently
+// breaking all ~110 v-model bindings in the app.
+configureCompat({
+	MODE: 2,
+	COMPONENT_V_MODEL: false,
+})
 
 const io = require("socket.io-client");
 
@@ -36,37 +49,31 @@ const socket = io( {
 	path: '/v2/message_bus/socket.io/',
 });
 
-Vue.use(Buefy)
-Vue.use(VueFullscreen)
-Vue.use(VAnimateCss);
-Vue.use(socketPlugin, socket);
-Vue.use(VueDOMPurifyHTML, {
+const app = createApp(App)
+
+app.use(Buefy)
+app.use(VueFullscreen)
+app.use(VAnimateCss);
+app.use(socketPlugin, socket);
+app.use(VueDOMPurifyHTML, {
 	default: {
 		ALLOWED_ATTR: ['target', 'href']
 	}
 });
 
-Vue.config.productionTip = false
-Vue.prototype.$api = api;
-Vue.prototype.$openAPI = openAPI;
-Vue.prototype.$baseIp = baseIp;
-Vue.prototype.$baseURL = baseURL;
-Vue.prototype.$protocol = protocol;
-Vue.prototype.$wsProtocol = wsProtocol;
+app.config.globalProperties.$api = api;
+app.config.globalProperties.$openAPI = openAPI;
+app.config.globalProperties.$baseIp = baseIp;
+app.config.globalProperties.$baseURL = baseURL;
+app.config.globalProperties.$protocol = protocol;
+app.config.globalProperties.$wsProtocol = wsProtocol;
 
 
 // Create an EventBus
-Vue.prototype.$EventBus = createEventBus();
-Vue.prototype.$messageBus = messageBus;
+app.config.globalProperties.$EventBus = createEventBus();
+app.config.globalProperties.$messageBus = messageBus;
 
-new Vue({
-	router,
-	i18n,
-	store,
-	render: h => h(App)
-}).$mount('#app')
-
-
-
-
-
+app.use(router)
+app.use(store)
+app.use(i18n)
+app.mount('#app')

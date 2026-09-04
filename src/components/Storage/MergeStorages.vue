@@ -414,9 +414,6 @@ export default {
 					duration: 5000,
 					queue: true,
 					indefinite: false,
-					onDismiss: () => {
-						this.$router.push({name: 'StorageManager'})
-					}
 				})
 				this.$EventBus.$emit(events.RELOAD_APP_LIST)
 				this.$EventBus.$emit(events.RELOAD_MOUNT_LIST)
