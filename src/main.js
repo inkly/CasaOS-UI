@@ -8,7 +8,6 @@ import api from '@/service/api.js'
 import openAPI from '@/service/index.js'
 import Buefy from 'buefy'
 import VueFullscreen from 'vue-fullscreen'
-import Vue2TouchEvents from 'vue2-touch-events'
 import VueSocialSharing from 'vue-social-sharing'
 import VueSocketIOExt from 'vue-socket.io-extended';
 import messageBus from '@/events/index.js'
@@ -40,7 +39,6 @@ const socket = io( {
 Vue.use(Buefy)
 Vue.use(VueFullscreen)
 Vue.use(VAnimateCss, { animateCSSPath: '/css/animate.min.css' });
-Vue.use(Vue2TouchEvents)
 Vue.use(VueSocketIOExt, socket);
 Vue.use(VueSocialSharing);
 Vue.use(VueDOMPurifyHTML, {
