@@ -1,4 +1,24 @@
-
+// Bulma and Buefy come first: @use may not follow any other rule, and the
+// three plain-CSS @import lines below are rules.
+//
+// bulma/sass/utilities/_all does not exist in Bulma 1, and common/variables is
+// already prepended to this file by style-resources-loader (loading a
+// `@forward ... with` file twice is fatal), so both are gone. `@use` rather
+// than `@import`: @import compiles fine against Bulma 1 and silently throws
+// every variable override away.
+@use "bulma/sass";
+@use "buefy/src/scss/buefy" with (
+	$toast-border-radius: 6px,
+	$toast-opacity: 1,
+	$toast-box-shadow: 0px 16px 32px -8px rgba(28, 31, 34, 0.12),
+	$snackbar-background-color: hsl(0, 0%, 100%),
+	$snackbar-color: hsla(208, 20%, 20%, 1),
+	$snackbar-border-radius: 6px,
+	$snackbar-button-text-transform: none,
+	$snackbar-box-shadow: 0px 16px 32px rgba(28, 31, 34, 0.12),
+	$sidebar-width: 22.5rem,
+	$loading-icon-size: 2.5rem
+);
 
 // Import materialdesignicons
 @import "~@mdi/font/css/materialdesignicons.min.css";
@@ -8,16 +28,6 @@
 
 // Import CasaOS IconFont
 @import '~iconfonts-casaos/casaos-iconfonts.css';
-
-@import "~bulma/sass/utilities/_all";
-
-// Custom Variables
-@import "common/variables";
-
-// Import Bulma and Buefy styles
-
-@import "~bulma/bulma";
-@import "~buefy/src/scss/buefy";
 
 // Import CasaOS Styles
 // Commons
