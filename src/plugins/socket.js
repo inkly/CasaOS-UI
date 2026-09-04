@@ -50,12 +50,23 @@ export default {
 			handlers.set(vm, kept)
 		}
 
-		app.config.globalProperties.$socket = {
-			$subscribe: (event, handler) => subscribe(caller(), event, handler),
-			$unsubscribe: (event) => unsubscribe(caller(), event)
-		}
+		const api = (vm) => ({
+			$subscribe: (event, handler) => subscribe(vm || caller(), event, handler),
+			$unsubscribe: (event) => unsubscribe(vm || caller(), event)
+		})
+
+		// The setup()-time fallback: no instance is bound to it, so it resolves the
+		// caller from the running lifecycle hook.
+		app.config.globalProperties.$socket = api(null)
 
 		app.mixin({
+			// beforeCreate is too late for setup(), but it is in time for everything
+			// that reaches $socket through the instance - including a caller outside
+			// any hook, where getCurrentInstance() is null.
+			beforeCreate() {
+				this.$socket = api(this)
+			},
+
 			created() {
 				// `this`, not caller(): getCurrentInstance() is not set while the
 				// options-API hooks run.
