@@ -18,6 +18,11 @@ module.exports = {
 					// `loadPaths`. `includePaths` is the legacy key: it is ignored
 					// with no error and no warning.
 					loadPaths: ["./node_modules", "./src/assets"],
+					// Bulma 1 still calls Sass's deprecated global colour builtins, and
+					// it is recompiled once per SCSS unit - 83 units x 5 warnings is
+					// ~2700 lines of log per build, none of it actionable here. Our own
+					// @import deprecations are still reported.
+					quietDeps: true,
 				},
 			},
 		},
