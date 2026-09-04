@@ -2,6 +2,32 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.31] - 2026-09-04
+
+First release of the inkly distribution, cut from alvins82's v0.4.30.
+
+### Added
+
+- Edit the Compose file of an installed app from its settings, with server-side validation before apply ([CasaOS-UI #18](https://github.com/alvins82/CasaOS-UI/pull/18)).
+- Choose whether apps open inside CasaOS or in a new tab, with a per-app exception list; the default matches the previous behaviour ([CasaOS-UI #19](https://github.com/alvins82/CasaOS-UI/pull/19)).
+- Require an account on a shared folder, manage share accounts, and change who can open an existing share ([CasaOS-UI #20](https://github.com/alvins82/CasaOS-UI/pull/20)).
+
+### Changed
+
+- The release workflow builds and publishes the dashboard tarball with the default token; the previous one needed the `@icewhale` npm scope and IceWhale's object storage. CI now runs on pull requests and on `main` instead of skipping on every fork.
+
+### Fixed
+
+- `vitest` is a dependency, so `pnpm test` runs; it had been declared in `package.json` since December 2024 without ever being installed ([CasaOS-UI #17](https://github.com/alvins82/CasaOS-UI/pull/17)).
+
+### Security
+
+- The dashboard no longer sends `baseinfo.conf` — an MD5 of the MAC address, the version and the UI language — to the feed host on every load. The device id stays on the box.
+
+### Verification
+
+- 34 tests pass with `pnpm exec vitest run`; production build completed with `pnpm build`.
+
 ## [0.4.30] - 2026-08-15
 
 ### Changed
