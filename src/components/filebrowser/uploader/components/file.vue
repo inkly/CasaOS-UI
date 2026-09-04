@@ -18,7 +18,7 @@
 					<div class="task-info-wrapper">
 						<span class="task-file-name">{{ file.name }}</span>
 						<div class="task-desc-wrapper">
-							<span v-if="status != 'success'" class="task-desc">{{ size * progress | renderSize }}/{{
+							<span v-if="status != 'success'" class="task-desc">{{ renderSize(size * progress) }}/{{
 								formatedSize }}</span>
 							<span v-else class="task-desc">{{ formatedSize }}</span>
 							<span class="task-dot"></span>

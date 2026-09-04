@@ -38,7 +38,7 @@
 										</div>
 										<div class="info">
 											<p class="title" >{{ item.name }}</p>
-											<p class="desc">{{ item.date | dateFmt }}</p>
+											<p class="desc">{{ dateFmt(item.date) }}</p>
 										</div>
 									</div>
 

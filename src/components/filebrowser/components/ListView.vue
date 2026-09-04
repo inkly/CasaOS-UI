@@ -52,8 +52,7 @@
 									</div>
 									<div class="text is-flex-grow-1">
 										{{ item.name }}
-										<span v-if="isMobile" class="is-size-7 is-block has-text-grey-light">{{ item.date |
-											dateFmt }}</span>
+										<span v-if="isMobile" class="is-size-7 is-block has-text-grey-light">{{ dateFmt(item.date) }}</span>
 									</div>
 									<div class="action-wrapper is-flex-shrink-0">
 										<action-button :class="{ show: isMobile }" @click.stop="openContextMenu($event, item)" />
@@ -63,11 +62,11 @@
 									<div v-show="!item.is_dir" class="one-line is-size-7">{{ getFileExt(item) }}</div>
 								</div>
 								<div v-if="!isMobile" class="td">
-									<div class="one-line is-size-7">{{ item.date | dateFmt }}</div>
+									<div class="one-line is-size-7">{{ dateFmt(item.date) }}</div>
 								</div>
 								<div v-if="!isMobile" class="td">
 									<div v-if="!item.is_dir" class="one-line is-size-7">
-										{{ item.size | renderSize }}
+										{{ renderSize(item.size) }}
 									</div>
 								</div>
 							</div>

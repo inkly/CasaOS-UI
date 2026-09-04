@@ -54,7 +54,7 @@
 				<a rel="noopener" href="https://wiki.casaos.io/zh/guides" target="_blank">{{ $t("Free up storage") }}</a>
 			</p>
 		</div>
-		<b-progress :type="item.usePercent | getProgressType" :value="item.usePercent || 0"
+		<b-progress :type="getProgressType(item.usePercent)" :value="item.usePercent || 0"
 					class="ml-3 mr-3" size="is-small"></b-progress>
 	</div>
 </template>

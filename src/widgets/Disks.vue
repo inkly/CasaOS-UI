@@ -31,7 +31,7 @@
 								</p>
 							</div>
 						</div>
-						<b-progress :type="totalPercent | getProgressType" :value="totalPercent" class="mt-2"
+						<b-progress :type="getProgressType(totalPercent)" :value="totalPercent" class="mt-2"
 							size="is-small"></b-progress>
 					</div>
 				</div>
@@ -58,7 +58,7 @@
 								</p>
 							</div>
 						</div>
-						<b-progress :type="usbPercent(item) | getProgressType"
+						<b-progress :type="getProgressType(usbPercent(item))"
 							:value="usbPercent(item)" class="mt-2"
 							size="is-small"></b-progress>
 					</div>

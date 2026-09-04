@@ -27,7 +27,7 @@
 					v-if="!item.health" class="has-text-danger">{{ $t('Damage') }}</b></p>
 					<p class="has-text-left is-size-7 ">{{ $t('Temp') }}: <b v-if="item.temperature > 0">{{
 						item.temperature }}°C
-						/ {{ item.temperature | toFahrenheit }}°F</b> <b v-else>N/A</b></p>
+						/ {{ toFahrenheit(item.temperature) }}°F</b> <b v-else>N/A</b></p>
 				</div>
 			</div>
 		</div>

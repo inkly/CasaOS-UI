@@ -35,10 +35,10 @@
 					<div>
 						<b-icon class="up" icon="up-arrow" pack="casa" size="is-small">
 						</b-icon>
-						{{ currentUpSpeed * 1024 | renderSize }}/s
+						{{ renderSize(currentUpSpeed * 1024) }}/s
 						<b-icon class="down ml-2" icon="down-arrow" pack="casa" size="is-small">
 						</b-icon>
-						{{ currentDownSpeed * 1024 | renderSize }}/s
+						{{ renderSize(currentDownSpeed * 1024) }}/s
 					</div>
 				</div>
 			</div>

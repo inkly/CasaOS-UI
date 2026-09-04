@@ -49,7 +49,7 @@
 											class="is-16x16 mr-2 is-flex-shrink-0"></b-image>
 										<span class="one-line">{{ item.title }}</span>
 									</div>
-									<div class="is-flex-shrink-0">{{ item.usage | renderSize }}</div>
+									<div class="is-flex-shrink-0">{{ renderSize(item.usage) }}</div>
 								</div>
 							</div>
 						</b-tab-item>

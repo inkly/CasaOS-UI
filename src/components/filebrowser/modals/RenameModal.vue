@@ -12,8 +12,8 @@
 		<section class="modal-card-body ">
 			<div class="node-card">
 				<div class="cover is-flex is-justify-content-center is-align-items-center">
-					<div :class="item | coverType">
-						<img :class="item | iconType" :src="getIconFile(item)" alt="folder" />
+					<div :class="coverType(item)">
+						<img :class="iconType(item)" :src="getIconFile(item)" alt="folder" />
 					</div>
 				</div>
 				<b-field :message="errors" :type="errorType" class="mb-3 mt-5 has-text-light" expanded>

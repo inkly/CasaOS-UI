@@ -35,7 +35,7 @@
 				</p>
 			</div>
 		</div>
-		<b-progress :type="usePercent | getProgressType" :value="usePercent" class="ml-3 mr-3"
+		<b-progress :type="getProgressType(usePercent)" :value="usePercent" class="ml-3 mr-3"
 					size="is-small"></b-progress>
 	</div>
 </template>

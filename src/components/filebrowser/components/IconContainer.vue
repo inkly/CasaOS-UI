@@ -9,11 +9,11 @@
  * Copyright (c) 2022 by IceWhale, All Rights Reserved. 
 -->
 <template>
-	<div :class="item | coverType">
+	<div :class="coverType(item)">
 		<transition name="fade">
 			<img v-if="showThumb" key="thumb" :class="isWide?'thumb-w':'thumb-h'" :src="imageData" alt="folder"
 				 class="is-absolute"/>
-			<img v-else key="icon" :class="item | iconType" :src="getIconFile(item)" alt="folder" class=" is-absolute"/>
+			<img v-else key="icon" :class="iconType(item)" :src="getIconFile(item)" alt="folder" class=" is-absolute"/>
 		</transition>
 		<div class="overlay-layer">
 			<b-icon v-if="isShared" class="share-icon casa-color-green casa-shape-rounded casa-shape-32px" custom-size="casa-28px"

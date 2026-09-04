@@ -11,15 +11,15 @@
 		<section class="modal-card-body is-flex is-justify-content-center is-align-items-center mb-5">
 			<div class="node-card ">
 				<div class="cover is-unselectable is-flex is-justify-content-center is-align-items-center">
-					<div :class="item | coverType">
-						<img :class="item | iconType" :src="getIconFile(item)" alt="folder"/>
+					<div :class="coverType(item)">
+						<img :class="iconType(item)" :src="getIconFile(item)" alt="folder"/>
 					</div>
 				</div>
 				<div class="info mt-3 is-flex is-flex-direction-column is-justify-content-center">
 					<p class="title">{{ item.name }}</p>
 					<div class="buttons is-justify-content-center">
 						<b-button type="is-primary" @click="download">{{ $t('Download') }}
-							{{ item.size | renderSize }}
+							{{ renderSize(item.size) }}
 						</b-button>
 					</div>
 				</div>
