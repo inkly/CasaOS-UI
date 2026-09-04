@@ -94,7 +94,6 @@
     "vue-slider-component": "^3.2.24",
     "vue-smooth-reflow": "^0.1.12",
     "vue-social-sharing": "^3.0.9",
-    "vue-socket.io-extended": "^4.2.0",
     "vuedraggable": "^2.24.3",
     "vuex": "^3.6.2",
     "xterm": "^4.19.0",
