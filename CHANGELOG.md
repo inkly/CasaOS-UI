@@ -2,6 +2,45 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [Unreleased]
+
+Groundwork for the move to Vue 3, all of it landing on Vue 2 so that the day the
+framework changes carries as little as possible.
+
+### Fixed
+
+- The production build was built in development mode. `.env.production` set
+  `NODE_ENV=prod` while the build tool tests for `production`, so every release
+  shipped Vue's development branches: warnings, the devtools hook and the
+  unminified paths. The emitted JavaScript drops from 31.3 MB to 13.0 MB.
+- The build no longer writes the build machine's entire environment into the
+  bundle. `vue.config.js` replaced the tool's own definitions with
+  `JSON.stringify(process.env)`, so the last local build carried the user name
+  and home directory of whoever ran it, and a CI build would carry the runner's.
+- An app's memory limit that is not one of the slider's marks (a compose file
+  edited by hand) no longer displays as 256 MB. The slider snaps to the nearest
+  mark instead of falling back to the first.
+
+### Changed
+
+- Seven abandoned dependencies were replaced by their equivalent in code we own:
+  the socket plugin, the tooltips, the memory slider, the breakpoint mixin, the
+  animation directive, the share links and the CodeMirror wrapper. Eight more
+  were removed as unused. Two visible differences came with that, both
+  deliberate: the "start sharing your files" hint now stays until its close
+  button is used rather than disappearing on any click elsewhere (which is also
+  the only way it stops coming back), and tooltips no longer flip themselves to
+  stay inside the window, so a long one near the right edge can be clipped.
+- The event bus is a plain emitter rather than a Vue instance, with the same
+  `$on`/`$off`/`$emit` surface and each subscriber still isolated from a
+  neighbour that throws.
+
+### Added
+
+- Component mount tests. The suite was 37 pure-function tests for 123 components;
+  it now also mounts the shell and the highest-traffic surfaces and fails on any
+  Vue warning, which is what the framework change will be checked against.
+
 ## [0.4.32] - 2026-09-04
 
 ### Added
