@@ -50,7 +50,7 @@ import { mixin } from '@/mixins/mixin';
 
 import mime from 'mime'
 // Core
-import { codemirror } from 'vue-codemirror'
+import codemirror from '@/components/basicComponents/CodeMirror.vue'
 import 'codemirror/lib/codemirror.css'
 // theme css
 import 'codemirror/theme/monokai.css'

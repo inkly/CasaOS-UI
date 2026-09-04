@@ -1,5 +1,5 @@
 <script>
-import { codemirror } from 'vue-codemirror'
+import Codemirror from '@/components/basicComponents/CodeMirror.vue'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
 import 'codemirror/mode/yaml/yaml.js'
@@ -17,7 +17,7 @@ const MESSAGES = {
 
 export default {
   name: 'ComposeEditor',
-  components: { Codemirror: codemirror },
+  components: { Codemirror },
   props: {
     appId: { type: String, required: true },
     value: { type: String, default: '' },
