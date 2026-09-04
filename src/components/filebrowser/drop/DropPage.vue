@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from "vue";
 import { PeersManager, ServerConnection } from "./Network.js";
 import { saveAs } from "file-saver";
 import VueBreakpointMixin from "@/mixins/breakpoint";
@@ -52,12 +53,12 @@ export default {
 	name: "drop-page",
 	mixins: [VueBreakpointMixin],
 	components: {
-		DropItem: () => import("./DropItem.vue"),
-		DropContextMenu: () => import("./DropContextMenu.vue"),
-		DropCenterIcon: () => import("./DropCenterIcon.vue"),
-		DropBg: () => import("./DropBg.vue"),
-		DropAddButton: () => import("./DropAddButton.vue"),
-		SidebarMenuButton: () => import("../components/SidebarMenuButton.vue"),
+		DropItem: defineAsyncComponent(() => import("./DropItem.vue")),
+		DropContextMenu: defineAsyncComponent(() => import("./DropContextMenu.vue")),
+		DropCenterIcon: defineAsyncComponent(() => import("./DropCenterIcon.vue")),
+		DropBg: defineAsyncComponent(() => import("./DropBg.vue")),
+		DropAddButton: defineAsyncComponent(() => import("./DropAddButton.vue")),
+		SidebarMenuButton: defineAsyncComponent(() => import("../components/SidebarMenuButton.vue")),
 	},
 	data() {
 		return {

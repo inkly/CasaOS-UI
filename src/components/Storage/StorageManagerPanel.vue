@@ -164,6 +164,7 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from "vue";
 import LottieAnimation from "lottie-web-vue";
 import smoothReflow from 'vue-smooth-reflow'
 import delay from 'lodash/delay';
@@ -487,7 +488,7 @@ export default {
 
 			this.$buefy.modal.open({
 				parent: this,
-				component: () => import('@/components/Storage/MergeStorages.vue'),
+				component: defineAsyncComponent(() => import('@/components/Storage/MergeStorages.vue')),
 				hasModalCard: true,
 				trapFocus: true,
 				ariaModal: true,

@@ -232,6 +232,7 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from "vue";
 import orderBy from "lodash/orderBy";
 import dropRight from "lodash/dropRight";
 import isEqual from "lodash/isEqual";
@@ -292,13 +293,13 @@ export default {
 		Uploader,
 		UploaderUnsupport,
 		UploaderList,
-		CodeEditor: () => import("./viewers/CodeEditor.vue"),
-		VideoPlayer: () => import("./viewers/VideoPlayer.vue"),
-		ImageViewer: () => import("./viewers/ImageViewer.vue"),
-		MarkDownEditor: () => import("./viewers/MarkdownEditor.vue"),
-		DocViewer: () => import("./viewers/DocViewer.vue"),
-		ExcelViewer: () => import("./viewers/ExcelViewer.vue"),
-		PdfViewer: () => import("./viewers/PdfViewer.vue"),
+		CodeEditor: defineAsyncComponent(() => import("./viewers/CodeEditor.vue")),
+		VideoPlayer: defineAsyncComponent(() => import("./viewers/VideoPlayer.vue")),
+		ImageViewer: defineAsyncComponent(() => import("./viewers/ImageViewer.vue")),
+		MarkDownEditor: defineAsyncComponent(() => import("./viewers/MarkdownEditor.vue")),
+		DocViewer: defineAsyncComponent(() => import("./viewers/DocViewer.vue")),
+		ExcelViewer: defineAsyncComponent(() => import("./viewers/ExcelViewer.vue")),
+		PdfViewer: defineAsyncComponent(() => import("./viewers/PdfViewer.vue")),
 		EmptyHolder,
 		ErrorHolder,
 		OperationToolbar,
@@ -311,7 +312,7 @@ export default {
 		MountList,
 		MountActionButton,
 		// Drop
-		DropPage: () => import("./drop/DropPage.vue"),
+		DropPage: defineAsyncComponent(() => import("./drop/DropPage.vue")),
 		DropEntryButton,
 		SidebarMenuButton,
 	},

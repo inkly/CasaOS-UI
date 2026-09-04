@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue'
 import ContextMenu from './ContextMenu.vue'
 import events      from '@/events/events';
 
@@ -57,7 +58,7 @@ export default {
 		showChangeWallpaperModal() {
 			this.$buefy.modal.open({
 				parent: this,
-				component: () => import('@/components/wallpaper/WallpaperModal.vue'),
+				component: defineAsyncComponent(() => import('@/components/wallpaper/WallpaperModal.vue')),
 				hasModalCard: true,
 				customClass: '',
 				trapFocus: true,

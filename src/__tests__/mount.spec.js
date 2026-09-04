@@ -18,6 +18,10 @@ import createEventBus from '@/events/eventBus'
 // no equivalent for. $t is mocked below, so an empty table changes nothing here.
 vi.mock('@/assets/lang', () => ({ default: { en_us: { lang_name: 'English' } } }))
 
+// lottie-web paints into a canvas the moment it is imported and happy-dom has
+// no 2d context, so the import itself throws. shallowMount stubs the tag anyway.
+vi.mock('lottie-web-vue', () => ({ default: { name: 'lottie-animation', render: h => h('div') } }))
+
 const App = () => import('@/App.vue')
 const TopBar = () => import('@/components/TopBar.vue')
 const BrandBar = () => import('@/components/BrandBar.vue')
@@ -32,6 +36,19 @@ const Clock = () => import('@/widgets/Clock.vue')
 const Network = () => import('@/widgets/Network.vue')
 const ListView = () => import('@/components/filebrowser/components/ListView.vue')
 
+// The other components that register an async child. shallowMount stubs those
+// children, so what this guards is the registry itself: the vue import resolving
+// and every wrapped factory surviving option evaluation.
+// Two owners are deliberately absent. Home pulls SideBar -> Settings.vue, which
+// builds its widget table with webpack's require.context (see the note above);
+// AppPanel's mounted() focuses $refs.search_app.$el.children[0], which a stubbed
+// child cannot supply. Both need more scaffolding than the registry is worth.
+const FilePanel = () => import('@/components/filebrowser/FilePanel.vue')
+const DropPage = () => import('@/components/filebrowser/drop/DropPage.vue')
+const ShareListPage = () => import('@/components/filebrowser/shared/ShareListPage.vue')
+const CasaWallpaper = () => import('@/components/wallpaper/CasaWallpaper.vue')
+const StorageManagerPanel = () => import('@/components/Storage/StorageManagerPanel.vue')
+
 // Every $api / $openAPI call returns a promise that never settles: the network
 // is not what these tests are about, and a fake payload would only feed each
 // component a shape it does not expect.
@@ -40,6 +57,9 @@ const apiHandler = {
   apply: () => new Promise(() => {}),
 }
 const $api = new Proxy(() => {}, apiHandler)
+
+// The slice of the vue-simple-uploader instance FilePanel drives.
+const uploaderStub = { assignDrop() {}, on() {}, off() {}, cancel() {} }
 
 const state = {
   isMobile: false,
@@ -135,4 +155,20 @@ describe('component smoke tests', () => {
   it('mounts Clock', () => mountOk(Clock))
   it('mounts Network', () => mountOk(Network))
   it('mounts ListView', () => mountOk(ListView, { propsData: { listData: [] }, attachTo: document.body }))
+
+  // mounted() reaches into $refs.uploader.uploader for the vue-simple-uploader
+  // handle, which a bare stub does not carry.
+  it('mounts FilePanel', () => mountOk(FilePanel, {
+    stubs: { Uploader: { render: h => h('div'), data: () => ({ uploader: uploaderStub }) } },
+  }))
+  // mounted() measures .action-area, which lives in this component's own template.
+  // beforeDestroy() tears down a peer manager that mounted() only builds a second
+  // later, so a fast mount/destroy finds it null.
+  it('mounts DropPage', () => mountOk(DropPage, {
+    attachTo: document.body,
+    data: () => ({ peersManager: { destory: () => {} } }),
+  }))
+  it('mounts ShareListPage', () => mountOk(ShareListPage))
+  it('mounts CasaWallpaper', () => mountOk(CasaWallpaper))
+  it('mounts StorageManagerPanel', () => mountOk(StorageManagerPanel))
 })

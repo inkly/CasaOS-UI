@@ -1,4 +1,5 @@
 <script>
+import { defineAsyncComponent } from 'vue'
 import { nanoid } from 'nanoid'
 import SearchBar from '@/components/SearchBar.vue'
 import SideBar from '@/components/SideBar.vue'
@@ -247,7 +248,7 @@ export default {
       this.$messageBus('widget_storagemanager')
       this.$buefy.modal.open({
         parent: this,
-        component: () => import('@/components/Storage/StorageManagerPanel.vue'),
+        component: defineAsyncComponent(() => import('@/components/Storage/StorageManagerPanel.vue')),
         hasModalCard: true,
         customClass: 'storage-modal',
         trapFocus: true,

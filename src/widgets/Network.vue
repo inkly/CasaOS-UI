@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 // import VueApexCharts from 'vue-apexcharts'
 import { mixin } from '@/mixins/mixin';
 
@@ -59,7 +60,7 @@ export default {
 	title: "Network Status",
 	initShow: true,
 	components: {
-		VueApexCharts: () => import("vue-apexcharts")
+		VueApexCharts: defineAsyncComponent(() => import("vue-apexcharts"))
 	},
 	data() {
 		return {

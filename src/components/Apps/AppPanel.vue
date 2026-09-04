@@ -1,4 +1,5 @@
 <script>
+import { defineAsyncComponent } from 'vue'
 import AppSideBar from './AppSideBar.vue'
 import ImportPanel from '../forms/ImportPanel.vue'
 import LottieAnimation from 'lottie-web-vue'
@@ -632,7 +633,7 @@ export default {
             if (composeJSON['x-casaos']?.tips?.before_install?.en_us) {
               this.$buefy.modal.open({
                 parent: this,
-                component: () => import('@/components/Apps/TipEditorModal.vue'),
+                component: defineAsyncComponent(() => import('@/components/Apps/TipEditorModal.vue')),
                 hasModalCard: true,
                 customClass: '',
                 trapFocus: true,

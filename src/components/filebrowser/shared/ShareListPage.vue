@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from "vue";
 import ShareListView    from "./ShareListView.vue";
 import ShareAccessModal from "./ShareAccessModal.vue";
 import events        from "@/events/events";
@@ -55,7 +56,7 @@ export default {
 
 	components: {
 		ShareListView,
-		SidebarMenuButton: () => import("../components/SidebarMenuButton.vue"),
+		SidebarMenuButton: defineAsyncComponent(() => import("../components/SidebarMenuButton.vue")),
 	},
 
 	mounted() {
