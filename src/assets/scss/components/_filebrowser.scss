@@ -561,7 +561,7 @@
 
                 &.has-text-danger {
                     &:hover {
-                        background-color: findLightColor($danger);
+                        background-color: bulmaFindLightColor($danger);
                     }
                 }
             }
