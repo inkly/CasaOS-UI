@@ -1246,7 +1246,7 @@ export default {
           icon="close-outline"
           pack="casa"
           @click.native="
-            $emit('close')
+            $emit('close');
             $messageBus('appstore_close')
           "
         />
@@ -1377,7 +1377,7 @@ export default {
                     <div
                       class="is-flex-grow-1 mr-4 is-clickable"
                       @click="
-                        showAppDetial(item.id)
+                        showAppDetial(item.id);
                         $messageBus('appstore_detail', item.title)
                       "
                     >
@@ -1407,7 +1407,7 @@ export default {
                         size="is-small"
                         type="is-primary is-light"
                         @click="
-                          quickInstall(item.id)
+                          quickInstall(item.id);
                           $messageBus('appstore_install', item.title)
                         "
                       >
@@ -1571,7 +1571,7 @@ export default {
                 <div
                   class="is-flex-grow-1 mr-4 is-clickable"
                   @click="
-                    showAppDetial(item.id)
+                    showAppDetial(item.id);
                     $messageBus('appstore_detail', item.title)
                   "
                 >
@@ -1605,7 +1605,7 @@ export default {
                   size="is-small"
                   type="is-primary is-light"
                   @click="
-                    quickInstall(item.id)
+                    quickInstall(item.id);
                     $messageBus('appstore_install', item.title)
                   "
                 >
@@ -1648,7 +1648,7 @@ export default {
                   <div
                     class="is-flex-grow-1 mr-4 is-clickable"
                     @click="
-                      showAppDetial(item.id)
+                      showAppDetial(item.id);
                       $messageBus('appstorecommunity_detail', item.title)
                     "
                   >
@@ -1682,7 +1682,7 @@ export default {
                     size="is-small"
                     type="is-primary is-light"
                     @click="
-                      quickInstall(item.id)
+                      quickInstall(item.id);
                       $messageBus('appstorecommunity_install', item.title)
                     "
                   >
