@@ -123,7 +123,12 @@ describe('component smoke tests', () => {
     propsData: { item: { id: '1', name: 'Test', title: { en_us: 'Test' }, icon: '', status: 'running', app_type: 'system', index: '', port_map: '', host: '', protocol: 'http' } },
     provide: { homeShowFiles: () => {}, openAppStore: () => {} },
   }))
-  it('mounts AppSideBar', () => mountOk(AppSideBar))
+  // Open, with slot content: closed and empty it renders one hidden div and
+  // the test would only prove the SFC parsed.
+  it('mounts AppSideBar', () => mountOk(AppSideBar, {
+    propsData: { open: true },
+    slots: { default: '<p>panel</p>' },
+  }))
   it('mounts UpdateModal', () => mountOk(UpdateModal, { propsData: { changeLog: '# hi' } }))
   it('mounts Ports', () => mountOk(Ports, { propsData: { vData: [], showHostPost: true } }))
   it('mounts Login', () => mountOk(Login))
