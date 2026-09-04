@@ -23,7 +23,7 @@
             position: relative;
             z-index: 100;
 
-            .popper {
+            .tasks-popover {
                 box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%), 0 0px 0 1px rgb(10 10 10 / 2%);
                 background-color: white;
                 border: none;
@@ -31,6 +31,7 @@
                 text-align: initial;
                 padding: 0 0 0.5rem 0;
                 width: 20rem;
+                white-space: normal;
             }
 
             .operation-status-item {

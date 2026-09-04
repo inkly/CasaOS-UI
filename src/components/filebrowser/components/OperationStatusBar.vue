@@ -10,11 +10,9 @@
 -->
 <template>
 	<div v-if="isShow" class="mr-2 operation-status-bar">
-		<popper :options="{
-			placement: 'top',
-			modifiers: { offset: { offset: '0,5px' } }
-		}" enter-active-class="animated fadeIn" leave-active-class=" fadeOut" trigger="clickToOpen">
-			<div class="popper">
+		<b-tooltip :auto-close="['outside']" :triggers="['click']" content-class="tasks-popover"
+				   position="is-bottom" type="is-white">
+			<template #content>
 				<div class="is-flex is-align-items-center">
 					<div class=" is-flex-grow-1">
 						<p class="card-header-title mb-0">{{ $t('Current Tasks') }}</p>
@@ -26,24 +24,20 @@
 				</div>
 
 				<operation-status-item v-for="task in taskList" :key="task.id" :data="task"></operation-status-item>
-			</div>
-			<b-button slot="reference" rounded size="is-small" type="is-primary is-light">
+			</template>
+			<b-button rounded size="is-small" type="is-primary is-light">
 				<b-icon custom-class="mdi-spin" custom-size=" mdi-18px" icon="autorenew"></b-icon>
 			</b-button>
-		</popper>
+		</b-tooltip>
 	</div>
 </template>
 
 <script>
-import Popper              from 'vue-popperjs';
-
-import 'vue-popperjs/dist/vue-popper.css';
 import OperationStatusItem from './OperationStatusItem.vue';
 
 export default {
 	name: "operation-status-bar",
 	components: {
-		Popper,
 		OperationStatusItem,
 	},
 	data() {

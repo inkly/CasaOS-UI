@@ -233,9 +233,6 @@ importers:
       vue-i18n:
         specifier: 8.28.2
         version: 8.28.2(vue@2.7.16)
-      vue-popperjs:
-        specifier: ^2.3.0
-        version: 2.3.0
       vue-router:
         specifier: ^3.6.5
         version: 3.6.5(vue@2.7.16)
@@ -5907,10 +5904,6 @@ packages:
     resolution: {integrity: sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==}
     engines: {node: '>=12'}
 
-  opencollective-postinstall@2.0.3:
-    resolution: {integrity: sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q==}
-    hasBin: true
-
   opener@1.5.2:
     resolution: {integrity: sha512-ur5UIdyw5Y7yEj9wLzhqXiy6GZ3Mwx0yGI+5sMn2r0N0v3cKJvUmFH5yPP+WXh9e0xfyzyJX95D8l088DNFj7A==}
     hasBin: true
@@ -6126,10 +6119,6 @@ packages:
   pluralize@8.0.0:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
-
-  popper.js@1.16.1:
-    resolution: {integrity: sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==}
-    deprecated: You can find the new Popper v2 at @popperjs/core, this package is dedicated to the legacy v1
 
   portfinder@1.0.32:
     resolution: {integrity: sha512-on2ZJVVDXRADWE6jnQaX0ioEylzgBpQk8r55NE4wjXW1ZxO+BgDlY6DXwj20i0V8eB4SenDQ00WEaxfiIQPcxg==}
@@ -7912,9 +7901,6 @@ packages:
         optional: true
       vue:
         optional: true
-
-  vue-popperjs@2.3.0:
-    resolution: {integrity: sha512-925QEeNjlMtb3eDHl5ZlODJzqnQL0nQPEKpr9aQ3XBg21DyqAdfLgD/At4svsPwFeIkpdF1gvHarENon47L9Cg==}
 
   vue-property-decorator@8.5.1:
     resolution: {integrity: sha512-O6OUN2OMsYTGPvgFtXeBU3jPnX5ffQ9V4I1WfxFQ6dqz6cOUbR3Usou7kgFpfiXDvV7dJQSFcJ5yUPgOtPPm1Q==}
@@ -14683,8 +14669,6 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
-  opencollective-postinstall@2.0.3: {}
-
   opener@1.5.2: {}
 
   option-validator@2.0.6:
@@ -14889,8 +14873,6 @@ snapshots:
       pathe: 1.1.2
 
   pluralize@8.0.0: {}
-
-  popper.js@1.16.1: {}
 
   portfinder@1.0.32:
     dependencies:
@@ -16847,11 +16829,6 @@ snapshots:
     optionalDependencies:
       '@vue/compiler-sfc': 3.5.13
       vue: 2.7.16
-
-  vue-popperjs@2.3.0:
-    dependencies:
-      opencollective-postinstall: 2.0.3
-      popper.js: 1.16.1
 
   vue-property-decorator@8.5.1(vue@2.7.16):
     dependencies:

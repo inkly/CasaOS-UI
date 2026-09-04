@@ -3,22 +3,19 @@
 
 		<div :class="{ 'active': active }" class="is-flex list-item new-list-item" @click.prevent="$emit('open')">
 
-			<popper ref="tip" :options="{
-				placement: 'top',
-				modifiers: { offset: { offset: '0,10px' } }
-			}" enter-active-class="fade-enter-active" transition='fade' trigger="click">
-				<div class="popper  tooltip-content dark">
+			<b-tooltip :active="tipVisible" :triggers="[]" always content-class="share-tip" position="is-right">
+				<template #content>
 					<div class="is-flex ">
 						{{ $t('Start sharing your files on the local network.') }}
 						<div class="is-clickable ml-1 is-flex is-align-items-center" @click.stop="hideTip">
 							<b-icon icon="close-xs" pack="casa"></b-icon>
 						</div>
 					</div>
-				</div>
-				<div slot="reference" class="cover mr-2 is-flex-shrink-0 is-flex is-align-items-center none-click" s>
+				</template>
+				<div class="cover mr-2 is-flex-shrink-0 is-flex is-align-items-center none-click">
 					<b-icon icon="share" pack="casa"></b-icon>
 				</div>
-			</popper>
+			</b-tooltip>
 			<div><span>{{ $t('Shared') }}</span></div>
 
 		</div>
@@ -30,7 +27,6 @@
 
 const sharedInitData = "shared_init_data";
 import events from '@/events/events';
-import Popper from 'vue-popperjs';
 
 export default {
 	props: {
@@ -39,11 +35,10 @@ export default {
 			default: false
 		},
 	},
-	components: {
-		Popper,
-	},
 	data() {
-		return {}
+		return {
+			tipVisible: false
+		}
 	},
 	created() {
 
@@ -76,11 +71,11 @@ export default {
 		},
 		showTip() {
 			setTimeout(() => {
-				this.$refs.tip.doShow()
+				this.tipVisible = true
 			}, 500)
 		},
 		hideTip() {
-			this.$refs.tip.doClose()
+			this.tipVisible = false
 			this.$api.users.setCustomStorage(sharedInitData, {
 				isInit: true
 			})
@@ -91,34 +86,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.popper {
-	background-color: #505459;
-	padding: 0.35rem 0.4rem 0.35rem 0.75rem;
-	box-shadow: 0px 1px 2px 1px rgba(0, 1, 0, 0.2);
-	border: none;
-	color: #ffffff;
-	border-radius: 6px;
-	font-size: 0.85rem;
-	font-weight: 400;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-	transition: opacity 1s;
-}
-
-.fade-enter,
-.fade-leave-to {
-	opacity: 0;
-}
-
 .none-click {
 	pointer-events: none;
 }
 </style>
 
 <style lang="scss">
-.dark .popper__arrow {
-	border-color: #505459 transparent transparent transparent !important;
+// Same bubble the popper drew. `is-always` pins opacity to 1, so the 1s fade-in
+// has to be re-stated at a specificity that beats it.
+.b-tooltip.is-always .tooltip-content.share-tip {
+	background: #505459;
+	color: #ffffff;
+	padding: 0.35rem 0.4rem 0.35rem 0.75rem;
+	box-shadow: 0px 1px 2px 1px rgba(0, 1, 0, 0.2);
+	border-radius: 6px;
+
+	&::before {
+		border-right-color: #505459 !important;
+	}
+
+	&.fade-enter {
+		opacity: 0;
+	}
+
+	&.fade-enter-active {
+		transition: opacity 1s;
+	}
 }
 </style>

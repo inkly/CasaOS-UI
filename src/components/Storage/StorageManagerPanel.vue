@@ -15,17 +15,15 @@
 				<!-- Storage and Disk List Start -->
 				<div v-if="!creatIsShow" class="is-flex-grow-1 is-flex-shrink-1 is-relative">
 					<div v-if="activeTab == 0" class="create-container" >
-						<popper :options="{ placement: 'bottom',  }"
-							append-to-body trigger="hover">
-							<div v-show="unDiskData.length == 0" class="popper  tooltip-content dark">
-								{{ $t('Please insert a Drive to Create Storage') }}
-							</div>
-							<div slot="reference">
+						<b-tooltip :active="unDiskData.length == 0"
+							:label="$t('Please insert a Drive to Create Storage')" append-to-body
+							content-class="create-storage-tip" position="is-bottom" type="is-dark">
+							<div>
 								<b-button :disabled="unDiskData.length == 0" :type="state_createstorage_operability"
 									class="o" rounded size="is-small" @click="showCreate">{{ $t('Create Storage') }}
 								</b-button>
 							</div>
-						</popper>
+						</b-tooltip>
 
 					</div>
 					<b-tabs v-model="activeTab" :animated="false">
@@ -175,7 +173,6 @@ import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { mixin } from '@/mixins/mixin';
 import DriveItem from './DriveItem.vue'
 import StorageItem from './StorageItem.vue'
-import Popper from 'vue-popperjs';
 import StorageCombination from "./StorageCombination.vue";
 import cToolTip from '@/components/basicComponents/tooltip/tooltip.vue';
 import events from '@/events/events';
@@ -188,7 +185,6 @@ export default {
 		ValidationProvider,
 		DriveItem,
 		StorageItem,
-		Popper,
 		StorageCombination,
 		cToolTip: cToolTip,
 	},
@@ -643,20 +639,18 @@ export default {
 	}
 }
 
-.popper {
-	background-color: #505459;
-	padding: 0.35rem 0.75rem;
-	box-shadow: 0px 1px 2px 1px rgba(0, 1, 0, 0.2);
-	border: none;
-	color: #ffffff;
-	border-radius: 6px;
-	font-size: 0.85rem;
-	font-weight: 400;
-}
 </style>
 
 <style lang="scss">
-.popper[x-placement^="bottom"].dark .popper__arrow {
-	border-color: transparent transparent #505459 transparent !important;
+// Same bubble the popper drew: #505459 is a shade lighter than Buefy's `is-dark`,
+// and the shadow is dropped globally by common/_others.scss.
+.b-tooltip.is-dark .tooltip-content.create-storage-tip {
+	background: #505459;
+	box-shadow: 0px 1px 2px 1px rgba(0, 1, 0, 0.2);
+	border-radius: 6px;
+
+	&::before {
+		border-bottom-color: #505459 !important;
+	}
 }
 </style>

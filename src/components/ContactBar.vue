@@ -1,55 +1,32 @@
 <template>
 	<div class="contact-bar is-flex is-align-items-center has-text-white">
 
-		<popper :options="{
-			placement: 'top',
-			modifiers: { offset: { offset: '0,4px' } }
-		}" enter-active-class="fade-enter-active" leave-active-class="" transition='fade' trigger="hover">
-			<div class="popper  tooltip-content">
-				{{ $t('Submit a feedback or report an issue') }}
-			</div>
-			<a slot="reference" @click="showFeedback">
+		<b-tooltip :label="$t('Submit a feedback or report an issue')" content-class="contact-tip" position="is-top"
+			type="is-primary">
+			<a @click="showFeedback">
 				<b-icon icon="eedback" pack="casa"></b-icon>
 			</a>
-		</popper>
+		</b-tooltip>
 
-		<popper :options="{
-			placement: 'top',
-			modifiers: { offset: { offset: '0,4px' } }
-		}" enter-active-class="fade-enter-active" leave-active-class="" transition='fade' trigger="hover">
-			<div class="popper  tooltip-content">
-				{{ $t('Join Discord') }}
-			</div>
-			<a slot="reference" rel="noopener" href="https://discord.gg/knqAbbBbeX" target="_blank"
+		<b-tooltip :label="$t('Join Discord')" content-class="contact-tip" position="is-top" type="is-primary">
+			<a rel="noopener" href="https://discord.gg/knqAbbBbeX" target="_blank"
 				@click="$messageBus('connect_discord')">
 				<b-icon icon="discord" pack="casa"></b-icon>
 			</a>
-		</popper>
+		</b-tooltip>
 
-		<popper :options="{
-			placement: 'top',
-			modifiers: { offset: { offset: '0,4px' } }
-		}" enter-active-class="fade-enter-active" leave-active-class="" transition='fade' trigger="hover">
-			<div class="popper  tooltip-content">
-				{{ $t('Visit our Github') }}
-			</div>
-			<a slot="reference" rel="noopener" href="https://github.com/IceWhaleTech/CasaOS" target="_blank"
+		<b-tooltip :label="$t('Visit our Github')" content-class="contact-tip" position="is-top" type="is-primary">
+			<a rel="noopener" href="https://github.com/IceWhaleTech/CasaOS" target="_blank"
 				@click="$messageBus('connect_github')">
 				<b-icon icon="github" pack="casa"></b-icon>
 			</a>
-		</popper>
+		</b-tooltip>
 
-		<popper :options="{
-			placement: 'top',
-			modifiers: { offset: { offset: '0,4px' } }
-		}" enter-active-class="fade-enter-active" leave-active-class="" transition='fade' trigger="hover">
-			<div class="popper  tooltip-content">
-				{{ $t('Share CasaOS') }}
-			</div>
-			<a slot="reference" @click="showShareModal">
+		<b-tooltip :label="$t('Share CasaOS')" content-class="contact-tip" position="is-top" type="is-primary">
+			<a @click="showShareModal">
 				<b-icon icon="chat" pack="casa"></b-icon>
 			</a>
-		</popper>
+		</b-tooltip>
 
 	</div>
 </template>
@@ -57,14 +34,10 @@
 <script>
 import FeedbackPanel from './feedback/FeedbackPanel.vue'
 import ShareModal from '@/components/share/ShareModal.vue'
-import Popper from 'vue-popperjs';
 
 
 export default {
 	name: "contact-bar",
-	components: {
-		Popper,
-	},
 	methods: {
 		showFeedback() {
 			// messageBus :: feedback
@@ -118,18 +91,6 @@ export default {
 	}
 }
 
-.popper {
-	background-color: $primary;
-	padding: 0.35rem 0.75rem;
-	box-shadow: 0px 1px 2px 1px rgba(0, 1, 0, 0.2);
-	border: none;
-	color: #ffffff;
-	border-radius: 6px;
-	font-size: 0.85rem;
-	font-weight: 400;
-}
-
-
 @media screen and (max-width: 480px) {
 	.contact-bar {
 		right: 0;
@@ -144,7 +105,11 @@ export default {
 </style>
 
 <style lang="scss">
-.popper .popper__arrow {
-	border-color: $primary transparent transparent transparent !important;
+// `is-primary` already paints the bubble and its arrow; these two are the only
+// things the old popper box had that a Buefy tooltip does not: the drop shadow
+// (dropped globally by common/_others.scss) and a 6px instead of 5px radius.
+.b-tooltip .tooltip-content.contact-tip {
+	box-shadow: 0px 1px 2px 1px rgba(0, 1, 0, 0.2);
+	border-radius: 6px;
 }
 </style>
