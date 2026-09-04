@@ -45,7 +45,7 @@
 <script>
 import { PeersManager, ServerConnection } from "./Network.js";
 import { saveAs } from "file-saver";
-import VueBreakpointMixin from "vue-breakpoint-mixin";
+import VueBreakpointMixin from "@/mixins/breakpoint";
 // import { v4 as uuidv4 } from "uuid";
 
 export default {

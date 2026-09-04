@@ -238,7 +238,7 @@ import isEqual from "lodash/isEqual";
 
 import { mixin } from "@/mixins/mixin";
 import { filterHiddenFiles } from "@/mixins/file_utils";
-import VueBreakpointMixin from "vue-breakpoint-mixin";
+import VueBreakpointMixin from "@/mixins/breakpoint";
 import events from "@/events/events";
 
 import TreeList from "./sidebar/TreeList.vue";

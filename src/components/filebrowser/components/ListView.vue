@@ -91,7 +91,6 @@
 <script>
 import { mixin } from "@/mixins/mixin";
 import ListViewMixin from "@/mixins/ListViewMixin";
-import BreakpointMixin from "vue-breakpoint-mixin";
 import ActionButton from "./ActionButton.vue";
 import ContextMenu from "./ContextMenu.vue";
 import ListIconContainer from "./ListIconContainer.vue";
@@ -103,7 +102,7 @@ export default {
 		ContextMenu,
 		ListIconContainer,
 	},
-	mixins: [mixin, ListViewMixin, BreakpointMixin],
+	mixins: [mixin, ListViewMixin],
 	data() {
 		return {
 			cols: 1000,

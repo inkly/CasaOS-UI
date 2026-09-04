@@ -1,7 +1,7 @@
 import pull from 'lodash/pull'
 import Hitbox from 'hitbox-js'
 import events from '@/events/events';
-import VueBreakpointMixin from "vue-breakpoint-mixin";
+import VueBreakpointMixin from "@/mixins/breakpoint";
 
 export default {
 	model: {

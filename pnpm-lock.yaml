@@ -215,9 +215,6 @@ importers:
       vue-awesome-swiper:
         specifier: ^4.1.1
         version: 4.1.1(swiper@5.4.5)(vue@2.7.16)
-      vue-breakpoint-mixin:
-        specifier: ^1.5.0
-        version: 1.5.0
       vue-codemirror:
         specifier: ^4.0.6
         version: 4.0.6
@@ -7808,9 +7805,6 @@ packages:
     peerDependencies:
       swiper: ^5.2.0
       vue: 2.x
-
-  vue-breakpoint-mixin@1.5.0:
-    resolution: {integrity: sha512-0GHAnt8kkGiyVGQawl4qZvl7A5edj+CnPI6wHkx05JGcsNVycUESSmnz/WkRm18D0WkzrPTnzVgTc7d6XI7wFA==}
 
   vue-codemirror@4.0.6:
     resolution: {integrity: sha512-ilU7Uf0mqBNSSV3KT7FNEeRIxH4s1fmpG4TfHlzvXn0QiQAbkXS9lLfwuZpaBVEnpP5CSE62iGJjoliTuA8poQ==}
@@ -16668,8 +16662,6 @@ snapshots:
     dependencies:
       swiper: 5.4.5
       vue: 2.7.16
-
-  vue-breakpoint-mixin@1.5.0: {}
 
   vue-codemirror@4.0.6:
     dependencies:
