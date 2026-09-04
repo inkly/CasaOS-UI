@@ -3,50 +3,71 @@
  *
  * It keeps the only two pieces of that plugin this app ever used: the
  * `sockets: { … }` component option, and the `$socket.$subscribe /
- * $unsubscribe` pair. Timing matches the library exactly — handlers are
- * attached in `created` and detached in `beforeDestroy`.
+ * $unsubscribe` pair. Handlers are attached in `created` and detached in
+ * `beforeUnmount`, as the library did.
+ *
+ * `$socket` lives on `globalProperties` rather than on each instance, because
+ * AppStoreSourceManagement.vue reads it from `setup()` and Vue 3 runs `setup()`
+ * *before* every mixin hook — there is no hook left that could install it in
+ * time. The per-component handler list moved to a WeakMap to match.
  *
  * Not reimplemented, because nothing here reads them: `$socket.connected`,
  * `$socket.disconnected`, `$socket.client`, and the automatic Vuex
  * mutation/action dispatch (main.js never passed a store).
  */
+import { getCurrentInstance } from 'vue'
+
 export default {
-	install(Vue, socket) {
-		// As the library did, so a mixin and a component can both contribute handlers.
-		Vue.config.optionMergeStrategies.sockets = Vue.config.optionMergeStrategies.methods
+	install(app, socket) {
+		// Vue 3 does not expose its built-in merge strategies on app.config, so
+		// spell out the methods-like merge the library relied on: a mixin and a
+		// component can both contribute handlers.
+		app.config.optionMergeStrategies.sockets = (to, from) => (to ? { ...from, ...to } : from)
 
-		Vue.mixin({
-			// Not `created`: AppStoreSourceManagement.vue reads `$socket.$subscribe`
-			// from `setup()`, which Vue 2.7 runs before any created hook.
-			beforeCreate() {
-				this._socketHandlers = []
-				this.$socket = {
-					$subscribe: (event, handler) => {
-						const listener = handler.bind(this)
-						this._socketHandlers.push([event, listener])
-						socket.on(event, listener)
-					},
-					$unsubscribe: (event) => {
-						const kept = []
-						for (const entry of this._socketHandlers) {
-							if (entry[0] === event) socket.off(entry[0], entry[1])
-							else kept.push(entry)
-						}
-						this._socketHandlers = kept
-					}
-				}
-			},
+		const handlers = new WeakMap()
+		const listOf = (vm) => {
+			let list = handlers.get(vm)
+			if (!list) handlers.set(vm, (list = []))
+			return list
+		}
+		// Set while a lifecycle hook runs, which is when the detached
+		// `const subscribe = app.$socket.$subscribe` call sites use it.
+		const caller = () => getCurrentInstance()?.proxy
 
+		const subscribe = (vm, event, handler) => {
+			const listener = vm ? handler.bind(vm) : handler
+			if (vm) listOf(vm).push([event, listener])
+			socket.on(event, listener)
+		}
+
+		const unsubscribe = (vm, event) => {
+			if (!vm) return
+			const kept = []
+			for (const entry of listOf(vm)) {
+				if (entry[0] === event) socket.off(entry[0], entry[1])
+				else kept.push(entry)
+			}
+			handlers.set(vm, kept)
+		}
+
+		app.config.globalProperties.$socket = {
+			$subscribe: (event, handler) => subscribe(caller(), event, handler),
+			$unsubscribe: (event) => unsubscribe(caller(), event)
+		}
+
+		app.mixin({
 			created() {
-				const handlers = this.$options.sockets
-				if (handlers) {
-					Object.keys(handlers).forEach(event => this.$socket.$subscribe(event, handlers[event]))
+				// `this`, not caller(): getCurrentInstance() is not set while the
+				// options-API hooks run.
+				const declared = this.$options.sockets
+				if (declared) {
+					Object.keys(declared).forEach(event => subscribe(this, event, declared[event]))
 				}
 			},
 
-			beforeDestroy() {
-				for (const [event, listener] of this._socketHandlers) socket.off(event, listener)
-				this._socketHandlers = []
+			beforeUnmount() {
+				for (const [event, listener] of listOf(this)) socket.off(event, listener)
+				handlers.set(this, [])
 			}
 		})
 	}
