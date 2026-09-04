@@ -71,9 +71,11 @@ export default {
      * @return {boolean}
      */
     async checkStep(ref) {
-      const isValid = await ref.validate()
+      // vee-validate 3 resolves to a Boolean, v4 to { valid, ... } — and an
+      // object is always truthy, so read `.valid` whenever it is there.
+      const result = await ref.validate()
       console.log(ref)
-      return isValid
+      return result?.valid ?? result
     },
 
     connect() {

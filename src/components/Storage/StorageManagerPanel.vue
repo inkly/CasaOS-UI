@@ -517,8 +517,10 @@ export default {
 		 * @return {Boolean}
 		 */
 		async checkStep(ref) {
-			let isValid = await ref.validate()
-			return isValid
+			// vee-validate 3 resolves to a Boolean, v4 to { valid, ... } — and an
+			// object is always truthy, so read `.valid` whenever it is there.
+			let result = await ref.validate()
+			return result?.valid ?? result
 		},
 		/**
 		 * @description: Create a new storage

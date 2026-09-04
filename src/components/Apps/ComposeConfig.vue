@@ -316,8 +316,10 @@ export default {
     },
 
     async checkStepItem(ref) {
-      const isValid = await ref.validate()
-      return isValid
+      // vee-validate 3 resolves to a Boolean, v4 to { valid, ... } — and an
+      // object is always truthy, so read `.valid` whenever it is there.
+      const result = await ref.validate()
+      return result?.valid ?? result
     },
 
     /**
@@ -329,7 +331,9 @@ export default {
       for (const servicesKey in this.configData.services) {
         promises.push(this.$refs[`${servicesKey}valida`][0].validate())
       }
-      return await Promise.all(promises)
+      // Same defensive shape, per entry: the callers in AppPanel test
+      // `valid.every(v => v === true)`, which no vee-validate 4 object satisfies.
+      return (await Promise.all(promises)).map(result => result?.valid ?? result)
     },
 
     /**
