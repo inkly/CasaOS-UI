@@ -711,7 +711,18 @@ export default {
     memoryIndex(service) {
       const memory = service.deploy.resources.limits.memory
       const megabytes = memory ? Number(String(memory).replace(/m/i, '')) : 256
-      return Math.max(this.markData.indexOf(megabytes), 0)
+      const exact = this.markData.indexOf(megabytes)
+      if (exact !== -1)
+        return exact
+
+      // A compose file edited by hand carries any value it likes (1.5g, a raw
+      // byte count). Falling back to index 0 displayed 256 MB for it, which
+      // reads as a real limit rather than an unknown one.
+      return this.markData.reduce(
+        (best, mark, index) =>
+          Math.abs(mark - megabytes) < Math.abs(this.markData[best] - megabytes) ? index : best,
+        0,
+      )
     },
     bridgePorts(services) {
       const result = []
