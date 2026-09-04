@@ -1,3 +1,7 @@
+import { readAppLaunchPreference } from '@/mixins/app/appLaunchPreference'
+
+const appLaunch = readAppLaunchPreference()
+
 const state = {
   // User
   access_token: '',
@@ -18,6 +22,12 @@ const state = {
   sidebarOpen: false,
 
   // System Config
+  // Whether installed apps open in the in-page dialog, and which apps are
+  // excepted from it. Read from storage at startup so the choice survives a
+  // reload.
+  appLaunchInIframe: appLaunch.inIframe,
+  appLaunchExceptions: appLaunch.exceptions,
+
   searchEngine: '',
   searchEngineSwitch: true,
   existingAppsSwitch: true,

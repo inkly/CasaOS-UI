@@ -465,5 +465,12 @@
   "A Compose file must be a mapping, starting with keys such as \"name\" and \"services\".": "A Compose file must be a mapping, starting with keys such as \"name\" and \"services\".",
   "This Compose file declares no services.": "This Compose file declares no services.",
   "The top-level \"name\" must match one of the services, to designate the main application.": "The top-level \"name\" must match one of the services, to designate the main application.",
-  "Environment variables are shown resolved: saving from here stores the resolved values and the variables are lost.": "Environment variables are shown resolved: saving from here stores the resolved values and the variables are lost."
+  "Environment variables are shown resolved: saving from here stores the resolved values and the variables are lost.": "Environment variables are shown resolved: saving from here stores the resolved values and the variables are lost.",
+  "App launching": "App launching",
+  "Configure": "Configure",
+  "Open apps inside CasaOS": "Open apps inside CasaOS",
+  "When this is off, every app opens in a new browser tab.": "When this is off, every app opens in a new browser tab.",
+  "Always open these apps in a new tab:": "Always open these apps in a new tab:",
+  "The list of installed apps could not be loaded.": "The list of installed apps could not be loaded.",
+  "No app is installed yet.": "No app is installed yet."
 }

@@ -1,7 +1,22 @@
+import {
+  APP_LAUNCH_EXCEPTIONS_KEY,
+  APP_LAUNCH_IFRAME_KEY,
+} from '@/mixins/app/appLaunchPreference'
+
 const mutations = {
   // User and tokens
   SET_ACCESS_TOKEN(state, token) {
     state.access_token = token
+  },
+
+  SET_APP_LAUNCH_IN_IFRAME(state, val) {
+    state.appLaunchInIframe = val
+    localStorage.setItem(APP_LAUNCH_IFRAME_KEY, String(val))
+  },
+
+  SET_APP_LAUNCH_EXCEPTIONS(state, val) {
+    state.appLaunchExceptions = val
+    localStorage.setItem(APP_LAUNCH_EXCEPTIONS_KEY, JSON.stringify(val))
   },
 
   SET_REFRESH_TOKEN(state, token) {
