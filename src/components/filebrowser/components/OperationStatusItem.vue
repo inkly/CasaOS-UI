@@ -55,13 +55,6 @@ export default {
 			return capitalize(this.data.type)
 		}
 	},
-
-	filters: {
-		toPercentText: function (value) {
-			return (100 * value).toFixed(1) + "%";
-		},
-
-	}
 }
 </script>
 
