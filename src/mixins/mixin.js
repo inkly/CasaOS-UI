@@ -375,6 +375,54 @@ export const mixin = {
 			}
 		},
 
+		toFahrenheit: function (value) {
+			return (32 + value * 1.8).toFixed(1);
+		},
+
+		getProgressType(per) {
+			if (per >= 0 && per < 80) {
+				return "is-primary"
+			} else if (per >= 80 && per < 90) {
+				return "is-warning"
+			} else {
+				return "is-danger"
+			}
+		},
+
+		dateFmt: function (value) {
+			const fileDate = new Date(value);
+			const currentDate = new Date();
+			const isSameYear = fileDate.getFullYear() === currentDate.getFullYear();
+
+			// 获取当前语言环境，默认为浏览器语言
+			const locale = (window.localStorage.getItem('lang') || navigator.language || 'en').replace('_', '-');
+
+			if (isSameYear) {
+				// 当前年份：只显示月日和时间
+				return new Intl.DateTimeFormat(locale, {
+					month: 'long',
+					day: 'numeric',
+					hour: '2-digit',
+					minute: '2-digit',
+					hour12: false
+				}).format(fileDate)
+			}
+			// 不同年份：显示完整日期和时间
+			return new Intl.DateTimeFormat(locale, {
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric',
+				hour: '2-digit',
+				minute: '2-digit',
+				hour12: false
+			}).format(fileDate)
+		},
+		coverType: function (item) {
+			return item.is_dir ? "folder-cover" : "file-cover"
+		},
+		iconType: function (item) {
+			return item.is_dir ? "folder-icon" : "files-icon"
+		},
 	},
 
 
