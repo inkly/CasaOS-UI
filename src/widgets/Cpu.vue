@@ -61,7 +61,7 @@
 </template>
 
 <script>
-// import VueApexCharts from 'vue-apexcharts'
+// import VueApexCharts from 'vue3-apexcharts'
 import smoothReflow from "vue-smooth-reflow";
 import orderBy from "lodash/orderBy";
 import has from "lodash/has";
