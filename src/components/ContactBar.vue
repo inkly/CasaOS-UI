@@ -112,4 +112,21 @@ export default {
 	box-shadow: 0px 1px 2px 1px rgba(0, 1, 0, 0.2);
 	border-radius: 6px;
 }
+
+// A Buefy tooltip centres itself on its trigger and has no overflow handling,
+// and this bar is pinned to the right edge, so the last one hangs off the
+// window: measured at 1280px, 11px past it in English and 26px in Dutch.
+// Anchor that one to the bar instead and put its arrow back over the icon,
+// which is what popper.js used to do here with preventOverflow.
+.contact-bar a:last-child .b-tooltip .tooltip-content.contact-tip {
+	left: auto;
+	right: -0.625rem;
+	transform: none;
+
+	&::before {
+		left: auto;
+		right: 15px;
+		transform: none;
+	}
+}
 </style>
