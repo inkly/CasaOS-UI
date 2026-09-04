@@ -14,7 +14,10 @@ module.exports = {
 		loaderOptions: {
 			sass: {
 				sassOptions: {
-					includePaths: ["./node_modules", "./src/assets"],
+					// sass-loader >= 16 defaults to the modern Sass API, which reads
+					// `loadPaths`. `includePaths` is the legacy key: it is ignored
+					// with no error and no warning.
+					loadPaths: ["./node_modules", "./src/assets"],
 				},
 			},
 		},
@@ -51,7 +54,10 @@ module.exports = {
 			item.use("style-resources-loader")
 				.loader("style-resources-loader")
 				.options({
-					patterns: ["./src/assets/scss/common/_variables.scss", "./src/assets/scss/common/_color.scss"],
+					// _color.scss is 44 lines of CSS RULES, not variables. Prepended, it
+					// made every following @use a hard error, and it duplicated those
+					// rules into ~95 chunks. It is still imported once from app.scss.
+					patterns: ["./src/assets/scss/common/_variables.scss"],
 				})
 				.end();
 		});

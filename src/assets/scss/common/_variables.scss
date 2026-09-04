@@ -1,7 +1,36 @@
-// Included below are all the defined variables from Bulma
-// Modify as needed, removing the !default attribute.
+// Bulma 1 configuration.
+//
+// These @forward/@use rules MUST stay the first thing in this file:
+// style-resources-loader pastes this file's text at the top of every
+// lang="scss" block in the app, and a @use after any other rule is a hard
+// error. `@forward ... with` is also the only channel that reaches Bulma 1's
+// internals — plain variable assignment before an @import silently does
+// nothing (Bulma 1 is a Sass module).
+@forward "bulma/sass/utilities/initial-variables" with (
+	$family-sans-serif: (BrittiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", "Noto Sans", "Noto Sans CJK SC", "Microsoft YaHei", "PingFang SC", "微软雅黑", sans-serif),
+	// 1304px + 2 * $gap, as this app has always defined it. Bulma 1's own
+	// default is 1344px + 2 * $gap.
+	$fullhd: 1368px
+);
+@forward "bulma/sass/utilities/derived-variables" with (
+	$primary: hsl(216, 90%, 54%),
+	$link: hsl(216, 90%, 54%),
+	$custom-colors: (
+		"grey": (hsla(208, 14%, 58%, 1), hsl(0, 0%, 100%)),
+		"facebook": (#1977F3, hsl(0, 0%, 100%)),
+		"twitter": (#1D9BF0, hsl(0, 0%, 100%)),
+		"reddit": (#FF4500, hsl(0, 0%, 100%))
+	)
+);
+
+// Functions (bulmaFind*, mergeColorMaps) and the breakpoint mixins
+// (@include mobile / touch / desktop / fullhd / until / until-widescreen).
+// The variables below stay local declarations, exactly as they were under
+// Bulma 0.9: pulling initial-variables/derived-variables in `as *` would make
+// every line here a reassignment of a module member.
+@use "bulma/sass/utilities/functions" as *;
+@use "bulma/sass/utilities/mixins" as *;
 // Bulma Variables
-@import "~bulma/sass/utilities/_all";
 // Colors
 
 
@@ -83,6 +112,10 @@ $radius: 3px !default;
 $radius-large: 5px !default;
 $radius-rounded: 290486px !default;
 $speed: 86ms !default;
+// Buefy variables, global under Bulma 0.9 and module-scoped in Bulma 1.
+// Read by _animate.scss.
+$speed-slow: 150ms !default;
+$speed-slower: 250ms !default;
 
 // Flags
 
@@ -103,14 +136,14 @@ $dark: $grey-darker !default;
 
 // Invert colors
 
-$orange-invert: findColorInvert($orange) !default;
-$yellow-invert: findColorInvert($yellow) !default;
-$green-invert: findColorInvert($green) !default;
-$turquoise-invert: findColorInvert($turquoise) !default;
-$cyan-invert: findColorInvert($cyan) !default;
-$blue-invert: findColorInvert($blue) !default;
-$purple-invert: findColorInvert($purple) !default;
-$red-invert: findColorInvert($red) !default;
+$orange-invert: bulmaFindColorInvert($orange) !default;
+$yellow-invert: bulmaFindColorInvert($yellow) !default;
+$green-invert: bulmaFindColorInvert($green) !default;
+$turquoise-invert: bulmaFindColorInvert($turquoise) !default;
+$cyan-invert: bulmaFindColorInvert($cyan) !default;
+$blue-invert: bulmaFindColorInvert($blue) !default;
+$purple-invert: bulmaFindColorInvert($purple) !default;
+$red-invert: bulmaFindColorInvert($red) !default;
 
 $primary-invert: $turquoise-invert !default;
 $info-invert: $cyan-invert !default;
@@ -130,7 +163,7 @@ $border-hover: $grey-light !default;
 // Text colors
 
 $text: $grey-dark !default;
-$text-invert: findColorInvert($text) !default;
+$text-invert: bulmaFindColorInvert($text) !default;
 $text-light: $grey !default;
 $text-strong: $grey-darker !default;
 
@@ -157,8 +190,8 @@ $link-focus-border: $blue !default;
 $link-active: $grey-darker !default;
 $link-active-border: $grey-dark !default;
 
-$link-light: findLightColor($link);
-$link-dark: findDarkColor($link);
+$link-light: bulmaFindLightColor($link);
+$link-dark: bulmaFindDarkColor($link);
 
 // Typography
 
@@ -184,13 +217,13 @@ $gray-font:rgba(144, 149, 153, 1);
 $casablue: hsl(216, 90%, 54%) !default;
 
 $primary: $casablue;
-$primary-light: findLightColor($primary);
-$primary-dark: findDarkColor($primary);
-$primary-invert: findColorInvert($primary);
+$primary-light: bulmaFindLightColor($primary);
+$primary-dark: bulmaFindDarkColor($primary);
+$primary-invert: bulmaFindColorInvert($primary);
 $ghost: $casablue;
-$ghost-light: findLightColor($ghost);
-$ghost-dark: findDarkColor($ghost);
-$ghost-invert: findColorInvert($ghost);
+$ghost-light: bulmaFindLightColor($ghost);
+$ghost-dark: bulmaFindDarkColor($ghost);
+$ghost-invert: bulmaFindColorInvert($ghost);
 
 $facebook: #1977F3;
 $twitter: #1D9BF0;
@@ -201,57 +234,10 @@ $reddit: #FF4500;
 $custom-colors: ("grey": ($grey-600, $white)) !default;
 $custom-shades: null !default;
 
-// Setup $colors to use as bulma classes (e.g. 'is-twitter')
-$colors: mergeColorMaps(("white": ($white,
-$black,
-),
-"black": ($black,
-$white,
-),
-"light": ($light,
-$light-invert,
-),
-"dark": ($dark,
-$dark-invert,
-),
-"primary": ($primary,
-$primary-invert,
-$primary-light,
-$primary-dark,
-),
-"link": ($link,
-$link-invert,
-$link-light,
-$link-dark,
-),
-"info": ($info,
-$info-invert,
-$info-light,
-$info-dark,
-),
-"success": ($success,
-$success-invert,
-$success-light,
-$success-dark,
-),
-"warning": ($warning,
-$warning-invert,
-$warning-light,
-$warning-dark,
-),
-"danger": ($danger,
-$danger-invert,
-$danger-light,
-$danger-dark,
-),
-"facebook":($facebook,
-$white),
-"twitter":($twitter,
-$white),
-"reddit":($reddit,
-$white),
-),
-$custom-colors);
+// $colors used to be rebuilt here with mergeColorMaps(). Bulma 1 drives its
+// palette off $custom-colors (configured in the @forward above) and CSS custom
+// properties, and the $info-light / $success-dark / ... variables this map read
+// no longer exist, so the block is gone.
 
 // Links
 $link: $primary;
