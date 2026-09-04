@@ -66,6 +66,12 @@
 					<a href="#" @click.prevent="manageUsers">{{ $t('Manage accounts') }}</a>
 				</p>
 			</template>
+			<b-switch v-model="timeMachine" class="mt-3" size="is-small">
+				{{ $t('Use as a Time Machine destination') }}
+			</b-switch>
+			<p v-if="timeMachine" class="has-text-full-03 is-size-7 mt-1">
+				{{ $t('Macs on the network will offer these folders as a Time Machine backup disk.') }}
+			</p>
 		</section>
 		<!-- Access End -->
 		<!-- Modal-Card Footer Start-->
@@ -92,6 +98,9 @@ export default {
 			requireAccount: false,
 			username: '',
 			users: [],
+			// Apple's SMB extensions are per-share, so a Time Machine folder gets
+			// them and every other share stays exactly as it was.
+			timeMachine: false,
 			rootDataList: [
 				{
 					name: 'Root',
@@ -231,7 +240,8 @@ export default {
 				return {
 					path: item.path,
 					anonymous: username === '',
-					username
+					username,
+					time_machine: this.timeMachine
 				}
 			})
 			try {

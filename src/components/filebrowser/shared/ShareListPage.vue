@@ -101,6 +101,7 @@ export default {
 						name: item.username ? `${name} (${item.username})` : name,
 						path: item.path,
 						username: item.username || "",
+						time_machine: !!item.time_machine,
 						size: 0,
 						write: false,
 					};

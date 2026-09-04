@@ -492,5 +492,8 @@
   "Something went wrong.": "Something went wrong.",
   "Who can open this folder": "Who can open this folder",
   "Anyone on the network can read and write this folder.": "Anyone on the network can read and write this folder.",
-  "Files already in the folder keep their current permissions.": "Files already in the folder keep their current permissions."
+  "Files already in the folder keep their current permissions.": "Files already in the folder keep their current permissions.",
+  "Use as a Time Machine destination": "Use as a Time Machine destination",
+  "Macs on the network will offer these folders as a Time Machine backup disk.": "Macs on the network will offer these folders as a Time Machine backup disk.",
+  "Macs on the network will offer this folder as a Time Machine backup disk.": "Macs on the network will offer this folder as a Time Machine backup disk."
 }

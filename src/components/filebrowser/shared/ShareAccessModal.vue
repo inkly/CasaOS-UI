@@ -13,6 +13,7 @@ export default {
     return {
       requireAccount: !!this.share.username,
       username: this.share.username || '',
+      timeMachine: !!this.share.time_machine,
       users: [],
       isSaving: false,
       error: '',
@@ -25,7 +26,8 @@ export default {
       }
 
       const next = this.requireAccount ? this.username : ''
-      return next !== (this.share.username || '') && !(this.requireAccount && !this.username)
+      const changed = next !== (this.share.username || '') || this.timeMachine !== !!this.share.time_machine
+      return changed && !(this.requireAccount && !this.username)
     },
   },
   created() {
@@ -66,6 +68,7 @@ export default {
       try {
         await this.$api.samba.updateShare(this.share.id, {
           username: this.requireAccount ? this.username : '',
+          time_machine: this.timeMachine,
         })
         this.$emit('reload')
         this.$emit('close')
@@ -119,6 +122,14 @@ export default {
           <a href="#" @click.prevent="manageUsers">{{ $t('Manage accounts') }}</a>
         </p>
       </template>
+
+      <b-switch v-model="timeMachine" class="mt-4">
+        {{ $t('Use as a Time Machine destination') }}
+      </b-switch>
+
+      <p v-if="timeMachine" class="has-text-full-03 is-size-7 mt-1">
+        {{ $t('Macs on the network will offer this folder as a Time Machine backup disk.') }}
+      </p>
 
       <p class="has-text-full-03 is-size-7 mt-4">
         {{ $t('Files already in the folder keep their current permissions.') }}

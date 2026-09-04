@@ -4,6 +4,10 @@ All notable changes to CasaOS UI are documented here.
 
 ## [Unreleased]
 
+### Added
+
+- A shared folder can be marked as a Time Machine destination, in the Share Folder dialog and on an existing share. Macs on the network then offer it as a backup disk ([CasaOS #1030](https://github.com/IceWhaleTech/CasaOS/issues/1030)).
+
 ### Fixed
 
 - The App Store no longer stops rendering when no category has apps — with only a third-party store registered the backend answers a single "All" category with a count of 0, which the menu filter dropped, leaving nothing selected ([CasaOS #2537](https://github.com/IceWhaleTech/CasaOS/issues/2537)).
