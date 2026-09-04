@@ -2,6 +2,12 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [Unreleased]
+
+### Fixed
+
+- The App Store no longer stops rendering when no category has apps — with only a third-party store registered the backend answers a single "All" category with a count of 0, which the menu filter dropped, leaving nothing selected ([CasaOS #2537](https://github.com/IceWhaleTech/CasaOS/issues/2537)).
+
 ## [0.4.31] - 2026-09-04
 
 First release of the inkly distribution, cut from alvins82's v0.4.30.

@@ -15,6 +15,7 @@ import { vOnClickOutside } from '@vueuse/components'
 import AppTerminalPanel from './AppTerminalPanel.vue'
 import AppStoreSourceManagement from '@/components/Apps/AppStoreSourceManagement.vue'
 import { ice_i18n } from '@/mixins/base/common-i18n'
+import { categoryMenu } from '@/mixins/app/appStoreCategories'
 import AppDetailInfo from '@/components/Apps/AppDetailInfo.vue'
 import ComposeConfig from '@/components/Apps/ComposeConfig.vue'
 import ComposeEditor from '@/components/Apps/ComposeEditor.vue'
@@ -451,12 +452,11 @@ export default {
     async getCategoryList() {
       this.isLoading = true
       try {
-        this.cateMenu = await this.$openAPI.appManagement.appStore.categoryList().then(res =>
-          res.data.data.filter((item) => {
-            return item.count > 0
-          }),
+        const { menu, current } = categoryMenu(
+          await this.$openAPI.appManagement.appStore.categoryList().then(res => res.data.data),
         )
-        this.currentCate = this.cateMenu[0]
+        this.cateMenu = menu
+        this.currentCate = current
         this.currentSort = this.sortMenu[0]
         if (this.isFirst) {
           this.isFirst = false
