@@ -212,9 +212,6 @@ importers:
       vue-awesome-swiper:
         specifier: ^4.1.1
         version: 4.1.1(swiper@5.4.5)(vue@2.7.16)
-      vue-codemirror:
-        specifier: ^4.0.6
-        version: 4.0.6
       vue-dompurify-html:
         specifier: 2.6.0
         version: 2.6.0(vue@2.7.16)
@@ -3726,9 +3723,6 @@ packages:
 
   detect-node@2.1.0:
     resolution: {integrity: sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==}
-
-  diff-match-patch@1.0.5:
-    resolution: {integrity: sha512-IayShXAgj/QMXgB0IWmKx+rOPuGMhqm5w6jvFxmVenXKIzRqTAAsbBPT3kWQeGANj3jGgvcvv4yK6SxqYmikgw==}
 
   diff-sequences@29.6.3:
     resolution: {integrity: sha512-EjePK1srD3P08o2j4f0ExnylqRs5B9tJjcp9t1krH2qRi8CCdsYfwe9JgSLurFBWwq4uOlipzfk5fHNvwFKr8Q==}
@@ -7793,10 +7787,6 @@ packages:
     peerDependencies:
       swiper: ^5.2.0
       vue: 2.x
-
-  vue-codemirror@4.0.6:
-    resolution: {integrity: sha512-ilU7Uf0mqBNSSV3KT7FNEeRIxH4s1fmpG4TfHlzvXn0QiQAbkXS9lLfwuZpaBVEnpP5CSE62iGJjoliTuA8poQ==}
-    engines: {node: '>= 4.0.0', npm: '>= 3.0.0'}
 
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
@@ -12136,8 +12126,6 @@ snapshots:
   destroy@1.2.0: {}
 
   detect-node@2.1.0: {}
-
-  diff-match-patch@1.0.5: {}
 
   diff-sequences@29.6.3: {}
 
@@ -16639,11 +16627,6 @@ snapshots:
     dependencies:
       swiper: 5.4.5
       vue: 2.7.16
-
-  vue-codemirror@4.0.6:
-    dependencies:
-      codemirror: 5.65.18
-      diff-match-patch: 1.0.5
 
   vue-demi@0.14.10(vue@2.7.16):
     dependencies:
