@@ -38,7 +38,7 @@ const socket = io( {
 
 Vue.use(Buefy)
 Vue.use(VueFullscreen)
-Vue.use(VAnimateCss, { animateCSSPath: '/css/animate.min.css' });
+Vue.use(VAnimateCss);
 Vue.use(socketPlugin, socket);
 Vue.use(VueDOMPurifyHTML, {
 	default: {

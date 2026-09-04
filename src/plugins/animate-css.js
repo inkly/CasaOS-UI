@@ -6,14 +6,13 @@
  * element and clears them once the animation ends. The library's modifiers
  * (click, hover, enter, exit) pulled in scrollmonitor and no call site used
  * one, so they are gone with it.
+ *
+ * public/css/animate.min.css is linked from index.html, next to custom.css,
+ * rather than injected here: it is then in place before the first animated
+ * element mounts.
  */
 export default {
-	install(Vue, { animateCSSPath = '/css/animate.min.css' } = {}) {
-		const link = document.createElement('link');
-		link.rel = 'stylesheet';
-		link.href = animateCSSPath;
-		document.head.appendChild(link);
-
+	install(Vue) {
 		Vue.directive('animate-css', {
 			bind(el, binding) {
 				const value = typeof binding.value === 'string' ? { classes: binding.value } : binding.value;
