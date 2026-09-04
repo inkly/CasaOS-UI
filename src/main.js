@@ -22,13 +22,18 @@ import VAnimateCss from '@/plugins/animate-css';
 // carries (.native, .sync, $set/$delete, beforeDestroy, functional and async
 // components, the old transition class names) working while they are migrated.
 //
-// COMPONENT_V_MODEL is the one flag that must be OFF. With it on, compat
-// rewrites every component `v-model` from `modelValue`/`update:modelValue`
-// back to Vue 2's `value`/`input` — which Buefy 3.1 does not read, silently
-// breaking all ~110 v-model bindings in the app.
+// Two flags must be OFF, both because their Vue-2 behaviour breaks Buefy 3.1,
+// which is already a Vue 3 library:
+//   COMPONENT_V_MODEL rewrites every component `v-model` from
+//   `modelValue`/`update:modelValue` back to Vue 2's `value`/`input`, which
+//   Buefy does not read - it would silently break all ~110 v-model bindings.
+//   ATTR_FALSE_VALUE renders `:attr="false"` as attr="false" instead of
+//   dropping the attribute; Buefy passes falsy props down as fallthrough
+//   attributes, and `disabled="false"` is truthy in HTML.
 configureCompat({
 	MODE: 2,
 	COMPONENT_V_MODEL: false,
+	ATTR_FALSE_VALUE: false,
 })
 
 const io = require("socket.io-client");
