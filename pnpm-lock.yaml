@@ -236,9 +236,6 @@ importers:
       vue-router:
         specifier: ^3.6.5
         version: 3.6.5(vue@2.7.16)
-      vue-slider-component:
-        specifier: ^3.2.24
-        version: 3.2.24(vue@2.7.16)
       vue-smooth-reflow:
         specifier: ^0.1.12
         version: 0.1.12(vue@2.7.16)
@@ -7815,11 +7812,6 @@ packages:
   vue-breakpoint-mixin@1.5.0:
     resolution: {integrity: sha512-0GHAnt8kkGiyVGQawl4qZvl7A5edj+CnPI6wHkx05JGcsNVycUESSmnz/WkRm18D0WkzrPTnzVgTc7d6XI7wFA==}
 
-  vue-class-component@7.2.6:
-    resolution: {integrity: sha512-+eaQXVrAm/LldalI272PpDe3+i4mPis0ORiMYxF6Ae4hyuCh15W8Idet7wPUEs4N4YptgFHGys4UrgNQOMyO6w==}
-    peerDependencies:
-      vue: ^2.0.0
-
   vue-codemirror@4.0.6:
     resolution: {integrity: sha512-ilU7Uf0mqBNSSV3KT7FNEeRIxH4s1fmpG4TfHlzvXn0QiQAbkXS9lLfwuZpaBVEnpP5CSE62iGJjoliTuA8poQ==}
     engines: {node: '>= 4.0.0', npm: '>= 3.0.0'}
@@ -7902,18 +7894,10 @@ packages:
       vue:
         optional: true
 
-  vue-property-decorator@8.5.1:
-    resolution: {integrity: sha512-O6OUN2OMsYTGPvgFtXeBU3jPnX5ffQ9V4I1WfxFQ6dqz6cOUbR3Usou7kgFpfiXDvV7dJQSFcJ5yUPgOtPPm1Q==}
-    peerDependencies:
-      vue: '*'
-
   vue-router@3.6.5:
     resolution: {integrity: sha512-VYXZQLtjuvKxxcshuRAwjHnciqZVoXAjTjcqBTz4rKc8qih9g9pI3hbDjmqXaHdgL3v8pV6P8Z335XvHzESxLQ==}
     peerDependencies:
       vue: ^2
-
-  vue-slider-component@3.2.24:
-    resolution: {integrity: sha512-28hfotAL/CPXPwqHgVFyUwUEV0zweoc2wW0bgraGkoIcRZGlFjk8caYJLE8+Luug5t3b9tJm/NyDXpyIdmcYZg==}
 
   vue-smooth-reflow@0.1.12:
     resolution: {integrity: sha512-cic+dmqsBzu/lRMXf/mhUPMM0g0vancJGUyNMMGHjis0ilSFd1RjIrZYcU5B7ef+n5oshH33/zbMA8OYyRTu7Q==}
@@ -16687,10 +16671,6 @@ snapshots:
 
   vue-breakpoint-mixin@1.5.0: {}
 
-  vue-class-component@7.2.6(vue@2.7.16):
-    dependencies:
-      vue: 2.7.16
-
   vue-codemirror@4.0.6:
     dependencies:
       codemirror: 5.65.18
@@ -16830,21 +16810,9 @@ snapshots:
       '@vue/compiler-sfc': 3.5.13
       vue: 2.7.16
 
-  vue-property-decorator@8.5.1(vue@2.7.16):
-    dependencies:
-      vue: 2.7.16
-      vue-class-component: 7.2.6(vue@2.7.16)
-
   vue-router@3.6.5(vue@2.7.16):
     dependencies:
       vue: 2.7.16
-
-  vue-slider-component@3.2.24(vue@2.7.16):
-    dependencies:
-      core-js: 3.39.0
-      vue-property-decorator: 8.5.1(vue@2.7.16)
-    transitivePeerDependencies:
-      - vue
 
   vue-smooth-reflow@0.1.12(vue@2.7.16):
     dependencies:

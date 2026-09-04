@@ -3,8 +3,6 @@ import debounce from 'lodash/debounce'
 import axios from 'axios'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import '@/plugins/vee-validate'
-import VueSlider from 'vue-slider-component'
-import 'vue-slider-component/theme/default.css'
 import YAML from 'yaml'
 import lowerFirst from 'lodash/lowerFirst'
 import isNil from 'lodash/isNil'
@@ -62,15 +60,6 @@ export default {
     VolumesInputGroup,
     EnvInputGroup,
     CommandsInput,
-    VueSlider,
-  },
-  filters: {
-    duplexDisplay(val) {
-      if (!val) {
-        return 256
-      }
-      return (isNumber(val) && val) || (val && val.replace(/m/i, ''))
-    },
   },
   props: {
     state: String,
@@ -146,7 +135,6 @@ export default {
       // error info
       ports_in_use: { udp: [], tcp: [] },
 
-      memory_min: 256,
       // other level_config
       volumes: [],
     }
@@ -718,6 +706,13 @@ export default {
         return true
       }
     },
+    // The slider walks markData (256, 512, 1024 ... totalMemory), so its model
+    // is the index of the configured limit, not the limit itself.
+    memoryIndex(service) {
+      const memory = service.deploy.resources.limits.memory
+      const megabytes = memory ? Number(String(memory).replace(/m/i, '')) : 256
+      return Math.max(this.markData.indexOf(megabytes), 0)
+    },
     bridgePorts(services) {
       const result = []
       for (const key in services) {
@@ -896,7 +891,11 @@ export default {
           </b-field>
 
           <b-field :label="$t('Memory Limit')" class="mb-5">
-            <VueSlider :max="totalMemory" :min="memory_min" class="mx-2" :marks="true" :data="markData" :value="service.deploy.resources.limits.memory | duplexDisplay" @change="(v) => (service.deploy.resources.limits.memory = v)" />
+            <b-slider :custom-formatter="(v) => markData[v]" :max="markData.length - 1" :min="0" :step="1" :value="memoryIndex(service)" class="mx-2" @input="(v) => (service.deploy.resources.limits.memory = markData[v])">
+              <b-slider-tick v-for="(mark, index) in markData" :key="mark" :value="index">
+                {{ mark }}
+              </b-slider-tick>
+            </b-slider>
           </b-field>
 
           <b-field :label="$t('CPU Shares')">
@@ -990,20 +989,24 @@ export default {
   }
 }
 
-::v-deep .vue-slider-mark-step {
-  width: 100%;
-  height: 100%;
+::v-deep .b-slider-tick {
+  width: 0.5rem;
+  height: 0.5rem;
   border-radius: 50%;
   -webkit-box-shadow: 0 0 0 2px #ccc;
   box-shadow: 0 0 0 2px #ccc;
   background-color: #fff;
+
+  &.is-tick-hidden {
+    background-color: #fff;
+  }
 }
 
-::v-deep .vue-slider-mark-label {
+::v-deep .b-slider-tick-label {
   font-size: 0.75rem;
 }
 
-::v-deep .vue-slider-dot-tooltip-text {
+::v-deep .b-slider-thumb-wrapper .tooltip-content {
   font-size: 0.75rem;
 }
 </style>
