@@ -1,13 +1,12 @@
 // @vitest-environment happy-dom
-import Vue from 'vue'
 import Buefy from 'buefy'
-import { shallowMount } from '@vue/test-utils'
+import { config, shallowMount } from '@vue/test-utils'
 import { beforeAll, describe, expect, it, vi } from 'vitest'
 import StorageManagerPanel from '@/components/Storage/StorageManagerPanel.vue'
 
 // lottie-web paints into a canvas as soon as it is imported and happy-dom has no
 // 2d context, so the import itself throws. shallowMount stubs the tag anyway.
-vi.mock('lottie-web-vue', () => ({ default: { name: 'lottie-animation', render: h => h('div') } }))
+vi.mock('lottie-web-vue', () => ({ default: { name: 'lottie-animation', template: '<div/>' } }))
 
 /**
  * `createStorge()` gates on `checkStep(this.$refs.ob1)`, so whatever that guard
@@ -34,7 +33,7 @@ const mocks = {
 }
 
 beforeAll(() => {
-  Vue.use(Buefy)
+  config.global.plugins = [Buefy]
 })
 
 describe('storageManagerPanel checkStep', () => {
@@ -46,9 +45,9 @@ describe('storageManagerPanel checkStep', () => {
   ]
 
   it.each(cases)('reduces %s to a Boolean', async (_label, resolved, expected) => {
-    const wrapper = shallowMount(StorageManagerPanel, { mocks })
+    const wrapper = shallowMount(StorageManagerPanel, { global: { mocks } })
     const answer = await wrapper.vm.checkStep({ validate: () => Promise.resolve(resolved) })
     expect(answer).toBe(expected)
-    wrapper.destroy()
+    wrapper.unmount()
   })
 })

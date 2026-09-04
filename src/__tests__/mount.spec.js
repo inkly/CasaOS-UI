@@ -1,9 +1,8 @@
 // @vitest-environment happy-dom
-import Vue from 'vue'
 import Buefy from 'buefy'
 import VAnimateCss from '@/plugins/animate-css'
 import VueDOMPurifyHTML from 'vue-dompurify-html'
-import { shallowMount } from '@vue/test-utils'
+import { config, shallowMount } from '@vue/test-utils'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import createEventBus from '@/events/eventBus'
 
@@ -20,7 +19,7 @@ vi.mock('@/assets/lang', () => ({ default: { en_us: { lang_name: 'English' } } }
 
 // lottie-web paints into a canvas the moment it is imported and happy-dom has
 // no 2d context, so the import itself throws. shallowMount stubs the tag anyway.
-vi.mock('lottie-web-vue', () => ({ default: { name: 'lottie-animation', render: h => h('div') } }))
+vi.mock('lottie-web-vue', () => ({ default: { name: 'lottie-animation', template: '<div/>' } }))
 
 const App = () => import('@/App.vue')
 const TopBar = () => import('@/components/TopBar.vue')
@@ -98,7 +97,7 @@ const mocks = {
   $protocol: 'http:',
   $wsProtocol: 'ws:',
   $route: { path: '/', name: 'home', params: {}, query: {}, meta: {} },
-  $router: { push: () => {}, replace: () => {}, currentRoute: { path: '/' } },
+  $router: { push: () => {}, replace: () => {} },
   $store: { state, getters: {}, commit: () => {}, dispatch: () => Promise.resolve() },
 }
 
@@ -107,28 +106,34 @@ let problems = []
 beforeAll(() => {
   // Mirrors the plugin stack main.js installs, minus the ones that need a live
   // socket; a plugin that stops loading is exactly what should fail here.
-  Vue.use(Buefy)
-  Vue.use(VueDOMPurifyHTML)
-  Vue.use(VAnimateCss)
-  Vue.config.warnHandler = msg => problems.push(msg)
+  // @vue/test-utils 2 builds a fresh app per mount, so plugins and app-level
+  // config are declared on config.global rather than on a Vue singleton.
+  config.global.plugins = [Buefy, VueDOMPurifyHTML, VAnimateCss]
+  config.global.config.warnHandler = msg => problems.push(msg)
 })
 
 beforeEach(() => {
   problems = []
 })
 
-async function mountOk(load, { mocks: extra = {}, stubs = {}, ...rest } = {}) {
+async function mountOk(load, { mocks: extra = {}, stubs = {}, provide = {}, ...rest } = {}) {
   const { default: Component } = await load()
+  // test-utils 2 moved mocks / stubs / provide under `global`; slots, propsData
+  // and attachTo stay top level. vue-router 4 registers its components as
+  // RouterView / RouterLink, so the kebab stub key no longer matches.
   const wrapper = shallowMount(Component, {
-    mocks: { ...mocks, ...extra },
-    stubs: { 'router-view': true, ...stubs },
+    global: {
+      mocks: { ...mocks, ...extra },
+      stubs: { RouterView: true, RouterLink: true, ...stubs },
+      provide,
+    },
     ...rest,
   })
   await wrapper.vm.$nextTick()
   await wrapper.vm.$nextTick()
   expect(wrapper.element).toBeTruthy()
   expect(problems).toEqual([])
-  wrapper.destroy()
+  wrapper.unmount()
 }
 
 describe('component smoke tests', () => {

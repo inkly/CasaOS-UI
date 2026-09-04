@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { getCurrentInstance, onBeforeUnmount, onMounted } from 'vue'
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import socketPlugin from './socket'
 
@@ -23,16 +23,16 @@ function fakeSocket() {
 	}
 }
 
-function localVueWith(socket) {
-	const localVue = createLocalVue()
-	localVue.use(socketPlugin, socket)
-	return localVue
+// test-utils 2 has no createLocalVue: every mount builds its own app, so the
+// plugin is installed per mount instead.
+function withSocket(socket) {
+	return { global: { plugins: [[socketPlugin, socket]] } }
 }
 
 const blank = { render: h => h('div') }
 
 function mountWith(socket, options) {
-	return mount({ ...blank, ...options }, { localVue: localVueWith(socket) })
+	return mount({ ...blank, ...options }, withSocket(socket))
 }
 
 describe('socket plugin', () => {
@@ -51,7 +51,7 @@ describe('socket plugin', () => {
 		socket.receive('casaos:system:utilization', { Properties: { sys_cpu: '[]' } })
 
 		expect(seen).toEqual([['cpu', { Properties: { sys_cpu: '[]' } }]])
-		wrapper.destroy()
+		wrapper.unmount()
 	})
 
 	it('delivers before destroy and not after', () => {
@@ -60,7 +60,7 @@ describe('socket plugin', () => {
 		const wrapper = mountWith(socket, { sockets: { 'app:install-end': handler } })
 
 		socket.receive('app:install-end')
-		wrapper.destroy()
+		wrapper.unmount()
 		socket.receive('app:install-end')
 
 		expect(handler).toHaveBeenCalledTimes(1)
@@ -71,16 +71,15 @@ describe('socket plugin', () => {
 		const socket = fakeSocket()
 		const kept = vi.fn()
 		const dropped = vi.fn()
-		const localVue = localVueWith(socket)
-		const first = mount({ ...blank, sockets: { 'app:install-end': dropped } }, { localVue })
-		const second = mount({ ...blank, sockets: { 'app:install-end': kept } }, { localVue })
+		const first = mount({ ...blank, sockets: { 'app:install-end': dropped } }, withSocket(socket))
+		const second = mount({ ...blank, sockets: { 'app:install-end': kept } }, withSocket(socket))
 
-		first.destroy()
+		first.unmount()
 		socket.receive('app:install-end')
 
 		expect(dropped).not.toHaveBeenCalled()
 		expect(kept).toHaveBeenCalledTimes(1)
-		second.destroy()
+		second.unmount()
 	})
 
 	// AppStoreSourceManagement.vue reads $subscribe from setup(), which Vue 2.7
@@ -95,7 +94,7 @@ describe('socket plugin', () => {
 		})
 
 		expect(earlyType).toBe('function')
-		wrapper.destroy()
+		wrapper.unmount()
 	})
 
 	it('$unsubscribe drops that event and leaves the others', () => {
@@ -116,7 +115,7 @@ describe('socket plugin', () => {
 
 		expect(subscribed).toHaveBeenCalledTimes(1)
 		expect(declared).toHaveBeenCalledTimes(1)
-		wrapper.destroy()
+		wrapper.unmount()
 	})
 
 	it('cleans up $subscribe handlers on destroy as well', () => {
@@ -128,7 +127,7 @@ describe('socket plugin', () => {
 			}
 		})
 
-		wrapper.destroy()
+		wrapper.unmount()
 		socket.receive('app-store:register-end')
 
 		expect(handler).not.toHaveBeenCalled()
@@ -152,7 +151,7 @@ describe('socket plugin', () => {
 		})
 
 		socket.receive('app-store:register-end', { ok: 1 })
-		wrapper.destroy()
+		wrapper.unmount()
 		socket.receive('app-store:register-end')
 
 		expect(end).toHaveBeenCalledTimes(1)
