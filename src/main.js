@@ -8,7 +8,6 @@ import api from '@/service/api.js'
 import openAPI from '@/service/index.js'
 import Buefy from 'buefy'
 import VueFullscreen from 'vue-fullscreen'
-import VueSocialSharing from 'vue-social-sharing'
 import socketPlugin from '@/plugins/socket.js'
 import createEventBus from '@/events/eventBus.js'
 import messageBus from '@/events/index.js'
@@ -41,7 +40,6 @@ Vue.use(Buefy)
 Vue.use(VueFullscreen)
 Vue.use(VAnimateCss, { animateCSSPath: '/css/animate.min.css' });
 Vue.use(socketPlugin, socket);
-Vue.use(VueSocialSharing);
 Vue.use(VueDOMPurifyHTML, {
 	default: {
 		ALLOWED_ATTR: ['target', 'href']

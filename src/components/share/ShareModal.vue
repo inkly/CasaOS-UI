@@ -25,13 +25,12 @@
 				</div>
 
 				<div class="buttons is-justify-content-center mb-6 mt-4">
-					<ShareNetwork v-for="site in shareSites" :key="site" :description="shareTitle" :img="githubUrl"
-								  :network="site"
-								  :title="shareTitle" :url="githubUrl" hashtags="homecloud,opensource">
+					<a v-for="site in shareSites" :key="site" :class="`share-network-${site}`"
+					   href="javascript:void(0)" @click="share(site)">
 						<b-button :icon-left="site" :type="`is-${site}`" class="ml-3 mr-3" icon-pack="casa">
 							Share
 						</b-button>
-					</ShareNetwork>
+					</a>
 				</div>
 
 			</div>
@@ -42,6 +41,7 @@
 
 <script>
 import {marked} from 'marked'
+import shareTo  from '@/service/share'
 
 export default {
 	props: {
@@ -69,6 +69,15 @@ export default {
 		}
 	},
 	methods: {
+		share(site) {
+			shareTo(site, {
+				url: this.githubUrl,
+				title: this.shareTitle,
+				description: this.shareTitle,
+				hashtags: 'homecloud,opensource'
+			});
+		},
+
 		/**
 		 * @description: Update System Version and check update state
 		 * @return {*} void
