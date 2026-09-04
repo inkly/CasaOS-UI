@@ -184,7 +184,7 @@ export default {
                 <div
                   class="custom-install-button-content"
                   @click.self="
-                    $emit('install', appDetailData.id, appDetailData)
+                    $emit('install', appDetailData.id, appDetailData);
                     $messageBus('appstore_install', i18n(appDetailData.title))
                   "
                 >
