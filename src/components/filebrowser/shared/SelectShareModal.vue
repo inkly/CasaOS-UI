@@ -49,11 +49,30 @@
 			</ul>
 		</section>
 		<!-- Modal-Card Body End -->
+		<!-- Access Start -->
+		<section class="modal-card-body share-access is-flex-grow-0">
+			<b-switch v-model="requireAccount" size="is-small">{{ $t('Require an account') }}</b-switch>
+			<p v-if="!requireAccount" class="has-text-full-03 is-size-7 mt-1">
+				{{ $t('Anyone on the network can read and write these folders.') }}
+			</p>
+			<template v-else>
+				<b-field class="mt-2">
+					<b-select v-model="username" :placeholder="$t('Choose an account')" expanded size="is-small">
+						<option v-for="user in users" :key="user" :value="user">{{ user }}</option>
+					</b-select>
+				</b-field>
+				<p class="has-text-full-03 is-size-7">
+					{{ $t('The account applies to every folder selected above.') }}
+					<a href="#" @click.prevent="manageUsers">{{ $t('Manage accounts') }}</a>
+				</p>
+			</template>
+		</section>
+		<!-- Access End -->
 		<!-- Modal-Card Footer Start-->
 		<footer class="modal-card-foot is-flex is-align-items-center">
 			<div class="is-flex-grow-1"></div>
 			<div>
-				<b-button :label="$t('Submit')" :loading="isSaving" rounded type="is-primary" @click="saveShares"/>
+				<b-button :disabled="requireAccount && !username" :label="$t('Submit')" :loading="isSaving" rounded type="is-primary" @click="saveShares"/>
 			</div>
 		</footer>
 		<!-- Modal-Card Footer End-->
@@ -61,10 +80,18 @@
 </template>
 
 <script>
+import SambaUsersModal from './SambaUsersModal.vue'
+
 export default {
 	data() {
 		return {
 			isSaving: false,
+			// Access. A share is protected when it names an account, so leaving
+			// requireAccount off sends no username and produces the guest share
+			// CasaOS has always created here.
+			requireAccount: false,
+			username: '',
+			users: [],
 			rootDataList: [
 				{
 					name: 'Root',
@@ -130,8 +157,43 @@ export default {
 	},
 	async created() {
 		this.getNewList()
+		this.loadUsers()
 	},
 	methods: {
+		/**
+		 * @description: Load the share accounts available to protect a share
+		 * @return {*}
+		 */
+		async loadUsers() {
+			try {
+				const response = await this.$api.samba.getUsers()
+				this.users = response.data.data || []
+			} catch (error) {
+				// Without a list the switch simply has nothing to offer; sharing
+				// without an account still works.
+				this.users = []
+			}
+		},
+
+		/**
+		 * @description: Open the share account manager
+		 * @return {*}
+		 */
+		manageUsers() {
+			this.$buefy.modal.open({
+				parent: this,
+				component: SambaUsersModal,
+				hasModalCard: true,
+				trapFocus: true,
+				canCancel: ['escape'],
+				scroll: 'keep',
+				animation: 'zoom-in',
+				events: {
+					close: () => this.loadUsers()
+				}
+			})
+		},
+
 		/**
 		 * @description: Get new list
 		 * @return {*}
@@ -164,10 +226,12 @@ export default {
 		async saveShares() {
 			this.isSaving = true
 			const selectedList = this.dataList.filter(item => item.selected)
+			const username = this.requireAccount ? this.username : ''
 			const data = selectedList.map(item => {
 				return {
 					path: item.path,
-					anonymous: true
+					anonymous: username === '',
+					username
 				}
 			})
 			try {

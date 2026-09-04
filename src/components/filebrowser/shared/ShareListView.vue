@@ -31,6 +31,11 @@
 										{{ item.name }}
 									</p>
 									<div class="action-wrapper mr-3">
+										<!-- Access Button Start -->
+										<b-button class="mr-2" icon-left="account-lock-outline" rounded size="is-small"
+												  :title="$t('Who can open this folder')"
+												  @click.stop="$emit('change-access', item)"></b-button>
+										<!-- Access Button End -->
 										<!-- Action Button Start -->
 										<action-button :index="index" :item="item"></action-button>
 										<!-- Action Button End -->
