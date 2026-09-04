@@ -2,12 +2,11 @@ const webpack = require("webpack");
 const path = require("path");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const dotenv = require("dotenv");
-const isProd = process.env.NODE_ENV === "prod";
+const isProd = process.env.NODE_ENV === "production";
 const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
 	publicPath: "/",
-	runtimeCompiler: true,
 	lintOnSave: false,
 	productionSourceMap: false,
 	pluginOptions: {},
@@ -67,10 +66,6 @@ module.exports = {
 				.use(require("css-minimizer-webpack-plugin"), [
 					{ minimizerOptions: { preset: ["default", { discardComments: { removeAll: true } }] } },
 				]);
-		} else {
-			// Development only
-			config.plugin('webpack-bundle-analyzer')
-				.use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
 		}
 	},
 	devServer: {
