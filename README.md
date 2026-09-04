@@ -66,3 +66,6 @@ reshape the digital home experience like never before.
 **A warm welcome for you to get help or share great ideas in the [Discord](https://discord.gg/knqAbbBbeX)!**
 
 [![Discord Card](https://discordapp.com/api/guilds/884667213326463016/widget.png?style=banner2)](https://discord.gg/knqAbbBbeX)
+## Licence
+
+This repository has never carried a LICENSE file: not in IceWhaleTech/CasaOS-UI, not in any fork. The CasaOS project as a whole is published under the Apache License 2.0, and both upstream and this distribution ship the built dashboard inside CasaOS releases under that licence. We have not added a licence file to this repository, because we are not in a position to grant one that its authors did not.

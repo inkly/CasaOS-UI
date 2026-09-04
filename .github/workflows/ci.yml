@@ -1,32 +1,36 @@
-name: push_test_server
+name: ci
 
 on:
-    pull_request:
+  pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
-    test:
-        if: github.repository == 'IceWhaleTech/CasaOS-UI'
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node-version: [ 16.x ]
-            # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+  test:
+    name: Test and build
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-        steps:
-            -   uses: actions/checkout@v3
-            -   name: '使用 Use Node.js ${{ matrix.node-version }}'
-                uses: actions/setup-node@v3
-                with:
-                    node-version: ${{ matrix.node-version }}
-                    cache: 'npm'
-            -   name: '缓存 Cache'
-                uses: actions/cache@v3
-                id: cache-dependencies
-                with:
-                    path: node_modules
-                    key: ${{runner.OS}}-${{hashFiles('**/yarn.lock')}}
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.0.6
+          run_install: false
 
-            -   run: yarn install
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
 
-            -   name: 'Unit tests'
-                run: yarn test
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run tests
+        run: pnpm exec vitest run
+
+      - name: Build
+        run: pnpm build

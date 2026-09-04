@@ -58,9 +58,12 @@ export default {
 				return JSON.parse(res.data.data)
 			})
 			this.$store.commit('SET_DEVICE_ID', params.i)
-			params.l = localStorage.getItem('lang') ? localStorage.getItem('lang') : navigator.language.toLowerCase().replace("-", "_");
-			let stringify = btoa(encodeURIComponent(JSON.stringify(params)))
-			let feed = await parse('https://blog-casaos.zimaspace.com/feed/tag/dashboard/?key=' + stringify)
+			// The feed used to be fetched with the whole of baseinfo.conf - an MD5 of the
+			// MAC address, the version and the UI language - base64-encoded into the
+			// query string. That is a device fingerprint sent to a third party on every
+			// dashboard load, and nothing about the feed needs it. The device id stays
+			// local: the message bus still uses it, it just never leaves the box.
+			let feed = await parse('https://blog-casaos.zimaspace.com/feed/tag/dashboard/')
 			const newFeed = feed.items.map(item => {
 				return {
 					title: item.title,
