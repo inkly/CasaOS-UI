@@ -117,23 +117,36 @@ beforeEach(() => {
 })
 
 async function mountOk(load, { mocks: extra = {}, stubs = {}, provide = {}, ...rest } = {}) {
-  const { default: Component } = await load()
-  // test-utils 2 moved mocks / stubs / provide under `global`; slots, propsData
-  // and attachTo stay top level. vue-router 4 registers its components as
-  // RouterView / RouterLink, so the kebab stub key no longer matches.
-  const wrapper = shallowMount(Component, {
-    global: {
-      mocks: { ...mocks, ...extra },
-      stubs: { RouterView: true, RouterLink: true, ...stubs },
-      provide,
-    },
-    ...rest,
+  // warnHandler only ever sees a warning raised against a mounted app, which is
+  // not where every compat deprecation comes out: an import-time one is raised
+  // with no current instance and goes to console.warn instead, and a compiler
+  // one is not even raised in this process (vitest.config.js re-emits those onto
+  // console.warn at the top of each module). Without this spy a test can pass
+  // while sitting on a pile of both. Same array, same assertion.
+  const warnSpy = vi.spyOn(console, 'warn').mockImplementation((...args) => {
+    problems.push(args.map(String).join(' '))
   })
-  await wrapper.vm.$nextTick()
-  await wrapper.vm.$nextTick()
-  expect(wrapper.element).toBeTruthy()
-  expect(problems).toEqual([])
-  wrapper.unmount()
+  try {
+    const { default: Component } = await load()
+    // test-utils 2 moved mocks / stubs / provide under `global`; slots, propsData
+    // and attachTo stay top level. vue-router 4 registers its components as
+    // RouterView / RouterLink, so the kebab stub key no longer matches.
+    const wrapper = shallowMount(Component, {
+      global: {
+        mocks: { ...mocks, ...extra },
+        stubs: { RouterView: true, RouterLink: true, ...stubs },
+        provide,
+      },
+      ...rest,
+    })
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.element).toBeTruthy()
+    expect(problems).toEqual([])
+    wrapper.unmount()
+  } finally {
+    warnSpy.mockRestore()
+  }
 }
 
 describe('component smoke tests', () => {
