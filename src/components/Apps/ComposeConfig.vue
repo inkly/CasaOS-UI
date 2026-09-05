@@ -1,7 +1,7 @@
 <script>
 import debounce from 'lodash/debounce'
 import axios from 'axios'
-import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import { Field as VeeField, Form as VeeForm } from 'vee-validate'
 import YAML from 'yaml'
 import lowerFirst from 'lodash/lowerFirst'
 import isNil from 'lodash/isNil'
@@ -52,8 +52,8 @@ const data = [
 export default {
   name: 'ComposeConfig',
   components: {
-    ValidationObserver,
-    ValidationProvider,
+    VeeField,
+    VeeForm,
     Ports,
     InputGroup,
     VolumesInputGroup,
@@ -312,13 +312,6 @@ export default {
       return data.filter((option) => {
         return option.toString().includes(text.toUpperCase())
       })
-    },
-
-    async checkStepItem(ref) {
-      // vee-validate 3 resolves to a Boolean, v4 to { valid, ... } — and an
-      // object is always truthy, so read `.valid` whenever it is there.
-      const result = await ref.validate()
-      return result?.valid ?? result
     },
 
     /**
@@ -791,10 +784,10 @@ export default {
   <section style="height: calc(100vh - 12.8125rem)">
     <b-tabs class="has-text-full-03" style="height: 100%" :model-value="firstAppName">
       <b-tab-item v-for="(service, key) in configData.services" :key="key" :label="key" :value="key" @click="current_service = key">
-        <ValidationObserver :ref="`${key}valida`">
+        <VeeForm :ref="`${key}valida`" as="span">
           <b-field grouped>
-            <ValidationProvider v-slot="{ errors, valid }" class="is-flex-grow-1 mr-3" name="Image0" rules="required">
-              <b-field :label="`${$t('Docker Image')} *`" :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': valid }" class="mb-3">
+            <VeeField v-slot="{ errors, meta }" :model-value="getFirstField(service.image)" name="Image0" rules="required">
+              <b-field :label="`${$t('Docker Image')} *`" :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-3 is-flex-grow-1 mr-3">
                 <b-input
                   :key="service.image" :readonly="state === 'update' || serviceStableVersion !== ''" :model-value="getFirstField(service.image)" :placeholder="$t('e.g.,hello-world:latest')" @update:model-value="(V) => changeIcon(V)" @blur="
                     (E) => {
@@ -805,15 +798,15 @@ export default {
                   "
                 />
               </b-field>
-            </ValidationProvider>
+            </VeeField>
 
             <b-dropdown aria-role="menu" trap-focus>
               <template #trigger>
-                <ValidationProvider v-slot="{ errors, valid }" name="Image1" rules="required">
+                <VeeField v-slot="{ errors, meta }" :model-value="getLateField(service.image)" name="Image1" rules="required">
                   <b-field
                     :label="$t('Tag')"
-                    :message="$t(errors) || '123'"
-                    :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                    :message="$t(errors)"
+                    :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
                   >
                     <b-input
                       icon-pack="casa"
@@ -827,7 +820,7 @@ export default {
                       "
                     />
                   </b-field>
-                </ValidationProvider>
+                </VeeField>
               </template>
               <b-dropdown-item
                 key="latest"
@@ -853,11 +846,11 @@ export default {
             </b-dropdown>
           </b-field>
 
-          <ValidationProvider v-slot="{ errors, valid }" name="composeAppName" rules="required">
-            <b-field :label="`${$t('App Name')} *`" :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': valid }">
+          <VeeField v-slot="{ errors, meta }" :model-value="ice_i18n(configData['x-casaos'].title)" name="composeAppName" rules="required">
+            <b-field :label="`${$t('App Name')} *`" :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }">
               <b-input :placeholder="$t('e.g.,Your App Name')" :model-value="ice_i18n(configData['x-casaos'].title)" @blur="(E) => (configData['x-casaos'].title.custom = E.target._value)" />
             </b-field>
-          </ValidationProvider>
+          </VeeField>
 
           <b-field v-if="key === firstAppName" :label="$t('Icon URL')">
             <p class="control">
@@ -955,12 +948,12 @@ export default {
             </b-taginput>
           </b-field>
 
-          <ValidationProvider v-slot="{ errors, valid }" name="Name" rules="ContainerName">
-            <b-field :label="$t('Container Name')" :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': valid && service.container_name }">
+          <VeeField v-slot="{ errors, meta }" :model-value="service.container_name" name="Name" rules="ContainerName">
+            <b-field :label="$t('Container Name')" :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': meta.valid && service.container_name }">
               <b-input v-model="service.container_name" :placeholder="$t('Name of app container')" />
             </b-field>
-          </ValidationProvider>
-        </ValidationObserver>
+          </VeeField>
+        </VeeForm>
       </b-tab-item>
     </b-tabs>
   </section>

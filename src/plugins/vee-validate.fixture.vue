@@ -16,6 +16,11 @@
 		<VeeField :model-value="port" name="port" rules="yaml_port" />
 		<VeeField :model-value="containerName" name="containerName" rules="ContainerName" />
 	</VeeForm>
+
+	<!-- ComposeConfig keeps one form per service and reaches them by index. -->
+	<VeeForm v-for="row in 2" :key="row" :ref="`row${row}valida`" as="span">
+		<VeeField :model-value="''" :name="`row-${row}`" rules="required" />
+	</VeeForm>
 </template>
 
 <script>
@@ -38,6 +43,9 @@ export default {
 	methods: {
 		validate() {
 			return this.$refs.ob.validate()
+		},
+		validateRow(row) {
+			return this.$refs[`row${row}valida`]
 		}
 	},
 }
