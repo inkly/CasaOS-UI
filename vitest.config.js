@@ -4,7 +4,13 @@ import vue from '@vitejs/plugin-vue'
 import {compileTemplate, parse as parseSFC} from '@vue/compiler-sfc'
 import {defineConfig} from 'vitest/config'
 
-const compatConfig = {MODE: 2}
+// The compiler half of the @vue/compat scaffold, matching the vue-loader
+// compatConfig in vue.config.js. Every flag off below is a template idiom that
+// no longer appears in src/.
+const compatConfig = {
+	MODE: 2,
+	COMPILER_V_ON_NATIVE: false,
+}
 
 // Templates and option blocks reach for assets with webpack's require().
 // @vitejs/plugin-vue2 rewrote those into imports; @vitejs/plugin-vue leaves

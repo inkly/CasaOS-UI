@@ -8,9 +8,9 @@
 			</div>
 			<b-tooltip label="Download logs" position="is-bottom" size="is-small" type="is-black">
 				<b-icon v-show="showTabName === 'logs'" class="close-button" icon="downloads-outline" pack="casa"
-					@click.native="downloadSystemLog" />
+					@click="downloadSystemLog" />
 			</b-tooltip>
-			<b-icon class="close-button ml-2" icon="close-outline" pack="casa" @click.native="$emit('close');" />
+			<b-icon class="close-button ml-2" icon="close-outline" pack="casa" @click="$emit('close');" />
 
 		</header>
 		<!-- Modal-Card Header End -->

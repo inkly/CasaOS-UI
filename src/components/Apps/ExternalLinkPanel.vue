@@ -166,7 +166,7 @@ export default {
           {{ panelTitle }}
         </h3>
       </div>
-      <b-icon class="close-button" icon="close-outline" pack="casa" @click.native="$emit('close');" />
+      <b-icon class="close-button" icon="close-outline" pack="casa" @click="$emit('close');" />
     </header>
     <!-- Modal-Card Header End -->
     <!-- Modal-Card Body Start -->

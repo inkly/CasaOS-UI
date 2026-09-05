@@ -287,7 +287,7 @@ export default {
                 class="border-8 is-clickable"
                 placeholder
                 ratio="16by9"
-                @click.native="zoomScreenshot(item)"
+                @click="zoomScreenshot(item)"
               />
             </div>
           </SwiperSlide>

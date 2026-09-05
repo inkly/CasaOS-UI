@@ -5,7 +5,7 @@
 			<div class="is-flex-grow-1">
 				<h3 class="title is-header">{{ $t('Rename') }}</h3>
 			</div>
-			<b-icon class="close-button" icon="close-outline" pack="casa" @click.native="$emit('close');" />
+			<b-icon class="close-button" icon="close-outline" pack="casa" @click="$emit('close');" />
 		</header>
 		<!-- Modal-Card Header End -->
 		<!-- Modal-Card Body Start -->
@@ -17,8 +17,8 @@
 					</div>
 				</div>
 				<b-field :message="errors" :type="errorType" class="mb-3 mt-5 has-text-light" expanded>
-					<b-input ref="rinput" v-model="fileName" v-on:keyup.enter.native="saveNewName"
-						@input.native="fileName = fileName.replace(/\//g, '')"></b-input>
+					<b-input ref="rinput" v-model="fileName" v-on:keyup.enter="saveNewName"
+						@input="fileName = fileName.replace(/\//g, '')"></b-input>
 				</b-field>
 			</div>
 

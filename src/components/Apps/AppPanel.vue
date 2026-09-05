@@ -1245,7 +1245,7 @@ export default {
           class="close-button"
           icon="close-outline"
           pack="casa"
-          @click.native="
+          @click="
             $emit('close');
             $messageBus('appstore_close')
           "
@@ -1332,10 +1332,10 @@ export default {
             v-if="currentSlide < 2"
             class="is-flex is-align-items-center modal-close-container modal-close-container-line"
           >
-            <b-icon class="close-button" icon="close-outline" pack="casa" @click.native="$emit('close')" />
+            <b-icon class="close-button" icon="close-outline" pack="casa" @click="$emit('close')" />
           </div>
           <div v-else-if="currentSlide === 2" class="is-flex is-align-items-center">
-            <b-icon class="close-button" icon="close-outline" pack="casa" @click.native="$emit('close')" />
+            <b-icon class="close-button" icon="close-outline" pack="casa" @click="$emit('close')" />
           </div>
         </div>
       </header>
@@ -1526,7 +1526,7 @@ export default {
                 class="is-flex is-align-self-center ml-2 is-clickable"
                 icon="search-outline"
                 pack="casa"
-                @click.native="searchAndSourcesStatusController"
+                @click="searchAndSourcesStatusController"
               />
             </transition>
             <transition name="search-fade">
@@ -1537,7 +1537,7 @@ export default {
                 :placeholder="$t('Search an app...')"
                 class="app-search ml-2"
                 @input="debounceSearchInput"
-                @keyup.enter.native="counterPatchGetStoreList++"
+                @keyup.enter="counterPatchGetStoreList++"
               />
             </transition>
             <div class="is-flex-grow-1" />

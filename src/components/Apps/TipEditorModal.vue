@@ -7,7 +7,7 @@
 			</div>
 			<div>
 				<div class="is-flex is-align-items-center">
-					<b-icon class="close-button" icon="close-outline" pack="casa" @click.native="$emit('close');" />
+					<b-icon class="close-button" icon="close-outline" pack="casa" @click="$emit('close');" />
 				</div>
 			</div>
 		</header>
@@ -21,7 +21,7 @@
 			<div v-if="name" class="is-flex is-flex-direction-row-reverse mt-2">
 				<b-icon class="is-clickable"
 					:class="{ 'has-text-grey-800': !isEditing, 'has-text-green-default': isDifferentiation, 'has-text-grey-400': !isDifferentiation && isEditing }"
-					:icon="icon" pack="casa" @click.native="toggle"></b-icon>
+					:icon="icon" pack="casa" @click="toggle"></b-icon>
 			</div>
 		</section>
 		<!-- Modal-Card Body End -->

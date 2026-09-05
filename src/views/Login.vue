@@ -16,14 +16,14 @@
 					<b-field :label="$t('Username')" :message="errors"
 							 :type="{ 'is-danger': errors[0], 'is-success': valid }"
 							 class="mt-3">
-						<b-input v-model="username" :autofocus="!username" type="text" v-on:keyup.enter.native="handleSubmit(login)"></b-input>
+						<b-input v-model="username" :autofocus="!username" type="text" v-on:keyup.enter="handleSubmit(login)"></b-input>
 					</b-field>
 				</ValidationProvider>
 				<ValidationProvider v-slot="{ errors, valid }" name="Password" rules="required|min:5" vid="password">
 					<b-field :label="$t('Password')" :message="$t(errors)"
 							 :type="{ 'is-danger': errors[0], 'is-success': valid }" class="mt-2">
 						<b-input v-model="password" :autofocus="username" password-reveal
-								 type="password" v-on:keyup.enter.native="handleSubmit(login)"></b-input>
+								 type="password" v-on:keyup.enter="handleSubmit(login)"></b-input>
 					</b-field>
 				</ValidationProvider>
 				<b-button class="mt-5" expanded rounded type="is-primary" @click="handleSubmit(login)">{{ $t('Login') }}

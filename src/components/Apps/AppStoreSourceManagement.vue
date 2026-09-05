@@ -177,13 +177,13 @@ onBeforeUnmount(() => {
 							<span class="has-text-full-04 is-flex-grow-1 one-line">{{ item.name }}</span>
 							<template v-if="operationSourceName !== item.id">
 								<b-icon class="close-button" custom-size="casa-16px" icon="trash-outline" pack="casa"
-									@click.native="operationSourceName = item.id" />
+									@click="operationSourceName = item.id" />
 							</template>
 							<template v-else>
 								<b-icon class="close-button" custom-size="casa-16px" icon="close-outline" pack="casa"
-									@click.native="operationSourceName = -1" />
+									@click="operationSourceName = -1" />
 								<b-icon class="close-button" custom-size="casa-16px" icon="check-outline" pack="casa"
-									@click.native="unregisterAppStore(item.id)" />
+									@click="unregisterAppStore(item.id)" />
 							</template>
 						</p>
 					</b-dropdown-item>
@@ -205,11 +205,11 @@ onBeforeUnmount(() => {
 			<div v-else-if="componentState === 'active_input_state'" key="3" class="is-flex is-align-items-center">
 				<b-field class="mb-0">
 					<b-input class="_sources_input" ref="inputSourceURL" v-model="url" :disabled="addLoadingState"
-						v-on:keyup.enter.native="registerAppStore(url)"></b-input>
+						v-on:keyup.enter="registerAppStore(url)"></b-input>
 					<b-tooltip label="Get more apps" position="is-bottom" class="add-tooltip" type="is-dark"
 						:class="{ disabled: addLoadingState }">
 						<b-icon class="is-clickable" icon="question-outline" pack="casa" size="is-small"
-							@click.native="redirectURL" />
+							@click="redirectURL" />
 					</b-tooltip>
 					<p class="control">
 						<b-button class="_sources_input" @click="registerAppStore(url)" :loading="addLoadingState">{{

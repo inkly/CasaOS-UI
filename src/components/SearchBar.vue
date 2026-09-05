@@ -47,7 +47,7 @@ export default {
     <b-input
       v-model="keyText" class="ovh" :class="[isFocus ? 'fo' : '']" :placeholder="$t('Search...')" expanded
       icon="search-outline" icon-pack="casa" icon-right="search-outline" icon-right-clickable size="is-medium"
-      @blur="onBlur" @focus="onFocus" @icon-right-click="gotoSearch" @keyup.enter.native="gotoSearch"
+      @blur="onBlur" @focus="onFocus" @icon-right-click="gotoSearch" @keyup.enter="gotoSearch"
     />
   </b-field>
 </template>
