@@ -44,11 +44,12 @@ configureCompat({
 	ATTR_FALSE_VALUE: false,
 	// Paid off: $set is a plain write, which Vue 3's proxies track.
 	INSTANCE_SET: false,
-	// These three stay ON until vee-validate 3 is gone. Turning them off does
-	// not only affect our code: compat drops the option for EVERY component, and
-	// vee-validate 3's ValidationProvider and ValidationObserver still use
-	// beforeDestroy to unobserve themselves (so they leak), while INSTANCE_DELETE
-	// off makes $delete throw rather than no-op.
+	// These three were held ON by vee-validate 3, which is now gone: its
+	// providers unobserved themselves in beforeDestroy, and with INSTANCE_DELETE
+	// off its $delete threw rather than no-op. A flag is global - compat drops
+	// the option for EVERY component in the bundle - so nothing else may still
+	// need them before they can go. Nothing in src/ does; the vendored code has
+	// not been re-checked since the swap.
 	OPTIONS_BEFORE_DESTROY: true,
 	OPTIONS_DESTROYED: true,
 	INSTANCE_DELETE: true,
