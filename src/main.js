@@ -40,6 +40,9 @@ configureCompat({
 	// Paid off: every hook is `beforeUnmount` / `unmounted`.
 	OPTIONS_BEFORE_DESTROY: false,
 	OPTIONS_DESTROYED: false,
+	// Paid off: $set / $delete are plain writes, which Vue 3 proxies track.
+	INSTANCE_SET: false,
+	INSTANCE_DELETE: false,
 })
 
 const io = require("socket.io-client");
