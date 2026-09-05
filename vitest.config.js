@@ -10,6 +10,7 @@ import {defineConfig} from 'vitest/config'
 const compatConfig = {
 	MODE: 2,
 	COMPILER_V_ON_NATIVE: false,
+	COMPILER_V_BIND_SYNC: false,
 }
 
 // Templates and option blocks reach for assets with webpack's require().

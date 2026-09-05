@@ -12,7 +12,7 @@
 
 				<template>
 					<!-- NavBar Start -->
-					<b-sidebar ref="sidebar" :open.sync="isSideBarOpen" :overlay="isMobile" :position="sideBarPosition"
+					<b-sidebar ref="sidebar" v-model="isSideBarOpen" :overlay="isMobile" :position="sideBarPosition"
 						fullheight>
 						<div class="nav-bar is-flex is-flex-direction-column">
 							<div class="is-flex-grow-1 is-flex-shrink-1 nav-bar-top scrollbars-light">

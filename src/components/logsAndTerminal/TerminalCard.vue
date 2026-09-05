@@ -1,5 +1,5 @@
 <template>
-	<fullscreen :class="[{ 'mt-4': !fullscreen }, isVaild ? 'fdark-bg' : 'flight-bg']" :fullscreen.sync="fullscreen"
+	<fullscreen :class="[{ 'mt-4': !fullscreen }, isVaild ? 'fdark-bg' : 'flight-bg']" v-model:fullscreen="fullscreen"
 		:page-only="true" :teleport="true" class="fullScreen  pl-2 pt-2 pb-2" @change="onWindowResize">
 		<a v-if="isVaild" class="fullscreen-button" @click="toggleFullScreen">
 			<b-icon :icon="buttonIcon"></b-icon>
