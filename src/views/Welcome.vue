@@ -36,35 +36,35 @@
 								 rounded></b-image>
 					</div>
 				</div>
-				<ValidationObserver ref="observer" v-slot="{ handleSubmit }">
-					<ValidationProvider v-slot="{ errors, valid }" name="User" rules="required">
+				<VeeForm v-slot="{ handleSubmit }" as="span">
+					<VeeField v-slot="{ errors, meta }" :model-value="username" name="User" rules="required">
 						<b-field :label="$t('Username')" :message="$t(errors)"
-								 :type="{ 'is-danger': errors[0], 'is-success': valid }">
+								 :type="{ 'is-danger': errors[0], 'is-success': meta.valid }">
 							<b-input v-model="username" type="text"
 									 v-on:keyup.enter="handleSubmit(register)"></b-input>
 						</b-field>
-					</ValidationProvider>
-					<ValidationProvider v-slot="{ errors, valid }" name="Password" rules="required|min:5"
-										vid="password">
+					</VeeField>
+					<VeeField v-slot="{ errors, meta }" :model-value="password" name="password"
+										rules="required|min:5">
 						<b-field :label="$t('Password')" :message="$t(errors)"
-								 :type="{ 'is-danger': errors[0], 'is-success': valid }"
+								 :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
 								 class="mt-4">
 							<b-input v-model="password" password-reveal type="password"
 									 v-on:keyup.enter="handleSubmit(register)"></b-input>
 						</b-field>
-					</ValidationProvider>
-					<ValidationProvider v-slot="{ errors, valid }" name="Password Confirmation"
-										rules="required|confirmed:password">
+					</VeeField>
+					<VeeField v-slot="{ errors, meta }" :model-value="confirmation" name="Password Confirmation"
+										rules="required|confirmed:@password">
 						<b-field :label="$t('Confirm Password')" :message="$t(errors)"
-								 :type="{ 'is-danger': errors[0], 'is-success': valid }" class="mt-4">
+								 :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mt-4">
 							<b-input v-model="confirmation" password-reveal type="password"
 									 v-on:keyup.enter="handleSubmit(register)"></b-input>
 						</b-field>
-					</ValidationProvider>
+					</VeeField>
 					<b-button class="mt-5" expanded rounded type="is-primary" @click="handleSubmit(register)">
 						{{ $t('Create') }}
 					</b-button>
-				</ValidationObserver>
+				</VeeForm>
 			</div>
 
 			<div v-if="step == 3" class="has-text-centered ">
@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import {ValidationObserver, ValidationProvider} from "vee-validate";
+import {Field as VeeField, Form as VeeForm} from "vee-validate";
 import LottieAnimation                          from "lottie-web-vue";
 import smoothReflow                             from '@/mixins/smoothReflow'
 
@@ -125,8 +125,8 @@ export default {
 		}
 	},
 	components: {
-		ValidationObserver,
-		ValidationProvider,
+		VeeField,
+		VeeForm,
 		LottieAnimation
 	},
 
