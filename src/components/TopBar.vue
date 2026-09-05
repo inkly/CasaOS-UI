@@ -533,7 +533,7 @@ export default {
             :label="$t('Account')"
             position="is-right"
             type="is-dark"
-            @click.native="$messageBus('account_setting')"
+            @click="$messageBus('account_setting')"
           >
             <p role="button">
               <b-icon class="picon" icon="account-outline" pack="casa" size="is-20" />
@@ -561,7 +561,7 @@ export default {
             :label="$t('Settings')"
             position="is-right"
             type="is-dark"
-            @click.native="$messageBus('dashboardsetting')"
+            @click="$messageBus('dashboardsetting')"
           >
             <p role="button">
               <b-icon

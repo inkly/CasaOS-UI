@@ -41,7 +41,7 @@
 						<b-field :label="$t('Username')" :message="$t(errors)"
 								 :type="{ 'is-danger': errors[0], 'is-success': valid }">
 							<b-input v-model="username" type="text"
-									 v-on:keyup.enter.native="handleSubmit(register)"></b-input>
+									 v-on:keyup.enter="handleSubmit(register)"></b-input>
 						</b-field>
 					</ValidationProvider>
 					<ValidationProvider v-slot="{ errors, valid }" name="Password" rules="required|min:5"
@@ -50,7 +50,7 @@
 								 :type="{ 'is-danger': errors[0], 'is-success': valid }"
 								 class="mt-4">
 							<b-input v-model="password" password-reveal type="password"
-									 v-on:keyup.enter.native="handleSubmit(register)"></b-input>
+									 v-on:keyup.enter="handleSubmit(register)"></b-input>
 						</b-field>
 					</ValidationProvider>
 					<ValidationProvider v-slot="{ errors, valid }" name="Password Confirmation"
@@ -58,7 +58,7 @@
 						<b-field :label="$t('Confirm Password')" :message="$t(errors)"
 								 :type="{ 'is-danger': errors[0], 'is-success': valid }" class="mt-4">
 							<b-input v-model="confirmation" password-reveal type="password"
-									 v-on:keyup.enter.native="handleSubmit(register)"></b-input>
+									 v-on:keyup.enter="handleSubmit(register)"></b-input>
 						</b-field>
 					</ValidationProvider>
 					<b-button class="mt-5" expanded rounded type="is-primary" @click="handleSubmit(register)">

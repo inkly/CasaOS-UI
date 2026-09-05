@@ -134,7 +134,7 @@
 					{{ $t('Enter "I AM SURE" to proceed with the operation.') }}
 				</div>
 				<b-input ref="inputPassword" v-model="password" class="mt-4" password-reveal
-						 @keyup.enter.native="verifyOperate(password)"></b-input>
+						 @keyup.enter="verifyOperate(password)"></b-input>
 			</template>
 			<div v-if="currentStep === 3" class="is-flex is-align-items-center font">
 				<div class="message-danger left mr-2 is-flex is-align-items-center">

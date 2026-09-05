@@ -280,7 +280,7 @@ export default {
         <template v-else-if="state === 2">
           <ValidationProvider v-slot="{ errors, valid }" name="User" rules="required">
             <b-field :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': valid }" class="mb-0 has-text-light">
-              <b-input v-model="user.username" type="text" @keyup.enter.native="handleSubmit(saveUser)" />
+              <b-input v-model="user.username" type="text" @keyup.enter="handleSubmit(saveUser)" />
             </b-field>
           </ValidationProvider>
         </template>
@@ -301,7 +301,7 @@ export default {
           </ValidationProvider>
           <ValidationProvider v-slot="{ errors, valid }" name="Password Confirmation" rules="required|confirmed:password">
             <b-field :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': valid }" class="mb-0">
-              <b-input v-model="confirmation" :placeholder="$t('Confirm the new password again')" password-reveal type="password" @keyup.enter.native="savePassword(savePassword)" />
+              <b-input v-model="confirmation" :placeholder="$t('Confirm the new password again')" password-reveal type="password" @keyup.enter="savePassword(savePassword)" />
             </b-field>
           </ValidationProvider>
         </template>

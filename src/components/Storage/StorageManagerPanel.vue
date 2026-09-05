@@ -7,7 +7,7 @@
 				<div class="is-flex-grow-1">
 					<h3 class="title is-header">{{ title }}</h3>
 				</div>
-				<b-icon class="close-button" icon="close-outline" pack="casa" @click.native="$emit('close');" />
+				<b-icon class="close-button" icon="close-outline" pack="casa" @click="$emit('close');" />
 			</header>
 
 			<!-- Modal-Card Body Start -->
@@ -67,8 +67,8 @@
 							<b-field :label="$t('Storage Name')" :message="$t(errors)"
 								:type="{ 'is-danger': errors[0], 'is-success': valid }">
 								<b-input v-model="createStorageName" ref="inputs"
-									@keyup.native="createStorageName = createStorageName.replace(/[^\w]/g, '')"
-									@paste.native="createStorageName = createStorageName.replace(/[^\w]/g, '')"></b-input>
+									@keyup="createStorageName = createStorageName.replace(/[^\w]/g, '')"
+									@paste="createStorageName = createStorageName.replace(/[^\w]/g, '')"></b-input>
 							</b-field>
 						</ValidationProvider>
 

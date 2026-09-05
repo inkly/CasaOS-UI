@@ -45,7 +45,12 @@ module.exports = {
 			.use("vue-loader")
 			.tap((options) => ({
 				...options,
-				compilerOptions: { ...options.compilerOptions, compatConfig: { MODE: 2 } },
+				// Compiler-side compat, kept in step with vitest.config.js. Runtime
+				// flags live in configureCompat() in main.js, not here.
+				compilerOptions: {
+					...options.compilerOptions,
+					compatConfig: { MODE: 2, COMPILER_V_ON_NATIVE: false },
+				},
 			}));
 
 		config.module

@@ -5,13 +5,13 @@
 			<div class="is-flex-grow-1">
 				<h3 class="title is-header">{{ $t('Edit Web UI port') }}</h3>
 			</div>
-			<b-icon class="close-button" icon="close-outline" pack="casa" @click.native="$emit('close');" />
+			<b-icon class="close-button" icon="close-outline" pack="casa" @click="$emit('close');" />
 		</header>
 		<!-- Modal-Card Header End -->
 		<!-- Modal-Card Body Start -->
 		<section class="modal-card-body ">
 			<b-field :message="errors" :type="errorType" class="has-text-light mb-0" expanded>
-				<b-input ref="finput" v-model="port" type="number" v-on:keyup.enter.native="savePort" @input="checkPort"></b-input>
+				<b-input ref="finput" v-model="port" type="number" v-on:keyup.enter="savePort" @input="checkPort"></b-input>
 			</b-field>
 		</section>
 		<!-- Modal-Card Body End -->

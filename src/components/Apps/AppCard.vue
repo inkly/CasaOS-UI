@@ -806,7 +806,7 @@ export default {
               <b-image
                 :class="dotClass(item.status, isLoading)" :src="item.icon"
                 :src-fallback="require('@/assets/img/app/default.svg')" class="is-64x64"
-                webp-fallback=".jpg" @click.native="openApp(item)"
+                webp-fallback=".jpg" @click="openApp(item)"
               />
               <!-- Unstable -->
               <CTooltip v-if="newAppIds.includes(item.name)" class="__position" content="NEW" />

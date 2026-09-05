@@ -5,7 +5,7 @@
 			<div class="is-flex-grow-1">
 				<h3 class="title is-header">{{ $t('New Folder') }}</h3>
 			</div>
-			<b-icon class="close-button" icon="close-outline" pack="casa" @click.native="$emit('close');" />
+			<b-icon class="close-button" icon="close-outline" pack="casa" @click="$emit('close');" />
 		</header>
 		<!-- Modal-Card Header End -->
 		<!-- Modal-Card Body Start -->
@@ -18,8 +18,8 @@
 					</div>
 				</div>
 				<b-field :message="errors" :type="errorType" class="mb-3 mt-5 has-text-light" expanded>
-					<b-input v-model="folderName" v-on:keyup.enter.native="createFolder" ref="inputs"
-						@input.native="folderName = folderName.replace(/\//g, '')"></b-input>
+					<b-input v-model="folderName" v-on:keyup.enter="createFolder" ref="inputs"
+						@input="folderName = folderName.replace(/\//g, '')"></b-input>
 				</b-field>
 				<div class="notification pl-4 pri-height">
 					<b-field>

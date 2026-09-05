@@ -11,7 +11,7 @@
 			>
 				<h3 class="title is-header mb-0">{{ $t("Shared Folders") }}</h3>
 			</div>
-			<b-icon class="close-button" icon="close-outline" pack="casa" @click.native="$emit('close');" />
+			<b-icon class="close-button" icon="close-outline" pack="casa" @click="$emit('close');" />
 		</header>
 		<!-- Header End -->
 

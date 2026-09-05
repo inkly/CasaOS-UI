@@ -13,18 +13,18 @@
 							{{ $t(message) }}
 						</b-notification>
 						<b-field :label="$t('Username')">
-							<b-input v-model="sshUser" name="username" v-on:keyup.enter.native="checkLogin"></b-input>
+							<b-input v-model="sshUser" name="username" v-on:keyup.enter="checkLogin"></b-input>
 						</b-field>
 
 						<b-field :label="$t('Password')">
 							<b-input v-model="sshPassword" name="password" password-reveal type="password"
-								v-on:keyup.enter.native="checkLogin">
+								v-on:keyup.enter="checkLogin">
 							</b-input>
 						</b-field>
 
 						<b-field :label="$t('Port')">
 							<b-input v-model="sshPort" name="port" type="number"
-								v-on:keyup.enter.native="checkLogin"></b-input>
+								v-on:keyup.enter="checkLogin"></b-input>
 						</b-field>
 						<div class="buttons mt-5">
 							<b-button :loading="isConnecting" expanded rounded type="is-primary" @click="checkLogin">{{

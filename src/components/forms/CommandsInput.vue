@@ -14,7 +14,7 @@
 
 		<div class="port-item  mr-4" v-for="(item, index) in items" :key="'port' + index">
 			<b-icon icon="close-outline" pack="casa" size="is-small" class="is-clickable"
-				@click.native="removeItem(index)"></b-icon>
+				@click="removeItem(index)"></b-icon>
 			<b-field expanded>
 				<b-input placeholder="Commands" v-model="items[index]" expanded @input="handleInput"></b-input>
 			</b-field>

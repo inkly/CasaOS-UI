@@ -12,7 +12,7 @@
 
 		</div>
 		<div v-for="(item, index) in items" :key="'port' + index + item.protocol" class="port-item mr-4">
-			<b-icon class="is-clickable" icon="close-outline" pack="casa" size="is-small" @click.native="removeItem(index)"></b-icon>
+			<b-icon class="is-clickable" icon="close-outline" pack="casa" size="is-small" @click="removeItem(index)"></b-icon>
 			<ValidationObserver ref="ob" v-slot="{ invalid }" slim>
 				<template>
 					<b-field grouped >
