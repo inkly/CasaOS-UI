@@ -13,50 +13,47 @@
 		</div>
 		<div v-for="(item, index) in items" :key="'port' + index + item.protocol" class="port-item mr-4">
 			<b-icon class="is-clickable" icon="close-outline" pack="casa" size="is-small" @click="removeItem(index)"></b-icon>
-			<ValidationObserver ref="ob" v-slot="{ invalid }" slim>
-				<b-field grouped >
-					<validation-provider v-if="showHostPost" v-slot="{ errors, valid }"
-						:rules="'yaml_port|not_in_ports:' + invalidPortsInUse(item.published, item.protocol)" slim>
-						<!-- Only show title when the first item. -->
-						<b-field :label="index < 1 ? $t('Host') : ''"
-							:type="{ 'is-danger': errors[0], 'is-success': valid }" expanded>
-							<b-input :placeholder="$t('Host')"
-								:model-value="item.host_ip ? `${item.host_ip}:${item.published}` : item.published" expanded
-								@blur="(event, val) => assignPortsItem(event.target._value, item)"></b-input>
-						</b-field>
-					</validation-provider>
-
-					<validation-provider v-slot="{ errors, valid }" rules="yaml_port" slim>
-						<!-- Only show title when the first item. -->
-						<b-field :label="index < 1 ? $t('Container') : ''"
-							:type="{ 'is-danger': errors[0], 'is-success': valid }" expanded>
-							<b-input v-model.number="item.target" :placeholder="$t('Container')" expanded></b-input>
-						</b-field>
-					</validation-provider>
-
+			<b-field grouped >
+				<VeeField v-if="showHostPost" v-slot="{ errors, meta }"
+					:model-value="item.host_ip ? `${item.host_ip}:${item.published}` : item.published" :name="`host-${index}`"
+					:rules="'yaml_port|not_in_ports:' + invalidPortsInUse(item.published, item.protocol)">
 					<!-- Only show title when the first item. -->
-					<b-field :label="index < 1 ? $t('Protocol') : ''" expanded>
-						<b-select v-model="item.protocol" :placeholder="$t('Protocol')" expanded>
-							<option value="tcp">TCP</option>
-							<option value="udp">UDP</option>
-							<option value="">TCP + UDP</option>
-						</b-select>
+					<b-field :label="index < 1 ? $t('Host') : ''"
+						:type="{ 'is-danger': errors[0], 'is-success': meta.valid }" expanded>
+						<b-input :placeholder="$t('Host')"
+							:model-value="item.host_ip ? `${item.host_ip}:${item.published}` : item.published" expanded
+							@blur="(event, val) => assignPortsItem(event.target._value, item)"></b-input>
 					</b-field>
-				</b-field>
+				</VeeField>
 
-			</ValidationObserver>
+				<VeeField v-slot="{ errors, meta }" :model-value="item.target" :name="`container-${index}`" rules="yaml_port">
+					<!-- Only show title when the first item. -->
+					<b-field :label="index < 1 ? $t('Container') : ''"
+						:type="{ 'is-danger': errors[0], 'is-success': meta.valid }" expanded>
+						<b-input v-model.number="item.target" :placeholder="$t('Container')" expanded></b-input>
+					</b-field>
+				</VeeField>
+
+				<!-- Only show title when the first item. -->
+				<b-field :label="index < 1 ? $t('Protocol') : ''" expanded>
+					<b-select v-model="item.protocol" :placeholder="$t('Protocol')" expanded>
+						<option value="tcp">TCP</option>
+						<option value="udp">UDP</option>
+						<option value="">TCP + UDP</option>
+					</b-select>
+				</b-field>
+			</b-field>
 		</div>
 	</div>
 </template>
 
 <script>
-import { ValidationObserver, ValidationProvider } from 'vee-validate';
+import { Field as VeeField } from 'vee-validate';
 
 export default {
 	name: 'ports-form',
 	components: {
-		ValidationProvider,
-		ValidationObserver
+		VeeField
 	},
 	data() {
 		return {
@@ -79,19 +76,14 @@ export default {
 		},
 	},
 	computed: {
-		items: {
-			get() {
-				this.vData.forEach(item => {
-					if (!item?.protocol) {
-						console.log(item, "item");
-						item.protocol = "";
-					}
-				})
-				return this.vData;
-			},
-			set(val) {
-				this.validateField(val);
-			}
+		items() {
+			this.vData.forEach(item => {
+				if (!item?.protocol) {
+					console.log(item, "item");
+					item.protocol = "";
+				}
+			})
+			return this.vData;
 		},
 	},
 	methods: {
@@ -109,13 +101,6 @@ export default {
 			this.items.splice(index, 1)
 		},
 
-		validateField(val) {
-			this.$refs.ob.checkStep().then(valid => {
-				if (valid) {
-					this.$emit('change', val);
-				}
-			});
-		},
 		assignPortsItem(val, item) {
 			const reg = /((^(\d{1,3}\.){3}\d{1,3}):)?(\d{1,5}$)/;
 			const partList = val.match(reg);
@@ -137,15 +122,6 @@ export default {
 				return (this.ports_in_use?.[type] || this.ports_in_use?.[type.toUpperCase()] || []).includes(port + "")
 			}
 			return false;
-		},
-
-		invalidPortsInUseRule(type) {
-			if (type === 'both') {
-				return (this.ports_in_use?.["udp"] || []).concat((this.ports_in_use?.["tcp"] || [])).join(',')
-			}
-			if (type) {
-				return (this.ports_in_use?.[type] || []).join(',')
-			}
 		},
 	},
 }
