@@ -12,6 +12,7 @@ const compatConfig = {
 	COMPILER_V_ON_NATIVE: false,
 	COMPILER_V_BIND_SYNC: false,
 	COMPILER_V_SLOT: false,
+	COMPILER_V_IF_V_FOR_PRECEDENCE: false,
 }
 
 // Templates and option blocks reach for assets with webpack's require().
