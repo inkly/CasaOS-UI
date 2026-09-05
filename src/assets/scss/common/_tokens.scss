@@ -22,6 +22,7 @@
 	--casa-text: #{$gray-800}; // #29343d
 	--casa-text-body: #2c3e50; // #app: inherited by everything on chrome that sets no colour
 	--casa-text-strong: #000; // ink: modal-close bars, .button.is-text, the settings select chevron
+	--casa-text-emphasis: #{$grey-darker}; // #363636, Bulma's own text-strong step: the modal-close divider, the autocomplete colon
 	--casa-text-secondary: #4a4a4a;
 	--casa-text-muted: #{$grey-600}; // #8595a3
 	--casa-border: #{$grey-300}; // #e4e8ec
@@ -31,7 +32,9 @@
 	// #e4e9ed: the section hairlines of TopBar, _modal and AppIframe. One step
 	// off --casa-border, kept apart so that light does not move.
 	--casa-divider: rgb(228 233 237);
+	--casa-divider-soft: rgba(133, 149, 163, 0.1215686275); // $grey-600 at 12%: the rule under a modal head and above its foot
 	--casa-hover: #{$grey-100}; // #f3f5f6
+	--casa-hover-tint: rgba(0, 0, 0, 0.04); // .hover-effect and .close-button: a veil over whatever is beneath, not a fill
 	--casa-active: #{$grey-200}; // #edf0f2
 	--casa-selected: #deebfd;
 	--casa-danger-tint: hsla(18, 98%, 94%, 1);
@@ -63,6 +66,7 @@ html[data-theme='dark'] {
 	--casa-text: #e6e9ec;
 	--casa-text-body: #e6e9ec;
 	--casa-text-strong: #fff;
+	--casa-text-emphasis: #ededed;
 	--casa-text-secondary: #c3c7cb;
 	--casa-text-muted: #8b95a1;
 	--casa-border: #3a3c41;
@@ -70,7 +74,9 @@ html[data-theme='dark'] {
 	--casa-border-strong: #4b4e54;
 	--casa-border-subtle: rgba(255, 255, 255, 0.1);
 	--casa-divider: #3a3c41;
+	--casa-divider-soft: rgba(255, 255, 255, 0.08);
 	--casa-hover: rgba(255, 255, 255, 0.06);
+	--casa-hover-tint: rgba(255, 255, 255, 0.06);
 	--casa-active: rgba(255, 255, 255, 0.12);
 	--casa-selected: rgba(34, 118, 243, 0.28);
 	--casa-danger-tint: hsla(18, 98%, 55%, 0.18);

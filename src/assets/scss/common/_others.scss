@@ -22,7 +22,7 @@
 }
 
 .b-line {
-	border-bottom: #cfcfcf 1px solid;
+	border-bottom: var(--casa-border-strong) 1px solid;
 }
 
 // Shadow
@@ -127,7 +127,7 @@
 				line-height: 2.714em;
 				left: 0.5rem;
 				z-index: 10;
-				color: hsl(0deg, 0%, 21%);
+				color: var(--casa-text-emphasis);
 			}
 
 			.input {

@@ -62,12 +62,12 @@
 	
 	&::before {
 		width: 80%;
-		background-color: black;
+		background-color: var(--casa-text-strong);
 	}
 	
 	&::after {
 		height: 80%;
-		background-color: black;
+		background-color: var(--casa-text-strong);
 	}
 	
 	&:hover,

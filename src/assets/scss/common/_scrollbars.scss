@@ -57,7 +57,7 @@
 }
 
 .scrollbars-light::-webkit-scrollbar-thumb {
-	background-color: rgba(0, 0, 0, 0.3);
+	background-color: var(--casa-scrollbar-thumb);
 	border-radius: 10px;
 	outline: none;
 }
@@ -71,7 +71,7 @@
 }
 
 .modal-card-body::-webkit-scrollbar-thumb {
-	background-color: rgba(0, 0, 0, 0.3);
+	background-color: var(--casa-scrollbar-thumb);
 	border-radius: 10px;
 	outline: none;
 }
@@ -131,7 +131,7 @@
 	
 	&:hover {
 		&::-webkit-scrollbar-thumb {
-			background: rgba(0, 0, 0, 0.2);
+			background: var(--casa-scrollbar-thumb-soft);
 		}
 	}
 }

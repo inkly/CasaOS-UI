@@ -180,7 +180,7 @@ export default {
 
 	.modal-card-head {
 		padding-top: 1.25rem;
-		border-bottom: 1px solid hsla(208, 16%, 94%, 1) !important;
+		border-bottom: 1px solid var(--casa-border-faint) !important;
 
 		.close {
 			height: 2rem;
@@ -194,7 +194,7 @@ export default {
 
 		::v-deep .v-md-editor {
 			box-shadow: none;
-			border: 1px solid hsla(208, 16%, 94%, 1);
+			border: 1px solid var(--casa-border-faint);
 			border-radius: 0.375rem;
 
 			overflow: hidden;

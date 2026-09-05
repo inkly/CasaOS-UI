@@ -1016,7 +1016,7 @@ export default {
     padding-left: 1.5rem;
     padding-top: 1.5rem;
     padding-bottom: 0.75rem;
-    border: 1px solid hsla(208, 16%, 94%, 1);
+    border: 1px solid var(--casa-border-faint);
   }
 
   .modal-card-body {
@@ -1028,7 +1028,7 @@ export default {
       width: 1.25rem;
     }
 
-    border: 1px solid hsla(208, 16%, 94%, 1);
+    border: 1px solid var(--casa-border-faint);
   }
 
   .modal-card-foot {
