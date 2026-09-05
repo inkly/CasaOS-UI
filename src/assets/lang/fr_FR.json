@@ -497,5 +497,9 @@
   "Files already in the folder keep their current permissions.": "Les fichiers déjà présents dans le dossier conservent leurs permissions actuelles.",
   "Use as a Time Machine destination": "Utiliser comme destination Time Machine",
   "Macs on the network will offer these folders as a Time Machine backup disk.": "Les Mac du réseau proposeront ces dossiers comme disque de sauvegarde Time Machine.",
-  "Macs on the network will offer this folder as a Time Machine backup disk.": "Les Mac du réseau proposeront ce dossier comme disque de sauvegarde Time Machine."
+  "Macs on the network will offer this folder as a Time Machine backup disk.": "Les Mac du réseau proposeront ce dossier comme disque de sauvegarde Time Machine.",
+  "Appearance": "Apparence",
+  "Light": "Clair",
+  "Dark": "Sombre",
+  "Follow the system": "Selon le système"
 }
