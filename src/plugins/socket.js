@@ -22,7 +22,7 @@ export default {
 		// Vue 3 does not expose its built-in merge strategies on app.config, so
 		// spell out the methods-like merge the library relied on: a mixin and a
 		// component can both contribute handlers.
-		app.config.optionMergeStrategies.sockets = (to, from) => (to ? { ...from, ...to } : from)
+		app.config.optionMergeStrategies.sockets = (to, from) => (to ? { ...to, ...from } : from)
 
 		const handlers = new WeakMap()
 		const listOf = (vm) => {
