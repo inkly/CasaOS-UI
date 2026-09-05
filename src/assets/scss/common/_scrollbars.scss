@@ -85,7 +85,7 @@
 }
 
 .t-box::-webkit-scrollbar-thumb {
-	background-color: rgba(0, 0, 0, 0.3);
+	background-color: var(--casa-scrollbar-thumb);
 	border-radius: 10px;
 	outline: none;
 }
