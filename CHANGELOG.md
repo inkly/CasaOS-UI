@@ -2,7 +2,7 @@
 
 All notable changes to CasaOS UI are documented here.
 
-## [Unreleased]
+## [0.4.33] - 2026-09-05
 
 Groundwork for the move to Vue 3, all of it landing on Vue 2 so that the day the
 framework changes carries as little as possible.
