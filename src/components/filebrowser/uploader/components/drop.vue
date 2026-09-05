@@ -38,7 +38,7 @@ export default {
 			uploader.on('drop', this.onDrop)
 		})
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		const dropEle = this.$refs.drop
 		const uploader = this.uploader.uploader
 		uploader.off('dragenter', this.onDragEnter)

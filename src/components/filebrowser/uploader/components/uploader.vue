@@ -137,7 +137,7 @@ export default {
 		uploader.on('filesSubmitted', this.filesSubmitted)
 		uploader.on('fileError', this.fileErrorHandle)
 	},
-	destroyed() {
+	unmounted() {
 		const uploader = this.uploader
 		uploader.off('catchAll', this.allEvent)
 		uploader.off(FILE_ADDED_EVENT, this.fileAdded)

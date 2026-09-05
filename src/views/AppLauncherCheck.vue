@@ -77,7 +77,7 @@ export default {
 		this.timer = setInterval(this.check, 1000)
 		this.check()
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		this.isCancelled = true
 		this.timer && clearInterval(this.timer)
 	},

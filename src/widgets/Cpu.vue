@@ -62,7 +62,7 @@
 
 <script>
 // import VueApexCharts from 'vue3-apexcharts'
-import smoothReflow from "vue-smooth-reflow";
+import smoothReflow from '@/mixins/smoothReflow';
 import orderBy from "lodash/orderBy";
 import has from "lodash/has";
 import slice from "lodash/slice";
@@ -143,7 +143,7 @@ export default {
 			property: ["height"],
 		});
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		clearInterval(this.timer);
 	},
 	methods: {

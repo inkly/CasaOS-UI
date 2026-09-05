@@ -99,7 +99,7 @@ export default {
       return this.state === 1 ? 'is-justify-content-center' : 'is-justify-content-end'
     },
   },
-  destroyed() {
+  unmounted() {
     if (this.image.src) {
       URL.revokeObjectURL(this.image.src)
     }

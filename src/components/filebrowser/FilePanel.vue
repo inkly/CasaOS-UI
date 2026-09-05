@@ -485,7 +485,7 @@ export default {
 		this.$EventBus.$on(events.SHOW_FILES_SIDEBAR, this.handleShowSideBar);
 		this.$EventBus.$on(events.HIDE_FILES_SIDEBAR, this.handleHideSideBar);
 	},
-	destroyed() {
+	unmounted() {
 		this.$EventBus.$off(events.SHOW_FILES_SIDEBAR, this.handleShowSideBar);
 		this.$EventBus.$off(events.HIDE_FILES_SIDEBAR, this.handleHideSideBar);
 		this.destroyedAction();

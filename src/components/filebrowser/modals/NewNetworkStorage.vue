@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import smoothReflow from 'vue-smooth-reflow'
+import smoothReflow from '@/mixins/smoothReflow'
 import events from '@/events/events';
 
 export default {

@@ -71,7 +71,7 @@ export default {
 			}
 		}
 	},
-	destroyed() {
+	unmounted() {
 		clearInterval(this.timer);
 	}
 }

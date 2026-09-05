@@ -111,7 +111,7 @@ export default {
 	created() {
 
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 	},
 	computed: {},
 

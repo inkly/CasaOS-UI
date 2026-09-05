@@ -107,7 +107,7 @@ export default {
 			}, 1000)
 		},
 	},
-	destroyed() {
+	unmounted() {
 		clearInterval(this.timer);
 	},
 }

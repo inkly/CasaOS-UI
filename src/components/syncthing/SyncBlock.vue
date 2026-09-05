@@ -50,7 +50,7 @@ export default {
 		});
 
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		this.$EventBus.$off(events.UPDATE_SYNC_STATUS);
 	},
 	computed: {

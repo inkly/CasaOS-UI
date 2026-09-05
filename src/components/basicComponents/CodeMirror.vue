@@ -53,7 +53,7 @@ export default {
     // modal or behind a v-if is often not laid out yet.
     this.$nextTick(() => this.refresh())
   },
-  beforeDestroy() {
+  beforeUnmount() {
     // Puts the textarea back and unhooks the editor, rather than the library's
     // "remove the wrapper element and leave the instance running".
     this.codemirror.toTextArea()

@@ -129,7 +129,7 @@ export default {
 		onRezise() {
 		}
 	},
-	destroyed() {
+	unmounted() {
 		window.addEventListener('resize', this.onRezise);
 	},
 }

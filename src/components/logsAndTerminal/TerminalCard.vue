@@ -92,7 +92,7 @@ export default {
 		}
 
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		if (this.isVaild) {
 			this.socket.close()
 		}

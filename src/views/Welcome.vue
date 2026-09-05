@@ -82,7 +82,7 @@
 import {ValidationObserver, ValidationProvider} from "vee-validate";
 import "@/plugins/vee-validate";
 import LottieAnimation                          from "lottie-web-vue";
-import smoothReflow                             from 'vue-smooth-reflow'
+import smoothReflow                             from '@/mixins/smoothReflow'
 
 export default {
 
