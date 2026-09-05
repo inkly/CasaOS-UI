@@ -17,13 +17,15 @@
 						<div class="tr-wrapper">
 							<div class="tr">
 								<div class="th"></div>
-								<div v-for="header in headerList" class="th" v-if="isMobile ? header.showOnMobile : true"
-									@click="onHeaderClick(header)">
-									<div class="one-line">{{ $t(header.text) }}</div>
-									<b-icon v-show="sort === header.sort" icon="expand-down" class="is-18 ml-1"
-										custom-size="casa-18px" :class="{ asc: order === 'asc' }">
-									</b-icon>
-								</div>
+								<template v-for="header in headerList" :key="header.sort">
+									<div v-if="isMobile ? header.showOnMobile : true" class="th"
+										@click="onHeaderClick(header)">
+										<div class="one-line">{{ $t(header.text) }}</div>
+										<b-icon v-show="sort === header.sort" icon="expand-down" class="is-18 ml-1"
+											custom-size="casa-18px" :class="{ asc: order === 'asc' }">
+										</b-icon>
+									</div>
+								</template>
 							</div>
 						</div>
 					</div>
