@@ -62,15 +62,15 @@
 
 				<!-- Create Storage Start -->
 				<div v-if="creatIsShow" class="is-flex-grow-1 is-relative">
-					<ValidationObserver ref="ob1">
-						<ValidationProvider v-slot="{ errors, valid }" name="StorageName" rules="required">
+					<VeeForm ref="ob1" as="span">
+						<VeeField v-slot="{ errors, meta }" :model-value="createStorageName" name="StorageName" rules="required">
 							<b-field :label="$t('Storage Name')" :message="$t(errors)"
-								:type="{ 'is-danger': errors[0], 'is-success': valid }">
+								:type="{ 'is-danger': errors[0], 'is-success': meta.valid }">
 								<b-input v-model="createStorageName" ref="inputs"
 									@keyup="createStorageName = createStorageName.replace(/[^\w]/g, '')"
 									@paste="createStorageName = createStorageName.replace(/[^\w]/g, '')"></b-input>
 							</b-field>
-						</ValidationProvider>
+						</VeeField>
 
 						<b-field :label="$t('Choose Drive')">
 							<b-select v-model="activeDisk" expanded @update:model-value="onDiskChoose">
@@ -80,7 +80,7 @@
 							</b-select>
 						</b-field>
 
-					</ValidationObserver>
+					</VeeForm>
 
 					<article v-if="createStorageType == 'format'" class="message is-danger mt-5">
 						<section class="message-body">
@@ -170,7 +170,7 @@ import smoothReflow from '@/mixins/smoothReflow'
 import delay from 'lodash/delay';
 import max from 'lodash/max';
 import orderBy from 'lodash/orderBy';
-import { ValidationObserver, ValidationProvider } from "vee-validate";
+import { Field as VeeField, Form as VeeForm } from "vee-validate";
 import { mixin } from '@/mixins/mixin';
 import DriveItem from './DriveItem.vue'
 import StorageItem from './StorageItem.vue'
@@ -182,8 +182,8 @@ export default {
 	name: "storage-manager-panel",
 	components: {
 		LottieAnimation,
-		ValidationObserver,
-		ValidationProvider,
+		VeeField,
+		VeeForm,
 		DriveItem,
 		StorageItem,
 		StorageCombination,
