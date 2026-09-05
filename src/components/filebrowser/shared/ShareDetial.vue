@@ -27,11 +27,11 @@
 					{{ $t('Enter the following link to access the shared folder ( Samba ) .') }}
 				</div>
 				<b-field :label="$t('PC ( Windows explorer )')" class="mb-5" horizontal>
-					<b-input :value="pcPath" expanded icon-pack="casa" icon-right="copy" icon-right-clickable name="subject"
+					<b-input :model-value="pcPath" expanded icon-pack="casa" icon-right="copy" icon-right-clickable name="subject"
 							 readonly @icon-right-click="copyToClipboard(pcPath)"></b-input>
 				</b-field>
 				<b-field :label="$t('Mac ( Finder )')" class="mb-5" horizontal>
-					<b-input :value="macPath" expanded icon-pack="casa" icon-right="copy" icon-right-clickable name="subject"
+					<b-input :model-value="macPath" expanded icon-pack="casa" icon-right="copy" icon-right-clickable name="subject"
 							 readonly @icon-right-click="copyToClipboard(macPath)"></b-input>
 				</b-field>
 			</div>

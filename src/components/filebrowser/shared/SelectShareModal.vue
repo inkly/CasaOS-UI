@@ -31,7 +31,7 @@
 						</div>
 						<div class=" is-flex-grow-1">{{ item.name }}</div>
 						<div class=" is-flex-shrink-0  is-flex is-align-items-center">
-							<b-checkbox :value="item.selected" class="mr-0" disabled></b-checkbox>
+							<b-checkbox :model-value="item.selected" class="mr-0" disabled></b-checkbox>
 						</div>
 					</div>
 				</li>
@@ -42,7 +42,7 @@
 						</div>
 						<div class=" is-flex-grow-1 is-unselectable">{{ item.name }}</div>
 						<div class=" is-flex-shrink-0  is-flex is-align-items-center">
-							<b-checkbox :value="item.selected" class="mr-0 none-click"></b-checkbox>
+							<b-checkbox :model-value="item.selected" class="mr-0 none-click"></b-checkbox>
 						</div>
 					</div>
 				</li>
@@ -190,7 +190,6 @@ export default {
 		 */
 		manageUsers() {
 			this.$buefy.modal.open({
-				parent: this,
 				component: SambaUsersModal,
 				hasModalCard: true,
 				trapFocus: true,

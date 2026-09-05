@@ -101,7 +101,6 @@ export default {
 		// Show Disk Management Panel
 		showDiskManagement() {
 			this.$buefy.modal.open({
-				parent: this,
 				component: StorageManagerPanel,
 				hasModalCard: true,
 				customClass: 'storage-modal',
@@ -115,7 +114,6 @@ export default {
 		// Show New Network Storage Panel
 		showNewNetworkStorage() {
 			this.$buefy.modal.open({
-				parent: this,
 				component: NewNetworkStorage,
 				hasModalCard: true,
 				customClass: 'network-storage-modal',

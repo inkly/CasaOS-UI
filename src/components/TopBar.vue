@@ -230,7 +230,6 @@ export default {
     showPortPanel() {
       this.$refs.settingsDrop.toggle()
       this.$buefy.modal.open({
-        parent: this,
         component: PortPanel,
         hasModalCard: true,
         customClass: 'account-modal',
@@ -328,7 +327,6 @@ export default {
     showUpdateModal() {
       this.$messageBus('dashboardsetting_versionupdate', true.toString())
       this.$buefy.modal.open({
-        parent: this,
         component: UpdateModal,
         hasModalCard: true,
         trapFocus: true,
@@ -348,7 +346,6 @@ export default {
     showSystemPackageUpdateModal() {
       this.$messageBus('dashboardsetting_systempackages')
       this.$buefy.modal.open({
-        parent: this,
         component: SystemPackageUpdateModal,
         hasModalCard: true,
         customClass: 'network-storage-modal',
@@ -365,7 +362,6 @@ export default {
      */
     showAppLaunchModal() {
       this.$buefy.modal.open({
-        parent: this,
         component: AppLaunchModal,
         hasModalCard: true,
         customClass: 'network-storage-modal',
@@ -409,7 +405,6 @@ export default {
       this.$messageBus('terminallogs')
       this.$store.commit('SET_SIDEBAR_CLOSE')
       this.$buefy.modal.open({
-        parent: this,
         component: TerminalPanel,
         hasModalCard: true,
         customClass: 'terminal-modal',
@@ -593,7 +588,7 @@ export default {
                   v-model="barData.search_switch"
                   class="is-flex-direction-row-reverse mr-0 _small"
                   type="is-dark"
-                  @input="saveData"
+                  @update:model-value="saveData"
                 />
               </b-field>
             </div>
@@ -615,7 +610,7 @@ export default {
                   v-model="barData.search_engine"
                   class="set-select"
                   size="is-small"
-                  @input="saveData"
+                  @update:model-value="saveData"
                 >
                   <option v-for="item in searchEngines" :key="item.name" :value="item.url">
                     {{ item.name }}
@@ -636,7 +631,7 @@ export default {
             </div>
             <div>
               <b-field>
-                <b-select v-model="barData.lang" class="set-select" size="is-small" @input="saveData">
+                <b-select v-model="barData.lang" class="set-select" size="is-small" @update:model-value="saveData">
                   <option v-for="lang in languages" :key="lang.lang" :value="lang.lang">
                     {{ lang.name }}
                   </option>
@@ -696,7 +691,7 @@ export default {
                   v-model="barData.existing_apps_switch"
                   class="is-flex-direction-row-reverse mr-0 _small"
                   type="is-dark"
-                  @input="saveData"
+                  @update:model-value="saveData"
                 />
               </b-field>
             </div>
@@ -718,7 +713,7 @@ export default {
                   :native-value="barData.rss_switch"
                   class="is-flex-direction-row-reverse mr-0 _small"
                   type="is-dark"
-                  @input="rssConfirm"
+                  @update:model-value="rssConfirm"
                 />
               </b-field>
             </div>
@@ -743,7 +738,7 @@ export default {
                   v-model="barData.recommend_switch"
                   class="is-flex-direction-row-reverse mr-0 _small"
                   type="is-dark"
-                  @input="saveData"
+                  @update:model-value="saveData"
                 />
               </b-field>
             </div>
@@ -776,7 +771,7 @@ export default {
                   v-model="autoUsbMount"
                   class="is-flex-direction-row-reverse mr-0 _small"
                   type="is-dark"
-                  @input="usbAutoMount"
+                  @update:model-value="usbAutoMount"
                 />
               </b-field>
             </div>

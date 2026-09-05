@@ -94,7 +94,7 @@ export default {
         </div>
 
         <div v-for="app in apps" :key="app.id" class="app-launch-modal__row">
-          <b-checkbox :value="isExcepted(app.id)" @input="toggleException(app.id)">
+          <b-checkbox :model-value="isExcepted(app.id)" @update:model-value="toggleException(app.id)">
             {{ app.title }}
           </b-checkbox>
         </div>

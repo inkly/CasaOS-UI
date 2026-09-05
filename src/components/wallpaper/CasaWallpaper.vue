@@ -57,7 +57,6 @@ export default {
 	methods: {
 		showChangeWallpaperModal() {
 			this.$buefy.modal.open({
-				parent: this,
 				component: defineAsyncComponent(() => import('@/components/wallpaper/WallpaperModal.vue')),
 				hasModalCard: true,
 				customClass: '',

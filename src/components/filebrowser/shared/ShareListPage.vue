@@ -70,7 +70,6 @@ export default {
 		 */
 		changeAccess(item) {
 			this.$buefy.modal.open({
-				parent: this,
 				component: ShareAccessModal,
 				hasModalCard: true,
 				trapFocus: true,

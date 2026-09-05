@@ -44,7 +44,7 @@
 									<b-field :class="{ show: isMobile || item.isSelected }"
 										class="checkbox-container is-flex mr-0 mb-0 is-flex-grow-1">
 										<b-checkbox v-model="item.isSelected" size="is-small" class="mr-0"
-											@input="handleCheckboxInput($event, index)"></b-checkbox>
+											@update:model-value="handleCheckboxInput($event, index)"></b-checkbox>
 									</b-field>
 									<!-- CheckBox End -->
 								</div>

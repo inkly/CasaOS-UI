@@ -358,7 +358,6 @@ export default {
 			}
 			this.isShowing = false
 			this.$buefy.modal.open({
-				parent: this,
 				component: AppPanel,
 				hasModalCard: true,
 				customClass: 'app-panel',
@@ -408,7 +407,6 @@ export default {
 					}
 				})
 				this.$buefy.modal.open({
-					parent: this,
 					component: AppPanel,
 					hasModalCard: true,
 					customClass: '',
@@ -448,7 +446,6 @@ export default {
 			}
 			const ret = await this.$api.container.getInfo(id)
 			this.$buefy.modal.open({
-				parent: this,
 				component: AppPanel,
 				hasModalCard: true,
 				customClass: '',
@@ -474,7 +471,6 @@ export default {
 
 		async showExternalLinkPanel (item = {}) {
 			this.$buefy.modal.open({
-				parent: this,
 				component: ExternalLinkPanel,
 				hasModalCard: true,
 				customClass: '',

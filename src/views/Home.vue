@@ -207,7 +207,6 @@ export default {
       const versionRes = await this.$api.sys.getVersion()
       if (versionRes.data.success == 200) {
         this.$buefy.modal.open({
-          parent: this,
           component: UpdateCompleteModal,
           hasModalCard: true,
           customClass: 'network-storage-modal',
@@ -247,7 +246,6 @@ export default {
     async showStorageManagerPanelModal() {
       this.$messageBus('widget_storagemanager')
       this.$buefy.modal.open({
-        parent: this,
         component: defineAsyncComponent(() => import('@/components/Storage/StorageManagerPanel.vue')),
         hasModalCard: true,
         customClass: 'storage-modal',

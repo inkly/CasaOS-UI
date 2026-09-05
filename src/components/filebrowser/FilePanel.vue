@@ -121,7 +121,7 @@
 								<div class="is-flex-grow-1 has-text-left is-flex is-align-items-center">
 									<b-field class="ml-1 is-flex is-size-14px mb-0" expanded >
 										<b-checkbox v-model="isSelectAll" :class="selectState" size="is-small"
-											@input="handleSelect">
+											@update:model-value="handleSelect">
 											{{
 												selectState != "none"
 												? $t("select-items", selectLabel)
@@ -847,7 +847,6 @@ export default {
 				this.isShowDetial = true;
 			} else {
 				this.$buefy.modal.open({
-					parent: this,
 					component: DetailModal,
 					hasModalCard: true,
 					customClass: "detail-panel file-modal",
@@ -874,7 +873,6 @@ export default {
 		showNewFolderModal() {
 			this.isModalOpen = true;
 			this.$buefy.modal.open({
-				parent: this,
 				component: NewFolderModal,
 				hasModalCard: true,
 				customClass: "new-folder-panel file-modal",
@@ -903,7 +901,6 @@ export default {
 		showNewFileModal() {
 			this.isModalOpen = true;
 			this.$buefy.modal.open({
-				parent: this,
 				component: NewFileModal,
 				hasModalCard: true,
 				customClass: "new-folder-panel file-modal",
@@ -933,7 +930,6 @@ export default {
 		showRenameModal(item) {
 			this.isModalOpen = true;
 			this.$buefy.modal.open({
-				parent: this,
 				component: RenameModal,
 				hasModalCard: true,
 				customClass: "rename-panel file-modal",
@@ -1069,7 +1065,6 @@ export default {
 
 		handleSelectShare() {
 			this.$buefy.modal.open({
-				parent: this,
 				component: SelectShareModal,
 				hasModalCard: true,
 				customClass: "share-detial-panel file-modal",
@@ -1089,7 +1084,6 @@ export default {
 		},
 		getShareLink(item) {
 			this.$buefy.modal.open({
-				parent: this,
 				component: ShareDetial,
 				hasModalCard: true,
 				customClass: "share-detial-panel file-modal",
@@ -1125,7 +1119,6 @@ export default {
 				console.log(e);
 			}
 			this.$buefy.modal.open({
-				parent: this,
 				component: MergeStorages,
 				hasModalCard: true,
 				canCancel: false,

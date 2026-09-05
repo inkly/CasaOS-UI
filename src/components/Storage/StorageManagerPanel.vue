@@ -73,7 +73,7 @@
 						</ValidationProvider>
 
 						<b-field :label="$t('Choose Drive')">
-							<b-select v-model="activeDisk" expanded @input="onDiskChoose">
+							<b-select v-model="activeDisk" expanded @update:model-value="onDiskChoose">
 								<option v-for="(option, index) in unDiskData" :key="option.path" :value="index">
 									{{ option.name }} ({{ option.model }} - {{ renderSize(option.size) }})
 								</option>
@@ -487,7 +487,6 @@ export default {
 			}
 
 			this.$buefy.modal.open({
-				parent: this,
 				component: defineAsyncComponent(() => import('@/components/Storage/MergeStorages.vue')),
 				hasModalCard: true,
 				trapFocus: true,
