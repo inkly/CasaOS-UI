@@ -11,30 +11,30 @@
 							type="is-danger">
 				{{ message }}
 			</b-notification>
-			<ValidationObserver ref="observer" v-slot="{ handleSubmit }">
-				<ValidationProvider v-slot="{ errors, valid }" name="User" rules="required">
+			<VeeForm v-slot="{ handleSubmit }" as="span">
+				<VeeField v-slot="{ errors, meta }" :model-value="username" name="User" rules="required">
 					<b-field :label="$t('Username')" :message="errors"
-							 :type="{ 'is-danger': errors[0], 'is-success': valid }"
+							 :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
 							 class="mt-3">
 						<b-input v-model="username" :autofocus="!username" type="text" v-on:keyup.enter="handleSubmit(login)"></b-input>
 					</b-field>
-				</ValidationProvider>
-				<ValidationProvider v-slot="{ errors, valid }" name="Password" rules="required|min:5" vid="password">
+				</VeeField>
+				<VeeField v-slot="{ errors, meta }" :model-value="password" name="Password" rules="required|min:5">
 					<b-field :label="$t('Password')" :message="$t(errors)"
-							 :type="{ 'is-danger': errors[0], 'is-success': valid }" class="mt-2">
+							 :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mt-2">
 						<b-input v-model="password" :autofocus="username" password-reveal
 								 type="password" v-on:keyup.enter="handleSubmit(login)"></b-input>
 					</b-field>
-				</ValidationProvider>
+				</VeeField>
 				<b-button class="mt-5" expanded rounded type="is-primary" @click="handleSubmit(login)">{{ $t('Login') }}
 				</b-button>
-			</ValidationObserver>
+			</VeeForm>
 		</div>
 	</div>
 </template>
 
 <script>
-import {ValidationObserver, ValidationProvider} from "vee-validate";
+import {Field as VeeField, Form as VeeForm} from "vee-validate";
 
 export default {
 
@@ -49,8 +49,8 @@ export default {
 		}
 	},
 	components: {
-		ValidationObserver,
-		ValidationProvider,
+		VeeField,
+		VeeForm,
 	},
 	beforeMount(){
 		let userString = localStorage.getItem('user')
