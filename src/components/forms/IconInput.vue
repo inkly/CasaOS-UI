@@ -12,17 +12,13 @@ const DEV_PATH = "/dev"
 export default {
 	name: "iconInput",
 	props: {
-		vdata: String,
+		modelValue: String,
 		type: String,
 		placeholder: String
 	},
-	model: {
-		prop: 'vdata',
-		event: 'change'
-	},
 	data() {
 		return {
-			path: this.vdata
+			path: this.modelValue
 		}
 	},
 
@@ -44,12 +40,13 @@ export default {
 		}
 	},
 	watch: {
-		vdata(val) {
+		modelValue(val) {
 			this.path = val
 		}
 	},
 	methods: {
 		handleInput() {
+			this.$emit('update:modelValue', this.path)
 			this.$emit('change', this.path)
 			this.$emit('input', this.path)
 		},
@@ -68,6 +65,7 @@ export default {
 				events: {
 					'updatePath': (e) => {
 						this.path = e
+						this.$emit('update:modelValue', this.path)
 						this.$emit('change', this.path)
 						this.$emit('input', this.path)
 					}

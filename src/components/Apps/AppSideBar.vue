@@ -11,12 +11,8 @@
 <script>
 export default {
 	name: "AppSideBar",
-	model: {
-		prop: 'open',
-		event: 'update:open'
-	},
 	props: {
-		open: Boolean,
+		modelValue: Boolean,
 		type: [String, Object],
 		overlay: Boolean,
 		position: {
@@ -56,7 +52,7 @@ export default {
 	},
 	data() {
 		return {
-			isOpen: this.open,
+			isOpen: this.modelValue,
 			isDelayOver: false,
 			transitionName: null,
 			animating: true,
@@ -103,11 +99,11 @@ export default {
 	},
 
 	watch: {
-		open: {
+		modelValue: {
 			handler(value) {
 				this.isOpen = value
-				const open = this.right ? !value : value
-				this.transitionName = !open ? 'slide-prev' : 'slide-next'
+				const modelValue = this.right ? !value : value
+				this.transitionName = !modelValue ? 'slide-prev' : 'slide-next'
 			},
 			immediate: true
 		}
@@ -116,7 +112,7 @@ export default {
 		close() {
 			this.isOpen = false
 			this.$emit('close')
-			this.$emit('update:open', false)
+			this.$emit('update:modelValue', false)
 		},
 		beforeEnter() {
 			this.animating = true

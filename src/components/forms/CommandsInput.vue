@@ -31,21 +31,18 @@ export default {
 	data() {
 		return {
 			isLoading: false,
-			items: this.vdata,
+			items: this.modelValue,
 			min: 0
 		}
 	},
-	model: {
-		prop: 'vdata',
-		event: 'change'
-	},
+	emits: ['update:modelValue'],
 	props: {
-		vdata: Array,
+		modelValue: Array,
 		label: String,
 		message: String,
 	},
 	watch: {
-		vdata(val) {
+		modelValue(val) {
 			this.items = val
 		}
 	},
@@ -63,7 +60,7 @@ export default {
 			this.filterArray()
 		},
 		filterArray() {
-			this.$emit('change', this.items)
+			this.$emit('update:modelValue', this.items)
 		},
 	},
 }

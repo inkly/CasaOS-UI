@@ -61,12 +61,9 @@ export default {
 			min: 0
 		}
 	},
-	model: {
-		prop: 'vData',
-		event: 'change'
-	},
+	emits: ['update:modelValue'],
 	props: {
-		vData: Array,
+		modelValue: Array,
 		showHostPost: Boolean,
 		ports_in_use: {
 			default: () => {
@@ -77,13 +74,13 @@ export default {
 	},
 	computed: {
 		items() {
-			this.vData.forEach(item => {
+			this.modelValue.forEach(item => {
 				if (!item?.protocol) {
 					console.log(item, "item");
 					item.protocol = "";
 				}
 			})
-			return this.vData;
+			return this.modelValue;
 		},
 	},
 	methods: {

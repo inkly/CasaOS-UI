@@ -45,22 +45,18 @@
 <script>
 export default {
   name: "operation-toolbar",
-  model: {
-    prop: 'active',
-    event: 'update:active'
-  },
   props: {
-    active: Boolean,
+    modelValue: Boolean,
   },
   data() {
     return {
-      isActive: this.active || false,
+      isActive: this.modelValue || false,
       type: "is-dark",
       size: "is-small"
     }
   },
   watch: {
-    active(value) {
+    modelValue(value) {
       this.isActive = value
     },
   },
@@ -80,7 +76,7 @@ export default {
     close() {
       this.isActive = false
       this.$emit('close')
-      this.$emit('update:active', this.isActive)
+      this.$emit('update:modelValue', this.isActive)
     }
   },
 }
