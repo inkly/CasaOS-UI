@@ -1,5 +1,6 @@
 // @vitest-environment happy-dom
 import { mount } from '@vue/test-utils'
+import { validate as validateValue } from 'vee-validate'
 import { describe, expect, it } from 'vitest'
 import Fixture from '@/plugins/vee-validate.fixture.vue'
 import '@/plugins/vee-validate'
@@ -76,5 +77,22 @@ describe('vee-validate wiring', () => {
 		expect(Array.isArray(forms)).toBe(true)
 		expect(typeof forms[0].validate).toBe('function')
 		wrapper.unmount()
+	})
+})
+
+// The port rule has been carried between two validation APIs, and both times
+// the escapes in its pattern were at risk. A rule that rejects every port
+// looks exactly like one that works, until somebody types a port. Pin both
+// halves, so a collapsed \d fails here rather than in the install dialog.
+describe('yaml_port', () => {
+	const accepted = ['8080', '80-8080', '192.168.1.1:8080', '192.168.1.1:8080-8090', '192.168.1.1', '65535']
+	const rejected = ['nope', 'dddd', 'ddddd-ddddd', 'abc123']
+
+	it.each(accepted)('accepts %s', async (value) => {
+		expect((await validateValue(value, 'yaml_port')).valid).toBe(true)
+	})
+
+	it.each(rejected)('rejects %s', async (value) => {
+		expect((await validateValue(value, 'yaml_port')).valid).toBe(false)
 	})
 })
