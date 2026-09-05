@@ -143,7 +143,7 @@ _____             _____ _____
 		this.$EventBus.$on(events.OPEN_APP_LAUNCHER, this.openAppLauncher)
 		this.$EventBus.$on(events.CLOSE_APP_IFRAME, this.closeAppFrame)
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		window.removeEventListener('resize', this.onWindowResize);
 		this.$EventBus.$off(events.OPEN_APP_IFRAME, this.openAppIframe)
 		this.$EventBus.$off(events.OPEN_APP_LAUNCHER, this.openAppLauncher)

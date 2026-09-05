@@ -144,7 +144,7 @@ export default {
 		});
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		if (this.instance && this.instance.destroy) {
 			this.instance.destroy(false);
 		}

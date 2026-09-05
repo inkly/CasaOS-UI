@@ -8,4 +8,6 @@ configureCompat({
 	MODE: 2,
 	COMPONENT_V_MODEL: false,
 	ATTR_FALSE_VALUE: false,
+	OPTIONS_BEFORE_DESTROY: false,
+	OPTIONS_DESTROYED: false,
 })

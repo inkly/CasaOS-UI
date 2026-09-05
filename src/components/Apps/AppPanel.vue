@@ -1176,7 +1176,7 @@ export default {
     }, 250),
   },
 
-  destroyed() {
+  unmounted() {
     window.addEventListener('resize', this.setCSSVHVar)
     clearInterval(this.timer)
   },

@@ -1,5 +1,5 @@
 <script>
-import smoothReflow from 'vue-smooth-reflow'
+import smoothReflow from '@/mixins/smoothReflow'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import '@/plugins/vee-validate'
 import Business_ShowNewAppTag from '@/mixins/app/Business_ShowNewAppTag'

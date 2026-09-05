@@ -208,7 +208,7 @@ export default {
 			return this.device.id === localStorage.getItem("peerid");
 		},
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		this.$EventBus.$off("file-progress", this.handleFileProgress);
 		this.$EventBus.$off("text-received");
 		this.$EventBus.$off("close-connection");

@@ -50,7 +50,7 @@ export default {
 			return this.deviceId == this.sender ? 'Cancel sending' : 'Ignore'
 		},
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		this.$EventBus.$off(events.SHOW_DROP_CONTEXT_MENU);
 		this.$EventBus.$off("peer-left");
 	},

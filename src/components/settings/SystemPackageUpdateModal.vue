@@ -151,7 +151,7 @@ export default {
 	mounted() {
 		this.loadInitialState()
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		this.stopPolling()
 	},
 	methods: {

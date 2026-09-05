@@ -29,7 +29,7 @@ export default {
 		});
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		this.breakpointWatchers.forEach(({ query, onChange }) => {
 			query.removeEventListener('change', onChange);
 		});

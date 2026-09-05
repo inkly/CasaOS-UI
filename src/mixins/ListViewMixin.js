@@ -286,7 +286,7 @@ export default {
 		},
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		document.body.removeEventListener('mousemove', this.onDragSelection)
 		document.body.removeEventListener('mouseup', this.onDragSelectionStop)
 		this.parentBox.removeEventListener("scroll", this.onScroll)

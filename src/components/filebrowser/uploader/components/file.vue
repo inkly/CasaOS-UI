@@ -310,7 +310,7 @@ export default {
 			this.file.uploader.on(event, eventHandler(event))
 		})
 	},
-	destroyed() {
+	unmounted() {
 		events.forEach((event) => {
 			this.file.uploader.off(event, this._handlers[event])
 		})

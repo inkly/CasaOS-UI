@@ -19,11 +19,14 @@ import '@/assets/scss/app.scss'
 import VAnimateCss from '@/plugins/animate-css';
 
 // The @vue/compat scaffold. MODE 2 keeps the Vue-2 idioms this app still
-// carries (.native, .sync, $set/$delete, beforeDestroy, functional and async
-// components, the old transition class names) working while they are migrated.
+// carries working while they are migrated; every flag switched off below is one
+// that has been paid off, and the goal is a list long enough to delete the
+// scaffold. Compiler-side flags (.native, .sync, v-if/v-for precedence) do not
+// live here - they go in the vue-loader compatConfig in vue.config.js, because
+// this is the runtime-only build. Keep this call in step with vitest.setup.js.
 //
-// Two flags must be OFF, both because their Vue-2 behaviour breaks Buefy 3.1,
-// which is already a Vue 3 library:
+// Two flags were off from day one, both because their Vue-2 behaviour breaks
+// Buefy 3.1, which is already a Vue 3 library:
 //   COMPONENT_V_MODEL rewrites every component `v-model` from
 //   `modelValue`/`update:modelValue` back to Vue 2's `value`/`input`, which
 //   Buefy does not read - it would silently break all ~110 v-model bindings.
@@ -34,6 +37,9 @@ configureCompat({
 	MODE: 2,
 	COMPONENT_V_MODEL: false,
 	ATTR_FALSE_VALUE: false,
+	// Paid off: every hook is `beforeUnmount` / `unmounted`.
+	OPTIONS_BEFORE_DESTROY: false,
+	OPTIONS_DESTROYED: false,
 })
 
 const io = require("socket.io-client");

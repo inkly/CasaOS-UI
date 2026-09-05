@@ -116,7 +116,7 @@ export default {
 	created() {
 		this.selfId = localStorage.getItem("peerid");
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		this.$EventBus.$emit("pagehide");
 		window.removeEventListener("resize", this.resize);
 		document.ondragover = null; // 拖拽进入

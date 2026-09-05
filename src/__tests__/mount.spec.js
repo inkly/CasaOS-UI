@@ -180,7 +180,7 @@ describe('component smoke tests', () => {
     stubs: { Uploader: { render: h => h('div'), data: () => ({ uploader: uploaderStub }) } },
   }))
   // mounted() measures .action-area, which lives in this component's own template.
-  // beforeDestroy() tears down a peer manager that mounted() only builds a second
+  // beforeUnmount() tears down a peer manager that mounted() only builds a second
   // later, so this case is also what proves that teardown is guarded.
   it('mounts DropPage', () => mountOk(DropPage, {
     attachTo: document.body,

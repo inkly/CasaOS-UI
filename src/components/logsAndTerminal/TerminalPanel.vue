@@ -90,7 +90,7 @@ export default {
 			window.open(`/v2/casaos/health/logs?${qs.stringify(parameters)}`, '_self');
 		},
 	},
-	destroyed() {
+	unmounted() {
 		clearInterval(this.timer);
 	}
 }

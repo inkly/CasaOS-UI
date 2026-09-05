@@ -199,7 +199,7 @@ export default {
 			this.getList()
 		}, 5000)
 	},
-	beforeDestroy () {
+	beforeUnmount () {
 		this.$EventBus.$off(events.OPEN_APP_STORE_AND_GOTO_SYNCTHING)
 		window.removeEventListener('resize', this.getSkCount)
 

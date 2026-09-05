@@ -30,7 +30,7 @@ export default {
 			return this.fullscreen ? "fullscreen-exit" : "fullscreen"
 		}
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		window.removeEventListener('resize', this.onWindowResize)
 	},
 	created() {

@@ -166,7 +166,7 @@
 <script>
 import { defineAsyncComponent } from "vue";
 import LottieAnimation from "lottie-web-vue";
-import smoothReflow from 'vue-smooth-reflow'
+import smoothReflow from '@/mixins/smoothReflow'
 import delay from 'lodash/delay';
 import max from 'lodash/max';
 import orderBy from 'lodash/orderBy';
@@ -271,7 +271,7 @@ export default {
 		});
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		this.$EventBus.$off(events.REFRESH_DISKLIST)
 	},
 
