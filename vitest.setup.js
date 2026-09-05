@@ -10,4 +10,6 @@ configureCompat({
 	ATTR_FALSE_VALUE: false,
 	OPTIONS_BEFORE_DESTROY: false,
 	OPTIONS_DESTROYED: false,
+	INSTANCE_SET: false,
+	INSTANCE_DELETE: false,
 })

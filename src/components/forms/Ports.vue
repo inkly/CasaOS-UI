@@ -86,7 +86,7 @@ export default {
 				this.vData.forEach(item => {
 					if (!item?.protocol) {
 						console.log(item, "item");
-						this.$set(item, 'protocol', "");
+						item.protocol = "";
 					}
 				})
 				return this.vData;

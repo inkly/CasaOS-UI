@@ -221,7 +221,7 @@ export default {
     },
     refreshNotice(data, type) {
       // this.noticesData[type] = data
-      this.$delete(this.noticesData, type)
+      delete this.noticesData[type]
     },
     patchTransform(eventJson) {
       // only show which is disk from local-storage
@@ -264,7 +264,7 @@ export default {
       const operateType = eventJson.name.split(':')[2]
       const entityUUID = eventJson.properties.serial || eventJson.properties['local-storage:uuid']
       if (!this.noticesData[eventType]) {
-        this.$set(this.noticesData, eventType, {
+        this.noticesData[eventType] = {
           prelude: {
             title: 'Found a new drive',
             icon: '',
@@ -278,11 +278,11 @@ export default {
             path: '/Storage',
             icon: 'mdi-arrow-right',
           },
-        })
+        }
       }
       if (operateType === 'added') {
         const percent = this.formatDiskUsage(eventJson.properties)
-        this.$set(this.noticesData[eventType].content, entityUUID, {
+        this.noticesData[eventType].content[entityUUID] = {
           title: eventJson.properties.model || 'Found a new drive',
           icon: '/storage/USB.png',
           color: 'is-primary',
@@ -290,18 +290,18 @@ export default {
           uuid: entityUUID,
           value: percent,
           messageUUID: eventJson.uuid,
-        })
+        }
         this.noticesData[eventType].operate.path = eventJson.properties.mount_point
       }
       else if (operateType === 'removed') {
         // Delete according to the uuid with this.noticesData[eventType]['content'] from BackEnd-DB
         if (this.noticesData[eventType] && this.noticesData[eventType].content[entityUUID]) {
           this.$api.users.delLetter(this.noticesData[eventType].content[entityUUID].messageUUID)
-          this.$delete(this.noticesData[eventType].content, entityUUID)
+          delete this.noticesData[eventType].content[entityUUID]
         }
         this.$api.users.delLetter(eventJson.uuid)
         if (Object.keys(this.noticesData[eventType].content).length === 0) {
-          this.$delete(this.noticesData, eventType)
+          delete this.noticesData[eventType]
         }
       }
     },
@@ -311,7 +311,7 @@ export default {
       const driveType = eventJson.name.split(':')[1]
       const entityUUID = eventJson.properties.serial || eventJson.properties['local-storage:uuid']
       if (!this.noticesData[driveType]) {
-        this.$set(this.noticesData, driveType, {
+        this.noticesData[driveType] = {
           prelude: {
             title: 'Found a new drive',
             icon: '',
@@ -325,12 +325,12 @@ export default {
             path: '/Storage',
             icon: 'mdi-arrow-right',
           },
-        })
+        }
       }
       if (operateType === 'added') {
         const percent = this.formatDiskUsage(eventJson.properties)
         // let percent = eventType.toUpperCase();
-        this.$set(this.noticesData[driveType].content, entityUUID, {
+        this.noticesData[driveType].content[entityUUID] = {
           title: eventJson.properties.model || 'Found a new drive',
           icon: '/storage/storage.png',
           color: 'is-primary',
@@ -338,18 +338,18 @@ export default {
           uuid: entityUUID,
           value: percent,
           messageUUID: eventJson.uuid,
-        })
+        }
         this.noticesData[driveType].operate.path = eventJson.properties.mount_point
       }
       else if (operateType === 'removed') {
         // Delete according to the uuid with this.noticesData[driveType]['content'] from BackEnd-DB
         if (this.noticesData[driveType] && this.noticesData[driveType].content[entityUUID]) {
           this.$api.users.delLetter(this.noticesData[driveType].content[entityUUID].messageUUID)
-          this.$delete(this.noticesData[driveType].content, entityUUID)
+          delete this.noticesData[driveType].content[entityUUID]
         }
         this.$api.users.delLetter(eventJson.uuid)
         if (Object.keys(this.noticesData[driveType].content).length === 0) {
-          this.$delete(this.noticesData, driveType)
+          delete this.noticesData[driveType]
         }
       }
     },
@@ -357,7 +357,7 @@ export default {
       const eventType = eventJson.properties.tran
       const entityUUID = eventJson.properties.serial || eventJson.properties['local-storage:uuid']
       if (!this.noticesData[eventType]) {
-        this.$set(this.noticesData, eventType, {
+        this.noticesData[eventType] = {
           prelude: {
             title: 'Need to add a new disk',
             icon: '',
@@ -371,11 +371,11 @@ export default {
             path: '/Storage',
             icon: 'mdi-arrow-right',
           },
-        })
+        }
       }
       if (operateType === 'added') {
         const percent = this.formatDiskUsage(eventJson.properties)
-        this.$set(this.noticesData[eventType].content, entityUUID, {
+        this.noticesData[eventType].content[entityUUID] = {
           title: eventJson.properties.model || 'Found a new drive',
           icon: '/storage/disk.png',
           color: 'is-primary',
@@ -383,24 +383,24 @@ export default {
           uuid: entityUUID,
           value: percent,
           messageUUID: eventJson.uuid,
-        })
+        }
         this.noticesData[eventType].operate.path = eventJson.properties.mount_point
       }
       else if (operateType === 'removed') {
         // Delete according to the uuid with this.noticesData[eventType]['content'] from BackEnd-DB
         if (this.noticesData[eventType] && this.noticesData[eventType].content[entityUUID]) {
           this.$api.users.delLetter(this.noticesData[eventType].content[entityUUID].messageUUID)
-          this.$delete(this.noticesData[eventType].content, entityUUID)
+          delete this.noticesData[eventType].content[entityUUID]
         }
 
         this.$api.users.delLetter(eventJson.uuid)
         if (Object.keys(this.noticesData[eventType].content).length === 0) {
-          this.$delete(this.noticesData, eventType)
+          delete this.noticesData[eventType]
         }
       }
     },
     addNotice(Json, rootName) {
-      this.$set(this.noticesData, rootName, {
+      this.noticesData[rootName] = {
         prelude: {
           title: Json.title,
           icon: Json.icon,
@@ -408,10 +408,10 @@ export default {
         content: Json.content,
         contentType: Json.contentType,
         operate: Json.operate,
-      })
+      }
     },
     removeNotice(rootName) {
-      this.$delete(this.noticesData, rootName)
+      delete this.noticesData[rootName]
     },
 
     transformAppInstallationProgress(res) {
@@ -440,10 +440,10 @@ export default {
             else {
               currentInstallAppText = `Installing ${progress}%`
             }
-            this.$set(this.noticesData[res.name], 'content', {
+            this.noticesData[res.name].content = {
               text: currentInstallAppText,
               value: progress,
-            })
+            }
           }
           catch (e) {
             console.log(e)

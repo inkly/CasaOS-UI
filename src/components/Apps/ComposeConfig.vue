@@ -353,7 +353,7 @@ export default {
         this.configData.name = yaml?.name || ''
         this.configData.services = {}
         // 删除掉原默认主应用。
-        this.$delete(this.configData.services, 'main_app')
+        delete this.configData.services.main_app
         // this.current_service = yaml["x-casaos"].main;
         this.current_service = Object.keys(yaml.services)[0]
         // 解析 services，并将其赋值到 configData.services中。
@@ -362,7 +362,7 @@ export default {
         this.configData['x-casaos'] = merge(this.configData['x-casaos'], yaml['x-casaos'])
 
         for (const serviceKey in yaml.services) {
-          this.$set(this.configData.services, serviceKey, this.parseComposeItem(yaml.services[serviceKey]))
+          this.configData.services[serviceKey] = this.parseComposeItem(yaml.services[serviceKey])
         }
       }
       catch (error) {
@@ -438,7 +438,7 @@ export default {
           }
         }
       })
-      isNil(composeServicesItem.ports) && this.$set(composeServicesItem, 'ports', [])
+      isNil(composeServicesItem.ports) && (composeServicesItem.ports = [])
 
       // Volume
       // https://yeasy.gitbook.io/docker_practice/compose/compose_file#volumes
@@ -476,7 +476,7 @@ export default {
           return item
         }
       })
-      isNil(composeServicesItem.volumes) && this.$set(composeServicesItem, 'volumes', [])
+      isNil(composeServicesItem.volumes) && (composeServicesItem.volumes = [])
 
       // Devices
       composeServicesItem.devices = this.makeArray(composeServicesItemInput.devices).map((item) => {
@@ -486,7 +486,7 @@ export default {
           host: ii[0],
         }
       })
-      isNil(composeServicesItem.devices) && this.$set(composeServicesItem, 'devices', [])
+      isNil(composeServicesItem.devices) && (composeServicesItem.devices = [])
 
       // Network_mode
       const network_mode = composeServicesItemInput?.network_mode
@@ -537,17 +537,16 @@ export default {
       // container_name
       composeServicesItem.container_name = composeServicesItemInput?.container_name || ''
       composeServicesItem.hostname = composeServicesItemInput?.container_name || ''
-      // this.$set(composeServicesItem, "container_name", composeServicesItemInput?.container_name);
 
       if (
         composeServicesItemInput.cpu_shares === 0
         || composeServicesItemInput.cpu_shares > 99
         || isNil(composeServicesItemInput.cpu_shares)
       ) {
-        this.$set(composeServicesItem, 'cpu_shares', 90)
+        composeServicesItem.cpu_shares = 90
       }
       else {
-        this.$set(composeServicesItem, 'cpu_shares', composeServicesItemInput.cpu_shares)
+        composeServicesItem.cpu_shares = composeServicesItemInput.cpu_shares
       }
 
       // 判断是否存在
@@ -569,7 +568,7 @@ export default {
       const ob = merge(composeServicesItemInput?.deploy, {
         resources: { limits: { memory: newMemory || this.totalMemory } },
       })
-      this.$set(composeServicesItem, 'deploy', ob)
+      composeServicesItem.deploy = ob
 
       return composeServicesItem
     },
@@ -767,14 +766,14 @@ export default {
     // networks or network_mode
     patchNetworkValue(value, service) {
       if (value === 'host' || value === 'bridge') {
-        this.$delete(service, 'networks')
-        this.$set(service, 'network_mode', value)
+        delete service.networks
+        service.network_mode = value
       }
       else {
-        this.$delete(service, 'network_mode')
-        this.$set(service, 'networks', [value])
+        delete service.network_mode
+        service.networks = [value]
         const tempNetworks = merge(this.configData?.networks || {}, { [value]: { name: value } })
-        this.$set(this.configData, 'networks', tempNetworks)
+        this.configData.networks = tempNetworks
       }
     },
 
