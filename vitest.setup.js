@@ -9,7 +9,7 @@ configureCompat({
 	COMPONENT_V_MODEL: false,
 	ATTR_FALSE_VALUE: false,
 	INSTANCE_SET: false,
-	// See the note in src/main.js: these three wait for vee-validate 4.
+	// See the note in src/main.js: vee-validate no longer holds these three on.
 	OPTIONS_BEFORE_DESTROY: true,
 	OPTIONS_DESTROYED: true,
 	INSTANCE_DELETE: true,
