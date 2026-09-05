@@ -46,7 +46,6 @@ export default {
 
     manageUsers() {
       this.$buefy.modal.open({
-        parent: this,
         component: SambaUsersModal,
         hasModalCard: true,
         trapFocus: true,

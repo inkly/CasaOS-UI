@@ -16,7 +16,7 @@
 			<b-icon icon="close-outline" pack="casa" size="is-small" class="is-clickable"
 				@click="removeItem(index)"></b-icon>
 			<b-field expanded>
-				<b-input placeholder="Commands" v-model="items[index]" expanded @input="handleInput"></b-input>
+				<b-input placeholder="Commands" v-model="items[index]" expanded @update:model-value="handleInput"></b-input>
 			</b-field>
 		</div>
 

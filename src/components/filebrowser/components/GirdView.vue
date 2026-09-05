@@ -50,7 +50,7 @@
 										<b-checkbox
 											v-model="item.isSelected"
 											size="is-small"
-											@input="handleCheckboxInput($event, index)"
+											@update:model-value="handleCheckboxInput($event, index)"
 										></b-checkbox>
 									</b-field>
 									<!-- CheckBox End -->

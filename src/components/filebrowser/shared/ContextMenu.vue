@@ -62,7 +62,6 @@ export default {
 		},
 		getShareLink(item) {
 			this.$buefy.modal.open({
-				parent: this,
 				component: ShareDetial,
 				hasModalCard: true,
 				customClass: 'share-detial-panel file-modal',

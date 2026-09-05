@@ -190,7 +190,7 @@ export default {
             <b-input v-model="dockerComposeCommands" :placeholder="$t('Notice: If there are multiple services, only the first set can be analyzed correctly')" class="import-area" type="textarea" />
           </b-field>
 
-          <b-upload ref="importUpload" v-model="dropFiles" accept=".yaml,.yml" drag-drop expanded @input="onSelect">
+          <b-upload ref="importUpload" v-model="dropFiles" accept=".yaml,.yml" drag-drop expanded @update:model-value="onSelect">
             <section class="section">
               <div class="content has-text-centered">
                 <p>
@@ -211,7 +211,7 @@ export default {
 
         <b-tab-item v-if="false" :label="$t('AppFile')">
           <b-field :message="errors" :type="{ 'is-danger': !!errors }">
-            <b-upload ref="importUpload" v-model="dropFiles" accept="application/json" drag-drop expanded @input="onSelect">
+            <b-upload ref="importUpload" v-model="dropFiles" accept="application/json" drag-drop expanded @update:model-value="onSelect">
               <section class="section">
                 <div class="content has-text-centered">
                   <p>

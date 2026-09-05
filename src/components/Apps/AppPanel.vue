@@ -632,7 +632,6 @@ export default {
             const composeJSON = parse(res.data)
             if (composeJSON['x-casaos']?.tips?.before_install?.en_us) {
               this.$buefy.modal.open({
-                parent: this,
                 component: defineAsyncComponent(() => import('@/components/Apps/TipEditorModal.vue')),
                 hasModalCard: true,
                 customClass: '',
@@ -867,7 +866,6 @@ export default {
      */
     showImportPanel() {
       this.$buefy.modal.open({
-        parent: this,
         component: ImportPanel,
         hasModalCard: true,
         customClass: '',
@@ -983,7 +981,6 @@ export default {
             const containers = res.data.data.containers
             const containerId = containers[this.dockerComposeServiceName].ID
             this.$buefy.modal.open({
-              parent: this,
               component: AppTerminalPanel,
               hasModalCard: true,
               customClass: 'terminal-modal',
@@ -1536,7 +1533,7 @@ export default {
                 v-on-click-outside="resetSearchAndSourcesStatus"
                 :placeholder="$t('Search an app...')"
                 class="app-search ml-2"
-                @input="debounceSearchInput"
+                @update:model-value="debounceSearchInput"
                 @keyup.enter="counterPatchGetStoreList++"
               />
             </transition>

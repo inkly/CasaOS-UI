@@ -172,7 +172,6 @@ export default {
 
       this.$EventBus.$on('casaUI:openDiskLearnMore', () => {
         this.$buefy.modal.open({
-          parent: this,
           component: DiskLearnMore,
           hasModalCard: true,
           customClass: 'storage-modal',

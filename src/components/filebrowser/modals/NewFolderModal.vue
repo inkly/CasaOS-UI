@@ -19,7 +19,7 @@
 				</div>
 				<b-field :message="errors" :type="errorType" class="mb-3 mt-5 has-text-light" expanded>
 					<b-input v-model="folderName" v-on:keyup.enter="createFolder" ref="inputs"
-						@input="folderName = folderName.replace(/\//g, '')"></b-input>
+						@update:model-value="folderName = folderName.replace(/\//g, '')"></b-input>
 				</b-field>
 				<div class="notification pl-4 pri-height">
 					<b-field>

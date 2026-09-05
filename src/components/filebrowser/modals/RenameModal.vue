@@ -18,7 +18,7 @@
 				</div>
 				<b-field :message="errors" :type="errorType" class="mb-3 mt-5 has-text-light" expanded>
 					<b-input ref="rinput" v-model="fileName" v-on:keyup.enter="saveNewName"
-						@input="fileName = fileName.replace(/\//g, '')"></b-input>
+						@update:model-value="fileName = fileName.replace(/\//g, '')"></b-input>
 				</b-field>
 			</div>
 

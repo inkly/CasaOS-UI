@@ -160,7 +160,6 @@ export default {
 		// show create folder or file panel
 		showCreatePanel(isFolder) {
 			this.$buefy.modal.open({
-				parent: this,
 				component: CreatePanel,
 				hasModalCard: true,
 				customClass: 'file-sel-modal',

@@ -43,7 +43,6 @@ export default {
 			// messageBus :: feedback
 			this.$messageBus('connect_feedback');
 			this.$buefy.modal.open({
-				parent: this,
 				component: FeedbackPanel,
 				hasModalCard: true,
 				customClass: 'feedback-modal',
@@ -58,7 +57,6 @@ export default {
 			// messageBus :: share
 			this.$messageBus('connect_sharecasaos');
 			this.$buefy.modal.open({
-				parent: this,
 				component: ShareModal,
 				hasModalCard: true,
 				customClass: 'network-storage-modal',

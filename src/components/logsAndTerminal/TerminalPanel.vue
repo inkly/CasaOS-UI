@@ -18,7 +18,7 @@
 		<!-- Modal-Card Body Start -->
 		<section class="modal-card-body " style="overflow:hidden">
 			<div class="is-flex-grow-1">
-				<b-tabs :animated="false" @input="onInput">
+				<b-tabs :animated="false" @update:model-value="onInput">
 					<b-tab-item :label="$t('Terminal')" value="terminal">
 						<terminal-card ref="terminal" :initWsUrl="wsUrl"></terminal-card>
 					</b-tab-item>

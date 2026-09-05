@@ -21,7 +21,7 @@
 						<b-field :label="index < 1 ? $t('Host') : ''"
 							:type="{ 'is-danger': errors[0], 'is-success': valid }" expanded>
 							<b-input :placeholder="$t('Host')"
-								:value="item.host_ip ? `${item.host_ip}:${item.published}` : item.published" expanded
+								:model-value="item.host_ip ? `${item.host_ip}:${item.published}` : item.published" expanded
 								@blur="(event, val) => assignPortsItem(event.target._value, item)"></b-input>
 						</b-field>
 					</validation-provider>

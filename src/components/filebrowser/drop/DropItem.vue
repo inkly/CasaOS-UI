@@ -33,7 +33,7 @@
 			:disabled="isSelf || device.offline || uploadDisabled"
 			drag-drop
 			multiple
-			@input="fileDroped"
+			@update:model-value="fileDroped"
 		>
 			<b-tooltip
 				:always="tipActive"

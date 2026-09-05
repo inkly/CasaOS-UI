@@ -28,7 +28,7 @@
 						</div>
 						<b-field>
 							<b-switch v-model="item.show" class="is-flex-direction-row-reverse mr-0" size="is-small"
-								type="is-dark" @input="handleInput"></b-switch>
+								type="is-dark" @update:model-value="handleInput"></b-switch>
 						</b-field>
 					</div>
 					<div class="is-flex is-align-items-center item">
@@ -37,8 +37,8 @@
 							<b>{{ $t('Show Search Bar') }}</b>
 						</div>
 						<b-field>
-							<b-switch :value="searchBarShown" class="is-flex-direction-row-reverse mr-0" size="is-small"
-								type="is-dark" @input="handleSearchBarInput"></b-switch>
+							<b-switch :model-value="searchBarShown" class="is-flex-direction-row-reverse mr-0" size="is-small"
+								type="is-dark" @update:model-value="handleSearchBarInput"></b-switch>
 						</b-field>
 					</div>
 				</b-dropdown-item>

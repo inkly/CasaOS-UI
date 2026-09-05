@@ -328,7 +328,6 @@ export default {
         }).then(res => res.data)
         this.$refs.dro.isActive = false
         this.$buefy.modal.open({
-          parent: this,
           component: tipEditorModal,
           hasModalCard: true,
           customClass: 'network-storage-modal',
