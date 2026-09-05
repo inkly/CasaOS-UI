@@ -65,4 +65,16 @@ describe('vee-validate wiring', () => {
 		expect(filled.results.containerName.errors[0]).toMatch(/^Name must be a string of numbers/)
 		wrapper.unmount()
 	})
+
+	// ComposeConfig collects one form per service with `this.$refs[key][0]`.
+	// Vue 3.5 still wraps a ref declared inside v-for in an array, so dropping
+	// that [0] - as the migration notes suggested - would make every install and
+	// every update die on `validate is not a function`.
+	it('still arrays a ref declared inside v-for', () => {
+		const wrapper = mount(Fixture)
+		const forms = wrapper.vm.validateRow(1)
+		expect(Array.isArray(forms)).toBe(true)
+		expect(typeof forms[0].validate).toBe('function')
+		wrapper.unmount()
+	})
 })
