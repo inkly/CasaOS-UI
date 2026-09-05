@@ -12,5 +12,6 @@ configureCompat({
 	OPTIONS_BEFORE_DESTROY: false,
 	OPTIONS_DESTROYED: false,
 	INSTANCE_DELETE: false,
+	INSTANCE_LISTENERS: false,
 	WATCH_ARRAY: false,
 })
