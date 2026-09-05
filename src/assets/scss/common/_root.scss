@@ -19,6 +19,29 @@
 // chosen theme; nothing else in the tree declares color-scheme.
 html[data-theme='dark'] {
     color-scheme: dark;
+
+    // The pin above also matches <html data-theme="dark"> through :root and
+    // would hold links at 54% there (4.2:1 on #171717). Bulma 1.0.4's own dark
+    // value for this property is 64% (5.9:1); give it back.
+    --bulma-link-on-scheme-l: 64%;
+
+    // Bulma paints its shadows white in dark (.card, .box, .dropdown-content,
+    // .modal-card-head, .b-tooltip); every shadow in the dashboard is black
+    // in both themes, so hold the light lightness.
+    --bulma-shadow-l: 4%;
+
+    // Buefy compiles b-loading's veil to a literal white; over dark chrome it
+    // is the surface (--casa-surface) at the same alpha. The app card exempts
+    // itself in _card.scss.
+    .loading-overlay {
+        --bulma-loading-background: rgba(31, 32, 35, 0.5);
+    }
+
+    // Bulma's shade helpers are literals with !important and never follow the
+    // theme. has-text-black sits on chrome twice (AppPanel), nowhere on glass.
+    .has-text-black {
+        color: var(--casa-text-strong) !important;
+    }
 }
 
 * {
