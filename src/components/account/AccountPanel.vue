@@ -1,6 +1,5 @@
 <script>
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
-import '@/plugins/vee-validate'
 import { Cropper, Preview } from 'vue-advanced-cropper'
 import 'vue-advanced-cropper/dist/style.css'
 import 'vue-advanced-cropper/dist/theme.compact.css'

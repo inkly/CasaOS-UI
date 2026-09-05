@@ -87,7 +87,7 @@ export default defineConfig({
 			},
 			{
 				find: /^vee-validate$/,
-				replacement: fileURLToPath(new URL('./node_modules/vee-validate/dist/vee-validate.esm.js', import.meta.url))
+				replacement: fileURLToPath(new URL('./node_modules/vee-validate/dist/vee-validate.mjs', import.meta.url))
 			},
 			{find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url))}
 		],
@@ -97,8 +97,8 @@ export default defineConfig({
 	test: {
 		setupFiles: ['./vitest.setup.js'],
 		// resolve.alias only reaches what vite processes. Left externalised, these
-		// packages require('vue') through Node and get plain Vue 3 - vee-validate 3
-		// then does `new Vue()` and every spec touching a form dies on collection.
+		// packages require('vue') through Node and get plain Vue 3 - a second Vue
+		// carries its own reactivity and injection, so no <Field> finds its <Form>.
 		server: {deps: {inline: [/@vue\/test-utils/, /vee-validate/, /buefy/, /vue-dompurify-html/, /vue-i18n/]}}
 	}
 })

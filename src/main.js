@@ -12,6 +12,11 @@ import socketPlugin from '@/plugins/socket.js'
 import createEventBus from '@/events/eventBus.js'
 import messageBus from '@/events/index.js'
 import VueDOMPurifyHTML from 'vue-dompurify-html'
+// vee-validate 4 throws `No such validator '<name>' exists.` for a rule nobody
+// registered, so the rules are defined once here instead of by whichever form
+// happens to be imported first. Ports.vue and StorageManagerPanel.vue name
+// rules they never registered and only ever worked by that load order.
+import '@/plugins/vee-validate'
 
 
 // Import Styles

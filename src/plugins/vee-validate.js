@@ -8,81 +8,65 @@
 
  */
 
-import { confirmed, email, length, min, required } from "vee-validate/dist/rules";
-import { isURL } from 'validator';
-import { extend } from "vee-validate";
-// import isValidHostname from 'is-valid-hostname';
-import validate from 'uuid-validate';
+import { confirmed, min, required } from '@vee-validate/rules';
+import { configure, defineRule } from 'vee-validate';
+
+// vee-validate 3 skipped a non-required rule when the field was empty
+// (`shouldSkip: !isRequired && isEmpty`); v4 runs it. Both optional rules below
+// guard for it themselves, or an untouched container name and every freshly
+// added port row would go red on first render - and `undefined` reaches
+// `value.length`, whose TypeError rejects the whole form's validate().
+function isEmpty(value) {
+	return value === undefined || value === null || value === '';
+}
 
 function isValidContainerName(value) {
 	let reg = /^[a-z0-9A-Z\-_]+$/;
 	return reg.test(value) && value.length <= 32;
 }
 
-extend("required", {
-	...required,
-	message: "This field is required"
+defineRule('required', required);
+defineRule('confirmed', confirmed);
+defineRule('min', min);
+
+defineRule('ContainerName', value => isEmpty(value) || isValidContainerName(value));
+
+defineRule('yaml_port', value => {
+	if (isEmpty(value)) {
+		return true;
+	}
+
+	// match 1 to 3 digits, for example "192"
+	let num = "\d{1,3}";
+
+	// match IP address, for example "
+	let ip = `(${num}\.){3}${num}`;
+
+	// match 1 to 5 digits, may also contain a hyphen and another 1 to 5 digits, for example "80-8080"
+	let portRange = "\d{1,5}(-\d{1,5})?";
+
+	// match IP address and an optional port range, or just match port range
+	let regExp = new RegExp(`^(${ip}(:${portRange})?)|(^${portRange})$`);
+	return regExp.test(value)
 });
 
-extend("email", {
-	...email,
-	message: "This field must be a valid email"
+// true : 满足，成功
+// false : 不满足， 报错
+// The second argument is still the params array in v4.
+defineRule('not_in_ports', (value, params) => params?.[0] === 'false');
+
+// v3 carried the message on every extend(); v4 has one generator per app.
+const MESSAGES = {
+	required: 'This field is required',
+	confirmed: 'This field confirmation does not match',
+	ContainerName: 'Name must be a string of numbers, letters, underscores, or hyphens(0~9,a~zA~Z,_,-).',
+	yaml_port: 'The field mast be a valid docker-compose port',
+	not_in_ports: 'The port is used by other services',
+};
+
+configure({
+	// v3 interpolated {length} out of the rule's own params; v4 hands them over.
+	generateMessage: ctx => ctx.rule?.name === 'min'
+		? `This field must have more than ${ctx.rule.params?.[0]} characters`
+		: MESSAGES[ctx.rule?.name] ?? `${ctx.field} is not valid.`,
 });
-
-extend("confirmed", {
-	...confirmed,
-	message: "This field confirmation does not match"
-});
-
-extend("length", {
-	...length,
-	message: "This field must have 2 options"
-});
-
-extend("min", {
-	...min,
-	message: "This field must have more than {length} characters"
-});
-
-extend('ContainerName', {
-	validate: (value) => isValidContainerName(value),
-	message: 'Name must be a string of numbers, letters, underscores, or hyphens(0~9,a~zA~Z,_,-).',
-});
-
-extend('uuid', {
-	validate: (value) => validate(value),
-	message: 'You entered an invalid share ID',
-});
-
-extend('url', {
-	validate: value => isURL(value, { require_protocol: true }),
-	message: 'The field mast be a valid url',
-})
-
-extend('yaml_port', {
-	validate: value => {
-		// match 1 to 3 digits, for example "192"
-		let num = "\\d{1,3}";
-
-		// match IP address, for example "
-		let ip = `(${num}\\.){3}${num}`;
-
-		// match 1 to 5 digits, may also contain a hyphen and another 1 to 5 digits, for example "80-8080"
-		let portRange = "\\d{1,5}(-\\d{1,5})?";
-
-		// match IP address and an optional port range, or just match port range
-		let regExp = new RegExp(`^(${ip}(:${portRange})?)|(^${portRange})$`);
-		return regExp.test(value)
-	},
-	message: 'The field mast be a valid docker-compose port',
-})
-
-extend('not_in_ports', {
-	validate: (value, isInPortsResult) => {
-		// true : 满足，成功
-		// false : 不满足， 报错
-		// return true
-		return isInPortsResult?.[0] === 'false'
-	},
-	message: 'The port is used by other services',
-})
