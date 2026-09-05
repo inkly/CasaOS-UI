@@ -182,6 +182,9 @@ export default {
 			.switch input[type="checkbox"]+.check {
 				background: transparent;
 				border: #fff 1px solid;
+				// The knob (::before) paints var(--bulma-background). Bulma's dark
+				// theme moves that to 14%; this dropdown is glass and stays as it is.
+				--bulma-background-l: 96%;
 			}
 		}
 	}
