@@ -19,6 +19,7 @@
 	--casa-surface-raised: #{$white}; // popovers over a modal, toasts, snackbars
 	--casa-surface-sunken: #f8f8f8; // nav strips, upload zones, tag boxes
 	--casa-surface-translucent: rgba(255, 255, 255, 0.8); // file browser drag mask
+	--casa-surface-soft: hsla(208, 16%, 98%, 1); // #f9fafb: grey pills and boxes on a surface (drop tips, storage tags)
 	--casa-text: #{$gray-800}; // #29343d
 	--casa-text-body: #2c3e50; // #app: inherited by everything on chrome that sets no colour
 	--casa-text-strong: #000; // ink: modal-close bars, .button.is-text, the settings select chevron
@@ -63,6 +64,7 @@ html[data-theme='dark'] {
 	--casa-surface-raised: #2a2b2f;
 	--casa-surface-sunken: #17181a;
 	--casa-surface-translucent: rgba(31, 32, 35, 0.8);
+	--casa-surface-soft: #25262a;
 	--casa-text: #e6e9ec;
 	--casa-text-body: #e6e9ec;
 	--casa-text-strong: #fff;

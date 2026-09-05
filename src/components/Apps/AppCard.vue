@@ -852,7 +852,7 @@ export default {
     .dropdown-content {
       padding: 4px !important;
       background: none;
-      background: hsla(0, 0%, 100%, 1);
+      background: var(--casa-surface);
       border-radius: 10px;
 
       .dropdown-item {
@@ -885,7 +885,7 @@ export default {
           border: none !important;
           height: 2rem;
           font-size: 0.875rem;
-          color: hsla(208, 20%, 20%, 1);
+          color: var(--casa-text);
 
           &.running {
             color: #779e2a !important;
@@ -898,11 +898,11 @@ export default {
 
         &.has-text-red {
           &:hover {
-            background: hsla(18, 98%, 94%, 1);
+            background: var(--casa-danger-tint);
           }
 
           &:active {
-            background: hsla(18, 100%, 80%, 1);
+            background: var(--casa-danger-tint-strong);
           }
         }
 
@@ -913,12 +913,12 @@ export default {
         }
 
         &:hover {
-          background-color: hsla(208, 16%, 96%, 1);
+          background-color: var(--casa-hover);
         }
 
         &:active {
           /* Gary/200 */
-          background-color: hsla(208, 16%, 94%, 1);
+          background-color: var(--casa-active);
         }
       }
 
@@ -928,7 +928,7 @@ export default {
       }
 
       ._b-bor {
-        border-top: hsla(208, 16%, 94%, 1) 1px solid;
+        border-top: var(--casa-border-faint) 1px solid;
 
         .is-text {
           text-decoration: none;
@@ -945,14 +945,14 @@ export default {
         }
 
         .column:first-child {
-          border-right: hsla(208, 16%, 94%, 1) 1px solid;
+          border-right: var(--casa-border-faint) 1px solid;
         }
       }
 
       /*common*/
       .loading-overlay {
         &.is-active {
-          background: hsla(208, 16%, 96%, 1) !important;
+          background: var(--casa-hover) !important;
           justify-content: flex-start;
         }
 

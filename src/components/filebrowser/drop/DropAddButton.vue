@@ -159,7 +159,7 @@ export default {
   z-index: 100;
   border-radius: 50%;
   box-shadow: 0px 16px 32px -8px rgba(28, 31, 34, 0.12);
-  background-color: #ffffff;
+  background-color: var(--casa-surface-raised);
 
   &.is-floating {
     .circle-area {
@@ -180,10 +180,10 @@ export default {
     height: var(--item-size);
     border-radius: 50%;
     transition: all 0.3s;
-    border: 1px solid #e4e8ec;
+    border: 1px solid var(--casa-border);
 
     &:hover {
-      background-color: #f3f5f6;
+      background-color: var(--casa-hover);
       border: 1px solid transparent;
       transform: scale(1.1);
     }
@@ -214,7 +214,7 @@ export default {
             bottom: -9px;
             right: calc(var(--item-size) / 2 - 5px);
             border-bottom: 5px solid transparent;
-            border-top: 5px solid #ffffff;
+            border-top: 5px solid var(--casa-surface-raised);
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
             z-index: 12;
@@ -224,7 +224,7 @@ export default {
             bottom: -12px;
             right: calc(var(--item-size) / 2 - 6px);
             border-bottom: 6px solid transparent;
-            border-top: 6px solid #e4e8ec;
+            border-top: 6px solid var(--casa-border);
             border-left: 6px solid transparent;
             border-right: 6px solid transparent;
             z-index: 10;
@@ -242,7 +242,7 @@ export default {
             bottom: -9px;
             left: calc(var(--item-size) / 2 - 5px);
             border-bottom: 5px solid transparent;
-            border-top: 5px solid #ffffff;
+            border-top: 5px solid var(--casa-surface-raised);
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
             z-index: 12;
@@ -252,7 +252,7 @@ export default {
             bottom: -12px;
             left: calc(var(--item-size) / 2 - 6px);
             border-bottom: 6px solid transparent;
-            border-top: 6px solid #e4e8ec;
+            border-top: 6px solid var(--casa-border);
             border-left: 6px solid transparent;
             border-right: 6px solid transparent;
             z-index: 10;
@@ -269,7 +269,7 @@ export default {
           &::before {
             top: -5px;
             right: calc(var(--item-size) / 2 - 5px);
-            border-bottom: 5px solid #ffffff;
+            border-bottom: 5px solid var(--casa-surface-raised);
             border-top: 5px solid transparent;
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
@@ -279,7 +279,7 @@ export default {
           &::after {
             top: -8px;
             right: calc(var(--item-size) / 2 - 6px);
-            border-bottom: 6px solid #e4e8ec;
+            border-bottom: 6px solid var(--casa-border);
             border-top: 6px solid transparent;
             border-left: 6px solid transparent;
             border-right: 6px solid transparent;
@@ -297,7 +297,7 @@ export default {
           &::before {
             top: -5px;
             left: calc(var(--item-size) / 2 - 5px);
-            border-bottom: 5px solid #ffffff;
+            border-bottom: 5px solid var(--casa-surface-raised);
             border-top: 5px solid transparent;
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
@@ -307,7 +307,7 @@ export default {
           &::after {
             top: -8px;
             left: calc(var(--item-size) / 2 - 6px);
-            border-bottom: 6px solid #e4e8ec;
+            border-bottom: 6px solid var(--casa-border);
             border-top: 6px solid transparent;
             border-left: 6px solid transparent;
             border-right: 6px solid transparent;
@@ -321,7 +321,8 @@ export default {
       min-width: 17.5rem;
 
       .dropdown-content {
-        border: 1px solid #e4e8ec;
+        background-color: var(--casa-surface-raised);
+        border: 1px solid var(--casa-border);
         border-radius: 6px;
         padding-top: 0;
         padding-bottom: 0;
@@ -349,7 +350,7 @@ export default {
     }
 
     .drop-grey-bg {
-      background: #f9fafb;
+      background: var(--casa-surface-soft);
       border-radius: 4px;
       padding: 0.5rem 0.75rem;
     }
