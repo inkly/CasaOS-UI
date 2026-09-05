@@ -1,7 +1,7 @@
 // Snackbar
 .notices {
 	.snackbar {
-		border: 1px solid $grey-300 !important;
+		border: 1px solid var(--casa-border) !important;
 		padding: 0.625rem 1.25rem;
 
 		.text {
@@ -10,7 +10,7 @@
 			font-weight: 400;
 			font-size: 0.875rem;
 			line-height: 1.25rem;
-			color: rgba(41, 52, 61, 1);
+			color: var(--casa-text);
 			padding: 0;
 		}
 
@@ -28,8 +28,8 @@
 				}
 			}
 
-			background: $white !important;
-			color: rgba(41, 52, 61, 1);
+			background: var(--casa-surface-raised) !important;
+			color: var(--casa-text);
 
 			&::before {
 				content: "\e946";
@@ -65,15 +65,15 @@
 
 			&.is-cancel {
 				.button {
-					background: $grey-100;
+					background: var(--casa-hover);
 					font-size: 14px;
 					font-weight: 400;
 					line-height: 20px;
 					letter-spacing: 0em;
-					color: $gray-800;
+					color: var(--casa-text);
 
 					&:hover {
-						background: $grey-200;
+						background: var(--casa-active);
 					}
 				}
 			}
@@ -94,4 +94,12 @@
 			}
 		}
 	}
+}
+
+// Buefy compiles the plain snackbar's colours into custom properties on
+// .notices (app.scss, `@use ... with`), and a Sass `with` map cannot carry a
+// var(): the dark theme re-points them here instead.
+html[data-theme='dark'] .notices {
+	--bulma-snackbar-background-color: var(--casa-surface-raised);
+	--bulma-snackbar-color: var(--casa-text);
 }
