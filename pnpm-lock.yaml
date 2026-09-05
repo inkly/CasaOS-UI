@@ -285,9 +285,6 @@ importers:
       '@vue/cli-service':
         specifier: 5.0.8
         version: 5.0.8(@vue/compiler-sfc@3.5.42)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.4.1)(sass-loader@16.0.8(sass@1.104.0)(webpack@5.96.1(webpack-cli@5.1.4(webpack-dev-server@5.1.0)(webpack@5.96.1))))(underscore@1.13.7)(vue-template-compiler@2.7.16)(vue@3.5.42(typescript@5.7.2))(webpack-cli@5.1.4(webpack-dev-server@5.1.0)(webpack@5.96.1))(webpack-sources@3.2.3)
-      '@vue/compat':
-        specifier: 3.5.42
-        version: 3.5.42(vue@3.5.42(typescript@5.7.2))
       '@vue/compiler-sfc':
         specifier: 3.5.42
         version: 3.5.42
@@ -2236,11 +2233,6 @@ packages:
 
   '@vue/cli-shared-utils@5.0.8':
     resolution: {integrity: sha512-uK2YB7bBVuQhjOJF+O52P9yFMXeJVj7ozqJkwYE9PlMHL1LMHjtCYm4cSdOebuPzyP+/9p0BimM/OqxsevIopQ==}
-
-  '@vue/compat@3.5.42':
-    resolution: {integrity: sha512-D4jCfg90ELj47HEDwmhEudQpigGcP6maJ8+nji2p8udMthbfcxn7F98rh3pWMfVuKDnSmSsUUw5jcG+34e7P/Q==}
-    peerDependencies:
-      vue: 3.5.42
 
   '@vue/compiler-core@3.5.42':
     resolution: {integrity: sha512-2Ye1ilMtKXxl8qZUrQ5j0CdgenFp/HFQmta6rfRyfEsTG69L6Wk+tWuNoHYHMx9E8tF2Slvdg1FuwDvAXdy1LQ==}
@@ -10661,14 +10653,6 @@ snapshots:
       strip-ansi: 6.0.1
     transitivePeerDependencies:
       - encoding
-
-  '@vue/compat@3.5.42(vue@3.5.42(typescript@5.7.2))':
-    dependencies:
-      '@babel/parser': 7.29.8
-      entities: 7.0.1
-      estree-walker: 2.0.2
-      source-map-js: 1.2.1
-      vue: 3.5.42(typescript@5.7.2)
 
   '@vue/compiler-core@3.5.42':
     dependencies:

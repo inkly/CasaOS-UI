@@ -130,12 +130,10 @@ beforeEach(() => {
 })
 
 async function mountOk(load, { mocks: extra = {}, stubs = {}, provide = {}, ...rest } = {}) {
-  // warnHandler only ever sees a warning raised against a mounted app, which is
-  // not where every compat deprecation comes out: an import-time one is raised
-  // with no current instance and goes to console.warn instead, and a compiler
-  // one is not even raised in this process (vitest.config.js re-emits those onto
-  // console.warn at the top of each module). Without this spy a test can pass
-  // while sitting on a pile of both. Same array, same assertion.
+  // warnHandler only ever sees a warning raised against a mounted app. One
+  // raised at import time has no current instance and goes to console.warn
+  // instead, so without this spy a test can pass while sitting on a pile of
+  // them. Same array, same assertion.
   const warnSpy = vi.spyOn(console, 'warn').mockImplementation((...args) => {
     problems.push(args.map(String).join(' '))
   })

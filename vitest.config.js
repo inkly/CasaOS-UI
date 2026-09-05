@@ -1,20 +1,6 @@
-import {readFileSync} from 'node:fs'
 import {fileURLToPath} from 'node:url'
 import vue from '@vitejs/plugin-vue'
-import {compileTemplate, parse as parseSFC} from '@vue/compiler-sfc'
 import {defineConfig} from 'vitest/config'
-
-// The compiler half of the @vue/compat scaffold, matching the vue-loader
-// compatConfig in vue.config.js. Every flag off below is a template idiom that
-// no longer appears in src/.
-const compatConfig = {
-	MODE: 2,
-	COMPILER_V_ON_NATIVE: false,
-	COMPILER_V_BIND_SYNC: false,
-	COMPILER_V_IF_V_FOR_PRECEDENCE: false,
-	COMPILER_NATIVE_TEMPLATE: false,
-	COMPILER_V_BIND_OBJECT_ORDER: false,
-}
 
 // Templates and option blocks reach for assets with webpack's require().
 // @vitejs/plugin-vue2 rewrote those into imports; @vitejs/plugin-vue leaves
@@ -34,53 +20,14 @@ const webpackAssetRequire = {
 	}
 }
 
-// A compat deprecation raised by the template compiler never reaches the test
-// worker: the parser prints it with console.warn in *this* process, and the ones
-// raised later in the transform go to Rollup's warn channel, which vitest drops.
-// Either way mount.spec.js's zero-warning assertion cannot see them, so a
-// component can carry .native, .sync or a v-if/v-for pair and still mount green.
-// Compile each of our own templates a second time with the same compat options,
-// collect both channels, and append them to the module: they then re-fire on
-// import, inside that spec's console.warn spy.
-const compatCompilerWarnings = {
-	name: 'compat-compiler-warnings',
-	enforce: 'post',
-	transform(code, id) {
-		if (!id.endsWith('.vue') || !id.includes('/src/')) return null
-		const {descriptor} = parseSFC(readFileSync(id, 'utf8'), {filename: id})
-		if (!descriptor.template || descriptor.template.src) return null
-		// No `ast` option, so this call re-parses the source and the parse-time
-		// deprecations land in `tips` alongside the transform-time ones.
-		const {tips} = compileTemplate({
-			source: descriptor.template.content,
-			filename: id,
-			id,
-			compilerOptions: {compatConfig}
-		})
-		if (!tips.length) return null
-		// Only the first line of a tip: the rest is a link and a code frame.
-		const where = id.slice(id.indexOf('/src/') + 1)
-		return tips.reduce(
-			(out, tip) => `${out};console.warn(${JSON.stringify(`[Vue warn] ${tip.split(/\r?\n/)[0]} (${where})`)})`,
-			code
-		)
-	}
-}
-
 export default defineConfig({
-	// compatConfig mirrors the vue-loader option in vue.config.js, so the specs
-	// compile the same templates the build does.
-	plugins: [vue({template: {compilerOptions: {compatConfig}}}), webpackAssetRequire, compatCompilerWarnings],
+	plugins: [vue(), webpackAssetRequire],
 	resolve: {
 		alias: [
-			// The same @vue/compat scaffold vue.config.js installs for webpack.
-			// Exact match, or the prefix would also rewrite vue-router, vuex and
-			// vue-i18n to @vue/compat-router and friends.
-			{find: /^vue$/, replacement: '@vue/compat/dist/vue.runtime.esm-bundler.js'},
 			// Both of these resolve to a CJS build under the "node" condition, which
-			// vitest externalises; their require('vue') then bypasses the alias
-			// above and a second, non-compat Vue ends up in the process. Absolute
-			// paths because neither package exports the dist file by subpath.
+			// vitest externalises, so their require('vue') lands on a second copy of
+			// Vue - which carries its own reactivity and injection. Absolute paths
+			// because neither package exports the dist file by subpath.
 			{
 				find: /^@vue\/test-utils$/,
 				replacement: fileURLToPath(new URL('./node_modules/@vue/test-utils/dist/vue-test-utils.esm-bundler.mjs', import.meta.url))
@@ -89,10 +36,9 @@ export default defineConfig({
 				find: /^vee-validate$/,
 				replacement: fileURLToPath(new URL('./node_modules/vee-validate/dist/vee-validate.mjs', import.meta.url))
 			},
-			// Same story: buefy has no `exports` map, so `main` wins and the CJS
-			// build loads plain Vue instead of the compat alias above. A shallow
-			// mount never renders a Buefy slot and survives it; a real one dies in
-			// renderSlot with `Cannot read properties of null (reading 'ce')`.
+			// Same story: buefy has no `exports` map at all, so `main` wins. A
+			// shallow mount never renders a Buefy slot and survives it; a real one
+			// dies in renderSlot with `Cannot read properties of null (reading 'ce')`.
 			{
 				find: /^buefy$/,
 				replacement: fileURLToPath(new URL('./node_modules/buefy/dist/buefy.esm.js', import.meta.url))
@@ -103,9 +49,8 @@ export default defineConfig({
 		extensions: ['.mjs', '.js', '.json', '.vue']
 	},
 	test: {
-		setupFiles: ['./vitest.setup.js'],
 		// resolve.alias only reaches what vite processes. Left externalised, these
-		// packages require('vue') through Node and get plain Vue 3 - a second Vue
+		// packages require('vue') through Node and get their own copy - a second Vue
 		// carries its own reactivity and injection, so no <Field> finds its <Form>.
 		server: {deps: {inline: [/@vue\/test-utils/, /vee-validate/, /buefy/, /vue-dompurify-html/, /vue-i18n/]}}
 	}
