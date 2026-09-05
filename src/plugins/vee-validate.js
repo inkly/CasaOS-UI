@@ -36,17 +36,10 @@ defineRule('yaml_port', value => {
 		return true;
 	}
 
-	// match 1 to 3 digits, for example "192"
-	let num = "\d{1,3}";
-
-	// match IP address, for example "
-	let ip = `(${num}\.){3}${num}`;
-
-	// match 1 to 5 digits, may also contain a hyphen and another 1 to 5 digits, for example "80-8080"
-	let portRange = "\d{1,5}(-\d{1,5})?";
-
-	// match IP address and an optional port range, or just match port range
-	let regExp = new RegExp(`^(${ip}(:${portRange})?)|(^${portRange})$`);
+	// Written as one literal rather than assembled from strings: moving this
+	// rule between two APIs is exactly how the escapes were lost once already.
+	// An IP with an optional port range, or a bare port range.
+	const regExp = /^((\d{1,3}\.){3}\d{1,3}(:\d{1,5}(-\d{1,5})?)?)|(^\d{1,5}(-\d{1,5})?)$/
 	return regExp.test(value)
 });
 
