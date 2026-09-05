@@ -50,6 +50,13 @@ configureCompat({
 	OPTIONS_BEFORE_DESTROY: false,
 	OPTIONS_DESTROYED: false,
 	INSTANCE_DELETE: false,
+	// Held on by vee-validate 3, which read this.$listeners in its render. With
+	// it on, compat strips every on* key out of $attrs (shouldSkipAttr), so a
+	// listener the child does not declare in `emits` is silently dropped instead
+	// of falling through to the DOM - which is what removing `.native` in part 2a
+	// left the app relying on. Buefy 3 declares narrow `emits`, so `@click` on a
+	// <b-icon> or `@keyup.enter` on a <b-input> only works with this off.
+	INSTANCE_LISTENERS: false,
 	// Paid off: the only array watcher was dead - its writer is commented out.
 	WATCH_ARRAY: false,
 })

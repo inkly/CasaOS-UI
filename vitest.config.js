@@ -89,6 +89,14 @@ export default defineConfig({
 				find: /^vee-validate$/,
 				replacement: fileURLToPath(new URL('./node_modules/vee-validate/dist/vee-validate.mjs', import.meta.url))
 			},
+			// Same story: buefy has no `exports` map, so `main` wins and the CJS
+			// build loads plain Vue instead of the compat alias above. A shallow
+			// mount never renders a Buefy slot and survives it; a real one dies in
+			// renderSlot with `Cannot read properties of null (reading 'ce')`.
+			{
+				find: /^buefy$/,
+				replacement: fileURLToPath(new URL('./node_modules/buefy/dist/buefy.esm.js', import.meta.url))
+			},
 			{find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url))}
 		],
 		// vue-cli resolves extensionless imports of .vue files; vite does not.
