@@ -2,6 +2,7 @@
 import Buefy from 'buefy'
 import VAnimateCss from '@/plugins/animate-css'
 import VueDOMPurifyHTML from 'vue-dompurify-html'
+import { h } from 'vue'
 import { config, shallowMount } from '@vue/test-utils'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import createEventBus from '@/events/eventBus'
@@ -177,7 +178,7 @@ describe('component smoke tests', () => {
   // mounted() reaches into $refs.uploader.uploader for the vue-simple-uploader
   // handle, which a bare stub does not carry.
   it('mounts FilePanel', () => mountOk(FilePanel, {
-    stubs: { Uploader: { render: h => h('div'), data: () => ({ uploader: uploaderStub }) } },
+    stubs: { Uploader: { render: () => h('div'), data: () => ({ uploader: uploaderStub }) } },
   }))
   // mounted() measures .action-area, which lives in this component's own template.
   // beforeUnmount() tears down a peer manager that mounted() only builds a second

@@ -43,6 +43,8 @@ configureCompat({
 	// Paid off: $set / $delete are plain writes, which Vue 3 proxies track.
 	INSTANCE_SET: false,
 	INSTANCE_DELETE: false,
+	// Paid off: the only array watcher was dead - its writer is commented out.
+	WATCH_ARRAY: false,
 })
 
 const io = require("socket.io-client");
