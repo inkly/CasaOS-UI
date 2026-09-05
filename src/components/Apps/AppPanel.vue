@@ -1272,7 +1272,7 @@ export default {
     <template v-else>
       <!-- Sidebar Start -->
       <AppSideBar v-model="sidebarOpen" :overlay="true" :right="true" position="absolute">
-        <template slot-scope="{ close }">
+        <template #default="{ close }">
           <AppDetailInfo
             :app-detail-data="appDetailData"
             :arch="arch"

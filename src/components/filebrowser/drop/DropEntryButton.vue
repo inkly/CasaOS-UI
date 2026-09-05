@@ -16,7 +16,6 @@
       @click.prevent="$emit('open');$messageBus('files_filesdrop_tab')"
     >
       <div
-        slot="reference"
         class="cover mr-2 is-flex-shrink-0 is-flex is-align-items-center none-click"
       >
         <b-icon  icon="drop" pack="casa"></b-icon>

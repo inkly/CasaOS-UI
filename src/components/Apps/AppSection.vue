@@ -56,7 +56,6 @@
 				</div>
 			</template>
 			<!-- App Icon Card End -->
-			<!-- <b-loading slot="footer" v-model="isLoading" :is-full-page="false"></b-loading> -->
 		</draggable>
 		<!-- App List End -->
 
