@@ -10,6 +10,7 @@
 
 import { confirmed, min, required } from '@vee-validate/rules';
 import { configure, defineRule } from 'vee-validate';
+import i18n from '@/plugins/i18n';
 
 // vee-validate 3 skipped a non-required rule when the field was empty
 // (`shouldSkip: !isRequired && isEmpty`); v4 runs it. Both optional rules below
@@ -48,7 +49,10 @@ defineRule('yaml_port', value => {
 // The second argument is still the params array in v4.
 defineRule('not_in_ports', (value, params) => params?.[0] === 'false');
 
-// v3 carried the message on every extend(); v4 has one generator per app.
+// v3 carried the message on every extend(); v4 has one generator per app. The
+// forms used to run its output through $t(errors): vue-i18n 8 translated the
+// one-element array, vue-i18n 9 throws on it and Vue drops the whole <Field>.
+// So the message is translated here and the forms bind `errors` as it comes.
 const MESSAGES = {
 	required: 'This field is required',
 	confirmed: 'This field confirmation does not match',
@@ -59,7 +63,7 @@ const MESSAGES = {
 
 configure({
 	// v3 interpolated {length} out of the rule's own params; v4 hands them over.
-	generateMessage: ctx => ctx.rule?.name === 'min'
+	generateMessage: ctx => i18n.global.t(ctx.rule?.name === 'min'
 		? `This field must have more than ${ctx.rule.params?.[0]} characters`
-		: MESSAGES[ctx.rule?.name] ?? `${ctx.field} is not valid.`,
+		: MESSAGES[ctx.rule?.name] ?? `${ctx.field} is not valid.`),
 });

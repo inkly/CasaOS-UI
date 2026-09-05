@@ -174,7 +174,7 @@ export default {
           <VeeForm ref="ob1" as="span">
             <VeeField v-slot="{ errors, meta }" :model-value="hostname" name="hostname" rules="required">
               <b-field
-                :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
+                :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
                 class="is-flex-wrap-nowrap"
               >
                 <template #label>
@@ -200,7 +200,7 @@ export default {
 
             <VeeField v-slot="{ errors, meta }" :model-value="name" name="appName" rules="required">
               <b-field
-                :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
+                :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
                 class="is-flex-wrap-nowrap"
               >
                 <template #label>

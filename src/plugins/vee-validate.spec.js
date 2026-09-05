@@ -1,9 +1,13 @@
 // @vitest-environment happy-dom
 import { mount } from '@vue/test-utils'
 import { validate as validateValue } from 'vee-validate'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import Fixture from '@/plugins/vee-validate.fixture.vue'
 import '@/plugins/vee-validate'
+
+// The plugin translates its messages through i18n, whose locale table is built
+// with require.context; an empty table makes t() hand back its key.
+vi.mock('@/assets/lang', () => ({ default: { en_us: {} } }))
 
 /**
  * The wiring every converted form repeats. None of it is checked by the

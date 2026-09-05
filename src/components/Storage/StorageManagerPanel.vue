@@ -64,7 +64,7 @@
 				<div v-if="creatIsShow" class="is-flex-grow-1 is-relative">
 					<VeeForm ref="ob1" as="span">
 						<VeeField v-slot="{ errors, meta }" :model-value="createStorageName" name="StorageName" rules="required">
-							<b-field :label="$t('Storage Name')" :message="$t(errors)"
+							<b-field :label="$t('Storage Name')" :message="errors"
 								:type="{ 'is-danger': errors[0], 'is-success': meta.valid }">
 								<b-input v-model="createStorageName" ref="inputs"
 									@keyup="createStorageName = createStorageName.replace(/[^\w]/g, '')"

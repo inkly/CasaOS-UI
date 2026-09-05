@@ -1760,7 +1760,7 @@ export default {
             <VeeField v-slot="{ errors, meta }" :model-value="settingData.label" name="appName" rules="required">
               <b-field
                 :label="`${$t('App name')} *`"
-                :message="$t(errors)"
+                :message="errors"
                 :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
               >
                 <b-input

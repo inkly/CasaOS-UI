@@ -40,7 +40,7 @@
 				</div>
 				<VeeForm v-slot="{ handleSubmit }" as="span">
 					<VeeField v-slot="{ errors, meta }" :model-value="username" name="User" rules="required">
-						<b-field :label="$t('Username')" :message="$t(errors)"
+						<b-field :label="$t('Username')" :message="errors"
 								 :type="{ 'is-danger': errors[0], 'is-success': meta.valid }">
 							<b-input v-model="username" type="text"
 									 v-on:keyup.enter="handleSubmit(register)"></b-input>
@@ -48,7 +48,7 @@
 					</VeeField>
 					<VeeField v-slot="{ errors, meta }" :model-value="password" name="password"
 										rules="required|min:5">
-						<b-field :label="$t('Password')" :message="$t(errors)"
+						<b-field :label="$t('Password')" :message="errors"
 								 :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
 								 class="mt-4">
 							<b-input v-model="password" password-reveal type="password"
@@ -57,7 +57,7 @@
 					</VeeField>
 					<VeeField v-slot="{ errors, meta }" :model-value="confirmation" name="Password Confirmation"
 										rules="required|confirmed:@password">
-						<b-field :label="$t('Confirm Password')" :message="$t(errors)"
+						<b-field :label="$t('Confirm Password')" :message="errors"
 								 :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mt-4">
 							<b-input v-model="confirmation" password-reveal type="password"
 									 v-on:keyup.enter="handleSubmit(register)"></b-input>

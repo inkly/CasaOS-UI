@@ -278,7 +278,7 @@ export default {
 
         <template v-else-if="state === 2">
           <VeeField v-slot="{ errors, meta }" :model-value="user.username" name="User" rules="required">
-            <b-field :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-0 has-text-light">
+            <b-field :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-0 has-text-light">
               <b-input v-model="user.username" type="text" @keyup.enter="handleSubmit(saveUser)" />
             </b-field>
           </VeeField>
@@ -289,17 +289,17 @@ export default {
             {{ message }}
           </b-notification>
           <VeeField v-slot="{ errors, meta }" :model-value="oriPassword" name="oriPassword" rules="required|min:5">
-            <b-field :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-5 has-text-light">
+            <b-field :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-5 has-text-light">
               <b-input v-model="oriPassword" :placeholder="$t('Original password')" password-reveal type="password" />
             </b-field>
           </VeeField>
           <VeeField v-slot="{ errors, meta }" :model-value="password" name="password" rules="required|min:5">
-            <b-field :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-5 has-text-light">
+            <b-field :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-5 has-text-light">
               <b-input v-model="password" :placeholder="$t('New password')" password-reveal type="password" />
             </b-field>
           </VeeField>
           <VeeField v-slot="{ errors, meta }" :model-value="confirmation" name="Password Confirmation" rules="required|confirmed:@password">
-            <b-field :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-0">
+            <b-field :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-0">
               <b-input v-model="confirmation" :placeholder="$t('Confirm the new password again')" password-reveal type="password" @keyup.enter="savePassword(savePassword)" />
             </b-field>
           </VeeField>

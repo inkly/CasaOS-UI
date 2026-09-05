@@ -787,7 +787,7 @@ export default {
         <VeeForm :ref="`${key}valida`" as="span">
           <b-field grouped>
             <VeeField v-slot="{ errors, meta }" :model-value="getFirstField(service.image)" name="Image0" rules="required">
-              <b-field :label="`${$t('Docker Image')} *`" :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-3 is-flex-grow-1 mr-3">
+              <b-field :label="`${$t('Docker Image')} *`" :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-3 is-flex-grow-1 mr-3">
                 <b-input
                   :key="service.image" :readonly="state === 'update' || serviceStableVersion !== ''" :model-value="getFirstField(service.image)" :placeholder="$t('e.g.,hello-world:latest')" @update:model-value="(V) => changeIcon(V)" @blur="
                     (E) => {
@@ -805,7 +805,7 @@ export default {
                 <VeeField v-slot="{ errors, meta }" :model-value="getLateField(service.image)" name="Image1" rules="required">
                   <b-field
                     :label="$t('Tag')"
-                    :message="$t(errors)"
+                    :message="errors"
                     :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
                   >
                     <b-input
@@ -847,7 +847,7 @@ export default {
           </b-field>
 
           <VeeField v-slot="{ errors, meta }" :model-value="ice_i18n(configData['x-casaos'].title)" name="composeAppName" rules="required">
-            <b-field :label="`${$t('App Name')} *`" :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }">
+            <b-field :label="`${$t('App Name')} *`" :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }">
               <b-input :placeholder="$t('e.g.,Your App Name')" :model-value="ice_i18n(configData['x-casaos'].title)" @blur="(E) => (configData['x-casaos'].title.custom = E.target._value)" />
             </b-field>
           </VeeField>
@@ -949,7 +949,7 @@ export default {
           </b-field>
 
           <VeeField v-slot="{ errors, meta }" :model-value="service.container_name" name="Name" rules="ContainerName">
-            <b-field :label="$t('Container Name')" :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': meta.valid && service.container_name }">
+            <b-field :label="$t('Container Name')" :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid && service.container_name }">
               <b-input v-model="service.container_name" :placeholder="$t('Name of app container')" />
             </b-field>
           </VeeField>

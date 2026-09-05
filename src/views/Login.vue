@@ -20,7 +20,7 @@
 					</b-field>
 				</VeeField>
 				<VeeField v-slot="{ errors, meta }" :model-value="password" name="Password" rules="required|min:5">
-					<b-field :label="$t('Password')" :message="$t(errors)"
+					<b-field :label="$t('Password')" :message="errors"
 							 :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mt-2">
 						<b-input v-model="password" :autofocus="username" password-reveal
 								 type="password" v-on:keyup.enter="handleSubmit(login)"></b-input>
