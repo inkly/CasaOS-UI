@@ -44,15 +44,12 @@ configureCompat({
 	ATTR_FALSE_VALUE: false,
 	// Paid off: $set is a plain write, which Vue 3's proxies track.
 	INSTANCE_SET: false,
-	// These three were held ON by vee-validate 3, which is now gone: its
-	// providers unobserved themselves in beforeDestroy, and with INSTANCE_DELETE
-	// off its $delete threw rather than no-op. A flag is global - compat drops
-	// the option for EVERY component in the bundle - so nothing else may still
-	// need them before they can go. Nothing in src/ does; the vendored code has
-	// not been re-checked since the swap.
-	OPTIONS_BEFORE_DESTROY: true,
-	OPTIONS_DESTROYED: true,
-	INSTANCE_DELETE: true,
+	// Paid off with vee-validate 3: it was the last holder of all three, and
+	// nothing in src/ or in the vendored bundle declares beforeDestroy/destroyed
+	// or calls $delete any more.
+	OPTIONS_BEFORE_DESTROY: false,
+	OPTIONS_DESTROYED: false,
+	INSTANCE_DELETE: false,
 	// Paid off: the only array watcher was dead - its writer is commented out.
 	WATCH_ARRAY: false,
 })
