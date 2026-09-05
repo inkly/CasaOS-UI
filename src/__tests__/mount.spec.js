@@ -179,7 +179,7 @@ describe('component smoke tests', () => {
     slots: { default: '<p>panel</p>' },
   }))
   it('mounts UpdateModal', () => mountOk(UpdateModal, { propsData: { changeLog: '# hi' } }))
-  it('mounts Ports', () => mountOk(Ports, { propsData: { vData: [], showHostPost: true } }))
+  it('mounts Ports', () => mountOk(Ports, { propsData: { modelValue: [], showHostPost: true } }))
   it('mounts Login', () => mountOk(Login))
   it('mounts Clock', () => mountOk(Clock))
   it('mounts Network', () => mountOk(Network))

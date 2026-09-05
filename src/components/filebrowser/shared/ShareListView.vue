@@ -65,10 +65,6 @@ import ContextMenu from './ContextMenu.vue';
 import ListIconContainer from "../components/ListIconContainer.vue"
 
 export default {
-	model: {
-		prop: 'listData',
-		event: 'change'
-	},
 	props: {
 		listData: Array,
 		isLoading: Boolean

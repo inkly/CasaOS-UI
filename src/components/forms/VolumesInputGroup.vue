@@ -57,12 +57,9 @@ export default {
 			min: 0
 		}
 	},
-	model: {
-		prop: 'vData',
-		event: 'change'
-	},
+	emits: ['update:modelValue'],
 	props: {
-		vData: Array,
+		modelValue: Array,
 		label: String,
 		message: String,
 		type: String,
@@ -81,10 +78,10 @@ export default {
 	computed: {
 		items: {
 			get() {
-				return this.vData
+				return this.modelValue
 			},
 			set(val) {
-				this.$emit('change', val)
+				this.$emit('update:modelValue', val)
 			}
 		}
 	},

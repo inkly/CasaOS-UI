@@ -68,12 +68,8 @@ export default {
 			position: "is-top-left"
 		}
 	},
-	model: {
-		prop: 'widgetsSettings',
-		event: 'change'
-	},
 	props: {
-		widgetsSettings: Array
+		modelValue: Array
 	},
 	computed: {
 		searchBarShown() {
@@ -97,7 +93,7 @@ export default {
 
 	},
 	created() {
-		this.settingsData = JSON.parse(JSON.stringify(this.widgetsSettings))
+		this.settingsData = JSON.parse(JSON.stringify(this.modelValue))
 		widgetsComponents.keys().forEach(fileName => {
 			const componentConfig = widgetsComponents(fileName)
 			this.apps.push({ app: componentConfig })
@@ -121,6 +117,7 @@ export default {
 			return obj.app.default.title;
 		},
 		handleInput() {
+			this.$emit('update:modelValue', this.settingsData)
 			this.$emit('change', this.settingsData)
 		},
 		handleSearchBarInput(value) {
