@@ -18,7 +18,7 @@
 						<b-autocomplete ref="inputs" v-model="host" :data="filteredDataObj"
 							:placeholder="$t('eg : smb://192.168.1.1')" append-to-body field="host" max-height="120px"
 							open-on-focus @select="option => selected = option">
-							<template slot-scope="props">
+							<template #default="props">
 								<div class="media is-align-items-center smb-media">
 									<div class="media-left is-flex is-align-items-center">
 										<b-icon icon="history"></b-icon>

@@ -942,7 +942,7 @@ export default {
 
           <b-field :label="$t('Container Capabilities (cap-add)')">
             <b-taginput ref="taginput" v-model="service.cap_add" :allow-new="false" :data="capArray" :open-on-focus="false" autocomplete @typing="getFilteredTags">
-              <template slot-scope="props">
+              <template #default="props">
                 {{ props.option }}
               </template>
               <template #empty>
