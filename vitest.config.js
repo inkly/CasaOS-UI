@@ -1,6 +1,10 @@
+import {readFileSync} from 'node:fs'
 import {fileURLToPath} from 'node:url'
 import vue from '@vitejs/plugin-vue'
+import {compileTemplate, parse as parseSFC} from '@vue/compiler-sfc'
 import {defineConfig} from 'vitest/config'
+
+const compatConfig = {MODE: 2}
 
 // Templates and option blocks reach for assets with webpack's require().
 // @vitejs/plugin-vue2 rewrote those into imports; @vitejs/plugin-vue leaves
@@ -20,10 +24,43 @@ const webpackAssetRequire = {
 	}
 }
 
+// A compat deprecation raised by the template compiler never reaches the test
+// worker: the parser prints it with console.warn in *this* process, and the ones
+// raised later in the transform go to Rollup's warn channel, which vitest drops.
+// Either way mount.spec.js's zero-warning assertion cannot see them, so a
+// component can carry .native, .sync or a v-if/v-for pair and still mount green.
+// Compile each of our own templates a second time with the same compat options,
+// collect both channels, and append them to the module: they then re-fire on
+// import, inside that spec's console.warn spy.
+const compatCompilerWarnings = {
+	name: 'compat-compiler-warnings',
+	enforce: 'post',
+	transform(code, id) {
+		if (!id.endsWith('.vue') || !id.includes('/src/')) return null
+		const {descriptor} = parseSFC(readFileSync(id, 'utf8'), {filename: id})
+		if (!descriptor.template || descriptor.template.src) return null
+		// No `ast` option, so this call re-parses the source and the parse-time
+		// deprecations land in `tips` alongside the transform-time ones.
+		const {tips} = compileTemplate({
+			source: descriptor.template.content,
+			filename: id,
+			id,
+			compilerOptions: {compatConfig}
+		})
+		if (!tips.length) return null
+		// Only the first line of a tip: the rest is a link and a code frame.
+		const where = id.slice(id.indexOf('/src/') + 1)
+		return tips.reduce(
+			(out, tip) => `${out};console.warn(${JSON.stringify(`[Vue warn] ${tip.split(/\r?\n/)[0]} (${where})`)})`,
+			code
+		)
+	}
+}
+
 export default defineConfig({
 	// compatConfig mirrors the vue-loader option in vue.config.js, so the specs
 	// compile the same templates the build does.
-	plugins: [vue({template: {compilerOptions: {compatConfig: {MODE: 2}}}}), webpackAssetRequire],
+	plugins: [vue({template: {compilerOptions: {compatConfig}}}), webpackAssetRequire, compatCompilerWarnings],
 	resolve: {
 		alias: [
 			// The same @vue/compat scaffold vue.config.js installs for webpack.
