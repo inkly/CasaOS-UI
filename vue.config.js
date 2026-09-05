@@ -49,7 +49,7 @@ module.exports = {
 				// flags live in configureCompat() in main.js, not here.
 				compilerOptions: {
 					...options.compilerOptions,
-					compatConfig: { MODE: 2, COMPILER_V_ON_NATIVE: false },
+					compatConfig: { MODE: 2, COMPILER_V_ON_NATIVE: false, COMPILER_V_BIND_SYNC: false },
 				},
 			}));
 
