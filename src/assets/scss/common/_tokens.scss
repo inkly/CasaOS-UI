@@ -73,6 +73,13 @@
 	// The wallpaper picker.
 	--casa-surface-tile: rgba(240, 242, 245, 1); // #f0f2f5: the upload tile beside the wallpaper thumbnails
 
+	// The login and welcome panel: a frosted card over the wallpaper. Chrome,
+	// not glass - it is white in light - so it does flip.
+	--casa-frost: rgba(255, 255, 255, 0.46);
+	--casa-frost-input: rgba(255, 255, 255, 0.32);
+	--casa-frost-heading: hsl(211, 72%, 20%, 100%); // the welcome title
+	--casa-frost-heading-dim: hsl(211, 72%, 20%, 60%); // its subtitle
+
 	// Glass: the layer that is already dark in both themes. Black under the
 	// wallpaper, translucent cards on it, white text on the cards. Dark mode
 	// re-skins the light chrome ABOVE this layer and must leave it untouched,
@@ -136,6 +143,10 @@ html[data-theme='dark'] {
 	--casa-warning-strip: hsla(40, 100%, 43%, 0.18);
 	--casa-focus-ring: rgba(255, 255, 255, 0.45);
 	--casa-surface-tile: #2a2b2f;
+	--casa-frost: rgba(31, 32, 35, 0.6);
+	--casa-frost-input: rgba(255, 255, 255, 0.1);
+	--casa-frost-heading: #{$white};
+	--casa-frost-heading-dim: rgba(255, 255, 255, 0.6);
 
 	// Glass: identical to :root on purpose, see above. Not an oversight.
 	--casa-under-wallpaper: #000;

@@ -98,7 +98,7 @@ export default {
 
 	.login-panel {
 		text-align: left;
-		background: rgba(255, 255, 255, 0.46);
+		background: var(--casa-frost);
 		backdrop-filter: blur(1rem);
 		border-radius: 8px;
 		padding: 2.5rem 4rem;
@@ -108,7 +108,7 @@ export default {
 		}
 
 		.input {
-			background: rgba(255, 255, 255, 0.32);
+			background: var(--casa-frost-input);
 			border-color: transparent;
 		}
 
@@ -134,7 +134,7 @@ export default {
 @media screen and (max-width: 480px) {
 	.login-panel {
 		text-align: left;
-		background: rgba(255, 255, 255, 0.46);
+		background: var(--casa-frost);
 		backdrop-filter: blur(1rem);
 		border-radius: 8px;
 		margin: 0 2rem;
@@ -145,7 +145,7 @@ export default {
 		}
 
 		.input {
-			background: rgba(255, 255, 255, 0.32);
+			background: var(--casa-frost-input);
 			border-color: transparent;
 		}
 

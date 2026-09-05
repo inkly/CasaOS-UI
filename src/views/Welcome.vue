@@ -13,7 +13,9 @@
 
 			<div v-if="step == 1" class="has-text-centered">
 				<div v-animate-css="s1Ani" class=" is-flex is-justify-content-center">
-					<b-image :src="require('@/assets/img/logo/casa-dark.svg')" class="is-128x128 mb-4"></b-image>
+					<!-- The same mark twice: navy ink for the light panel, white for the dark one. -->
+					<b-image :src="require('@/assets/img/logo/casa-dark.svg')" class="is-128x128 mb-4 logo-on-light"></b-image>
+					<b-image :src="require('@/assets/img/logo/casa-light.svg')" class="is-128x128 mb-4 logo-on-dark"></b-image>
 				</div>
 
 				<h2 v-animate-css="s2Ani" class="title is-2 mb-5 has-text-centered __attached_title">{{
@@ -223,7 +225,7 @@ export default {
 
 	.login-panel {
 		text-align: left;
-		background: rgba(255, 255, 255, 0.46);
+		background: var(--casa-frost);
 		backdrop-filter: blur(1rem);
 		border-radius: 8px;
 		padding: 2.5rem 4rem;
@@ -233,7 +235,7 @@ export default {
 		}
 
 		.input {
-			background: rgba(255, 255, 255, 0.32);
+			background: var(--casa-frost-input);
 			border-color: transparent;
 		}
 
@@ -259,7 +261,7 @@ export default {
 @media screen and (max-width: 480px) {
 	.login-panel {
 		text-align: left;
-		background: rgba(255, 255, 255, 0.46);
+		background: var(--casa-frost);
 		backdrop-filter: blur(1rem);
 		border-radius: 8px;
 		margin: 0 2rem;
@@ -270,7 +272,7 @@ export default {
 		}
 
 		.input {
-			background: rgba(255, 255, 255, 0.32);
+			background: var(--casa-frost-input);
 			border-color: transparent;
 		}
 
@@ -303,11 +305,16 @@ export default {
 // Temporary
 .__attached_title {
 	// former color.Not in existing architecture.
-	color: hsl(211, 72%, 20%, 100%);;
+	color: var(--casa-frost-heading);
 }
 
 .__attached_sub_title {
-	color: hsl(211, 72%, 20%, 60%);
+	color: var(--casa-frost-heading-dim);
+}
+
+html[data-theme='dark'] .logo-on-light,
+html[data-theme='light'] .logo-on-dark {
+	display: none;
 }
 
 .__op60 {
