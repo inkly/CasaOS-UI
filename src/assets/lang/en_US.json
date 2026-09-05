@@ -467,6 +467,8 @@
   "The top-level \"name\" must match one of the services, to designate the main application.": "The top-level \"name\" must match one of the services, to designate the main application.",
   "Environment variables are shown resolved: saving from here stores the resolved values and the variables are lost.": "Environment variables are shown resolved: saving from here stores the resolved values and the variables are lost.",
   "App launching": "App launching",
+  "Apps open inside CasaOS": "Apps open inside CasaOS",
+  "Apps open in a new tab": "Apps open in a new tab",
   "Configure": "Configure",
   "Open apps inside CasaOS": "Open apps inside CasaOS",
   "When this is off, every app opens in a new browser tab.": "When this is off, every app opens in a new browser tab.",

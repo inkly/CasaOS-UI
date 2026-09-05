@@ -832,10 +832,16 @@ export default {
           <!-- System Package Update End -->
 
           <!-- App Launching Start -->
-          <div class="setting-item">
+          <div class="_is-large hover-effect _is-radius pr-2 mr-4 ml-4">
+            <div class="is-flex is-align-items-center">
+              <div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
+                <b-icon class="mr-1 ml-2" icon="display-applications-outline" pack="casa" size="is-20" />
+                {{ $t("App launching") }}
+              </div>
+            </div>
             <div class="is-flex is-align-items-center is-justify-content-end update-container pl-5">
               <div class="is-flex-grow-1 is-size-7">
-                {{ $t("App launching") }}
+                {{ $t($store.state.appLaunchInIframe ? "Apps open inside CasaOS" : "Apps open in a new tab") }}
               </div>
               <b-button class="ml-2" rounded size="is-small" type="is-dark" @click.stop="showAppLaunchModal">
                 {{ $t("Configure") }}
