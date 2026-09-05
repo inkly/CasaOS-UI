@@ -2,6 +2,20 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.35] - 2026-09-05
+
+### Fixed
+
+- The "App launching" row of the settings panel has the shape of its
+  neighbours: an icon, a title line and the panel's spacing, where it sat as a
+  bare label and button against the edge. Its description line shows the
+  current mode.
+
+### Changed
+
+- The settings panel and the App launching dialog are translated into French.
+- The CI and release workflows run on Node 24.
+
 ## [0.4.34] - 2026-09-05
 
 ### Fixed
