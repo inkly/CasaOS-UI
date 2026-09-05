@@ -12,4 +12,5 @@ configureCompat({
 	OPTIONS_DESTROYED: false,
 	INSTANCE_SET: false,
 	INSTANCE_DELETE: false,
+	WATCH_ARRAY: false,
 })

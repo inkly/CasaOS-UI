@@ -1,4 +1,5 @@
 <script>
+import { h } from 'vue'
 import VMdEditor from '@kangc/v-md-editor'
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import YAML from 'yaml'
@@ -104,13 +105,7 @@ export default {
       return tempO.font
     },
     zoomScreenshot(img) {
-      const customVNode = this.$createElement(
-        'div',
-        {
-          class: 'modal-content',
-        },
-        [this.$createElement('img', { attrs: { src: img } })],
-      )
+      const customVNode = h('div', { class: 'modal-content' }, [h('img', { src: img })])
 
       this.$buefy.modal.open({
         content: [customVNode],

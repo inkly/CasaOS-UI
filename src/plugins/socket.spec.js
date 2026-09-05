@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { getCurrentInstance, onBeforeUnmount, onMounted } from 'vue'
+import { getCurrentInstance, h, onBeforeUnmount, onMounted } from 'vue'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import socketPlugin from './socket'
@@ -29,7 +29,7 @@ function withSocket(socket) {
 	return { global: { plugins: [[socketPlugin, socket]] } }
 }
 
-const blank = { render: h => h('div') }
+const blank = { render: () => h('div') }
 
 function mountWith(socket, options) {
 	return mount({ ...blank, ...options }, withSocket(socket))

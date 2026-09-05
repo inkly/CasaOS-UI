@@ -235,7 +235,6 @@
 import { defineAsyncComponent } from "vue";
 import orderBy from "lodash/orderBy";
 import dropRight from "lodash/dropRight";
-import isEqual from "lodash/isEqual";
 
 import { mixin } from "@/mixins/mixin";
 import { filterHiddenFiles } from "@/mixins/file_utils";
@@ -355,7 +354,6 @@ export default {
 			showUploadList: false,
 			openUploadList: true,
 			uploaderListHeaderText: "Uploading",
-			usbDisks: [],
 			hasMergerFunction: false,
 		};
 	},
@@ -429,11 +427,6 @@ export default {
 				this.hasPasteData = val != null;
 			},
 			deep: true,
-		},
-		usbDisks(newval, oldval) {
-			if (!isEqual(newval, oldval) && newval == "/DATA") {
-				this.getFileList(this.currentPath);
-			}
 		},
 		pageType(val) {
 			switch (val) {
