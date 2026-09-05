@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<!-- data-theme="light": Bulma 1 emits a @media (prefers-color-scheme: dark)
-     block on :root with no opt-in, which would flip inputs, dropdowns and tables
-     for every dark-OS user against this app's hard-coded white modals. Remove
-     it the day the dashboard actually has a dark theme. -->
+<!-- data-theme is the theme switch: Bulma 1 only follows the OS on its own
+     through an unguarded @media (prefers-color-scheme: dark) block, so the
+     attribute always carries a concrete value. "light" here is the no-JS
+     default; the inline script below replaces it with the stored preference
+     before anything paints. -->
 <html lang="" data-theme="light">
 
 <head>
@@ -16,6 +17,24 @@
 	<meta content="#ffffff" name="theme-color">
 	<link href="<%= BASE_URL %>favicon.ico" rel="shortcut icon" type="image/x-icon">
 	<link href="<%= BASE_URL %>favicon.ico" mask="" rel="icon" sizes="any">
+	<!-- Same three rules as src/mixins/app/themePreference.js, inlined so the
+	     theme is settled before the stylesheet arrives: a stored light/dark wins,
+	     anything else follows the OS. -->
+	<script>
+		try {
+			var theme = localStorage.getItem('theme')
+			document.documentElement.dataset.theme = theme === 'light' || theme === 'dark'
+				? theme
+				: (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+		} catch (e) {}
+	</script>
+	<!-- Ground before the extracted CSS lands: #fff is what Bulma paints on
+	     <html> in light, #000 is what the dashboard paints under the wallpaper.
+	     html[data-theme] outranks Bulma's bare html rule. -->
+	<style>
+		html[data-theme=light] { background: #fff; }
+		html[data-theme=dark] { background: #000; color-scheme: dark; }
+	</style>
 	<link href="<%= BASE_URL %>css/animate.min.css" rel="stylesheet">
 	<link href="<%= BASE_URL %>css/custom.css" rel="stylesheet">
 	<title>

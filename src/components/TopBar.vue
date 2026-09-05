@@ -6,6 +6,7 @@ import UpdateModal from './settings/UpdateModal.vue'
 import SystemPackageUpdateModal from './settings/SystemPackageUpdateModal.vue'
 import AppLaunchModal from './settings/AppLaunchModal.vue'
 import { mixin } from '@/mixins/mixin'
+import { readThemePreference, setThemePreference } from '@/mixins/app/themePreference'
 import messages from '@/assets/lang'
 
 import events from '@/events/events'
@@ -57,6 +58,14 @@ export default {
         lang: key,
         name: value.lang_name,
       })),
+      // Appearance: kept in localStorage, never in barData - the login page
+      // needs it before any user exists, and the server copy would overwrite it.
+      theme: readThemePreference(),
+      themes: [
+        { value: 'light', label: 'Light' },
+        { value: 'dark', label: 'Dark' },
+        { value: 'system', label: 'Follow the system' },
+      ],
       // Search Engine Sets
       searchEngines: [
         { url: 'https://duckduckgo.com/?q=', name: 'DuckDuckGo' },
@@ -205,6 +214,13 @@ export default {
       let lang = localStorage.getItem('lang') ? localStorage.getItem('lang') : this.getLangFromBrowser()
       lang = lang.includes('_') ? lang : 'en_us'
       return lang
+    },
+
+    /*************************************************
+		 * PART 1-2b  Dashboard Setting - Appearance
+		 **************************************************/
+    setThemePreference(value) {
+      setThemePreference(value)
     },
 
     /*************************************************
@@ -640,6 +656,26 @@ export default {
             </div>
           </div>
           <!-- Language End -->
+
+          <!-- Appearance Start -->
+          <div
+            class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4"
+          >
+            <div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
+              <b-icon class="mr-1 ml-2" custom-size="mdi-20px" icon="theme-light-dark" />
+              {{ $t("Appearance") }}
+            </div>
+            <div>
+              <b-field>
+                <b-select v-model="theme" class="set-select" size="is-small" @update:model-value="setThemePreference">
+                  <option v-for="item in themes" :key="item.value" :value="item.value">
+                    {{ $t(item.label) }}
+                  </option>
+                </b-select>
+              </b-field>
+            </div>
+          </div>
+          <!-- Appearance End -->
 
           <!-- WebUI Port Start -->
           <div

@@ -17,11 +17,16 @@ import VueDOMPurifyHTML from 'vue-dompurify-html'
 // happens to be imported first. Ports.vue and StorageManagerPanel.vue name
 // rules they never registered and only ever worked by that load order.
 import '@/plugins/vee-validate'
+import { applyThemePreference, readThemePreference } from '@/mixins/app/themePreference'
 
 
 // Import Styles
 import '@/assets/scss/app.scss'
 import VAnimateCss from '@/plugins/animate-css';
+
+// The inline script in public/index.html stamped data-theme before the first
+// paint; from here on the module owns it and follows the OS while on 'system'.
+applyThemePreference(readThemePreference())
 
 const io = require("socket.io-client");
 
