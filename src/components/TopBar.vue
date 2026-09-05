@@ -1139,16 +1139,6 @@ export default {
 	}
 }
 
-@media (prefers-color-scheme: dark) {
-	.top-bar {
-		background: rgba(53, 54, 58, 1);
-
-		.picon {
-			color: #fff;
-		}
-	}
-}
-
 // TODO
 ._is-normal {
 	/* Text 400Regular/Text03 */
