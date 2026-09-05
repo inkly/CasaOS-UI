@@ -1,0 +1,91 @@
+// Theme tokens: the one place a colour may differ between the light and the
+// dark theme.
+//
+// :root is the light theme. Every light value is, to the digit, the literal it
+// replaced at its use site: the light theme must not move, and each slice is
+// proved by diffing the resolved colours of the built CSS. A site whose literal
+// is even one step off a token keeps its literal or gets a token of its own;
+// nothing is rounded onto a neighbour. html[data-theme='dark'] is the dark
+// theme (public/index.html and src/mixins/app/themePreference.js stamp the
+// attribute, always with a concrete value).
+//
+// Names say what a colour is FOR, never what it looks like: --casa-hover is a
+// background whatever grey it happens to be. Only app.scss imports this file;
+// style-resources-loader must not prepend it, it emits rules.
+
+:root {
+	// Light chrome: the top bar, modals, dropdowns, panels, toasts.
+	--casa-surface: #{$white};
+	--casa-surface-raised: #{$white}; // popovers over a modal, toasts, snackbars
+	--casa-surface-sunken: #f8f8f8; // nav strips, upload zones, tag boxes
+	--casa-surface-translucent: rgba(255, 255, 255, 0.8); // file browser drag mask
+	--casa-text: #{$gray-800}; // #29343d
+	--casa-text-body: #2c3e50; // #app: inherited by everything on chrome that sets no colour
+	--casa-text-strong: #000; // ink: modal-close bars, .button.is-text, the settings select chevron
+	--casa-text-secondary: #4a4a4a;
+	--casa-text-muted: #{$grey-600}; // #8595a3
+	--casa-border: #{$grey-300}; // #e4e8ec
+	--casa-border-faint: #{$grey-200}; // #edf0f2 hairlines: card outlines, tab and header rules
+	--casa-border-strong: #cfcfcf;
+	--casa-border-subtle: rgba(0, 0, 0, 0.1);
+	// #e4e9ed: the section hairlines of TopBar, _modal and AppIframe. One step
+	// off --casa-border, kept apart so that light does not move.
+	--casa-divider: rgb(228 233 237);
+	--casa-hover: #{$grey-100}; // #f3f5f6
+	--casa-active: #{$grey-200}; // #edf0f2
+	--casa-selected: #deebfd;
+	--casa-danger-tint: hsla(18, 98%, 94%, 1);
+	--casa-danger-tint-strong: hsla(18, 100%, 80%, 1);
+	--casa-danger-soft: hsla(348, 100%, 95%, 1);
+	--casa-warning-tint: #fff7e6;
+	--casa-scrollbar-thumb: rgba(0, 0, 0, 0.3);
+	--casa-scrollbar-thumb-soft: rgba(0, 0, 0, 0.2);
+
+	// Glass: the layer that is already dark in both themes. Black under the
+	// wallpaper, translucent cards on it, white text on the cards. Dark mode
+	// re-skins the light chrome ABOVE this layer and must leave it untouched,
+	// so these have the same value in both blocks. They exist to name the
+	// layer, so that nobody routes it through a token that inverts.
+	--casa-under-wallpaper: #000;
+	--casa-glass: #{$backDropColor};
+	--casa-glass-highlight: rgb(255 255 255 / 12.5%);
+	--casa-on-glass: #{$white};
+	--casa-on-glass-dim: rgba(255, 255, 255, 0.6);
+	--casa-on-glass-soft: #{$grey-100}; // #f3f5f6
+	--casa-on-glass-muted: #{$grey-400}; // #d3d9df
+}
+
+html[data-theme='dark'] {
+	--casa-surface: #1f2023;
+	--casa-surface-raised: #2a2b2f;
+	--casa-surface-sunken: #17181a;
+	--casa-surface-translucent: rgba(31, 32, 35, 0.8);
+	--casa-text: #e6e9ec;
+	--casa-text-body: #e6e9ec;
+	--casa-text-strong: #fff;
+	--casa-text-secondary: #c3c7cb;
+	--casa-text-muted: #8b95a1;
+	--casa-border: #3a3c41;
+	--casa-border-faint: #32343a;
+	--casa-border-strong: #4b4e54;
+	--casa-border-subtle: rgba(255, 255, 255, 0.1);
+	--casa-divider: #3a3c41;
+	--casa-hover: rgba(255, 255, 255, 0.06);
+	--casa-active: rgba(255, 255, 255, 0.12);
+	--casa-selected: rgba(34, 118, 243, 0.28);
+	--casa-danger-tint: hsla(18, 98%, 55%, 0.18);
+	--casa-danger-tint-strong: hsla(18, 98%, 55%, 0.32);
+	--casa-danger-soft: hsla(348, 86%, 61%, 0.18);
+	--casa-warning-tint: hsla(40, 100%, 43%, 0.18);
+	--casa-scrollbar-thumb: rgba(255, 255, 255, 0.3);
+	--casa-scrollbar-thumb-soft: rgba(255, 255, 255, 0.2);
+
+	// Glass: identical to :root on purpose, see above. Not an oversight.
+	--casa-under-wallpaper: #000;
+	--casa-glass: #{$backDropColor};
+	--casa-glass-highlight: rgb(255 255 255 / 12.5%);
+	--casa-on-glass: #{$white};
+	--casa-on-glass-dim: rgba(255, 255, 255, 0.6);
+	--casa-on-glass-soft: #{$grey-100};
+	--casa-on-glass-muted: #{$grey-400};
+}

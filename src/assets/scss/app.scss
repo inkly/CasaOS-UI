@@ -22,6 +22,9 @@
 	$image-placeholder-blur: 0px
 );
 
+// Theme tokens (--casa-*), read by every partial and component below.
+@import "common/tokens";
+
 // Import materialdesignicons
 @import "~@mdi/font/css/materialdesignicons.min.css";
 
