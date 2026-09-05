@@ -10,9 +10,9 @@
 		<!-- Modal-Card Header End -->
 		<!-- Modal-Card Body Start -->
 		<section class="modal-card-body ">
-			<div class="node-card fixed-height">
+			<div ref="log" class="node-card fixed-height">
 				<div v-if="!isUpdating" class="update-info-container  is-size-14px" v-dompurify-html="markdownToHtml"></div>
-				<div v-else class="update-info-container  is-size-14px" v-dompurify-html="updateMarkdownHtml"></div>
+				<pre v-else class="update-log is-size-14px">{{ updateLogText }}</pre>
 			</div>
 		</section>
 		<!-- Modal-Card Body End -->
@@ -51,9 +51,17 @@ export default {
 		markdownToHtml() {
 			return marked.parse(this.changeLog);
 		},
-		updateMarkdownHtml() {
-
-			return marked.parse(this.updateLogs);
+		updateLogText() {
+			// The installer writes plain text; drop the colour codes a sub-command may leave behind.
+			return this.updateLogs.replace(/\u001b\[[0-9;]*m/g, '');
+		}
+	},
+	watch: {
+		updateLogs() {
+			this.$nextTick(() => {
+				const log = this.$refs.log;
+				if (log) log.scrollTop = log.scrollHeight;
+			});
 		}
 	},
 	methods: {
@@ -96,7 +104,7 @@ export default {
 						}, 1000);
 
 					}
-				})
+				}).catch(() => {}); // the services restart mid-update; the log comes back with them
 			}, 200);
 		},
 		/**
@@ -123,6 +131,16 @@ export default {
 .fixed-height {
 	max-height: 20rem;
 	overflow-y: auto;
+}
+
+.update-log {
+	min-height: 20rem;
+	padding: 0;
+	background: transparent;
+	color: inherit;
+	line-height: 1.5rem;
+	white-space: pre-wrap;
+	word-break: break-all;
 }
 
 .update-info-container {
