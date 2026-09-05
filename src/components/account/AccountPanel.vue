@@ -1,5 +1,5 @@
 <script>
-import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import { Field as VeeField, Form as VeeForm } from 'vee-validate'
 import { Cropper, Preview } from 'vue-advanced-cropper'
 import 'vue-advanced-cropper/dist/style.css'
 import 'vue-advanced-cropper/dist/theme.compact.css'
@@ -31,8 +31,8 @@ const avatarUrlPrefix = 'v1/users/avatar?token='
 export default {
   name: 'AccountPanel',
   components: {
-    ValidationObserver,
-    ValidationProvider,
+    VeeField,
+    VeeForm,
     Cropper,
     Preview,
   },
@@ -223,7 +223,7 @@ export default {
 
 <template>
   <div class="modal-card w-424">
-    <ValidationObserver v-slot="{ handleSubmit }">
+    <VeeForm v-slot="{ handleSubmit }" as="span">
       <!-- Modal-Card Header Start -->
       <header class="modal-card-head">
         <div class="is-flex-grow-1">
@@ -277,32 +277,32 @@ export default {
         </template>
 
         <template v-else-if="state === 2">
-          <ValidationProvider v-slot="{ errors, valid }" name="User" rules="required">
-            <b-field :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': valid }" class="mb-0 has-text-light">
+          <VeeField v-slot="{ errors, meta }" :model-value="user.username" name="User" rules="required">
+            <b-field :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-0 has-text-light">
               <b-input v-model="user.username" type="text" @keyup.enter="handleSubmit(saveUser)" />
             </b-field>
-          </ValidationProvider>
+          </VeeField>
         </template>
 
         <template v-else-if="state === 3">
           <b-notification v-model="notificationShow" aria-close-label="Close notification" auto-close role="alert" type="is-danger">
             {{ message }}
           </b-notification>
-          <ValidationProvider v-slot="{ errors, valid }" name="oriPassword" rules="required|min:5" vid="oriPassword">
-            <b-field :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': valid }" class="mb-5 has-text-light">
+          <VeeField v-slot="{ errors, meta }" :model-value="oriPassword" name="oriPassword" rules="required|min:5">
+            <b-field :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-5 has-text-light">
               <b-input v-model="oriPassword" :placeholder="$t('Original password')" password-reveal type="password" />
             </b-field>
-          </ValidationProvider>
-          <ValidationProvider v-slot="{ errors, valid }" name="Password" rules="required|min:5" vid="password">
-            <b-field :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': valid }" class="mb-5 has-text-light">
+          </VeeField>
+          <VeeField v-slot="{ errors, meta }" :model-value="password" name="password" rules="required|min:5">
+            <b-field :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-5 has-text-light">
               <b-input v-model="password" :placeholder="$t('New password')" password-reveal type="password" />
             </b-field>
-          </ValidationProvider>
-          <ValidationProvider v-slot="{ errors, valid }" name="Password Confirmation" rules="required|confirmed:password">
-            <b-field :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': valid }" class="mb-0">
+          </VeeField>
+          <VeeField v-slot="{ errors, meta }" :model-value="confirmation" name="Password Confirmation" rules="required|confirmed:@password">
+            <b-field :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-0">
               <b-input v-model="confirmation" :placeholder="$t('Confirm the new password again')" password-reveal type="password" @keyup.enter="savePassword(savePassword)" />
             </b-field>
-          </ValidationProvider>
+          </VeeField>
         </template>
 
         <template v-else-if="state === 4">
@@ -331,7 +331,7 @@ export default {
         <b-button v-else-if="state === 4" :label="$t('Submit')" expaned rounded type="is-dark" @click="handleSubmit(saveAvatar)" />
       </footer>
       <!-- Modal-Card Footer End -->
-    </ValidationObserver>
+    </VeeForm>
     <b-loading v-model="isLoading" :is-full-page="false" />
   </div>
 </template>
