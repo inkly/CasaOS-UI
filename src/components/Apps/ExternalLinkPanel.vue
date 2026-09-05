@@ -1,11 +1,11 @@
 <script>
 import smoothReflow from '@/mixins/smoothReflow'
-import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import { Field as VeeField, Form as VeeForm } from 'vee-validate'
 import Business_ShowNewAppTag from '@/mixins/app/Business_ShowNewAppTag'
 import Business_LinkApp from '@/mixins/app/Business_LinkApp'
 
 export default {
-  components: { ValidationProvider, ValidationObserver },
+  components: { VeeField, VeeForm },
   mixins: [smoothReflow, Business_ShowNewAppTag, Business_LinkApp],
   props: {
     linkName: {
@@ -73,7 +73,6 @@ export default {
       // vee-validate 3 resolves to a Boolean, v4 to { valid, ... } — and an
       // object is always truthy, so read `.valid` whenever it is there.
       const result = await ref.validate()
-      console.log(ref)
       return result?.valid ?? result
     },
 
@@ -172,10 +171,10 @@ export default {
     <section class="modal-card-body ">
       <div class="node-card">
         <div class="mb-0">
-          <ValidationObserver ref="ob1">
-            <ValidationProvider v-slot="{ errors, valid }" rules="required">
+          <VeeForm ref="ob1" as="span">
+            <VeeField v-slot="{ errors, meta }" :model-value="hostname" name="hostname" rules="required">
               <b-field
-                :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
                 class="is-flex-wrap-nowrap"
               >
                 <template #label>
@@ -188,7 +187,7 @@ export default {
                   max-height="120px" open-on-focus
                 />
               </b-field>
-            </ValidationProvider>
+            </VeeField>
 
             <div v-if="!state_hostIsExist" class="message-alert is-flex is-align-items-center">
               <div class="left mr-2 is-flex is-align-items-center">
@@ -199,9 +198,9 @@ export default {
               </div>
             </div>
 
-            <ValidationProvider v-slot="{ errors, valid }" rules="required">
+            <VeeField v-slot="{ errors, meta }" :model-value="name" name="appName" rules="required">
               <b-field
-                :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :message="$t(errors)" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
                 class="is-flex-wrap-nowrap"
               >
                 <template #label>
@@ -213,7 +212,7 @@ export default {
                   :placeholder="$t('Customize your APP name')" max-height="120px"
                 />
               </b-field>
-            </ValidationProvider>
+            </VeeField>
 
             <b-field :label="$t('Icon URL')">
               <p class="control">
@@ -226,7 +225,7 @@ export default {
               </p>
               <b-input v-model="icon" :placeholder="$t('Your custom icon URL')" expanded />
             </b-field>
-          </ValidationObserver>
+          </VeeForm>
         </div>
       </div>
     </section>
