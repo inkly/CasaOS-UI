@@ -1,20 +1,18 @@
 // @vitest-environment happy-dom
-import Vue from 'vue'
 import Buefy from 'buefy'
 import VueDOMPurifyHTML from 'vue-dompurify-html'
-import { shallowMount } from '@vue/test-utils'
+import { config, shallowMount } from '@vue/test-utils'
 import { beforeAll, expect, it } from 'vitest'
 import UpdateModal from '@/components/settings/UpdateModal.vue'
 
 beforeAll(() => {
-  Vue.use(Buefy)
-  Vue.use(VueDOMPurifyHTML)
+  config.global.plugins = [Buefy, VueDOMPurifyHTML]
 })
 
 it('shows the upgrade log as text, without the installer colour codes', async () => {
   const wrapper = shallowMount(UpdateModal, {
-    propsData: { changeLog: '# hi' },
-    mocks: { $t: key => key, $api: {} },
+    props: { changeLog: '# hi' },
+    global: { mocks: { $t: key => key, $api: {} } },
   })
   const esc = String.fromCharCode(27)
   await wrapper.setData({
