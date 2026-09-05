@@ -14,38 +14,36 @@
 		<div v-for="(item, index) in items" :key="'port' + index + item.protocol" class="port-item mr-4">
 			<b-icon class="is-clickable" icon="close-outline" pack="casa" size="is-small" @click="removeItem(index)"></b-icon>
 			<ValidationObserver ref="ob" v-slot="{ invalid }" slim>
-				<template>
-					<b-field grouped >
-						<validation-provider v-if="showHostPost" v-slot="{ errors, valid }"
-							:rules="'yaml_port|not_in_ports:' + invalidPortsInUse(item.published, item.protocol)" slim>
-							<!-- Only show title when the first item. -->
-							<b-field :label="index < 1 ? $t('Host') : ''"
-								:type="{ 'is-danger': errors[0], 'is-success': valid }" expanded>
-								<b-input :placeholder="$t('Host')"
-									:value="item.host_ip ? `${item.host_ip}:${item.published}` : item.published" expanded
-									@blur="(event, val) => assignPortsItem(event.target._value, item)"></b-input>
-							</b-field>
-						</validation-provider>
-
-						<validation-provider v-slot="{ errors, valid }" rules="yaml_port" slim>
-							<!-- Only show title when the first item. -->
-							<b-field :label="index < 1 ? $t('Container') : ''"
-								:type="{ 'is-danger': errors[0], 'is-success': valid }" expanded>
-								<b-input v-model.number="item.target" :placeholder="$t('Container')" expanded></b-input>
-							</b-field>
-						</validation-provider>
-
+				<b-field grouped >
+					<validation-provider v-if="showHostPost" v-slot="{ errors, valid }"
+						:rules="'yaml_port|not_in_ports:' + invalidPortsInUse(item.published, item.protocol)" slim>
 						<!-- Only show title when the first item. -->
-						<b-field :label="index < 1 ? $t('Protocol') : ''" expanded>
-							<b-select v-model="item.protocol" :placeholder="$t('Protocol')" expanded>
-								<option value="tcp">TCP</option>
-								<option value="udp">UDP</option>
-								<option value="">TCP + UDP</option>
-							</b-select>
+						<b-field :label="index < 1 ? $t('Host') : ''"
+							:type="{ 'is-danger': errors[0], 'is-success': valid }" expanded>
+							<b-input :placeholder="$t('Host')"
+								:value="item.host_ip ? `${item.host_ip}:${item.published}` : item.published" expanded
+								@blur="(event, val) => assignPortsItem(event.target._value, item)"></b-input>
 						</b-field>
-					</b-field>
+					</validation-provider>
 
-				</template>
+					<validation-provider v-slot="{ errors, valid }" rules="yaml_port" slim>
+						<!-- Only show title when the first item. -->
+						<b-field :label="index < 1 ? $t('Container') : ''"
+							:type="{ 'is-danger': errors[0], 'is-success': valid }" expanded>
+							<b-input v-model.number="item.target" :placeholder="$t('Container')" expanded></b-input>
+						</b-field>
+					</validation-provider>
+
+					<!-- Only show title when the first item. -->
+					<b-field :label="index < 1 ? $t('Protocol') : ''" expanded>
+						<b-select v-model="item.protocol" :placeholder="$t('Protocol')" expanded>
+							<option value="tcp">TCP</option>
+							<option value="udp">UDP</option>
+							<option value="">TCP + UDP</option>
+						</b-select>
+					</b-field>
+				</b-field>
+
 			</ValidationObserver>
 		</div>
 	</div>

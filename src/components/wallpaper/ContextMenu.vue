@@ -4,13 +4,11 @@
 			<b-dropdown aria-role="list" close-on-click ref="dropDown" id="dr2" class="file-dropdown"
 						:position="'is-'+verticalPos+'-'+horizontalPos" :animation="ani" :mobile-modal="false">
 				<!-- Blank Start -->
-				<template>
-					<b-dropdown-item aria-role="menuitem" class="is-flex is-align-items-center" key="system-context11"
-									 @click="showChangeWallpaperModal">
-						<b-icon pack="casa" icon="wallpaper-outline" class="mr-1"></b-icon>
-						{{ $t('Change wallpaper') }}
-					</b-dropdown-item>
-				</template>
+				<b-dropdown-item aria-role="menuitem" class="is-flex is-align-items-center" key="system-context11"
+								 @click="showChangeWallpaperModal">
+					<b-icon pack="casa" icon="wallpaper-outline" class="mr-1"></b-icon>
+					{{ $t('Change wallpaper') }}
+				</b-dropdown-item>
 				<!-- Blank End -->
 			</b-dropdown>
 		</div>

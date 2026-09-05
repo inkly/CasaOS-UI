@@ -5,16 +5,14 @@
 						:position="'is-' + verticalPos + '-' + horizontalPos"
 						aria-role="list" class="file-dropdown" close-on-click>
 				<!-- Blank Start -->
-				<template>
-					<b-dropdown-item key="drop-context1" aria-role="menuitem" class="is-flex is-align-items-center">
-						<b-upload v-model="files" class="is-clickable has-text-full-03 is-flex is-align-items-center"
-								  multiple @input="activeDropUpload">
-							<b-icon class="mr-1 is-16x16" custom-size="casa-16px" icon="sending-files" pack="casa"/>
-							{{ $t('Sending files') }}
-						</b-upload>
-					</b-dropdown-item>
+				<b-dropdown-item key="drop-context1" aria-role="menuitem" class="is-flex is-align-items-center">
+					<b-upload v-model="files" class="is-clickable has-text-full-03 is-flex is-align-items-center"
+							  multiple @input="activeDropUpload">
+						<b-icon class="mr-1 is-16x16" custom-size="casa-16px" icon="sending-files" pack="casa"/>
+						{{ $t('Sending files') }}
+					</b-upload>
+				</b-dropdown-item>
 
-				</template>
 				<!-- Blank End -->
 			</b-dropdown>
 		</div>

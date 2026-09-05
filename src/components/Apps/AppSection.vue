@@ -31,11 +31,11 @@
 
 		<!-- App List Start -->
 		<draggable
+			v-bind="dragOptions"
 			v-model="appList"
 			:draggable="draggable"
 			class="app-list contextmenu-canvas"
 			tag="div"
-			v-bind="dragOptions"
 			@end="onSortEnd"
 			@start="drag = true"
 		>
