@@ -2,6 +2,16 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.34] - 2026-09-05
+
+### Fixed
+
+- The update dialog shows the upgrade log as text. It used to feed the log to
+  the Markdown renderer, which merged its lines into paragraphs and left the
+  installer's colour codes in view. The log now follows its own tail, and a read
+  that fails while the services restart is ignored instead of becoming an
+  unhandled rejection.
+
 ## [0.4.33] - 2026-09-05
 
 Groundwork for the move to Vue 3, all of it landing on Vue 2 so that the day the
