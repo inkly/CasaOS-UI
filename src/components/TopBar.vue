@@ -951,7 +951,7 @@ export default {
       </b-message>
       <footer
         v-if="showPowerTitle !== 'Now shutting down'"
-        class="has-background-white is-flex is-flex-direction-row-reverse"
+        class="is-flex is-flex-direction-row-reverse"
       >
         <button
           class="ml-2 mr-5 mt-3 mb-3 pr-4 pl-4 _is-normal _has-background-blue is-flex is-align-items-center is-justify-content-center"
@@ -978,7 +978,7 @@ export default {
 
 ._footer {
 	height: 3.5rem;
-	border-top: 1px solid rgb(228 233 237);
+	border-top: 1px solid var(--casa-divider);
 }
 
 ._title {
@@ -989,7 +989,7 @@ export default {
 	letter-spacing: 0em;
 	text-align: left;
 	padding: 1.25rem 1.25rem 0.5rem 1.5rem;
-	border-bottom: 1px solid rgb(228 233 237);
+	border-bottom: 1px solid var(--casa-divider);
 }
 
 ._is-normal {
@@ -1006,7 +1006,7 @@ export default {
 }
 
 ._has-text-gray {
-	color: hsla(208, 14%, 58%, 1);
+	color: var(--casa-text-muted);
 }
 
 ._fixed-height {
@@ -1018,7 +1018,7 @@ export default {
 	position: relative;
 	z-index: 20;
 	height: 2.75rem;
-	background: rgba(255, 255, 255, 1);
+	background: var(--casa-surface);
 
 	.navbar-brand {
 		margin-left: 1.25rem;
@@ -1053,7 +1053,7 @@ export default {
 			min-width: 22.5rem;
 
 			.dropdown-content {
-				background: rgba(255, 255, 255, 1);
+				background: var(--casa-surface);
 				border-radius: 10px;
 
 				.dropdown-item {
@@ -1071,13 +1071,13 @@ export default {
 	.set-select {
 		.select {
 			&::after {
-				border-color: #000 !important;
+				border-color: var(--casa-text-strong) !important;
 			}
 		}
 
 		select {
 			background-color: transparent !important;
-			border-color: #000 !important;
+			border-color: var(--casa-text-strong) !important;
 		}
 	}
 
@@ -1131,7 +1131,7 @@ export default {
 	}
 
 	.icon {
-		color: rgb(74, 74, 74);
+		color: var(--casa-text-secondary);
 	}
 }
 
@@ -1200,8 +1200,8 @@ export default {
 			border-radius: 0rem;
 
 			.message-header {
-				background: hsla(0, 0%, 100%, 1);
-				border-bottom: 1px solid hsla(208, 16%, 94%, 1);
+				background: var(--casa-surface);
+				border-bottom: 1px solid var(--casa-border-faint);
 				//margin-top: 1.25rem;
 				//margin-left: 1.5rem;
 				padding: 1.25rem 1.5rem 0.75rem 1.5rem;
@@ -1212,7 +1212,7 @@ export default {
 					justify-content: center;
 					vertical-align: middle;
 
-					color: hsla(208, 20%, 20%, 1);
+					color: var(--casa-text);
 
 					font-family: $family-sans-serif;
 					font-size: 1rem;
@@ -1240,14 +1240,15 @@ export default {
 			}
 
 			.message-body {
-				background: hsla(0, 0%, 100%, 1);
+				background: var(--casa-surface);
 				padding-top: 1rem;
 				padding-bottom: 1rem;
 			}
 		}
 
 		footer {
-			border: 1px solid hsla(208, 16%, 94%, 1);
+			background: var(--casa-surface);
+			border: 1px solid var(--casa-border-faint);
 
 			button {
 				border-radius: 0.875rem;

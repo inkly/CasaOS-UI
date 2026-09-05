@@ -355,7 +355,7 @@ export default {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 1);
+    background-color: var(--casa-under-wallpaper);
     z-index: 19;
     opacity: 0;
     visibility: hidden;

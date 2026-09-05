@@ -98,7 +98,7 @@ export default {
 		font-weight: 400;
 		font-size: 0.875rem;
 		line-height: 1.25rem;
-		color: rgba(255, 255, 255, 0.6);
+		color: var(--casa-on-glass-dim);
 
 		overflow: hidden;
 		text-overflow: ellipsis;

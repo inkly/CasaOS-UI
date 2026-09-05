@@ -78,13 +78,13 @@ export default {
 	//z-index: 10;
 
 	a {
-		color: #fff;
+		color: var(--casa-on-glass);
 		margin: 0.625rem;
 		display: flex;
 		align-items: center;
 
 		&:hover {
-			color: #fff;
+			color: var(--casa-on-glass);
 		}
 	}
 }

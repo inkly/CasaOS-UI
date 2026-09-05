@@ -57,14 +57,14 @@ export default {
 	input {
 		transition: all 0.2s;
 		appearance: none;
-		background: $backDropColor;
+		background: var(--casa-glass);
 		backdrop-filter: $backDropBlur;
 		border: $backDropBorder;
 		box-shadow: $backDropShadow;
 		border-radius: $backDropBorderRadius;
 		outline: none;
 		font-size: 0.875rem !important;
-		color: rgba(255, 255, 255, 0.6);
+		color: var(--casa-on-glass-dim);
 		height: 3.5rem;
 
 		&:focus {
@@ -73,7 +73,7 @@ export default {
 		}
 
 		&::placeholder {
-			color: $grey-400;
+			color: var(--casa-on-glass-muted);
 		}
 	}
 
@@ -87,13 +87,13 @@ export default {
 		.icon.is-left {
 			transition: all 0.2s;
 			left: 0;
-			color: $grey-100 !important;
+			color: var(--casa-on-glass-soft) !important;
 		}
 
 		.icon.is-right {
 			transition: all 0.2s;
 			right: -3rem !important;
-			color: $grey-100 !important;
+			color: var(--casa-on-glass-soft) !important;
 		}
 
 		input {

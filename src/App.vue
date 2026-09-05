@@ -6,7 +6,7 @@
 			<!-- Background Layer End -->
 
 			<div class="base-bar is-flex"
-				 style="background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);">
+				 style="background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, var(--casa-under-wallpaper) 100%);">
 				<!-- BrandBar Start -->
 				<brand-bar v-if="!$store.state.isMobile && $route.path === '/'"
 						   v-animate-css="brandAni"></brand-bar>
@@ -197,11 +197,11 @@ _____             _____ _____
 	font-size: 0.875rem;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	color: #2c3e50;
+	color: var(--casa-text-body);
 	overflow-y: hidden;
 
 	&.is-dark-bg {
-		background-color: #000;
+		background-color: var(--casa-under-wallpaper);
 	}
 
 	& .base-bar {
