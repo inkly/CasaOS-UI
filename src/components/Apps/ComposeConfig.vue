@@ -2,7 +2,6 @@
 import debounce from 'lodash/debounce'
 import axios from 'axios'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
-import '@/plugins/vee-validate'
 import YAML from 'yaml'
 import lowerFirst from 'lodash/lowerFirst'
 import isNil from 'lodash/isNil'

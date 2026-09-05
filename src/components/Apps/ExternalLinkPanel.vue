@@ -1,7 +1,6 @@
 <script>
 import smoothReflow from '@/mixins/smoothReflow'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
-import '@/plugins/vee-validate'
 import Business_ShowNewAppTag from '@/mixins/app/Business_ShowNewAppTag'
 import Business_LinkApp from '@/mixins/app/Business_LinkApp'
 

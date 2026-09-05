@@ -35,7 +35,6 @@
 
 <script>
 import {ValidationObserver, ValidationProvider} from "vee-validate";
-import "@/plugins/vee-validate";
 
 export default {
 
