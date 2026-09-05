@@ -52,9 +52,11 @@ const StorageManagerPanel = () => import('@/components/Storage/StorageManagerPan
 // The forms vee-validate 4 was rolled out across. Their <VeeForm> and <VeeField>
 // are stubbed here like any other child, so what this guards is that the module
 // still resolves and the options still evaluate - which is what broke while the
-// tags and the package were out of step. AppPanel is the one form left out, for
-// the mounted() reason above.
-const ExternalLinkPanel = () => import('@/components/Apps/ExternalLinkPanel.vue')
+// tags and the package were out of step. Two forms stay out for the same
+// mounted() reason as the components above: AppPanel focuses
+// $refs.search_app, ExternalLinkPanel focuses $refs.inputs, and both refs sit
+// on a child that a stub cannot supply - here, one two slots deep inside the
+// stubbed VeeForm and VeeField.
 const AccountPanel = () => import('@/components/account/AccountPanel.vue')
 const ComposeConfig = () => import('@/components/Apps/ComposeConfig.vue')
 const Welcome = () => import('@/views/Welcome.vue')
@@ -199,7 +201,6 @@ describe('component smoke tests', () => {
   it('mounts ShareListPage', () => mountOk(ShareListPage))
   it('mounts CasaWallpaper', () => mountOk(CasaWallpaper))
   it('mounts StorageManagerPanel', () => mountOk(StorageManagerPanel))
-  it('mounts ExternalLinkPanel', () => mountOk(ExternalLinkPanel))
   it('mounts AccountPanel', () => mountOk(AccountPanel))
   it('mounts ComposeConfig', () => mountOk(ComposeConfig, {
     propsData: { totalMemory: 1, networks: [], capArray: [] },
