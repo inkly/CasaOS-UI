@@ -233,7 +233,7 @@ export default {
 
 	.image {
 		border-radius: 4px;
-		border: #fff 1px solid;
+		border: var(--casa-surface) 1px solid;
 		overflow: hidden;
 		background-size: cover;
 	}
@@ -242,9 +242,9 @@ export default {
 		width: 100%;
 		height: 100%;
 		border-radius: 4px;
-		border: #fff 1px solid;
+		border: var(--casa-surface) 1px solid;
 		overflow: hidden;
-		background-color: rgba(240, 242, 245, 1);
+		background-color: var(--casa-surface-tile);
 	}
 }
 

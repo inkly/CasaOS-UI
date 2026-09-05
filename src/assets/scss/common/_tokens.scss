@@ -70,6 +70,9 @@
 	--casa-warning-strip: #fff6e5; // the amber notice of the app panel, one step off --casa-warning-tint
 	--casa-focus-ring: rgba(54, 54, 54, 0.45); // keyboard focus on the app frame's close button
 
+	// The wallpaper picker.
+	--casa-surface-tile: rgba(240, 242, 245, 1); // #f0f2f5: the upload tile beside the wallpaper thumbnails
+
 	// Glass: the layer that is already dark in both themes. Black under the
 	// wallpaper, translucent cards on it, white text on the cards. Dark mode
 	// re-skins the light chrome ABOVE this layer and must leave it untouched,
@@ -132,6 +135,7 @@ html[data-theme='dark'] {
 	--casa-text-icon: hsla(208, 16%, 70%, 1);
 	--casa-warning-strip: hsla(40, 100%, 43%, 0.18);
 	--casa-focus-ring: rgba(255, 255, 255, 0.45);
+	--casa-surface-tile: #2a2b2f;
 
 	// Glass: identical to :root on purpose, see above. Not an oversight.
 	--casa-under-wallpaper: #000;
