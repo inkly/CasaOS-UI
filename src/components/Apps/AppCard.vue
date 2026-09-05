@@ -874,7 +874,7 @@ export default {
         }
 
         span+span i {
-          color: hsla(208, 16%, 42%, 1);
+          color: var(--casa-text-icon);
         }
 
         &.is-text {

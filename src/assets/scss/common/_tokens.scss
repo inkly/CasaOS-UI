@@ -63,6 +63,13 @@
 	--casa-picker-hover: #e0e0e0;
 	--casa-picker-selected: #b6e0ff;
 
+	// The app store and the app frame.
+	--casa-surface-head: #{$grey-200}; // #edf0f2: the header strip of the app store and of a framed app
+	--casa-hover-row: hsl(0, 0%, 97%); // an app store row
+	--casa-text-icon: hsla(208, 16%, 42%, 1); // the glyph beside an app card menu entry
+	--casa-warning-strip: #fff6e5; // the amber notice of the app panel, one step off --casa-warning-tint
+	--casa-focus-ring: rgba(54, 54, 54, 0.45); // keyboard focus on the app frame's close button
+
 	// Glass: the layer that is already dark in both themes. Black under the
 	// wallpaper, translucent cards on it, white text on the cards. Dark mode
 	// re-skins the light chrome ABOVE this layer and must leave it untouched,
@@ -120,6 +127,11 @@ html[data-theme='dark'] {
 	--casa-picker-border: #3a3c41;
 	--casa-picker-hover: rgba(255, 255, 255, 0.1);
 	--casa-picker-selected: #{rgba($primary, 0.35)};
+	--casa-surface-head: #2a2b2f;
+	--casa-hover-row: rgba(255, 255, 255, 0.05);
+	--casa-text-icon: hsla(208, 16%, 70%, 1);
+	--casa-warning-strip: hsla(40, 100%, 43%, 0.18);
+	--casa-focus-ring: rgba(255, 255, 255, 0.45);
 
 	// Glass: identical to :root on purpose, see above. Not an oversight.
 	--casa-under-wallpaper: #000;

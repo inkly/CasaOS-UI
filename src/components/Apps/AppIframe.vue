@@ -72,7 +72,7 @@ export default {
   max-width: 81rem;
   min-height: 0;
   overflow: hidden;
-  background: #fff;
+  background: var(--casa-surface);
   border-radius: 0.5rem;
   box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.25);
 }
@@ -81,9 +81,9 @@ export default {
   flex: 0 0 3.5rem;
   min-height: 3.5rem;
   padding: 1.25rem 1.25rem 0.5rem 1.5rem;
-  color: #363636;
-  background-color: hsla(208, 16%, 94%, 1);
-  border-bottom: 1px solid rgb(228, 233, 237);
+  color: var(--casa-text-emphasis);
+  background-color: var(--casa-surface-head);
+  border-bottom: 1px solid var(--casa-divider);
 }
 
 .app-iframe-title {
@@ -117,14 +117,14 @@ export default {
 }
 
 .app-iframe-close:focus {
-  outline: 2px solid rgba(54, 54, 54, 0.45);
+  outline: 2px solid var(--casa-focus-ring);
   outline-offset: 2px;
 }
 
 .app-iframe-content {
   flex: 1 1 auto;
   min-height: 0;
-  background: #fff;
+  background: var(--casa-surface);
 }
 
 .app-iframe {

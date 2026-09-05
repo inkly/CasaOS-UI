@@ -1921,7 +1921,7 @@ export default {
 // appPanel global style
 .app-panel {
     .modal-card-head {
-        background-color: hsla(208, 16%, 94%, 1);
+        background-color: var(--casa-surface-head);
     }
 
     ._stepStoreList {
@@ -1948,7 +1948,7 @@ export default {
     transition: background 0.3s ease;
 
     &:hover {
-        background-color: hsl(0, 0%, 97%);
+        background-color: var(--casa-hover-row);
     }
 }
 
@@ -1978,7 +1978,7 @@ export default {
 
     .level {
         .footing {
-            color: hsl(0, 0%, 48%);
+            color: var(--casa-text-dim);
         }
     }
 
@@ -2176,7 +2176,7 @@ export default {
     height: 2rem;
     margin-top: 0.5rem;
     margin-bottom: 1rem;
-    background: #fff6e5;
+    background: var(--casa-warning-strip);
     border-radius: 0.25rem;
     color: #d99000;
     font-size: 0.875rem;
@@ -2215,7 +2215,7 @@ export default {
 }
 
 ._b-line {
-    border-bottom: 1px solid hsla(208, 16%, 94%, 1) !important;
+    border-bottom: 1px solid var(--casa-border-faint) !important;
 }
 
 .progress {
