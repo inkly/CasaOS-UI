@@ -1,5 +1,16 @@
 // Root Style
 
+// Bulma 1 gives a bare <a> its own lightness (--bulma-link-on-scheme-l, 39%)
+// rather than the link colour itself, which darkened every link in the
+// dashboard to #0a52bd. Hold the palette's own blue. It has to name the theme
+// selectors too: Bulma sets this again under [data-theme=light], which beats a
+// bare :root.
+:root,
+.theme-light,
+[data-theme="light"] {
+	--bulma-link-on-scheme-l: var(--bulma-link-l);
+}
+
 :root {
     --swiper-navigation-size: 24px !important;
 }

@@ -269,3 +269,32 @@ button.dropdown-item.is-active {
 	}
 }
 
+// Buefy 3.1 writes rgba($color, α) where Bulma 1's $color is now a custom
+// property, which emits rgba(var(--bulma-grey), .8) — invalid, so browsers
+// drop the declaration silently. These three land on controls we use: the
+// focus and hover ring of every switch, the outlined switch's hover border,
+// and the placeholder of an empty select. Bulma 1 publishes the matching
+// -rgb triplets, so restate them with those.
+.switch {
+	input[type="checkbox"]:active + .check,
+	input[type="checkbox"]:active:checked + .check,
+	input[type="checkbox"]:focus + .check,
+	input[type="checkbox"]:focus:checked + .check {
+		box-shadow: 0 0 0.5em rgba(var(--bulma-grey-rgb), 0.8);
+	}
+
+	&:hover input[type="checkbox"] + .check,
+	&:hover input[type="checkbox"]:checked + .check {
+		box-shadow: 0 0 0.5em rgba(var(--bulma-grey-rgb), 0.8);
+	}
+
+	// --bulma-grey-light is a plain hex in our palette, so there is no
+	// triplet to reach for.
+	&.is-outlined:hover input[type="checkbox"] + .check {
+		border-color: rgba(243, 245, 246, 0.9);
+	}
+}
+
+.select.is-empty select {
+	color: rgba(var(--bulma-grey-rgb), 0.7);
+}
