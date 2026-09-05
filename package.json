@@ -108,7 +108,6 @@
     "@vue/cli-plugin-router": "5.0.8",
     "@vue/cli-plugin-vuex": "5.0.8",
     "@vue/cli-service": "5.0.8",
-    "@vue/compat": "3.5.42",
     "@vue/compiler-sfc": "3.5.42",
     "@vue/test-utils": "^2.5.0",
     "babel-eslint": "^10.1.0",

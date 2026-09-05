@@ -1,5 +1,5 @@
 import 'intersection-observer'
-import { createApp, configureCompat } from 'vue'
+import { createApp } from 'vue'
 import App from '@/App.vue'
 import router from '@/router'
 import store from '@/store'
@@ -22,44 +22,6 @@ import '@/plugins/vee-validate'
 // Import Styles
 import '@/assets/scss/app.scss'
 import VAnimateCss from '@/plugins/animate-css';
-
-// The @vue/compat scaffold. MODE 2 keeps the Vue-2 idioms this app still
-// carries working while they are migrated; every flag switched off below is one
-// that has been paid off, and the goal is a list long enough to delete the
-// scaffold. Compiler-side flags (.native, .sync, v-if/v-for precedence) do not
-// live here - they go in the vue-loader compatConfig in vue.config.js, because
-// this is the runtime-only build. Keep this call in step with vitest.setup.js.
-//
-// Two flags were off from day one, both because their Vue-2 behaviour breaks
-// Buefy 3.1, which is already a Vue 3 library:
-//   COMPONENT_V_MODEL rewrites every component `v-model` from
-//   `modelValue`/`update:modelValue` back to Vue 2's `value`/`input`, which
-//   Buefy does not read - it would silently break all ~110 v-model bindings.
-//   ATTR_FALSE_VALUE renders `:attr="false"` as attr="false" instead of
-//   dropping the attribute; Buefy passes falsy props down as fallthrough
-//   attributes, and `disabled="false"` is truthy in HTML.
-configureCompat({
-	MODE: 2,
-	COMPONENT_V_MODEL: false,
-	ATTR_FALSE_VALUE: false,
-	// Paid off: $set is a plain write, which Vue 3's proxies track.
-	INSTANCE_SET: false,
-	// Paid off with vee-validate 3: it was the last holder of all three, and
-	// nothing in src/ or in the vendored bundle declares beforeDestroy/destroyed
-	// or calls $delete any more.
-	OPTIONS_BEFORE_DESTROY: false,
-	OPTIONS_DESTROYED: false,
-	INSTANCE_DELETE: false,
-	// Held on by vee-validate 3, which read this.$listeners in its render. With
-	// it on, compat strips every on* key out of $attrs (shouldSkipAttr), so a
-	// listener the child does not declare in `emits` is silently dropped instead
-	// of falling through to the DOM - which is what removing `.native` in part 2a
-	// left the app relying on. Buefy 3 declares narrow `emits`, so `@click` on a
-	// <b-icon> or `@keyup.enter` on a <b-input> only works with this off.
-	INSTANCE_LISTENERS: false,
-	// Paid off: the only array watcher was dead - its writer is commented out.
-	WATCH_ARRAY: false,
-})
 
 const io = require("socket.io-client");
 
