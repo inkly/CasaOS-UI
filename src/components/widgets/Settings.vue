@@ -182,9 +182,14 @@ export default {
 			.switch input[type="checkbox"]+.check {
 				background: transparent;
 				border: #fff 1px solid;
-				// The knob (::before) paints var(--bulma-background). Bulma's dark
-				// theme moves that to 14%; this dropdown is glass and stays as it is.
-				--bulma-background-l: 96%;
+
+				// The knob. Buefy paints it var(--bulma-background), which Bulma's
+				// dark theme turns near-black; this dropdown is glass and keeps the
+				// light value. Pinning --bulma-background-l here would not do: the
+				// composed --bulma-background is resolved on :root and inherited.
+				&::before {
+					background: hsl(0, 0%, 96%);
+				}
 			}
 		}
 	}
