@@ -9,7 +9,7 @@ import orderBy from 'lodash/orderBy'
 import debounce from 'lodash/debounce'
 import FileSaver from 'file-saver'
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
-import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import { Field as VeeField, Form as VeeForm } from 'vee-validate'
 import { parse } from 'yaml'
 import { vOnClickOutside } from '@vueuse/components'
 import AppTerminalPanel from './AppTerminalPanel.vue'
@@ -64,8 +64,8 @@ export default {
     AppsInstallationLocation,
     ComposeConfig,
     ComposeEditor,
-    ValidationObserver,
-    ValidationProvider,
+    VeeField,
+    VeeForm,
   },
   directives: {
     OnClickOutside: vOnClickOutside,
@@ -1756,12 +1756,12 @@ export default {
 
         <section v-else-if="!isCasa && !composeEditorOpen" :class="{ _hideOverflow: !isCasa }" class="modal-card-body pt-3">
           <!--	导入"已存在的容器"，进行初始化操作	-->
-          <ValidationObserver ref="containerValida">
-            <ValidationProvider v-slot="{ errors, valid }" name="appName" rules="required">
+          <VeeForm ref="containerValida" as="span">
+            <VeeField v-slot="{ errors, meta }" :model-value="settingData.label" name="appName" rules="required">
               <b-field
                 :label="`${$t('App name')} *`"
                 :message="$t(errors)"
-                :type="{ 'is-danger': errors[0], 'is-success': valid }"
+                :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
               >
                 <b-input
                   v-model="settingData.label"
@@ -1769,7 +1769,7 @@ export default {
                   maxlength="40"
                 />
               </b-field>
-            </ValidationProvider>
+            </VeeField>
 
             <b-field :label="$t('Icon URL')">
               <p class="control">
@@ -1821,7 +1821,7 @@ export default {
                 expanded
               />
             </b-field>
-          </ValidationObserver>
+          </VeeForm>
         </section>
       </template>
       <!-- App Install Form End -->
