@@ -47,6 +47,22 @@
 	--casa-scrollbar-thumb: rgba(0, 0, 0, 0.3);
 	--casa-scrollbar-thumb-soft: rgba(0, 0, 0, 0.2);
 
+	// The file browser. Its greys are its own steps, none on the CasaOS ramp,
+	// and the invariant keeps each apart.
+	--casa-hover-soft: #f8f8f8; // a file row, a grid card, the upload list header
+	--casa-hover-sunken: #f3f3f3; // a row of the nav strip, which is itself sunken
+	--casa-hover-tile: rgb(235, 235, 235); // the upload-type tiles
+	--casa-hover-icon: #{$grey-lighter}; // #dbdbdb: the round action icon of an upload task
+	--casa-border-hairline: #f8f8f8; // between list rows
+	--casa-primary-tint: #{$primary-light}; // hsl(216, 90%, 96%): a selected file, the breadcrumb hover, the upload progress fill
+	--casa-danger-hover: #{bulmaFindLightColor($danger)}; // hsl(348, 86%, 96%): a destructive menu item under the pointer
+	--casa-text-faint: rgba(37, 38, 43, 0.36); // the size line under a file name
+	--casa-text-dim: #{$grey}; // #7a7a7a: the upload task detail, the app detail footing
+	--casa-text-code: #616161; // inline code in the markdown editor
+	--casa-picker-border: #e4e4e4; // the icon picker's rows (IconInput)
+	--casa-picker-hover: #e0e0e0;
+	--casa-picker-selected: #b6e0ff;
+
 	// Glass: the layer that is already dark in both themes. Black under the
 	// wallpaper, translucent cards on it, white text on the cards. Dark mode
 	// re-skins the light chrome ABOVE this layer and must leave it untouched,
@@ -91,6 +107,19 @@ html[data-theme='dark'] {
 	--casa-warning-tint: hsla(40, 100%, 43%, 0.18);
 	--casa-scrollbar-thumb: rgba(255, 255, 255, 0.3);
 	--casa-scrollbar-thumb-soft: rgba(255, 255, 255, 0.2);
+	--casa-hover-soft: rgba(255, 255, 255, 0.05);
+	--casa-hover-sunken: rgba(255, 255, 255, 0.06);
+	--casa-hover-tile: rgba(255, 255, 255, 0.1);
+	--casa-hover-icon: rgba(255, 255, 255, 0.12);
+	--casa-border-hairline: rgba(255, 255, 255, 0.06);
+	--casa-primary-tint: #{rgba($primary, 0.28)};
+	--casa-danger-hover: #{rgba($danger, 0.18)};
+	--casa-text-faint: rgba(255, 255, 255, 0.4);
+	--casa-text-dim: #9e9e9e;
+	--casa-text-code: #b5b5b5;
+	--casa-picker-border: #3a3c41;
+	--casa-picker-hover: rgba(255, 255, 255, 0.1);
+	--casa-picker-selected: #{rgba($primary, 0.35)};
 
 	// Glass: identical to :root on purpose, see above. Not an oversight.
 	--casa-under-wallpaper: #000;

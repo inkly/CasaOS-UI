@@ -426,17 +426,17 @@ export default {
 			z-index: 2;
 			left: 0;
 			top: 0;
-			background-color: #ffffff;
+			background-color: var(--casa-surface-raised);
 			border-radius: 50%;
 			box-shadow: 0px 32px 64px -16px rgba(28, 31, 34, 0.2);
 			display: flex;
 			justify-content: center;
 			align-items: center;
 			transition: all 0.2s ease-in-out;
-			border: 2px solid #ffffff;
+			border: 2px solid var(--casa-surface-raised);
 
 			&.is-online {
-				background-color: #ffffff !important;
+				background-color: var(--casa-surface-raised) !important;
 			}
 
 			.b-image-wrapper {
@@ -471,13 +471,13 @@ export default {
 			transform: scale(1.25);
 
 			.up-layer {
-				border: 2px solid #e4e8ec;
+				border: 2px solid var(--casa-border);
 			}
 		}
 
 		&.is-self {
 			.up-layer {
-				border: 2px solid #e4e8ec;
+				border: 2px solid var(--casa-border);
 			}
 		}
 	}

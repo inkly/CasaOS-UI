@@ -101,7 +101,7 @@ export default {
 		flex-grow: 15 !important;
 
 		input {
-			background-color: #f8f8f8;
+			background-color: var(--casa-surface-sunken);
 		}
 	}
 }

@@ -64,7 +64,7 @@ export default {
 	user-select: none;
 	font-size: 0.875rem;
 	line-height: 1.5em;
-	border-bottom: #e4e4e4 1px solid;
+	border-bottom: var(--casa-picker-border) 1px solid;
 	border-radius: 4px;
 	transition: background-color 0.2s;
 	cursor: pointer;
@@ -76,11 +76,11 @@ export default {
 	}
 
 	&:hover {
-		background-color: #e0e0e0;
+		background-color: var(--casa-picker-hover);
 	}
 
 	&.active {
-		background-color: #b6e0ff;
+		background-color: var(--casa-picker-selected);
 	}
 }
 </style>

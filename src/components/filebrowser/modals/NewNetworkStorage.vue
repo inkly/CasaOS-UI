@@ -216,7 +216,7 @@ export default {
 .message-alert {
 	padding: 0.4rem 1rem;
 	margin-bottom: 1.75rem;
-	background: #fff7e6;
+	background: var(--casa-warning-tint);
 	border-radius: 4px;
 	color: #d99000;
 	font-size: 0.875rem;

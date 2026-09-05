@@ -190,7 +190,7 @@ export default {
 
 	code {
 		background-color: rgba(#616161, 0.1);
-		color: #616161;
+		color: var(--casa-text-code);
 	}
 
 	pre {
