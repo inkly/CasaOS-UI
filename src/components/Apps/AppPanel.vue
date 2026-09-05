@@ -1859,65 +1859,63 @@ export default {
       :class="{ 'is-justify-content-center': currentSlide == 0 }"
       class="modal-card-foot is-flex is-align-items-center"
     >
-      <template>
-        <div class="is-flex-grow-1" />
-        <div>
-          <b-button
-            v-if="currentSlide == 2 && currentInstallAppError"
-            :label="$t('Back')"
-            rounded
-            @click="prevStep"
-          />
-          <b-button
-            v-if="currentSlide == 1 && state == 'install'"
-            :label="$t('Install')"
-            :loading="isLoading"
-            rounded
-            type="is-primary"
-            @click="checkComposeAppAndInstallComposeApp(dockerComposeCommands, currentInstallId)"
-          />
-          <b-button
-            v-if="isCasa && currentSlide == 1 && state == 'update' && !composeEditorOpen"
-            :label="$t('Save')"
-            :loading="isLoading"
-            rounded
-            type="is-primary"
-            @click="updateApp()"
-          />
-          <b-button
-            v-if="isCasa && currentSlide == 1 && state == 'update' && composeEditorOpen"
-            :disabled="!composeEditorState.canApply"
-            :label="$t('Apply')"
-            :loading="composeEditorState.isApplying"
-            rounded
-            type="is-primary"
-            @click="$refs.composeEditor.apply()"
-          />
-          <b-button
-            v-if="!isCasa && currentSlide == 1 && state == 'update'"
-            :label="$t('Save')"
-            :loading="isLoading"
-            rounded
-            type="is-primary"
-            @click="updateContainer()"
-          />
-          <b-button
-            v-if="currentSlide == 2 && !currentInstallAppError"
-            :label="$t(cancelButtonText)"
-            rounded
-            type="is-primary"
-            @click="$emit('close')"
-          />
-          <b-button
-            v-if="isFirstInstall"
-            :label="$t('Submit')"
-            :loading="isLoading"
-            rounded
-            type="is-primary"
-            @click="submitInstallationLocation(installationLocation)"
-          />
-        </div>
-      </template>
+      <div class="is-flex-grow-1" />
+      <div>
+        <b-button
+          v-if="currentSlide == 2 && currentInstallAppError"
+          :label="$t('Back')"
+          rounded
+          @click="prevStep"
+        />
+        <b-button
+          v-if="currentSlide == 1 && state == 'install'"
+          :label="$t('Install')"
+          :loading="isLoading"
+          rounded
+          type="is-primary"
+          @click="checkComposeAppAndInstallComposeApp(dockerComposeCommands, currentInstallId)"
+        />
+        <b-button
+          v-if="isCasa && currentSlide == 1 && state == 'update' && !composeEditorOpen"
+          :label="$t('Save')"
+          :loading="isLoading"
+          rounded
+          type="is-primary"
+          @click="updateApp()"
+        />
+        <b-button
+          v-if="isCasa && currentSlide == 1 && state == 'update' && composeEditorOpen"
+          :disabled="!composeEditorState.canApply"
+          :label="$t('Apply')"
+          :loading="composeEditorState.isApplying"
+          rounded
+          type="is-primary"
+          @click="$refs.composeEditor.apply()"
+        />
+        <b-button
+          v-if="!isCasa && currentSlide == 1 && state == 'update'"
+          :label="$t('Save')"
+          :loading="isLoading"
+          rounded
+          type="is-primary"
+          @click="updateContainer()"
+        />
+        <b-button
+          v-if="currentSlide == 2 && !currentInstallAppError"
+          :label="$t(cancelButtonText)"
+          rounded
+          type="is-primary"
+          @click="$emit('close')"
+        />
+        <b-button
+          v-if="isFirstInstall"
+          :label="$t('Submit')"
+          :loading="isLoading"
+          rounded
+          type="is-primary"
+          @click="submitInstallationLocation(installationLocation)"
+        />
+      </div>
     </footer>
     <!-- Modal-Card Footer End -->
   </div>
