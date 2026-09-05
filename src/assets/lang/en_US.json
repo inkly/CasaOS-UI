@@ -201,7 +201,7 @@
   "Single Drive Storage": "Single storage drive",
   "Format": "Format",
   "Remove": "Remove",
-  "Available Total": "{name} | Available: {avl} (Total: {total})",
+  "Available Total": "{name} {'|'} Available: {avl} (Total: {total})",
   "Health": "Health",
   "Healthy": "Healthy",
   "Damage": "Damaged",
