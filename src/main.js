@@ -37,12 +37,16 @@ configureCompat({
 	MODE: 2,
 	COMPONENT_V_MODEL: false,
 	ATTR_FALSE_VALUE: false,
-	// Paid off: every hook is `beforeUnmount` / `unmounted`.
-	OPTIONS_BEFORE_DESTROY: false,
-	OPTIONS_DESTROYED: false,
-	// Paid off: $set / $delete are plain writes, which Vue 3 proxies track.
+	// Paid off: $set is a plain write, which Vue 3's proxies track.
 	INSTANCE_SET: false,
-	INSTANCE_DELETE: false,
+	// These three stay ON until vee-validate 3 is gone. Turning them off does
+	// not only affect our code: compat drops the option for EVERY component, and
+	// vee-validate 3's ValidationProvider and ValidationObserver still use
+	// beforeDestroy to unobserve themselves (so they leak), while INSTANCE_DELETE
+	// off makes $delete throw rather than no-op.
+	OPTIONS_BEFORE_DESTROY: true,
+	OPTIONS_DESTROYED: true,
+	INSTANCE_DELETE: true,
 	// Paid off: the only array watcher was dead - its writer is commented out.
 	WATCH_ARRAY: false,
 })

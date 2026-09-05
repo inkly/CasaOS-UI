@@ -8,9 +8,10 @@ configureCompat({
 	MODE: 2,
 	COMPONENT_V_MODEL: false,
 	ATTR_FALSE_VALUE: false,
-	OPTIONS_BEFORE_DESTROY: false,
-	OPTIONS_DESTROYED: false,
 	INSTANCE_SET: false,
-	INSTANCE_DELETE: false,
+	// See the note in src/main.js: these three wait for vee-validate 4.
+	OPTIONS_BEFORE_DESTROY: true,
+	OPTIONS_DESTROYED: true,
+	INSTANCE_DELETE: true,
 	WATCH_ARRAY: false,
 })
