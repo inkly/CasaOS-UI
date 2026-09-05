@@ -229,13 +229,13 @@ onBeforeUnmount(() => {
 }
 
 .add-tooltip {
-	border-top: 1px solid #CFCFCF !important;
-	border-bottom: 1px solid #CFCFCF !important;
+	border-top: 1px solid var(--casa-border-strong) !important;
+	border-bottom: 1px solid var(--casa-border-strong) !important;
 	align-items: center !important;
 	padding-right: 0.25rem;
 
 	&.disabled {
-		background-color: hsl(0, 0%, 96%) !important;
+		background-color: var(--casa-surface-disabled) !important;
 	}
 }
 

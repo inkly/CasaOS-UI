@@ -90,7 +90,7 @@ export default {
 
 <style lang="scss">
 .pri-border {
-	border: 0.0625rem solid #0000001A;
+	border: 0.0625rem solid var(--casa-border-subtle);
 	border-radius: 0.5rem;
 }
 </style>

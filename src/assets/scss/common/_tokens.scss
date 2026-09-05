@@ -18,6 +18,7 @@
 	--casa-surface: #{$white};
 	--casa-surface-raised: #{$white}; // popovers over a modal, toasts, snackbars
 	--casa-surface-sunken: #f8f8f8; // nav strips, upload zones, tag boxes
+	--casa-surface-disabled: hsl(0, 0%, 96%); // a control switched off: the add-source row of the app store
 	--casa-surface-translucent: rgba(255, 255, 255, 0.8); // file browser drag mask
 	--casa-surface-soft: hsla(208, 16%, 98%, 1); // #f9fafb: grey pills and boxes on a surface (drop tips, storage tags)
 	--casa-text: #{$gray-800}; // #29343d
@@ -26,6 +27,7 @@
 	--casa-text-emphasis: #{$grey-darker}; // #363636, Bulma's own text-strong step: the modal-close divider, the autocomplete colon
 	--casa-text-secondary: #4a4a4a;
 	--casa-text-muted: #{$grey-600}; // #8595a3
+	--casa-text-hint: #5a5a5a; // the helper line under a field (Ports), the file browser breadcrumb
 	--casa-border: #{$grey-300}; // #e4e8ec
 	--casa-border-faint: #{$grey-200}; // #edf0f2 hairlines: card outlines, tab and header rules
 	--casa-border-strong: #cfcfcf;
@@ -63,6 +65,7 @@ html[data-theme='dark'] {
 	--casa-surface: #1f2023;
 	--casa-surface-raised: #2a2b2f;
 	--casa-surface-sunken: #17181a;
+	--casa-surface-disabled: #242424;
 	--casa-surface-translucent: rgba(31, 32, 35, 0.8);
 	--casa-surface-soft: #25262a;
 	--casa-text: #e6e9ec;
@@ -71,6 +74,7 @@ html[data-theme='dark'] {
 	--casa-text-emphasis: #ededed;
 	--casa-text-secondary: #c3c7cb;
 	--casa-text-muted: #8b95a1;
+	--casa-text-hint: #b0b5ba;
 	--casa-border: #3a3c41;
 	--casa-border-faint: #32343a;
 	--casa-border-strong: #4b4e54;

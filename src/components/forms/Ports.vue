@@ -127,7 +127,7 @@ export default {
 <style lang="scss">
 .info {
 	font-size: 0.875rem;
-	color: #5a5a5a;
+	color: var(--casa-text-hint);
 }
 
 .port-item {

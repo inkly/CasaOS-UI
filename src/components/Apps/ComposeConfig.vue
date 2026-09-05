@@ -965,7 +965,7 @@ export default {
 
   ::v-deep .tabs {
     padding: 0 1.5rem;
-    border-bottom: 1px solid hsla(208, 16%, 94%, 1);
+    border-bottom: 1px solid var(--casa-border-faint);
 
     ul {
       border: 0;
