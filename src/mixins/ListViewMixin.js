@@ -4,10 +4,6 @@ import events from '@/events/events';
 import VueBreakpointMixin from "@/mixins/breakpoint";
 
 export default {
-	model: {
-		prop: 'listData',
-		event: 'change'
-	},
 	mixins: [VueBreakpointMixin],
 	props: {
 		listData: Array,

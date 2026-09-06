@@ -164,7 +164,7 @@
 								</div>
 								<!-- Drag and Drop Mask End -->
 
-								<component :is="listView" ref="listview" v-model="listData" :isLoading="isLoading"
+								<component :is="listView" ref="listview" :list-data="listData" :isLoading="isLoading"
 									@change="handelListChange" @gotoFolder="getFileList" @reload="reload"
 									@showDetailModal="showDetailModal">
 									<empty-holder v-if="isEmpty" @newFile="showNewFileModal"
