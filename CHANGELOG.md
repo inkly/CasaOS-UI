@@ -2,6 +2,41 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.37] - 2026-09-06
+
+The dashboard runs on Vue 3, and it has a dark theme.
+
+### Added
+
+- A dark theme. Appearance is a new row in the settings panel — light, dark,
+  or follow the system, which is the default when nothing has been chosen. The
+  choice is remembered in the browser and applied before the first paint, so
+  there is no flash, and the login and welcome pages honour it too. The
+  dashboard's glass cards and widgets were already dark and are identical in
+  both themes; what changes is the chrome laid over them — the top bar, the
+  modals, dropdowns, forms, toasts, the file browser, the App Store, storage
+  ([CasaOS #938](https://github.com/IceWhaleTech/CasaOS/issues/938)).
+
+### Changed
+
+- Vue 2.7 → Vue 3.5, Buefy 0.9 → 3.1, Bulma 0.9 → 1.0, vee-validate 3 → 4,
+  vue-router 3 → 4, vuex 3 → 4, vue-i18n 8 → 9, vue-awesome-swiper → Swiper's
+  own Vue integration. Vue 2 had been end-of-life since December 2023; the
+  dashboard keeps the same components and the same look. The light theme was
+  compared declaration by declaration against the previous release and did
+  not move, apart from Swiper's own stylesheet.
+
+### Fixed
+
+- Every link had darkened to #0a52bd with Bulma 1's contrast defaults; it is
+  the palette's blue again. The focus ring of switches and the placeholder of
+  empty selects had vanished — Buefy 3.1 writes them in a form browsers drop.
+- The disk summary in the storage widget showed only the disk name in 28
+  languages: vue-i18n 9 reads `|` as a plural separator.
+- The port field of the app installer rejected every port after the
+  validation rules moved API. Its test now checks both accepted and rejected
+  inputs.
+
 ## [0.4.36] - 2026-09-06
 
 ### Changed
