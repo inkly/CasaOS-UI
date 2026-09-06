@@ -2,7 +2,83 @@
 
 All notable changes to CasaOS UI are documented here.
 
-## [Unreleased]
+## [0.4.38] - 2026-09-06
+
+Two-factor authentication, an Environment tab per app, a lint gate, and four dark-theme follow-ups.
+
+### Added
+
+- An Environment tab in the settings of an installed app, beside Settings and
+  Compose, edits the app's `.env` file. The file is fetched the first time the
+  tab opens, and a read that fails shows the server's message inside the tab.
+  Before Apply, the editor checks locally that every line is blank, a `#`
+  comment or a key line as compose-go's dotenv parser takes one — `KEY=`,
+  `KEY:`, a bare `KEY`, an `export` prefix, names with `.`, `-`, `[` and `]` —
+  and names the first line that is none of these. Everything after the `=`,
+  the quoting, and the keys CasaOS sets itself (TZ, PUID, PGID) are checked by
+  the server, which is asked for a dry run before the real apply; its
+  rejection is shown under the editor and the real apply is not sent.
+  Applying an empty file deletes `.env`. Applying re-creates the app, so the
+  panel closes as it does for Compose, and leaving the Compose or the
+  Environment tab with unapplied changes asks before discarding them. The
+  Compose tab's notice now says that values defined in the app's `.env` are
+  kept as `${VAR}` and that only the other environment values are shown
+  resolved. The two `.env` requests bypass the generated client: the read
+  takes the body as text, so a file that is only `123` is not parsed as a
+  number, and the write goes out as `text/plain`, so an empty file reaches the
+  server as nothing rather than as `""` — a request retried after a token
+  refresh now keeps its own headers instead of falling back to the JSON
+  default.
+- Two-factor authentication. When the server answers a login with the
+  two-factor status, the login page swaps the password form for a code step:
+  the 6-digit code from an authenticator app, or a recovery code through the
+  link under the field, with a Back link to the password step. The pre-auth
+  token the server hands back is held in the page's component only — nothing
+  is written to local storage until the code is verified, and the session is
+  then stored by the same path a password login uses. A pre-auth token the
+  server rejects, or one past its expiry, returns to the password step with a
+  message; a wrong code clears the field and stays. In the account panel a new
+  "Two-factor authentication" row shows On or Off and opens the enrolment: the
+  password, then the QR code and the key as text with a Copy button, then the
+  code from the app to enable it, then the recovery codes, shown once with a
+  Copy button. Turning it off asks for the password or a code from the app,
+  one or the other; every error stays under its field. The QR code is drawn in
+  the browser by the new dependency `qrcode` 1.5.4, imported lazily by the
+  enrolment screen, so it is a chunk of its own that the login and home
+  bundles do not carry. The strings are in English and French.
+
+### Changed
+
+- ESLint is a CI gate. `pnpm lint` runs `eslint .` instead of
+  `vue-cli-service lint`, the `.eslintrc.js` that ESLint 8 with a flat config
+  never loaded is removed, and the ci workflow runs the lint before the tests
+  and the build, so a pull request with a lint error fails. The lint had been
+  red across the tree since the Vue 3 migration (39 564 errors) because
+  @antfu/eslint-config's defaults, 2-space and script-first, met a
+  tab-indented, template-first tree. The flat config now follows what the
+  tree does, each option chosen by counting its violations with ESLint and
+  keeping the one with fewer: tabs, single quotes, no semicolons, trailing
+  commas, 1tbs braces, template before script; the Vue rule set is the Vue 3
+  one. One `eslint --fix --fix-type layout` pass then reformatted 204 files —
+  indentation, quotes, semicolons, commas, bracket placement, blank lines —
+  and the production build before and after, with named ids and mangling
+  disabled so that only the source-dependent hashes had to be normalised, is
+  byte-identical for 369 of the 370 emitted files; the 370th is the static
+  `public/js/custom.js`, which gained a final newline. The triage of what the
+  layout pass left ran the suggestion and problem autofixes (prefer-const,
+  object-shorthand, prefer-template, import order, unused imports, and the
+  rest named in the commit), then by hand dropped unused catch bindings and
+  callback parameters, dead variables, unused `ref` attributes and stale
+  eslint-disable comments, and made five changes worth naming:
+  `InputGroup.vue` declares the `emit` its computed setter called without
+  declaring it; the find() callback of `ExternalLinkPanel.vue` returns false
+  on the no-match path; the two Object.keys().map() loops of
+  `ComposeConfig.vue` become forEach; the port/IP regex of the validation
+  plugin uses non-capturing groups; the mock server's readFile callback
+  answers the request on error instead of rendering undefined. What is left
+  for a human — `==` comparisons, console.log calls, a prop written from a
+  child, event and prop name casing — stays visible as warnings in a named
+  config block, not turned off. At the gate: 0 errors, 472 warnings.
 
 ### Fixed
 
@@ -21,6 +97,9 @@ All notable changes to CasaOS UI are documented here.
 - After a CasaOS update the browser kept running the previous UI until a
   manual reload - with the system in dark mode, the App Store and Files stayed
   light. The update dialog now reloads the page once it has signed out.
+- A login attempted while the server could not be reached showed no message:
+  the error path read the message off a response that did not exist and threw
+  instead. It now falls back to the request error's own message.
 
 ## [0.4.37] - 2026-09-06
 
