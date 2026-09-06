@@ -2,6 +2,26 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [Unreleased]
+
+### Fixed
+
+- The network graph was empty: apexcharts 4 rejects a chart created before its
+  first sample, where apexcharts 3 tolerated it. The chart now mounts with the
+  first sample, and Vue 3's reactivity feeds it - the Vue 2-era manual redraw
+  is gone with the double render it caused every second.
+- The app card menu had its entries centred, and the file browser's menus lost
+  their styling too: Buefy 3.1 no longer copies a dropdown's class onto the
+  menu it moves under `<body>` for `append-to-body`, so every class-scoped menu
+  style silently fell back to Bulma's defaults. A small plugin puts the classes
+  back after each rebuild.
+- The Appearance list in the settings panel was unreadable in the dark theme:
+  Chromium paints the native list on the select's own background, which is
+  transparent there, so it came out white under light text.
+- After a CasaOS update the browser kept running the previous UI until a
+  manual reload - with the system in dark mode, the App Store and Files stayed
+  light. The update dialog now reloads the page once it has signed out.
+
 ## [0.4.37] - 2026-09-06
 
 The dashboard runs on Vue 3, and it has a dark theme.
