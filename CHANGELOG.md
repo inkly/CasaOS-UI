@@ -2,6 +2,20 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.39] - 2026-09-06
+
+### Fixed
+
+- After an update the user signed in on the new services and was thrown back
+  to the login page a second or two later. The update dialog signed out
+  through the router, whose guard awaits an API call before it navigates;
+  started while the services restarted, that call settled only after the
+  next login, and the guard then removed the fresh tokens. The upgrade
+  rotates the token keys, so the session is over either way: the dialog now
+  clears it locally and reloads the page - into the UI just installed - once
+  the backend answers, or after two minutes regardless; each probe is given
+  three seconds, and log responses still in flight start no second reload.
+
 ## [0.4.38] - 2026-09-06
 
 Two-factor authentication, an Environment tab per app, a lint gate, and four dark-theme follow-ups.
