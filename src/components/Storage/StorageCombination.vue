@@ -136,11 +136,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 .combination-box {
-	background-color: hsla(208, 16%, 98%, 1);
+	background-color: var(--casa-surface-soft);
 	border-radius: 0.5rem;
 
 	.tag {
-		background-color: hsla(208, 16%, 98%, 1);
+		background-color: var(--casa-surface-soft);
 		border: 1px solid hsla(208, 100%, 45%, 1);
 		color: hsla(208, 100%, 45%, 1);
 		padding: 2px 6px;

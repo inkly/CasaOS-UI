@@ -577,7 +577,7 @@ export default {
 
 .pri-head {
 	line-height: 1.875rem;
-	border-bottom: rgba(0, 0, 0, 0.1) 1px solid !important;
+	border-bottom: var(--casa-border-subtle) 1px solid !important;
 }
 
 .pri-margin {
@@ -643,12 +643,12 @@ export default {
 ._has-text-gray-800 {
 	/* Gary/800 */
 
-	color: hsla(208, 20%, 20%, 1);
+	color: var(--casa-text);
 }
 
 ._has-text-gray-600 {
 	/* Gary/600 */
-	color: hsla(208, 14%, 58%, 1);
+	color: var(--casa-text-muted);
 }
 
 ._has-text-red-default {
@@ -673,7 +673,7 @@ export default {
 
 ._has-background-gray-100 {
 	/* Gray/100 */
-	background: hsla(208, 16%, 96%, 1);
+	background: var(--casa-hover);
 }
 
 ._height-40 {
@@ -695,7 +695,7 @@ export default {
 
 .radius {
 	box-sizing: border-box;
-	border: 1px solid rgba(0, 0, 0, 0.1);
+	border: 1px solid var(--casa-border-subtle);
 	border-radius: 0.375rem;
 }
 
@@ -739,7 +739,7 @@ export default {
 }
 
 .t-line {
-	border-top: rgba(0, 0, 0, 0.1) 1px solid !important;
+	border-top: var(--casa-border-subtle) 1px solid !important;
 }
 
 .warn {

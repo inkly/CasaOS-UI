@@ -87,11 +87,11 @@ export default {
 
 	/* Gary/800 */
 
-	color: #29343D;
+	color: var(--casa-text);
 }
 
 ._b-line {
-	border-bottom: 1px solid hsla(208, 16%, 94%, 1)
+	border-bottom: 1px solid var(--casa-border-faint)
 }
 
 ._font {
@@ -102,7 +102,7 @@ export default {
 	line-height: 21px;
 	/* identical to box height, or 150% */
 
-	color: hsla(0, 0%, 29%, 1);
+	color: var(--casa-text-secondary);
 }
 
 ._content-title {
@@ -113,7 +113,7 @@ export default {
 	line-height: 24px;
 	/* identical to box height, or 150% */
 
-	color: hsla(0, 0%, 0%, 0.9);
+	color: var(--casa-text-lead);
 
 }
 </style>

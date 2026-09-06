@@ -24,6 +24,7 @@
 	--casa-text: #{$gray-800}; // #29343d
 	--casa-text-body: #2c3e50; // #app: inherited by everything on chrome that sets no colour
 	--casa-text-strong: #000; // ink: modal-close bars, .button.is-text, the settings select chevron
+	--casa-text-lead: rgba(0, 0, 0, 0.9); // the bold lead-in of a sentence: the Step N: of DiskLearnMore
 	--casa-text-emphasis: #{$grey-darker}; // #363636, Bulma's own text-strong step: the modal-close divider, the autocomplete colon
 	--casa-text-secondary: #4a4a4a;
 	--casa-text-muted: #{$grey-600}; // #8595a3
@@ -104,6 +105,7 @@ html[data-theme='dark'] {
 	--casa-text: #e6e9ec;
 	--casa-text-body: #e6e9ec;
 	--casa-text-strong: #fff;
+	--casa-text-lead: rgba(255, 255, 255, 0.9);
 	--casa-text-emphasis: #ededed;
 	--casa-text-secondary: #c3c7cb;
 	--casa-text-muted: #8b95a1;
