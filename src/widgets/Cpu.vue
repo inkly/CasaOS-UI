@@ -15,7 +15,7 @@
 
 			<div class="columns is-mobile mt-0 mb-1">
 				<div class="column is-half has-text-centered">
-					<radial-bar :extend-content="power + temperature" :extend-content-clickable="true"
+					<radial-bar :extend-content="readout" :extend-content-clickable="true"
 						:percent="parseInt(cpuSeries)" label="CPU" @extendContentClick="changeFormat"></radial-bar>
 				</div>
 				<div class="column is-half has-text-centered">
@@ -95,7 +95,7 @@ export default {
 				? localStorage.getItem('temperatureFormat')
 				: '°C',
 			orgTemperature: 0,
-			power: '0W / ',
+			power: '',
 			powerList: [],
 		}
 	},
@@ -123,6 +123,14 @@ export default {
 					? `${this.orgTemperature}°C`
 					: `${this.celsiusToFahrenheit(this.orgTemperature)}°F`
 			return temp
+		},
+		// A VM has no RAPL counter and no thermal zone: the core sends power
+		// value "0" and temperature 0, which is not a reading worth showing.
+		readout() {
+			if (!this.power && !this.orgTemperature) {
+				return ''
+			}
+			return this.power + this.temperature
 		},
 	},
 	created() {
@@ -170,15 +178,14 @@ export default {
 			this.cpuSeries = cpu.percent
 			this.pushPower(cpu.power)
 			this.orgTemperature = cpu.temperature == undefined ? 0 : cpu.temperature
+			this.power = ''
 			if (this.powerList.length == 2 && cpu.model === 'intel') {
-				this.power
-					= `${(
-						(this.powerList[1].value - this.powerList[0].value)
-						/ 1000000
-						/ (this.powerList[1].timestamp - this.powerList[0].timestamp)
-					).toFixed(1)}W / `
-			} else {
-				this.power = ''
+				const watts = (this.powerList[1].value - this.powerList[0].value)
+					/ 1000000
+					/ (this.powerList[1].timestamp - this.powerList[0].timestamp)
+				if (watts > 0) {
+					this.power = `${watts.toFixed(1)}W / `
+				}
 			}
 			// Memory
 			this.ramSeries = mem.usedPercent

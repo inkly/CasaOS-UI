@@ -23,7 +23,7 @@
 				<div class="label">{{ label }}</div>
 			</div>
 		</div>
-		<div :class="{ 'is-clickable': extendContentClickable }" class="bar-content" @click="extendClick">
+		<div v-if="extendContent" :class="{ 'is-clickable': extendContentClickable }" class="bar-content" @click="extendClick">
 			{{ extendContent }}
 		</div>
 	</div>
