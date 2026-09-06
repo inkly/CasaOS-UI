@@ -412,29 +412,52 @@
 			<template v-if="currentSlide == 1">
 				<!-- Settings / raw Compose switch, on installed CasaOS apps only -->
 				<div v-if="isCasa && state == 'update'" class="is-flex px-4 pt-3 compose-mode-switch">
-					<b-button :type="composeEditorOpen ? 'is-text' : 'is-primary'"
+					<b-button :type="editorTab === 'settings' ? 'is-primary' : 'is-text'"
 						class="mr-2"
 						rounded
 						size="is-small"
-						@click="setComposeEditorOpen(false)">
+						@click="setEditorTab('settings')">
 						{{ $t('Settings') }}
 					</b-button>
-					<b-button :type="composeEditorOpen ? 'is-primary' : 'is-text'"
+					<b-button :type="editorTab === 'compose' ? 'is-primary' : 'is-text'"
+						class="mr-2"
 						rounded
 						size="is-small"
-						@click="setComposeEditorOpen(true)">
+						@click="setEditorTab('compose')">
 						{{ $t('Compose') }}
+					</b-button>
+					<b-button :type="editorTab === 'env' ? 'is-primary' : 'is-text'"
+						rounded
+						size="is-small"
+						@click="setEditorTab('env')">
+						{{ $t('Environment') }}
 					</b-button>
 				</div>
 
-				<ComposeEditor v-if="isCasa && state == 'update' && composeEditorOpen"
+				<ComposeEditor v-if="isCasa && state == 'update' && editorTab === 'compose'"
 					ref="composeEditor"
 					:app-id="id"
 					:value="dockerComposeConfig"
 					@applied="onComposeApplied"
-					@state="onComposeEditorState" />
+					@state="onEditorState" />
 
-				<ComposeConfig v-if="isCasa && !composeEditorOpen"
+				<template v-if="isCasa && state === 'update' && editorTab === 'env'">
+					<EnvEditor v-if="envLoaded"
+						ref="envEditor"
+						:app-id="id"
+						:value="envText"
+						@applied="onEnvApplied"
+						@state="onEditorState" />
+
+					<section v-else class="modal-card-body is-relative" style="min-height: 10rem">
+						<b-message v-if="envError" size="is-small" type="is-danger">
+							{{ envError }}
+						</b-message>
+						<b-loading v-else :is-full-page="false" :model-value="envLoading" />
+					</section>
+				</template>
+
+				<ComposeConfig v-if="isCasa && editorTab === 'settings'"
 					ref="ComposeConfig"
 					:cap-array="capArray"
 					:docker-compose-commands="dockerComposeConfig"
@@ -446,7 +469,7 @@
 					@updateDockerComposeServiceName="updateDockerComposeServiceName"
 					@updateMainName="name => (currentInstallId = name)" />
 
-				<section v-else-if="!isCasa && !composeEditorOpen" :class="{ _hideOverflow: !isCasa }" class="modal-card-body pt-3">
+				<section v-else-if="!isCasa && editorTab === 'settings'" :class="{ _hideOverflow: !isCasa }" class="modal-card-body pt-3">
 					<!--	导入"已存在的容器"，进行初始化操作	-->
 					<VeeForm ref="containerValida" as="span">
 						<VeeField v-slot="{ errors, meta }" :model-value="settingData.label" name="appName" rules="required">
@@ -541,19 +564,19 @@
 					rounded
 					type="is-primary"
 					@click="checkComposeAppAndInstallComposeApp(dockerComposeCommands, currentInstallId)" />
-				<b-button v-if="isCasa && currentSlide == 1 && state == 'update' && !composeEditorOpen"
+				<b-button v-if="isCasa && currentSlide == 1 && state == 'update' && editorTab === 'settings'"
 					:label="$t('Save')"
 					:loading="isLoading"
 					rounded
 					type="is-primary"
 					@click="updateApp()" />
-				<b-button v-if="isCasa && currentSlide == 1 && state == 'update' && composeEditorOpen"
-					:disabled="!composeEditorState.canApply"
+				<b-button v-if="isCasa && currentSlide == 1 && state == 'update' && editorTab !== 'settings'"
+					:disabled="!editorState.canApply"
 					:label="$t('Apply')"
-					:loading="composeEditorState.isApplying"
+					:loading="editorState.isApplying"
 					rounded
 					type="is-primary"
-					@click="$refs.composeEditor.apply()" />
+					@click="$refs[`${editorTab}Editor`].apply()" />
 				<b-button v-if="!isCasa && currentSlide == 1 && state == 'update'"
 					:label="$t('Save')"
 					:loading="isLoading"
@@ -599,6 +622,7 @@ import { categoryMenu } from '@/mixins/app/appStoreCategories'
 import AppDetailInfo from '@/components/Apps/AppDetailInfo.vue'
 import ComposeConfig from '@/components/Apps/ComposeConfig.vue'
 import ComposeEditor from '@/components/Apps/ComposeEditor.vue'
+import EnvEditor from '@/components/Apps/EnvEditor.vue'
 import business_OpenThirdApp from '@/mixins/app/Business_OpenThirdApp'
 import business_ShowNewAppTag from '@/mixins/app/Business_ShowNewAppTag'
 import AppsInstallationLocation from '@/components/Apps/AppsInstallationLocation'
@@ -644,6 +668,7 @@ export default {
 		AppsInstallationLocation,
 		ComposeConfig,
 		ComposeEditor,
+		EnvEditor,
 		VeeField,
 		VeeForm,
 	},
@@ -703,8 +728,14 @@ export default {
 			capArray: data,
 			errInfo: {},
 			dockerComposeCommands: '',
-			composeEditorOpen: false,
-			composeEditorState: { canApply: false, isApplying: false, isDirty: false },
+			// 'settings' | 'compose' | 'env'; the last two mount an editor whose
+			// state the footer Apply button reads.
+			editorTab: 'settings',
+			editorState: { canApply: false, isApplying: false, isDirty: false },
+			envText: '',
+			envLoaded: false,
+			envLoading: false,
+			envError: '',
 			dockerComposeServiceName: '',
 
 			pageIndex: 1,
@@ -1676,34 +1707,63 @@ export default {
 			}
 		},
 
-		onComposeEditorState(state) {
-			this.composeEditorState = state
+		onEditorState(state) {
+			this.editorState = state
 		},
 
-		setComposeEditorOpen(open) {
-			// Leaving the Compose tab throws the draft away: the form and the raw YAML
-			// are deliberately not synchronised, so an unapplied draft cannot survive.
-			if (!open && this.composeEditorState.isDirty) {
-				this.$buefy.dialog.confirm({
-					message: this.$t('You have unapplied Compose changes. Leaving this tab discards them.'),
-					confirmText: this.$t('Discard'),
-					cancelText: this.$t('Cancel'),
-					type: 'is-warning',
-					onConfirm: () => {
-						if (this.$refs.composeEditor)
-							this.$refs.composeEditor.reset()
+		setEditorTab(tab) {
+			if (tab === this.editorTab)
+				return
 
-						this.composeEditorOpen = false
-					},
-				})
+			// Leaving an editor tab throws its draft away: the form and the raw files
+			// are deliberately not synchronised, so an unapplied draft cannot survive.
+			if (!this.editorState.isDirty) {
+				this.switchEditorTab(tab)
 				return
 			}
 
-			this.composeEditorOpen = open
+			this.$buefy.dialog.confirm({
+				message: this.$t('You have unapplied changes. Leaving this tab discards them.'),
+				confirmText: this.$t('Discard'),
+				cancelText: this.$t('Cancel'),
+				type: 'is-warning',
+				onConfirm: () => this.switchEditorTab(tab),
+			})
+		},
+
+		switchEditorTab(tab) {
+			// The editor left behind is unmounted with its draft; its last state must
+			// not keep the Apply button of the next tab enabled.
+			this.editorTab = tab
+			this.editorState = { canApply: false, isApplying: false, isDirty: false }
+			if (tab === 'env' && !this.envLoaded)
+				this.loadEnv()
+		},
+
+		async loadEnv() {
+			this.envLoading = true
+			this.envError = ''
+			try {
+				const res = await this.$api.container.getComposeEnv(this.id)
+				this.envText = res.data
+				this.envLoaded = true
+			} catch (error) {
+				const data = error.response && error.response.data
+				this.envError = (data && data.message) || error.message
+			} finally {
+				this.envLoading = false
+			}
 		},
 
 		onComposeApplied(composeYAML) {
 			this.dockerComposeConfig = composeYAML
+			this.$emit('updateState')
+			this.$emit('close')
+		},
+
+		onEnvApplied() {
+			// The app is being re-created; the next visit to the tab fetches afresh.
+			this.envLoaded = false
 			this.$emit('updateState')
 			this.$emit('close')
 		},

@@ -462,7 +462,7 @@
   "Edit the Docker Compose file of this app directly. Changes are validated before being applied.": "Edit the Docker Compose file of this app directly. Changes are validated before being applied.",
   "Unsaved changes.": "Unsaved changes.",
   "Changes are being applied.": "Changes are being applied.",
-  "You have unapplied Compose changes. Leaving this tab discards them.": "You have unapplied Compose changes. Leaving this tab discards them.",
+  "You have unapplied changes. Leaving this tab discards them.": "You have unapplied changes. Leaving this tab discards them.",
   "The server rejected this Compose file.": "The server rejected this Compose file.",
   "The Compose file is empty.": "The Compose file is empty.",
   "This is not valid YAML.": "This is not valid YAML.",
