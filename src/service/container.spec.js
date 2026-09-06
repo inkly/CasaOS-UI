@@ -39,8 +39,30 @@ describe('container.applyComposeEnv', () => {
 	})
 })
 
+describe('container.applyComposeEnv after a token refresh', () => {
+	beforeEach(() => adapter.mockClear())
+
+	it('retries with the same text/plain body, not re-encoded as JSON', async () => {
+		localStorage.setItem('refresh_token', 'r0')
+		adapter
+			.mockImplementationOnce(config => Promise.reject(Object.assign(new Error('401'), { config, response: { status: 401, data: '{}', config } })))
+			.mockImplementationOnce(config => Promise.resolve({ data: { success: 200, data: { access_token: 'new', refresh_token: 'r1', expires_at: 1 } }, status: 200, statusText: 'OK', headers: {}, config }))
+		await container.applyComposeEnv('jellyfin', 'A=1\n', false)
+		expect(adapter.mock.calls.map(c => c[0].url)).toEqual(['/v2/app_management/compose/jellyfin/env', '/v1/users/refresh', '/v2/app_management/compose/jellyfin/env'])
+		const retry = adapter.mock.calls[2][0]
+		expect(retry.data).toBe('A=1\n')
+		expect(retry.headers['Content-Type']).toBe('text/plain')
+		expect(retry.headers.Authorization).toBe('new')
+	})
+})
+
 describe('container.getComposeEnv', () => {
 	beforeEach(() => adapter.mockClear())
+
+	it('hands the caller the server message of a failed GET', async () => {
+		adapter.mockImplementationOnce(config => Promise.reject(Object.assign(new Error('500'), { config, response: { status: 500, data: '{"message":"cannot parse .env"}', config } })))
+		await expect(container.getComposeEnv('jellyfin')).rejects.toMatchObject({ response: { data: { message: 'cannot parse .env' } } })
+	})
 
 	it('reads the body as text, leaving a numeric-looking file alone', async () => {
 		const res = await container.getComposeEnv('jellyfin')

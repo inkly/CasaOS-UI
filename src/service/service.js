@@ -99,7 +99,8 @@ instance.interceptors.response.use(
 			}
 			return new Promise((resolve) => {
 				requests.push((token) => {
-					originalConfig.headers = {}
+					// The request keeps its own headers: a text/plain body retried
+					// under the JSON default would be re-encoded as a JSON string.
 					originalConfig.headers.Authorization = token
 					resolve(instance(originalConfig))
 				})

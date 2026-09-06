@@ -42,7 +42,9 @@ import 'codemirror/addon/selection/active-line.js'
 
 // What a line must start with to be worth sending: the server's dotenv parser
 // is authoritative for everything after the `=`.
-const ASSIGNMENT = /^(?:export\s+)?[A-Z_]\w*\s*=/i
+// What compose-go's dotenv parser takes as a key line: `KEY=`, `KEY:`, or a
+// bare `KEY` inheriting the environment; names may carry `.`, `-`, `[`, `]`.
+const ASSIGNMENT = /^(?:export\s+)?[\w.[\]-]+\s*(?:[=:]|$)/
 
 export default {
 	name: 'EnvEditor',

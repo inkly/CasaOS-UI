@@ -38,7 +38,7 @@ describe('envEditor', () => {
 		await wrapper.vm.apply()
 		expect(applyComposeEnv).not.toHaveBeenCalled()
 
-		type('# c\nexport A="x y"\nB=\'$lit\'\n\n')
+		type('# c\nexport A="x y"\nB=\'$lit\'\nA.B-C[0]=1\nKEY: v\nBARE\n\n')
 		await wrapper.vm.$nextTick()
 		expect(wrapper.text()).not.toContain('expected KEY=VALUE')
 		expect(lastState().canApply).toBe(true)

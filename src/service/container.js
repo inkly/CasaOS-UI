@@ -158,6 +158,18 @@ const container = {
 		return instance.get(`${PREFIX2COMPOSE}/${id}/env`, {
 			responseType: 'text',
 			transformResponse: [d => d],
+		}).catch((error) => {
+			// The identity transform applies to error bodies too: hand the
+			// caller the server's {message}, not a JSON string.
+			const data = error.response && error.response.data
+			if (typeof data === 'string') {
+				try {
+					error.response.data = JSON.parse(data)
+				} catch {
+					// not JSON: leave the text
+				}
+			}
+			throw error
 		})
 	},
 
