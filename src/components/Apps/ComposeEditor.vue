@@ -5,7 +5,7 @@
 		</p>
 
 		<b-message class="mb-3" size="is-small" type="is-warning">
-			{{ $t('Environment variables are shown resolved: saving from here stores the resolved values and the variables are lost.') }}
+			{{ $t("Values defined in the app's .env are kept as {ref}; other environment values are shown resolved.", { ref: '${VAR}' }) }}
 		</b-message>
 
 		<Codemirror :options="cmOptions"

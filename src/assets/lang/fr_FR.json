@@ -474,7 +474,7 @@
   "A Compose file must be a mapping, starting with keys such as \"name\" and \"services\".": "Un fichier Compose doit être un mapping, commençant par des clés telles que \"name\" et \"services\".",
   "This Compose file declares no services.": "Ce fichier Compose ne déclare aucun service.",
   "The top-level \"name\" must match one of the services, to designate the main application.": "Le \"name\" de premier niveau doit correspondre à l'un des services, pour désigner l'application principale.",
-  "Environment variables are shown resolved: saving from here stores the resolved values and the variables are lost.": "Les variables d'environnement sont affichées résolues : enregistrer depuis ici stocke les valeurs résolues et les variables sont perdues.",
+  "Values defined in the app's .env are kept as {ref}; other environment values are shown resolved.": "Les valeurs définies dans le .env de l'application sont conservées sous la forme {ref} ; les autres valeurs d'environnement sont affichées résolues.",
   "Environment": "Environnement",
   "Edit the .env file of this app. Applying an empty file deletes it.": "Modifiez le fichier .env de cette application. Appliquer un fichier vide le supprime.",
   "One KEY=VALUE per line; a line starting with # is a comment.": "Une paire CLÉ=VALEUR par ligne ; une ligne commençant par # est un commentaire.",
