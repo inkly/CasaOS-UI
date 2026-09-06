@@ -19,13 +19,16 @@
 	<link href="<%= BASE_URL %>favicon.ico" mask="" rel="icon" sizes="any">
 	<!-- Same three rules as src/mixins/app/themePreference.js, inlined so the
 	     theme is settled before the stylesheet arrives: a stored light/dark wins,
-	     anything else follows the OS. -->
+	     anything else follows the OS. theme-color follows the attribute:
+	     #1f2023 is --casa-surface in dark. -->
 	<script>
 		try {
 			var theme = localStorage.getItem('theme')
-			document.documentElement.dataset.theme = theme === 'light' || theme === 'dark'
+			theme = theme === 'light' || theme === 'dark'
 				? theme
 				: (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+			document.documentElement.dataset.theme = theme
+			document.querySelector('meta[name=theme-color]').content = theme === 'dark' ? '#1f2023' : '#ffffff'
 		} catch (e) {}
 	</script>
 	<!-- Ground before the extracted CSS lands: #fff is what Bulma paints on

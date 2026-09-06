@@ -1,6 +1,9 @@
 export const THEME_KEY = 'theme'
 export const THEMES = ['light', 'dark', 'system']
 const DARK_QUERY = '(prefers-color-scheme: dark)'
+// <meta name="theme-color">, the browser chrome around the page: --casa-surface
+// of each theme. public/index.html repeats the pair for the first paint.
+const THEME_COLOR = { light: '#ffffff', dark: '#1f2023' }
 
 // The preference lives in localStorage rather than in the user's server-side
 // settings: /login and /welcome render before any user exists, and the theme
@@ -11,6 +14,7 @@ function environment(env) {
     storage: env?.storage ?? (typeof localStorage === 'undefined' ? null : localStorage),
     matchMedia: env?.matchMedia ?? (typeof matchMedia === 'undefined' ? null : query => matchMedia(query)),
     root: env?.root ?? (typeof document === 'undefined' ? null : document.documentElement),
+    meta: env?.meta ?? (typeof document === 'undefined' ? null : document.querySelector('meta[name="theme-color"]')),
   }
 }
 
@@ -48,14 +52,19 @@ export function resolveTheme(preference, matchMedia) {
 let unsubscribe = null
 
 /**
- * Stamp data-theme on the root and follow the OS only while the preference is
- * 'system'. Re-applying replaces the previous subscription. Never throws.
+ * Stamp data-theme on the root, paint the theme-color meta to match, and follow
+ * the OS only while the preference is 'system'. Re-applying replaces the
+ * previous subscription. Never throws.
  */
 export function applyThemePreference(preference, env) {
-  const { matchMedia, root } = environment(env)
+  const { matchMedia, root, meta } = environment(env)
   const stamp = () => {
+    const theme = resolveTheme(preference, matchMedia)
     if (root) {
-      root.dataset.theme = resolveTheme(preference, matchMedia)
+      root.dataset.theme = theme
+    }
+    if (meta) {
+      meta.content = THEME_COLOR[theme]
     }
   }
 

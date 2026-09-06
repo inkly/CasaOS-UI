@@ -147,6 +147,19 @@ describe('applyThemePreference', () => {
     expect(root.dataset.theme).toBe('dark')
   })
 
+  it('paints the theme-color meta to match, and follows an OS flip', () => {
+    const root = { dataset: {} }
+    const meta = { content: '#ffffff' }
+    const matchMedia = fakeMatchMedia(true)
+
+    applyThemePreference('system', { matchMedia, root, meta })
+    expect(meta.content).toBe('#1f2023')
+
+    matchMedia.query.matches = false
+    matchMedia.query.fire()
+    expect(meta.content).toBe('#ffffff')
+  })
+
   it('does not throw without a document', () => {
     expect(() => applyThemePreference('dark', { matchMedia: fakeMatchMedia(false), root: null })).not.toThrow()
   })
