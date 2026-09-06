@@ -1019,6 +1019,14 @@ export default {
 		select {
 			background-color: transparent !important;
 			border-color: var(--casa-text-strong) !important;
+
+			// Chromium paints the native list on the select's own background, which
+			// is transparent here: white, under dark's light text. Give the options
+			// a surface of their own.
+			option {
+				background-color: var(--casa-surface);
+				color: var(--casa-text);
+			}
 		}
 	}
 
