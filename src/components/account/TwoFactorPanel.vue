@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="two-factor">
 		<template v-if="step === 'password'">
 			<p class="has-text-emphasis-04 has-text-gray-font mb-3">
 				{{ $t('Confirm your password to start setting up two-factor authentication.') }}
@@ -49,7 +49,7 @@
 				<b-input v-if="useCode" v-model="code" :has-counter="false" :placeholder="$t('Authentication code')" autocomplete="one-time-code" autofocus inputmode="numeric" maxlength="6" @keyup.enter="disable" />
 				<b-input v-else v-model="password" :placeholder="$t('Password')" autocomplete="current-password" autofocus password-reveal type="password" @keyup.enter="disable" />
 			</b-field>
-			<a class="is-size-7" @click="useCode = !useCode; error = ''">{{ useCode ? $t('Use your password instead') : $t('Use a code from your app instead') }}</a>
+			<a class="is-size-7" @click="toggleFactor">{{ useCode ? $t('Use your password instead') : $t('Use a code from your app instead') }}</a>
 			<b-button :label="$t('Disable')" :loading="busy" class="mt-3" expanded rounded type="is-danger" @click="disable" />
 		</template>
 	</div>
@@ -74,7 +74,25 @@ export default {
 			busy: false,
 		}
 	},
+	mounted() {
+		this.focusInput()
+	},
 	methods: {
+		// A field swapped in after a click never gets the browser's autofocus.
+		focusInput() {
+			this.$nextTick(() => {
+				const input = this.$el.querySelector('input')
+				if (input)
+					input.focus()
+			})
+		},
+		toggleFactor() {
+			this.useCode = !this.useCode
+			this.code = ''
+			this.password = ''
+			this.error = ''
+			this.focusInput()
+		},
 		async setup() {
 			if (!this.password) {
 				return
@@ -89,6 +107,7 @@ export default {
 				this.password = ''
 				this.error = ''
 				this.step = 'qr'
+				this.focusInput()
 			} catch (err) {
 				this.fail(err)
 			}
@@ -109,13 +128,14 @@ export default {
 				// 10017: the pending secret is gone (a password login in between), start again.
 				if (this.fail(err) === 10017) {
 					this.step = 'password'
+					this.focusInput()
 				}
 			}
 			this.code = ''
 			this.busy = false
 		},
 		async disable() {
-			if (!(this.code || this.password)) {
+			if (!(this.useCode ? this.code : this.password)) {
 				return
 			}
 			this.busy = true
@@ -148,6 +168,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// The account panel sits in the top bar's dropdown, whose items are nowrap.
+.two-factor {
+	white-space: normal;
+}
+
 .secret {
 	user-select: all;
 	white-space: pre-wrap;

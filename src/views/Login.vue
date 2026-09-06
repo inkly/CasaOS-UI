@@ -34,7 +34,7 @@
 					<b-input v-if="useRecovery" v-model="code" autocomplete="off" autofocus type="text" @keyup.enter="verify"></b-input>
 					<b-input v-else v-model="code" :has-counter="false" autocomplete="one-time-code" autofocus inputmode="numeric" maxlength="6" type="text" @keyup.enter="verify"></b-input>
 				</b-field>
-				<a class="is-size-7" @click="useRecovery = !useRecovery; code = ''">{{ useRecovery ? $t('Use a code from your app instead') : $t('Use a recovery code instead') }}</a>
+				<a class="is-size-7" @click="toggleRecovery">{{ useRecovery ? $t('Use a code from your app instead') : $t('Use a recovery code instead') }}</a>
 				<b-button class="mt-5" expanded rounded type="is-primary" @click="verify">{{ $t('Verify') }}
 				</b-button>
 				<div class="has-text-centered mt-3">
@@ -87,6 +87,7 @@ export default {
 					this.preAuth = userRes.data.data
 					this.code = ''
 					this.useRecovery = false
+					this.focusInput()
 					return
 				}
 				await this.finishLogin(userRes.data.data)
@@ -123,6 +124,20 @@ export default {
 			this.preAuth = null
 			this.code = ''
 			this.useRecovery = false
+			this.focusInput('input[type="password"]')
+		},
+		toggleRecovery() {
+			this.useRecovery = !this.useRecovery
+			this.code = ''
+			this.focusInput()
+		},
+		// A field swapped in after a click never gets the browser's autofocus.
+		focusInput(selector = 'input') {
+			this.$nextTick(() => {
+				const input = this.$el.querySelector(selector)
+				if (input)
+					input.focus()
+			})
 		},
 		async finishLogin(data) {
 			localStorage.setItem('access_token', data.token.access_token)
@@ -141,7 +156,7 @@ export default {
 			this.$router.push('/')
 		},
 		showError(err) {
-			this.message = this.$t(err.response.data.message)
+			this.message = this.$t(err.response?.data?.message || err.message)
 			this.notificationShow = true
 		},
 	},

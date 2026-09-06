@@ -255,7 +255,9 @@ export default {
 			}
 		},
 		setTotp(on) {
-			this.$store.commit('SET_USER', { ...this.userInfo, totp_enabled: on })
+			const user = { ...this.userInfo, totp_enabled: on }
+			this.$store.commit('SET_USER', user)
+			localStorage.setItem('user', JSON.stringify(user))
 		},
 		onChange({ coordinates, image, canvas }) {
 			this.result = {

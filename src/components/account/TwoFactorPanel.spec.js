@@ -12,8 +12,9 @@ const codes = ['aaaaa-11111', 'bbbbb-22222', 'ccccc-33333', 'ddddd-44444', 'eeee
 
 const reject = (success, message) => () => Promise.reject(Object.assign(new Error(message), { response: { status: 400, data: { success, message } } }))
 
-function mountPanel(totpEnabled, users) {
+function mountPanel(totpEnabled, users, attachTo) {
 	return mount(TwoFactorPanel, {
+		attachTo,
 		global: {
 			plugins: [Buefy, i18n],
 			mocks: {
@@ -58,6 +59,21 @@ describe('twoFactorPanel', () => {
 		expect(wrapper.find('img').exists()).toBe(true)
 		expect(wrapper.text()).toContain('wrong code')
 		expect(wrapper.emitted('change')).toBeUndefined()
+		wrapper.unmount()
+	})
+
+	it('sends only the active factor when disabling, and focuses the field it swaps in', async () => {
+		const disable2FA = vi.fn(() => Promise.resolve({ data: { success: 200 } }))
+		const wrapper = mountPanel(true, { disable2FA }, document.body)
+		await wrapper.find('input').setValue('secret')
+		await wrapper.find('a').trigger('click')
+		await flushPromises()
+		expect(document.activeElement).toBe(wrapper.find('input').element)
+		await wrapper.findAll('button.button').at(-1).trigger('click')
+		await flushPromises()
+		expect(disable2FA).not.toHaveBeenCalled()
+		await fill(wrapper, '123456')
+		expect(disable2FA).toHaveBeenCalledWith({ code: '123456' })
 		wrapper.unmount()
 	})
 
