@@ -3,7 +3,7 @@ import {
 	ComposeMethodsApiFactory,
 	Configuration,
 	InternalMethodsApiFactory,
-} from '@icewhale/casaos-appmanagement-openapi'
+} from '@/openapi/app_management'
 import { instance } from '@/service/service'
 // app_management
 

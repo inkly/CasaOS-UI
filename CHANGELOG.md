@@ -4,21 +4,57 @@ All notable changes to CasaOS UI are documented here.
 
 ## [Unreleased]
 
-The dashboard no longer takes an npm package from IceWhale on trust.
+The dashboard no longer takes an npm package from IceWhale, on trust or
+otherwise: there is none left.
 
 ### Removed
 
 - The `@icewhale/casaos-openapi` dependency, which had no import site
   anywhere in the tree.
+- The `@icewhale/casaos-appmanagement-openapi` dependency - the last one.
+  It is the App Store and compose surface of the dashboard (4 imported
+  symbols, 16 operations, 41 call sites), and pinning it to `0.4.17-alpha1`
+  only made the build reproducible: every CI run and every release still
+  downloaded it from npm under IceWhale's account.
+
+### Added
+
+- `src/openapi/app_management`, the same client generated from our own
+  AppManagement spec with the same generator (openapi-generator
+  `typescript-axios`), committed rather than fetched. `pnpm run
+  generate:app-management` regenerates it from
+  `../CasaOS-AppManagement/api/app_management/openapi.yaml`, and
+  `openapitools.json` pins the generator version so a regeneration is a
+  reviewable diff and not a surprise. It is committed for the same reason
+  the translations are: generating needs Java and a 20 MB jar download,
+  which is not a thing to ask of a build, and what the dashboard puts on
+  the wire should be visible in a pull request.
+
+  The published package's spec was 7 minor versions behind ours. Compiled
+  side by side, the 31 operations they share are identical - method, path,
+  query parameter names and placement, `Content-Type`, positional argument
+  order - and `common.js` and `configuration.js` come out byte for byte the
+  same. Ours adds the two operations the older spec was missing,
+  `GET`/`PUT /compose/{id}/env`; the dashboard does not call them, because
+  `src/service/container.js` already reaches those two through raw axios
+  with the `text/plain` body and identity `transformResponse` a generated
+  client does not produce.
+- `src/service/index.spec.js`, which drives all 16 operations the dashboard
+  calls through a stub axios and asserts the method and URL each one
+  produces, so a regeneration that moves an endpoint fails the suite instead
+  of the browser.
 
 ### Changed
 
-- `@icewhale/casaos-appmanagement-openapi` is pinned to `0.4.17-alpha1`
-  instead of `latest`, and the new-language build workflow installs with
-  `--frozen-lockfile` like CI and release do. The bare `pnpm install` was
-  the one place a move of IceWhale's `latest` tag could have changed what
-  the dashboard was built against; IceWhale has since published 1.2.2
-  prereleases of that SDK.
+- The new-language build workflow installs with `--frozen-lockfile` like CI
+  and release do. The bare `pnpm install` was the one place a move of
+  IceWhale's `latest` tag could have changed what the dashboard was built
+  against.
+- webpack and vitest resolve `.ts`: the generated client is TypeScript.
+  vue-cli's babel rule tests `.m?jsx?` and its resolver knows `.js`/`.vue`,
+  so the rule is widened rather than doubled - a second rule would have to
+  name `babel-loader`, which pnpm does not hoist.
+  `@babel/preset-typescript` was already configured.
 
 ## [0.4.42] - 2026-09-06
 

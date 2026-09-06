@@ -34,6 +34,14 @@ module.exports = {
 			.type('javascript/auto')
 			.include.add(/node_modules/)
 			.end()
+		// The generated app_management client is TypeScript. vue-cli's resolver only
+		// knows .js/.vue and its babel rule only tests .m?jsx?. Widening that rule
+		// rather than adding one keeps babel-loader's already-resolved path, which a
+		// bare 'babel-loader' cannot find under pnpm. @babel/preset-typescript is
+		// already in babel.config.js.
+		config.resolve.extensions.prepend('.ts')
+		config.module.rule('js').test(/\.m?[jt]sx?$/)
+
 		const oneOfsMap = config.module.rule('scss').oneOfs.store
 		oneOfsMap.forEach((item) => {
 			item.use('style-resources-loader')

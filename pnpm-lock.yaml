@@ -11,9 +11,6 @@ importers:
       '@fontsource/roboto':
         specifier: ^5.0.5
         version: 5.1.0
-      '@icewhale/casaos-appmanagement-openapi':
-        specifier: 0.4.17-alpha1
-        version: 0.4.17-alpha1
       '@kangc/v-md-editor':
         specifier: ^2.3.18
         version: 2.3.18(@vue/compiler-sfc@3.5.42)(vue@3.5.42(typescript@5.7.2))
@@ -1234,9 +1231,6 @@ packages:
   '@humanwhocodes/object-schema@2.0.3':
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
     deprecated: Use @eslint/object-schema instead
-
-  '@icewhale/casaos-appmanagement-openapi@0.4.17-alpha1':
-    resolution: {integrity: sha512-j2P9820B5DGGIyno/p0l65jeOqoVsmiKKCnGOUxoybuPunSgeYtYyotILnmsE+vgSLi+JQibQ+yvtBW1mrI7VQ==}
 
   '@intlify/core-base@9.14.5':
     resolution: {integrity: sha512-5ah5FqZG4pOoHjkvs8mjtv+gPKYU0zCISaYNjBNNqYiaITxW8ZtVih3GS/oTOqN8d9/mDLyrjD46GBApNxmlsA==}
@@ -2611,9 +2605,6 @@ packages:
 
   axios@0.28.1:
     resolution: {integrity: sha512-iUcGA5a7p0mVb4Gm/sy+FSECNkPFT4y7wt6OM/CDpO/OnNCvSs3PoMG8ibrC9jRoGYU0gUK5pXVC4NPXq6lHRQ==}
-
-  axios@1.7.8:
-    resolution: {integrity: sha512-Uu0wb7KNqK2t5K+YQyVCLM76prD5sRFjKHbJYCP1J7JFGEQ6nN7HWn9+04LAeiJ3ji54lgS/gZCH1oxyrf1SPw==}
 
   babel-eslint@10.1.0:
     resolution: {integrity: sha512-ifWaTHQ0ce+448CYop8AdrQiBsGrnC+bMgfyKFdi6EsPLTAWG+QfyDeM6OH+FmWnKvEq5NnBMLvlBUPKQZoDSg==}
@@ -9472,12 +9463,6 @@ snapshots:
 
   '@humanwhocodes/object-schema@2.0.3': {}
 
-  '@icewhale/casaos-appmanagement-openapi@0.4.17-alpha1':
-    dependencies:
-      axios: 1.7.8
-    transitivePeerDependencies:
-      - debug
-
   '@intlify/core-base@9.14.5':
     dependencies:
       '@intlify/message-compiler': 9.14.5
@@ -11168,14 +11153,6 @@ snapshots:
       possible-typed-array-names: 1.0.0
 
   axios@0.28.1:
-    dependencies:
-      follow-redirects: 1.15.9(debug@4.3.7)
-      form-data: 4.0.1
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
-
-  axios@1.7.8:
     dependencies:
       follow-redirects: 1.15.9(debug@4.3.7)
       form-data: 4.0.1

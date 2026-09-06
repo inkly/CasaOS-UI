@@ -47,7 +47,7 @@ export default defineConfig({
 			{ find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
 		],
 		// vue-cli resolves extensionless imports of .vue files; vite does not.
-		extensions: ['.mjs', '.js', '.json', '.vue'],
+		extensions: ['.mjs', '.js', '.ts', '.json', '.vue'],
 	},
 	test: {
 		// resolve.alias only reaches what vite processes. Left externalised, these
