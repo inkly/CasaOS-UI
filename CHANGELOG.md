@@ -2,6 +2,22 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [Unreleased]
+
+### Fixed
+
+- On a virtual machine the storage widget tagged the system disk "Damaged"
+  while the Storage manager called the same disk healthy: smartctl answers
+  for a QEMU disk without any `smart_status`, and LocalStorage read that
+  absence as a failure. LocalStorage now sends `smart_status` per disk
+  ("passed", "failed" or "unavailable"); the widget and the Storage
+  manager's Disk tab both follow it, showing "No SMART data" / "N/A" where
+  there is none, and fall back to the `health` Boolean of an older
+  LocalStorage.
+- The System Status widget printed "0.0W / 0°C" under the CPU dial of a
+  machine without a power counter or a thermal zone; the readout is gone
+  when neither is available.
+
 ## [0.4.40] - 2026-09-06
 
 The contact bar and the app installer point at this distribution, and the news feed from the upstream blog is gone.
