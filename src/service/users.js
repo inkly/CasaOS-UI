@@ -102,6 +102,23 @@ const users = {
 		})
 	},
 
+	// two-factor authentication
+	setup2FA(data) {
+		return api.post(`${PREFIX}/2fa/setup`, data)
+	},
+
+	enable2FA(data) {
+		return api.post(`${PREFIX}/2fa/enable`, data)
+	},
+
+	disable2FA(data) {
+		return api.post(`${PREFIX}/2fa/disable`, data)
+	},
+
+	verify2FA(data) {
+		return api.post(`${PREFIX}/2fa/verify`, data)
+	},
+
 	// refresh token [OK]
 	refreshToken(refresh_token) {
 		return api.post(`${PREFIX}/refresh`, {

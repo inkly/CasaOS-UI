@@ -38,7 +38,7 @@
 							</div>
 						</div>
 					</div>
-					<div>
+					<div class="mb-55">
 						<div class="has-text-emphasis-04 has-text-gray-font mb-2">
 							{{ $t('Password') }}
 						</div>
@@ -47,6 +47,19 @@
 								••••••
 							</div>
 							<div class="edit-button" @click.stop="goto(3);">
+								<b-icon class="close-button ml-2 has-text-gray-font" icon="edit-outline" pack="casa" />
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="has-text-emphasis-04 has-text-gray-font mb-2">
+							{{ $t('Two-factor authentication') }}
+						</div>
+						<div class="is-flex is-align-items-center account-item">
+							<div class="has-text-emphasis-02 is-flex-grow-1">
+								{{ userInfo.totp_enabled ? $t('On') : $t('Off') }}
+							</div>
+							<div class="edit-button" @click.stop="goto(5);">
 								<b-icon class="close-button ml-2 has-text-gray-font" icon="edit-outline" pack="casa" />
 							</div>
 						</div>
@@ -97,6 +110,10 @@
 						</div>
 					</div>
 				</template>
+
+				<template v-else-if="state === 5">
+					<TwoFactorPanel @change="setTotp" @done="goto(1)" />
+				</template>
 			</section>
 			<!-- Modal-Card Body End -->
 			<!-- Modal-Card Footer Start -->
@@ -116,6 +133,7 @@
 <script>
 import { Field as VeeField, Form as VeeForm } from 'vee-validate'
 import { Cropper, Preview } from 'vue-advanced-cropper'
+import TwoFactorPanel from './TwoFactorPanel.vue'
 import 'vue-advanced-cropper/dist/style.css'
 import 'vue-advanced-cropper/dist/theme.compact.css'
 
@@ -150,6 +168,7 @@ export default {
 		VeeForm,
 		Cropper,
 		Preview,
+		TwoFactorPanel,
 	},
 	data() {
 		return {
@@ -198,6 +217,9 @@ export default {
 				case 4:
 					val = this.$t('Change Avatar')
 					break
+				case 5:
+					val = this.$t('Two-factor authentication')
+					break
 				default:
 					break
 			}
@@ -207,7 +229,7 @@ export default {
 			return this.$store.state.user
 		},
 		bodyPadding() {
-			return this.state === 1 || this.state === 4 ? 'px-40 py-24' : ''
+			return this.state === 1 || this.state === 4 || this.state === 5 ? 'px-40 py-24' : ''
 		},
 		buttonAlign() {
 			return this.state === 1 ? 'is-justify-content-center' : 'is-justify-content-end'
@@ -231,6 +253,11 @@ export default {
 				this.confirmation = ''
 				this.username = this.userInfo.username
 			}
+		},
+		setTotp(on) {
+			const user = { ...this.userInfo, totp_enabled: on }
+			this.$store.commit('SET_USER', user)
+			localStorage.setItem('user', JSON.stringify(user))
 		},
 		onChange({ coordinates, image, canvas }) {
 			this.result = {

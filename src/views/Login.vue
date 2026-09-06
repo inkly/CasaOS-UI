@@ -11,7 +11,7 @@
 				type="is-danger">
 				{{ message }}
 			</b-notification>
-			<VeeForm v-slot="{ handleSubmit }" as="span">
+			<VeeForm v-if="!preAuth" v-slot="{ handleSubmit }" as="span">
 				<VeeField v-slot="{ errors, meta }" :model-value="username" name="User" rules="required">
 					<b-field :label="$t('Username')" :message="errors"
 						:type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
@@ -29,6 +29,18 @@
 				<b-button class="mt-5" expanded rounded type="is-primary" @click="handleSubmit(login)">{{ $t('Login') }}
 				</b-button>
 			</VeeForm>
+			<template v-else>
+				<b-field :label="useRecovery ? $t('Recovery code') : $t('Authentication code')" class="mt-3">
+					<b-input v-if="useRecovery" v-model="code" autocomplete="off" autofocus type="text" @keyup.enter="verify"></b-input>
+					<b-input v-else v-model="code" :has-counter="false" autocomplete="one-time-code" autofocus inputmode="numeric" maxlength="6" type="text" @keyup.enter="verify"></b-input>
+				</b-field>
+				<a class="is-size-7" @click="toggleRecovery">{{ useRecovery ? $t('Use a code from your app instead') : $t('Use a recovery code instead') }}</a>
+				<b-button class="mt-5" expanded rounded type="is-primary" @click="verify">{{ $t('Verify') }}
+				</b-button>
+				<div class="has-text-centered mt-3">
+					<a @click="cancelPreAuth">{{ $t('Back') }}</a>
+				</div>
+			</template>
 		</div>
 	</div>
 </template>
@@ -39,6 +51,10 @@ import { Field as VeeField, Form as VeeForm } from 'vee-validate'
 export default {
 
 	name: 'login-page',
+	components: {
+		VeeField,
+		VeeForm,
+	},
 	data() {
 		return {
 			username: '',
@@ -46,11 +62,11 @@ export default {
 			isLoading: false,
 			message: '',
 			notificationShow: false,
+			// The pre-auth token lives here only: it is not a session.
+			preAuth: null,
+			code: '',
+			useRecovery: false,
 		}
-	},
-	components: {
-		VeeField,
-		VeeForm,
 	},
 	beforeMount() {
 		const userString = localStorage.getItem('user')
@@ -67,24 +83,81 @@ export default {
 		async login() {
 			try {
 				const userRes = await this.$api.users.login(this.username, this.password)
-				localStorage.setItem('access_token', userRes.data.data.token.access_token)
-				localStorage.setItem('refresh_token', userRes.data.data.token.refresh_token)
-				localStorage.setItem('expires_at', userRes.data.data.token.expires_at)
-				localStorage.setItem('user', JSON.stringify(userRes.data.data.user))
-
-				this.$store.commit('SET_USER', userRes.data.data.user)
-				this.$store.commit('SET_ACCESS_TOKEN', userRes.data.data.token.access_token)
-				this.$store.commit('SET_REFRESH_TOKEN', userRes.data.data.token.refresh_token)
-
-				const versionRes = await this.$api.sys.getVersion()
-				if (versionRes.data.success == 200) {
-					localStorage.setItem('version', versionRes.data.data.current_version)
+				if (userRes.data.success === 10014) {
+					this.preAuth = userRes.data.data
+					this.code = ''
+					this.useRecovery = false
+					this.focusInput()
+					return
 				}
-				this.$router.push('/')
+				await this.finishLogin(userRes.data.data)
 			} catch (err) {
-				this.message = this.$t(err.response.data.message)
-				this.notificationShow = true
+				this.showError(err)
 			}
+		},
+		async verify() {
+			if (!this.code) {
+				return
+			}
+			if (Date.now() / 1000 > this.preAuth.expires_at) {
+				this.cancelPreAuth()
+				this.message = this.$t('The code has expired, please log in again')
+				this.notificationShow = true
+				return
+			}
+			const body = { pre_auth_token: this.preAuth.pre_auth_token }
+			body[this.useRecovery ? 'recovery_code' : 'code'] = this.code
+			try {
+				const res = await this.$api.users.verify2FA(body)
+				await this.finishLogin(res.data.data)
+			} catch (err) {
+				const code = err.response?.data?.success
+				if (code === 20006) {
+					this.cancelPreAuth()
+				} else if (code === 10015) {
+					this.code = ''
+				}
+				this.showError(err)
+			}
+		},
+		cancelPreAuth() {
+			this.preAuth = null
+			this.code = ''
+			this.useRecovery = false
+			this.focusInput('input[type="password"]')
+		},
+		toggleRecovery() {
+			this.useRecovery = !this.useRecovery
+			this.code = ''
+			this.focusInput()
+		},
+		// A field swapped in after a click never gets the browser's autofocus.
+		focusInput(selector = 'input') {
+			this.$nextTick(() => {
+				const input = this.$el.querySelector(selector)
+				if (input)
+					input.focus()
+			})
+		},
+		async finishLogin(data) {
+			localStorage.setItem('access_token', data.token.access_token)
+			localStorage.setItem('refresh_token', data.token.refresh_token)
+			localStorage.setItem('expires_at', data.token.expires_at)
+			localStorage.setItem('user', JSON.stringify(data.user))
+
+			this.$store.commit('SET_USER', data.user)
+			this.$store.commit('SET_ACCESS_TOKEN', data.token.access_token)
+			this.$store.commit('SET_REFRESH_TOKEN', data.token.refresh_token)
+
+			const versionRes = await this.$api.sys.getVersion()
+			if (versionRes.data.success == 200) {
+				localStorage.setItem('version', versionRes.data.data.current_version)
+			}
+			this.$router.push('/')
+		},
+		showError(err) {
+			this.message = this.$t(err.response?.data?.message || err.message)
+			this.notificationShow = true
 		},
 	},
 }
