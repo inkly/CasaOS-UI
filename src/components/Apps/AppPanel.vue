@@ -1493,7 +1493,7 @@ export default {
 									)
 								}</p>`
 								+ `<p class="mt-3">${
-									this.$t('Feel free to suggest improvements to this feature in Discord Server!')
+									this.$t('Feel free to suggest improvements to this feature in an issue!')
 								}</p></div>`,
 							type: 'is-dark',
 						})

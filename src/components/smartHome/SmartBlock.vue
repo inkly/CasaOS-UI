@@ -14,7 +14,7 @@
 				<b-image :src="require('@/assets/img/smart/smart_icon.svg')" class="is-80x80"></b-image>
 			</div>
 			<div class="buttons is-flex is-flex-shrink-0 is-flex-direction-row-reverse">
-				<b-button class="mb-0" rounded size="is-small" type="is-primary" @click="goToDiscord">{{
+				<b-button class="mb-0" rounded size="is-small" type="is-primary" @click="goToIssues">{{
 					$t('In development')
 				}}
 				</b-button>
@@ -28,16 +28,16 @@
 export default {
 	name: 'smart-block',
 	methods: {
-		goToDiscord() {
+		goToIssues() {
 			this.$buefy.dialog.confirm({
 				title: ' ',
-				message: this.$t('Have an idea? Shoot it on Discord!'),
+				message: this.$t('Have an idea? Open an issue!'),
 				hasIcon: true,
-				icon: 'discord',
+				icon: 'github',
 				confirmText: this.$t('Go'),
 				cancelText: this.$t('Cancel'),
 				onConfirm: () => {
-					window.open('https://discord.gg/Gx4BCEtHjx', '_blank', 'noopener')
+					window.open('https://github.com/inkly/CasaOS/issues/new', '_blank', 'noopener')
 				},
 			})
 		},

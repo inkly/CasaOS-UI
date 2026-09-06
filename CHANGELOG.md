@@ -11,10 +11,13 @@ All notable changes to CasaOS UI are documented here.
   output of the debug-info endpoint and the browser name and version, and
   opened a prefilled new issue on github.com/IceWhaleTech/CasaOS in a new
   tab; nothing was posted from the page itself. The share dialog offered
-  Facebook, Twitter and Reddit buttons for a fixed CasaOS blurb. Both
-  reported to the message bus on open (connect_feedback, connect_discord,
-  connect_github, connect_sharecasaos); those events are gone with them,
-  as is the browser-info dependency only the form used.
+  Facebook, Twitter and Reddit buttons for a fixed CasaOS blurb. The form
+  and the dialog reported to the message bus on open (connect_feedback,
+  connect_sharecasaos), the two links on click (connect_discord,
+  connect_github); those events are gone with them, as is the
+  browser-info dependency only the form used. The device id the feed
+  used to read from baseinfo.conf has no reader left, so its store
+  mutation goes too.
 - The news feed from the upstream blog. The brand bar fetched an RSS feed
   from blog-casaos.zimaspace.com and scrolled the latest posts next to the
   logo, behind a "Show news feed from CasaOS Blog" switch in the settings
@@ -27,6 +30,9 @@ All notable changes to CasaOS UI are documented here.
 
 ### Changed
 
+- The "In development" button of the smart-home block and the AutoFill
+  hint of the app installer pointed at the upstream Discord; they point
+  at the issues of inkly/CasaOS now.
 - Two links remain in the contact bar: the feedback icon, "Report an
   issue", opens https://github.com/inkly/CasaOS/issues, and the GitHub
   icon, "Visit our GitHub", opens https://github.com/inkly/CasaOS, both in
