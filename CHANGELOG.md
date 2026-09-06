@@ -2,6 +2,43 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [Unreleased]
+
+### Removed
+
+- The contact bar's Discord link, in-app feedback form and share dialog.
+  The feedback form collected a title and a description, appended the
+  output of the debug-info endpoint and the browser name and version, and
+  opened a prefilled new issue on github.com/IceWhaleTech/CasaOS in a new
+  tab; nothing was posted from the page itself. The share dialog offered
+  Facebook, Twitter and Reddit buttons for a fixed CasaOS blurb. Both
+  reported to the message bus on open (connect_feedback, connect_discord,
+  connect_github, connect_sharecasaos); those events are gone with them,
+  as is the browser-info dependency only the form used.
+- The news feed from the upstream blog. The brand bar fetched an RSS feed
+  from blog-casaos.zimaspace.com and scrolled the latest posts next to the
+  logo, behind a "Show news feed from CasaOS Blog" switch in the settings
+  menu and a consent dialog shown once after the first login. The switch,
+  both dialogs, the rss_switch field of the dashboard settings, the store
+  flag, the two message bus events (connect_news, dashboardsetting_news)
+  and the rss-to-json dependency are removed; nothing in the dashboard
+  contacts that blog any more. Fourteen locale keys those features alone
+  used are dropped from the 31 language files.
+
+### Changed
+
+- Two links remain in the contact bar: the feedback icon, "Report an
+  issue", opens https://github.com/inkly/CasaOS/issues, and the GitHub
+  icon, "Visit our GitHub", opens https://github.com/inkly/CasaOS, both in
+  a new tab with rel="noopener".
+
+### Fixed
+
+- The rule that anchors the contact bar's last tooltip inside the window
+  selected `a:last-child .b-tooltip`, but Buefy renders the anchor inside
+  the tooltip rather than around it, so the rule never matched. It now
+  selects the last tooltip, which is the one the GitHub link carries.
+
 ## [0.4.39] - 2026-09-06
 
 ### Fixed
