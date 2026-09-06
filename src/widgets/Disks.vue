@@ -22,8 +22,9 @@
 							</div>
 							<div class="ml-2 is-flex-grow-1 ">
 								<h4 class="title mb-1 mt-0 has-text-left one-line is-align-items-center is-flex">
-									<b-tag v-if="health" type="is-success">{{ $t('Healthy') }}</b-tag>
-									<b-tag v-else type="is-danger">{{ $t('Damage') }}</b-tag>
+									<b-tag v-if="health === 'passed'" type="is-success">{{ $t('Healthy') }}</b-tag>
+									<b-tag v-else-if="health === 'failed'" type="is-danger">{{ $t('Damage') }}</b-tag>
+									<b-tag v-else type="is-light">{{ $t('No SMART data') }}</b-tag>
 								</h4>
 								<p class="has-text-left is-size-14px disk-info">
 									{{ $t('Used') }}: {{ renderSize(totalUsed) }}<br>
@@ -86,7 +87,7 @@ export default {
 			totalSize: 0,
 			totalUsed: 0,
 			totalPercent: 0,
-			health: 'Healthy',
+			health: 'passed',
 			usbDisks: [],
 		}
 	},
@@ -102,7 +103,7 @@ export default {
 			this.totalPercent = this.totalSize > 0
 				? Math.min(100, Math.floor(diskInfo.used * 100 / this.totalSize))
 				: 0
-			this.health = diskInfo.health
+			this.health = this.smartHealth(diskInfo)
 		},
 		usbUsed(item) {
 			const used = Number(item.used)
@@ -192,6 +193,12 @@ export default {
 		background-color: transparent;
 		color: $red;
 		border-color: $red;
+	}
+
+	&.is-light {
+		background-color: transparent;
+		color: $grey-400;
+		border-color: $grey-400;
 	}
 
 }

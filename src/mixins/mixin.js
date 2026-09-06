@@ -371,6 +371,18 @@ export const mixin = {
 			return (32 + value * 1.8).toFixed(1)
 		},
 
+		/**
+		 * @description: SMART health of a disk payload: 'passed', 'failed' or
+		 * 'unavailable'. A LocalStorage without `smart_status` only has the
+		 * `health` Boolean, which then decides between passed and failed.
+		 */
+		smartHealth(disk) {
+			if (disk && typeof disk.smart_status === 'string') {
+				return disk.smart_status
+			}
+			return disk && disk.health ? 'passed' : 'failed'
+		},
+
 		getProgressType(per) {
 			if (per >= 0 && per < 80) {
 				return 'is-primary'

@@ -209,6 +209,8 @@
   "Health": "Health",
   "Healthy": "Healthy",
   "Damage": "Damaged",
+  "No SMART data": "No SMART data",
+  "N/A": "N/A",
   "Temp": "Temperature",
   "Creation in progress": "Creation in progress",
   "Apply": "Apply",
