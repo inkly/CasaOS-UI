@@ -32,6 +32,7 @@ const AppSideBar = () => import('@/components/Apps/AppSideBar.vue')
 const UpdateModal = () => import('@/components/settings/UpdateModal.vue')
 const Ports = () => import('@/components/forms/Ports.vue')
 const Login = () => import('@/views/Login.vue')
+const CoreService = () => import('@/components/CoreService.vue')
 const Clock = () => import('@/widgets/Clock.vue')
 const Network = () => import('@/widgets/Network.vue')
 const ListView = () => import('@/components/filebrowser/components/ListView.vue')
@@ -181,6 +182,10 @@ describe('component smoke tests', () => {
   it('mounts UpdateModal', () => mountOk(UpdateModal, { propsData: { changeLog: '# hi' } }))
   it('mounts Ports', () => mountOk(Ports, { propsData: { modelValue: [], showHostPost: true } }))
   it('mounts Login', () => mountOk(Login))
+  // The one Home child that carries the carousel. shallowMount stubs the
+  // Swiper tags, so what this guards is the swiper/vue import resolving
+  // against this Vue: the previous carousel threw at import in the bundle.
+  it('mounts CoreService', () => mountOk(CoreService, { provide: { homeShowFiles: () => {} } }))
   it('mounts Clock', () => mountOk(Clock))
   it('mounts Network', () => mountOk(Network))
   it('mounts ListView', () => mountOk(ListView, { propsData: { listData: [] }, attachTo: document.body }))

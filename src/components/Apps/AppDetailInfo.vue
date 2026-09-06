@@ -1,7 +1,8 @@
 <script>
 import { h } from 'vue'
 import VMdEditor from '@kangc/v-md-editor'
-import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Autoplay, Navigation } from 'swiper/modules'
 import YAML from 'yaml'
 import business_OpenThirdApp from '@/mixins/app/Business_OpenThirdApp'
 import business_ShowNewAppTag from '@/mixins/app/Business_ShowNewAppTag'
@@ -45,11 +46,8 @@ export default {
   data() {
     return {
       // Image List Swiper
-      disPrev: false,
-      disNext: false,
-      slidesPerView: 3,
-      swiper: null,
       swiperOptions: {
+        modules: [Navigation, Autoplay],
         loop: false,
         autoplay: true,
         observer: true,
@@ -68,11 +66,6 @@ export default {
           },
           1366: {
             slidesPerView: 3,
-          },
-        },
-        on: {
-          breakpoint: (swiper) => {
-            this.slidesPerView = swiper.slidesPerView
           },
         },
       },
@@ -97,6 +90,8 @@ export default {
     updateSwiper() {
       this.swiper.slideTo(0, 0, false)
     },
+    // Kept off data(): a Swiper instance behind a reactive proxy is not one
+    // Swiper recognises as its own.
     handleSwiperReadied(swiper) {
       this.swiper = swiper
     },
@@ -269,10 +264,9 @@ export default {
       <!-- App Info Slider Start -->
       <div v-if="showDetailSwiper" class="is-relative">
         <Swiper
-          :options="swiperOptions"
-          class="swiper swiper-responsive-breakpoints"
+          v-bind="swiperOptions"
           @observer-update="updateSwiper"
-          @ready="handleSwiperReadied"
+          @swiper="handleSwiperReadied"
         >
           <SwiperSlide v-for="item in appDetailData.screenshot_link" :key="`sc${item}`">
             <div class="gap">

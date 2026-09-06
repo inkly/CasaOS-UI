@@ -1,5 +1,6 @@
 <script>
-import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Navigation, Pagination } from 'swiper/modules'
 import sortBy from 'lodash/sortBy'
 import noticeBlock from '@/components/noticBlock/noticeBlock'
 import { mixin } from '@/mixins/mixin'
@@ -20,6 +21,7 @@ export default {
       notice: 'local-storage',
       isLoading: false,
       swiperOptions: {
+        modules: [Navigation, Pagination],
         watchOverflow: true,
         breakpoints: {
           450: {
@@ -41,11 +43,6 @@ export default {
           disabledClass: 'swiper-button-disabled',
         },
         observer: true,
-        on: {
-          slideChangeTransitionStart: () => {
-            this.$messageBus('youshouldknow_slide')
-          },
-        },
       },
       noticesData: {},
       dockerProgress: {},
@@ -78,7 +75,7 @@ export default {
         }
         // skip new notice card
         this.$nextTick(() => {
-          this.$refs.mySwiper.$swiper.slideTo(val - 1, 1000, true)
+          this.swiper.slideTo(val - 1, 1000, true)
         })
       },
     },
@@ -97,6 +94,11 @@ export default {
     this.destroyUIEventBus()
   },
   methods: {
+    // Kept off data(): a Swiper instance behind a reactive proxy is not one
+    // Swiper recognises as its own.
+    setSwiper(swiper) {
+      this.swiper = swiper
+    },
     _isValidDiskEvent(evt) {
       let p = {}
       if (typeof evt?.properties === 'string') {
@@ -581,7 +583,7 @@ export default {
 </script>
 
 <template>
-  <Swiper ref="mySwiper" :options="swiperOptions">
+  <Swiper v-bind="swiperOptions" @swiper="setSwiper" @slide-change-transition-start="$messageBus('youshouldknow_slide')">
     <SwiperSlide v-for="(noticeCard, key) in noticesData" :key="key" :class="{ _singleWidth: showFullCard }">
       <NoticeBlock :notice-data="noticeCard" :notice-type="key" @delete-notice="refreshNotice" />
     </SwiperSlide>
@@ -591,16 +593,12 @@ export default {
     <SwiperSlide v-if="recommendShow">
       <SmartBlock />
     </SwiperSlide>
-    <template #pagination>
+    <template #container-end>
       <div v-show="recommendShow || noticeLength !== 0" class="swiper-pagination" />
-    </template>
-    <template #button-prev>
       <img
         :src="require('@/assets/img/widgets/swiper-left.svg')" alt="prev"
         class="swiper-button-prev"
       >
-    </template>
-    <template #button-next>
       <img
         :src="require('@/assets/img/widgets/swiper-right.svg')" alt="next"
         class="swiper-button-next"
@@ -615,7 +613,7 @@ export default {
 	width: 100% !important;
 }
 
-.swiper-container {
+.swiper {
 
 	&:hover>.swiper-button-next:not(.swiper-button-disabled),
 	&:hover>.swiper-button-prev:not(.swiper-button-disabled) {

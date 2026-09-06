@@ -8,7 +8,8 @@ import isNull from 'lodash/isNull'
 import orderBy from 'lodash/orderBy'
 import debounce from 'lodash/debounce'
 import FileSaver from 'file-saver'
-import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Autoplay, Navigation } from 'swiper/modules'
 import { Field as VeeField, Form as VeeForm } from 'vee-validate'
 import { parse } from 'yaml'
 import { vOnClickOutside } from '@vueuse/components'
@@ -138,6 +139,7 @@ export default {
 
       // Featured Swiper
       featureSwiperOptions: {
+        modules: [Navigation, Autoplay],
         loop: false,
         autoplay: true,
         spaceBetween: 24,
@@ -1346,7 +1348,7 @@ export default {
             </h3>
             <!-- Featured Slider Start -->
             <div class="is-relative featured-app b-line">
-              <Swiper ref="featureSwiper" :options="featureSwiperOptions" class="swiper">
+              <Swiper v-bind="featureSwiperOptions">
                 <SwiperSlide
                   v-for="(item, index) in recommendList"
                   :key="index + item.title + item.id"
