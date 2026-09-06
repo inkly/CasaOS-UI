@@ -2,7 +2,7 @@
 
 All notable changes to CasaOS UI are documented here.
 
-## [Unreleased]
+## [0.4.42] - 2026-09-06
 
 ### Fixed
 
