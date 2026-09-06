@@ -90,9 +90,9 @@ export default {
 						localStorage.setItem('is_update', 'true')
 						clearInterval(this.updateTimer)
 						setTimeout(() => {
-							this.$router.replace({
-								path: '/logout',
-							})
+							// The route change alone keeps the pre-upgrade bundle running (and
+							// its light-only chrome); the reload loads the UI just installed.
+							this.$router.replace({ path: '/logout' }).then(() => location.reload())
 						}, 1000)
 					} else if (this.updateLogs.includes(`CasaOS upgrade failed`)) {
 						this.$buefy.toast.open({
