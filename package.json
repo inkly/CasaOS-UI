@@ -67,6 +67,7 @@
     "mitt": "^3.0.1",
     "music-metadata-browser": "^2.5.10",
     "nanoid": "^4.0.2",
+    "qrcode": "^1.5.4",
     "qs": "^6.11.2",
     "remove": "^0.1.5",
     "rss-to-json": "^2.1.1",
