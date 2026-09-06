@@ -131,7 +131,6 @@ export default {
 		}
 		if (sessionStorage.getItem('fromWelcome')) {
 			this.$messageBus('global_newvisit')
-			this.rssConfirm()
 			// one-off consumption
 			sessionStorage.removeItem('fromWelcome')
 		}
@@ -163,7 +162,6 @@ export default {
 					shortcuts_switch: true,
 					widgets_switch: true,
 					existing_apps_switch: true,
-					rss_switch: this.barData.rss_switch,
 				}
 				// save
 				const saveRes = await this.$api.users.setCustomStorage('system', barData)
@@ -175,7 +173,6 @@ export default {
 
 			this.$store.commit('SET_SEARCH_ENGINE_SWITCH', systemConfig.data.data.search_switch)
 			this.$store.commit('SET_RECOMMEND_SWITCH', systemConfig.data.data.recommend_switch)
-			this.$store.commit('SET_RSS_SWITCH', systemConfig.data.data.rss_switch)
 			this.barData = systemConfig.data.data
 			this.isLoading = false
 		},
@@ -283,27 +280,6 @@ export default {
 					},
 				})
 			}
-		},
-
-		// one-off
-		rssConfirm() {
-			this.$buefy.dialog.confirm({
-				title: this.$t('Show news feed from CasaOS Blog'),
-				message: this.$t('CasaOS dashboard will get the the latest news feed of https://blog.casaos.io via Internet, which might leave your visit records to the site. Do you accept?'),
-				type: 'is-dark',
-				confirmText: this.$t('Accept'),
-				cancelText: this.$t('Cancel'),
-				onConfirm: async () => {
-					const systemConfig = await this.$api.users.getCustomStorage('system')
-					const barData = systemConfig.data.data
-					barData.rss_switch = true
-					const saveRes = await this.$api.users.setCustomStorage('system', barData)
-					this.barData = saveRes.data.data
-				},
-				onCancel: () => {
-					this.barData.rss_switch = false
-				},
-			})
 		},
 
 		// show storage settings modal

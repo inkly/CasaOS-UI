@@ -81,7 +81,6 @@ const state = {
 	needInitialization: false,
 	existingAppsSwitch: true,
 	recommendSwitch: true,
-	rssSwitch: false,
 	searchEngine: 'google',
 	searchEngineSwitch: true,
 	appLaunchInIframe: false,
@@ -164,7 +163,7 @@ async function mountOk(load, { mocks: extra = {}, stubs = {}, provide = {}, ...r
 describe('component smoke tests', () => {
 	it('mounts App', () => mountOk(App))
 	it('mounts TopBar', () => mountOk(TopBar, {
-		propsData: { initBarData: { lang: 'en_us', search_engine: 'https://duckduckgo.com/?q=', search_switch: true, recommend_switch: true, existing_apps_switch: true, rss_switch: false } },
+		propsData: { initBarData: { lang: 'en_us', search_engine: 'https://duckduckgo.com/?q=', search_switch: true, recommend_switch: true, existing_apps_switch: true } },
 	}))
 	it('mounts BrandBar', () => mountOk(BrandBar))
 	it('mounts ContactBar', () => mountOk(ContactBar))
