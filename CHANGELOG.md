@@ -2,6 +2,14 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.36] - 2026-09-06
+
+### Changed
+
+- The dashboard is fully translated into French: the seventy-six strings of the
+  system package updates, merged storage, the Compose editor, share accounts and
+  Time Machine shares that were still shown in English.
+
 ## [0.4.35] - 2026-09-05
 
 ### Fixed
