@@ -2,7 +2,7 @@
 
 All notable changes to CasaOS UI are documented here.
 
-## [Unreleased]
+## [0.4.43] - 2026-09-07
 
 The dashboard no longer takes an npm package from IceWhale, on trust or
 otherwise: there is none left.
