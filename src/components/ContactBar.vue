@@ -1,30 +1,15 @@
 <template>
 	<div class="contact-bar is-flex is-align-items-center has-text-white">
 
-		<b-tooltip :label="$t('Submit a feedback or report an issue')" content-class="contact-tip" position="is-top"
-			type="is-primary">
-			<a @click="showFeedback">
+		<b-tooltip :label="$t('Report an issue')" content-class="contact-tip" position="is-top" type="is-primary">
+			<a rel="noopener" href="https://github.com/inkly/CasaOS/issues" target="_blank">
 				<b-icon icon="eedback" pack="casa"></b-icon>
 			</a>
 		</b-tooltip>
 
-		<b-tooltip :label="$t('Join Discord')" content-class="contact-tip" position="is-top" type="is-primary">
-			<a rel="noopener" href="https://discord.gg/knqAbbBbeX" target="_blank"
-				@click="$messageBus('connect_discord')">
-				<b-icon icon="discord" pack="casa"></b-icon>
-			</a>
-		</b-tooltip>
-
 		<b-tooltip :label="$t('Visit our Github')" content-class="contact-tip" position="is-top" type="is-primary">
-			<a rel="noopener" href="https://github.com/IceWhaleTech/CasaOS" target="_blank"
-				@click="$messageBus('connect_github')">
+			<a rel="noopener" href="https://github.com/inkly/CasaOS" target="_blank">
 				<b-icon icon="github" pack="casa"></b-icon>
-			</a>
-		</b-tooltip>
-
-		<b-tooltip :label="$t('Share CasaOS')" content-class="contact-tip" position="is-top" type="is-primary">
-			<a @click="showShareModal">
-				<b-icon icon="chat" pack="casa"></b-icon>
 			</a>
 		</b-tooltip>
 
@@ -32,40 +17,8 @@
 </template>
 
 <script>
-import FeedbackPanel from './feedback/FeedbackPanel.vue'
-import ShareModal from '@/components/share/ShareModal.vue'
-
 export default {
 	name: 'contact-bar',
-	methods: {
-		showFeedback() {
-			// messageBus :: feedback
-			this.$messageBus('connect_feedback')
-			this.$buefy.modal.open({
-				component: FeedbackPanel,
-				hasModalCard: true,
-				customClass: 'feedback-modal',
-				trapFocus: true,
-				canCancel: [],
-				scroll: 'keep',
-				animation: 'zoom-in',
-			})
-		},
-
-		showShareModal() {
-			// messageBus :: share
-			this.$messageBus('connect_sharecasaos')
-			this.$buefy.modal.open({
-				component: ShareModal,
-				hasModalCard: true,
-				customClass: 'network-storage-modal',
-				trapFocus: true,
-				canCancel: [],
-				scroll: 'keep',
-				animation: 'zoom-in',
-			})
-		},
-	},
 }
 </script>
 
@@ -115,7 +68,7 @@ export default {
 // window: measured at 1280px, 11px past it in English and 26px in Dutch.
 // Anchor that one to the bar instead and put its arrow back over the icon,
 // which is what popper.js used to do here with preventOverflow.
-.contact-bar a:last-child .b-tooltip .tooltip-content.contact-tip {
+.contact-bar .b-tooltip:last-child .tooltip-content.contact-tip {
 	left: auto;
 	right: -0.625rem;
 	transform: none;

@@ -191,18 +191,6 @@ module.exports = {
 	connect_news: async () => {
 		return await intermediateProcessor('casaos-ui:connect:connect_news')
 	},
-	connect_feedback: async () => {
-		return await intermediateProcessor('casaos-ui:connect:connect_feedback')
-	},
-	connect_discord: async () => {
-		return await intermediateProcessor('casaos-ui:connect:connect_discord')
-	},
-	connect_github: async () => {
-		return await intermediateProcessor('casaos-ui:connect:connect_github')
-	},
-	connect_sharecasaos: async () => {
-		return await intermediateProcessor('casaos-ui:connect:connect_sharecasaos')
-	},
 
 	appstore_install: async (name) => {
 		return await intermediateProcessor('casaos-ui:appstore:appstore_install', { value: name })
