@@ -140,12 +140,12 @@ export default {
 					const host = this.host.replace('smb://', '').replace('nfs://', '')
 					const data = this.isGuest
 						? {
-								host: host,
+								host,
 								username: this.guestName,
 								password: this.guestPass,
 							}
 						: {
-								host: host,
+								host,
 								username: this.username,
 								password: this.password,
 							}
@@ -176,7 +176,7 @@ export default {
 		},
 
 		saveNewLoginInfoToLocalStorage() {
-			let oldInfo = this.$store.state.networkStorage
+			const oldInfo = this.$store.state.networkStorage
 			const loginItem = this.isGuest
 				? {
 						host: this.host,

@@ -15,7 +15,7 @@
 							<b-button :icon-right="active ? 'up-outline' : 'down-outline'"
 								:label="initNetwork[networkId].name" icon-pack="casa" type="is-primary" />
 						</template>
-						<b-dropdown-item v-for="(item, index) in initNetwork" :key="'net' + index" :value="index"
+						<b-dropdown-item v-for="(item, index) in initNetwork" :key="`net${index}`" :value="index"
 							aria-role="listitem">
 							{{ item.name }}
 						</b-dropdown-item>
@@ -54,7 +54,6 @@ import { mixin } from '@/mixins/mixin'
 
 export default {
 	mixins: [mixin],
-	// eslint-disable-next-line vue/multi-word-component-names
 	name: 'network',
 	icon: 'network-outline',
 	title: 'Network Status',
@@ -218,8 +217,8 @@ export default {
 			if (this.networks) {
 				const upSpeed = this.networks[this.networkId][0].data[this.networks[this.networkId][0].data.length - 1]
 				const downSpeed = this.networks[this.networkId][1].data[this.networks[this.networkId][1].data.length - 1]
-				this.currentUpSpeed = isNaN(upSpeed) ? 0 : upSpeed
-				this.currentDownSpeed = isNaN(downSpeed) ? 0 : downSpeed
+				this.currentUpSpeed = Number.isNaN(Number(upSpeed)) ? 0 : upSpeed
+				this.currentDownSpeed = Number.isNaN(Number(downSpeed)) ? 0 : downSpeed
 			}
 		},
 		covertToKB(bytes) {
@@ -231,8 +230,8 @@ export default {
 		// 	this.initNetwork = data.data
 		// 	this.buildDatas(this.initNetwork)
 		// },
-		'casaos:system:utilization'(res) {
-			let data = res.Properties
+		'casaos:system:utilization': function (res) {
+			const data = res.Properties
 			this.initNetwork = JSON.parse(data.sys_net)
 			this.buildDatas(this.initNetwork)
 		},

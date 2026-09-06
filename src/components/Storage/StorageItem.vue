@@ -60,8 +60,8 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin'
 import delay from 'lodash/delay'
+import { mixin } from '@/mixins/mixin'
 
 export default {
 	name: 'storage-item',
@@ -102,7 +102,7 @@ export default {
 				},
 				onConfirm: (value) => {
 					this.$api.storage.rename({
-						path: path,
+						path,
 						name: value,
 					}).then((res) => {
 						if (res.data.success != 200) {
@@ -148,8 +148,8 @@ export default {
 					this.isRemoving = false
 				},
 				onConfirm: (value) => {
-					let data = {
-						path: path,
+					const data = {
+						path,
 						password: value,
 					}
 
@@ -164,7 +164,7 @@ export default {
 							console.error(res)
 						} else {
 							this.isRemoving = false
-							let _this = this
+							const _this = this
 							delay(() => {
 								_this.isRemoving = false
 								_this.$emit('getDiskList')
@@ -199,8 +199,8 @@ export default {
 					this.isFormating = false
 				},
 				onConfirm: (value) => {
-					let data = {
-						path: path,
+					const data = {
+						path,
 						volume: mount_point,
 						password: value,
 					}
@@ -215,7 +215,7 @@ export default {
 							})
 							console.error(res)
 						} else {
-							let _this = this
+							const _this = this
 							delay(() => {
 								_this.isFormating = false
 								_this.$emit('getDiskList')

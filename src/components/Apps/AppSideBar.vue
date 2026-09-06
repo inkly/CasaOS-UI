@@ -1,7 +1,7 @@
 <template>
 	<div class="app-sidebar" :class="{ 'no-event': isOpen }">
 		<transition :name="transitionName" @before-enter="beforeEnter" @after-enter="afterEnter" @enter="enter">
-			<div v-show="isOpen" ref="sidebarContent" class="sidebar-content" :class="rootClasses">
+			<div v-show="isOpen" class="sidebar-content" :class="rootClasses">
 				<slot :close="close"></slot>
 			</div>
 		</transition>
@@ -23,7 +23,7 @@ export default {
 					'fixed',
 					'absolute',
 					'static',
-				].indexOf(value) >= 0
+				].includes(value)
 			},
 		},
 		fullheight: Boolean,
@@ -121,7 +121,7 @@ export default {
 			this.animating = false
 		},
 		enter() {
-			let myDiv = document.getElementById('ss-content')
+			const myDiv = document.getElementById('ss-content')
 			if (myDiv) {
 				myDiv.scrollTop = 0
 			}

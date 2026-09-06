@@ -1,3 +1,70 @@
+<template>
+	<div class="modal-card">
+		<!-- Modal-Card Header Start -->
+		<header class="modal-card-head">
+			<div class="is-flex-grow-1">
+				<h3 class="title is-header">
+					{{ $t('Import') }}
+				</h3>
+			</div>
+		</header>
+		<!-- Modal-Card Header End -->
+		<!-- Modal-Card Body Start -->
+		<section class="modal-card-body">
+			<b-tabs v-model="activeTab" :animated="false">
+				<b-tab-item label="Docker Compose">
+					<b-field :message="errors" :type="{ 'is-danger': !!errors }">
+						<b-input v-model="dockerComposeCommands" :placeholder="$t('Notice: If there are multiple services, only the first set can be analyzed correctly')" class="import-area" type="textarea" />
+					</b-field>
+
+					<b-upload ref="importUpload" v-model="dropFiles" accept=".yaml,.yml" drag-drop expanded @update:model-value="onSelect">
+						<section class="section">
+							<div class="content has-text-centered">
+								<p>
+									<b-icon :icon="uploadIcon" custom-size="is-size-2" size="is-40" />
+								</p>
+								<p class="has-text-full-03">
+									{{ dropText }}
+								</p>
+							</div>
+						</section>
+					</b-upload>
+				</b-tab-item>
+				<b-tab-item label="Docker CLI">
+					<b-field :message="errors" :type="{ 'is-danger': !!errors }" class="mb-0">
+						<b-input v-model="dockerCliCommands" class="import-area-cli" type="textarea" />
+					</b-field>
+				</b-tab-item>
+
+				<b-tab-item v-if="false" :label="$t('AppFile')">
+					<b-field :message="errors" :type="{ 'is-danger': !!errors }">
+						<b-upload ref="importUpload" v-model="dropFiles" accept="application/json" drag-drop expanded @update:model-value="onSelect">
+							<section class="section">
+								<div class="content has-text-centered">
+									<p>
+										<b-icon :icon="uploadIcon" size="is-large" />
+									</p>
+									<p>{{ dropText }}</p>
+								</div>
+							</section>
+						</b-upload>
+					</b-field>
+				</b-tab-item>
+			</b-tabs>
+		</section>
+		<!-- Modal-Card Body End -->
+		<!-- Modal-Card Footer Start -->
+		<footer class="modal-card-foot is-flex is-align-items-center">
+			<div class="is-flex-grow-1 has-text-full-04"></div>
+			<div>
+				<b-button :label="$t('Cancel')" rounded @click="$emit('close')" />
+				<b-button :label="$t('Submit')" rounded type="is-primary" @click="emitSubmit" />
+			</div>
+		</footer>
+		<!-- Modal-Card Footer End -->
+	</div>
+</template>
+
 <script>
 import { parse, stringify } from 'yaml'
 import composerize from 'composerize'
@@ -169,73 +236,6 @@ export default {
 	},
 }
 </script>
-
-<template>
-	<div class="modal-card">
-		<!-- Modal-Card Header Start -->
-		<header class="modal-card-head">
-			<div class="is-flex-grow-1">
-				<h3 class="title is-header">
-					{{ $t('Import') }}
-				</h3>
-			</div>
-		</header>
-		<!-- Modal-Card Header End -->
-		<!-- Modal-Card Body Start -->
-		<section class="modal-card-body">
-			<b-tabs v-model="activeTab" :animated="false">
-				<b-tab-item label="Docker Compose">
-					<b-field :message="errors" :type="{ 'is-danger': !!errors }">
-						<b-input v-model="dockerComposeCommands" :placeholder="$t('Notice: If there are multiple services, only the first set can be analyzed correctly')" class="import-area" type="textarea" />
-					</b-field>
-
-					<b-upload ref="importUpload" v-model="dropFiles" accept=".yaml,.yml" drag-drop expanded @update:model-value="onSelect">
-						<section class="section">
-							<div class="content has-text-centered">
-								<p>
-									<b-icon :icon="uploadIcon" custom-size="is-size-2" size="is-40" />
-								</p>
-								<p class="has-text-full-03">
-									{{ dropText }}
-								</p>
-							</div>
-						</section>
-					</b-upload>
-				</b-tab-item>
-				<b-tab-item label="Docker CLI">
-					<b-field :message="errors" :type="{ 'is-danger': !!errors }" class="mb-0">
-						<b-input v-model="dockerCliCommands" class="import-area-cli" type="textarea" />
-					</b-field>
-				</b-tab-item>
-
-				<b-tab-item v-if="false" :label="$t('AppFile')">
-					<b-field :message="errors" :type="{ 'is-danger': !!errors }">
-						<b-upload ref="importUpload" v-model="dropFiles" accept="application/json" drag-drop expanded @update:model-value="onSelect">
-							<section class="section">
-								<div class="content has-text-centered">
-									<p>
-										<b-icon :icon="uploadIcon" size="is-large" />
-									</p>
-									<p>{{ dropText }}</p>
-								</div>
-							</section>
-						</b-upload>
-					</b-field>
-				</b-tab-item>
-			</b-tabs>
-		</section>
-		<!-- Modal-Card Body End -->
-		<!-- Modal-Card Footer Start -->
-		<footer class="modal-card-foot is-flex is-align-items-center">
-			<div class="is-flex-grow-1 has-text-full-04"></div>
-			<div>
-				<b-button :label="$t('Cancel')" rounded @click="$emit('close')" />
-				<b-button :label="$t('Submit')" rounded type="is-primary" @click="emitSubmit" />
-			</div>
-		</footer>
-		<!-- Modal-Card Footer End -->
-	</div>
-</template>
 
 <style lang="scss" scoped>
 .import-area {

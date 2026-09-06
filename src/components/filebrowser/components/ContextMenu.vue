@@ -1,9 +1,9 @@
 <template>
 	<div>
 
-		<div :style="{ top: y + 'px', left: x + 'px' }" class="action-btn context-menu">
+		<div :style="{ top: `${y}px`, left: `${x}px` }" class="action-btn context-menu">
 			<b-dropdown id="dr1" ref="dropDown" :animation="ani" :close-on-click="false" :mobile-modal="false"
-				:position="'is-' + verticalPos + '-' + horizontalPos" aria-role="list" class="file-dropdown"
+				:position="`is-${verticalPos}-${horizontalPos}`" aria-role="list" class="file-dropdown"
 				@active-change="dorpActiveChange($event, 'dr1')">
 				<!-- Blank Start -->
 				<template v-if="!showDetail">
@@ -106,8 +106,8 @@
 </template>
 
 <script>
-import { mixin, wallpaperType } from '@/mixins/mixin'
 import has from 'lodash/has'
+import { mixin, wallpaperType } from '@/mixins/mixin'
 
 export default {
 	mixins: [mixin],
@@ -170,7 +170,7 @@ export default {
 	methods: {
 		open(event, item) {
 			this.item = item
-			let bounced = event.target.getAttribute('class').includes('dropdown-menu')
+			const bounced = event.target.getAttribute('class').includes('dropdown-menu')
 			if (!bounced) {
 				this.showDetail = (item != undefined)
 				if (this.showDetail) {
@@ -206,7 +206,7 @@ export default {
 				this.filePanel.uploaderInstance.assignBrowse(document.getElementById('upfolderBtn'), true)
 			})
 		},
-		dorpActiveChange($event, el) {
+		dorpActiveChange($event) {
 			if ($event) {
 				this.isConfirmed = false
 			}

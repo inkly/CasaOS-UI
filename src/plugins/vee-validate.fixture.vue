@@ -19,7 +19,7 @@
 
 	<!-- ComposeConfig keeps one form per service and reaches them by index. -->
 	<VeeForm v-for="row in 2" :key="row" :ref="`row${row}valida`" as="span">
-		<VeeField :model-value="''" :name="`row-${row}`" rules="required" />
+		<VeeField model-value="" :name="`row-${row}`" rules="required" />
 	</VeeForm>
 </template>
 

@@ -47,7 +47,7 @@ const users = {
 	// get user image [NOT USE]
 	getUserImage(path) {
 		return api.get(`${PREFIX}/image`, {
-			path: path,
+			path,
 		})
 	},
 
@@ -59,7 +59,7 @@ const users = {
 	// delete user image [NOT USE]
 	deleteUserImage(path) {
 		return api.delete(`${PREFIX}/current/image`, {
-			path: path,
+			path,
 		})
 	},
 
@@ -88,24 +88,24 @@ const users = {
 	// register [OK]
 	register(username, password, key) {
 		return api.post(`${PREFIX}/register`, {
-			username: username,
-			password: password,
-			key: key,
+			username,
+			password,
+			key,
 		})
 	},
 
 	// login [OK]
 	login(username, password) {
 		return api.post(`${PREFIX}/login`, {
-			username: username,
-			password: password,
+			username,
+			password,
 		})
 	},
 
 	// refresh token [OK]
 	refreshToken(refresh_token) {
 		return api.post(`${PREFIX}/refresh`, {
-			refresh_token: refresh_token,
+			refresh_token,
 		})
 	},
 

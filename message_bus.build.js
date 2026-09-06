@@ -7,9 +7,9 @@
  * Copyright (c) 2022 by IceWhale, All Rights Reserved.
  */
 
+const fs = require('node:fs')
+const path = require('node:path')
 const events = require('./src/events/message_bus.js')
-const fs = require('fs')
-const path = require('path')
 
 const outPath = './build/sysroot/var/lib/casaos/'
 const outName = 'ui-message-bus.json'

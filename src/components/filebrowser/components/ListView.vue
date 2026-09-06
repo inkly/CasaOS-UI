@@ -31,7 +31,7 @@
 					<!-- Table header End -->
 					<!-- Table body Start -->
 					<div class="tbody card-container">
-						<div v-for="(item, index) in listData" :key="'list-' + index + item.name" :data-rel="index"
+						<div v-for="(item, index) in listData" :key="`list-${index}${item.name}`" :data-rel="index"
 							class="tr-wrapper rdata">
 							<div :class="{
 									isCutting: getCardState(item),
@@ -80,6 +80,7 @@
 				</div>
 			</div>
 			<!-- Context Menu Start -->
+			<!-- eslint-disable-next-line vue/no-unused-refs -- opened by mixins/mixin.js -->
 			<context-menu ref="ctxMenu" @reload="$emit('reload')"></context-menu>
 			<!-- Context Menu End -->
 		</div>
@@ -88,11 +89,11 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin'
-import ListViewMixin from '@/mixins/ListViewMixin'
 import ActionButton from './ActionButton.vue'
 import ContextMenu from './ContextMenu.vue'
 import ListIconContainer from './ListIconContainer.vue'
+import ListViewMixin from '@/mixins/ListViewMixin'
+import { mixin } from '@/mixins/mixin'
 
 export default {
 	name: 'list-view',

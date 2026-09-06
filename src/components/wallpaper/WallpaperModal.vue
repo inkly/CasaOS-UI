@@ -18,7 +18,7 @@
 			</div>
 
 			<div class="columns mt-5 mb-5 is-variable is-2">
-				<div v-for="(item, index) in wallpaperItems" :key="'wallpaper' + index" class="column">
+				<div v-for="(item, index) in wallpaperItems" :key="`wallpaper${index}`" class="column">
 					<div :class="{ active: checkActive(item.path) }" class="image-list-item is-clickable"
 						@click="changeWallpaper(item.path)">
 						<b-image :src="item.path"></b-image>
@@ -52,8 +52,9 @@
 </template>
 
 <script>
-const wallpaperConfig = 'wallpaper'
 import Uploader from 'simple-uploader.js'
+
+const wallpaperConfig = 'wallpaper'
 
 export default {
 	data() {
@@ -96,7 +97,7 @@ export default {
 		this.uploader.assignBrowse(document.getElementById('upload-wallpaper'), false, true, this.attributes)
 		this.uploader.on('filesSubmitted', () => {
 			this.isUpLoading = true
-			this.$api.sys.getVersion().then((res) => {
+			this.$api.sys.getVersion().then(() => {
 				this.uploader.opts.headers.Authorization = this.$store.state.access_token || localStorage.getItem('access_token')
 				this.uploader.upload()
 			})
@@ -113,7 +114,7 @@ export default {
 			const res = JSON.parse(message)
 
 			if (res.success === 200) {
-				const uploadPath = 'SERVER_URL' + res.data.online_path + '&time=' + new Date().getTime()
+				const uploadPath = `SERVER_URL${res.data.online_path}&time=${new Date().getTime()}`
 				this.backgroundStyleObj.backgroundImage = `url(${this.parseUrl(uploadPath)})`
 				this.path = uploadPath
 				this.from = 'Upload'
@@ -127,7 +128,7 @@ export default {
 	},
 	methods: {
 		saveChange() {
-			let data = {
+			const data = {
 				path: this.path,
 				from: this.from,
 			}

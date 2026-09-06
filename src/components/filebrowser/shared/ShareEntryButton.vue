@@ -1,7 +1,7 @@
 <template>
 	<div>
 
-		<div :class="{ active: active }" class="is-flex list-item new-list-item" @click.prevent="$emit('open')">
+		<div :class="{ active }" class="is-flex list-item new-list-item" @click.prevent="$emit('open')">
 
 			<b-tooltip :active="tipVisible" :triggers="[]" always content-class="share-tip" position="is-right">
 				<template #content>
@@ -24,8 +24,9 @@
 </template>
 
 <script>
-const sharedInitData = 'shared_init_data'
 import events from '@/events/events'
+
+const sharedInitData = 'shared_init_data'
 
 export default {
 	props: {

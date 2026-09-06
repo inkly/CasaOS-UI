@@ -53,10 +53,10 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin'
 import Uploader from 'simple-uploader.js'
 import events from '../common/file-events'
 import { secondsToStr } from '../common/utils'
+import { mixin } from '@/mixins/mixin'
 
 const COMPONENT_NAME = 'uploader-file'
 
@@ -108,7 +108,7 @@ export default {
 			}
 			Object.keys(typeMap).forEach((_type) => {
 				const extensions = typeMap[_type]
-				if (extensions.indexOf(extension) > -1) {
+				if (extensions.includes(extension)) {
 					type = _type
 				}
 			})
@@ -209,8 +209,7 @@ export default {
 			let res = message
 			try {
 				res = JSON.parse(message)
-				// eslint-disable-next-line no-empty
-			} catch (e) {
+			} catch {
 
 			}
 			if (message == '') {
@@ -227,7 +226,7 @@ export default {
 					this.processResponse(args[2])
 					return
 				}
-				this[`_${event}`].apply(this, args)
+				this[`_${event}`](...args)
 			}
 		},
 		_fileProgress() {

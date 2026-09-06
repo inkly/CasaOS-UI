@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<div :style="{ top: y + 'px', left: x + 'px' }" class="drop-context-menu">
+		<div :style="{ top: `${y}px`, left: `${x}px` }" class="drop-context-menu">
 			<b-dropdown id="dr1" ref="dropDown" :animation="ani" :mobile-modal="false"
-				:position="'is-' + verticalPos + '-' + horizontalPos"
+				:position="`is-${verticalPos}-${horizontalPos}`"
 				aria-role="list" class="file-dropdown" close-on-click>
 				<!-- Blank Start -->
 				<b-dropdown-item key="drop-context1" aria-role="menuitem" class="is-flex is-align-items-center">

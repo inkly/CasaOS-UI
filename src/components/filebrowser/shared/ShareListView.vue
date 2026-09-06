@@ -12,7 +12,7 @@
 				<!-- Empty Content Slot End -->
 				<div class="select-parent">
 					<div class="card-container">
-						<div v-for="(item, index) in listData" :key="'list-' + index + item.path" :data-rel="index"
+						<div v-for="(item, index) in listData" :key="`list-${index}${item.path}`" :data-rel="index"
 							class="tr-wrapper rdata" @contextmenu.prevent="openContextMenu($event, item)">
 							<div :class="{ active: item.isSelected }" class="tr is-unselectable">
 
@@ -49,6 +49,7 @@
 
 			</div>
 			<!-- Context Menu Start -->
+			<!-- eslint-disable-next-line vue/no-unused-refs -- opened by mixins/mixin.js -->
 			<context-menu ref="ctxMenu" @reload="$emit('reload')"></context-menu>
 			<!-- Context Menu End -->
 
@@ -59,10 +60,10 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin'
+import ListIconContainer from '../components/ListIconContainer.vue'
 import ActionButton from './ActionButton.vue'
 import ContextMenu from './ContextMenu.vue'
-import ListIconContainer from '../components/ListIconContainer.vue'
+import { mixin } from '@/mixins/mixin'
 
 export default {
 	props: {

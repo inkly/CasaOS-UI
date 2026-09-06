@@ -26,7 +26,7 @@ const actions = {
 				item.selected = true
 				item.extensions = null
 			})
-			let data = await $api.users.saveShutcutDetail(val).then(v => v.data.data)
+			const data = await $api.users.saveShutcutDetail(val).then(v => v.data.data)
 			context.commit('SET_SHORTCUT_DATA', data)
 		} catch (e) {
 			console.log(e)

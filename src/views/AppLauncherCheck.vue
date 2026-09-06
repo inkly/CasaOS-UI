@@ -94,9 +94,9 @@ export default {
 		// Get container running state
 		async getContainerState() {
 			try {
-				let res = await this.$api.container.getState(this.appDetailData.name)
+				const res = await this.$api.container.getState(this.appDetailData.name)
 				return res.data.data
-			} catch (error) {
+			} catch {
 				return {
 					state: 'error',
 				}
@@ -105,18 +105,18 @@ export default {
 		// Start container
 		async startContainer() {
 			try {
-				let res = await this.$openAPI.appManagement.compose.setComposeAppStatus(this.appDetailData.name, 'start')
+				const res = await this.$openAPI.appManagement.compose.setComposeAppStatus(this.appDetailData.name, 'start')
 				return res.data
-			} catch (error) {
+			} catch {
 				return 'error'
 			}
 		},
 		// Check container health
 		async healthCheck() {
 			try {
-				let res = await this.$openAPI.appManagement.compose.checkComposeAppHealthByID(this.appDetailData.name)
+				const res = await this.$openAPI.appManagement.compose.checkComposeAppHealthByID(this.appDetailData.name)
 				return res.status === 200
-			} catch (error) {
+			} catch {
 				return false
 			}
 		},

@@ -11,8 +11,8 @@
  */
 
 // 调用本地文件系统
-const fs = require('fs')
-const path = require('path')
+const fs = require('node:fs')
+const path = require('node:path')
 
 // 【not use】
 module.exports = function mock(app) {
@@ -70,6 +70,10 @@ module.exports = function mock(app) {
 		// 读取本地文件
 		const filePath = path.join(__dirname, `../../packages/${req.params.path}/index.html`)
 		fs.readFile(filePath, (err, file) => {
+			if (err) {
+				res.status(500).end(err.message)
+				return
+			}
 			// 允许跨域
 			// res.header("Access-Control-Allow-Origin", "*");
 			res.render(file)

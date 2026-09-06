@@ -29,7 +29,7 @@
 		<!-- Editor Breadcrumb Start -->
 		<div class="file-path-bread">
 			<b-breadcrumb size="is-small">
-				<b-breadcrumb-item v-for="(item, index) in pathArray" :key="'f-' + index" active>{{ item }}
+				<b-breadcrumb-item v-for="(item, index) in pathArray" :key="`f-${index}`" active>{{ item }}
 				</b-breadcrumb-item>
 			</b-breadcrumb>
 		</div>
@@ -44,11 +44,8 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin'
-
 import mime from 'mime'
 // Core
-import codemirror from '@/components/basicComponents/CodeMirror.vue'
 import 'codemirror/lib/codemirror.css'
 // theme css
 import 'codemirror/theme/monokai.css'
@@ -102,7 +99,6 @@ import 'codemirror/addon/fold/xml-fold.js'
 
 // Mode
 import 'codemirror/mode/javascript/javascript'
-import 'codemirror/mode/clike/clike'
 import 'codemirror/mode/go/go'
 import 'codemirror/mode/htmlmixed/htmlmixed'
 import 'codemirror/mode/htmlembedded/htmlembedded'
@@ -126,6 +122,8 @@ import { CSSLint } from 'csslint'
 import { JSHINT } from 'jshint'
 import jsonlint from 'jsonlint-mod'
 import jsyaml from 'js-yaml'
+import codemirror from '@/components/basicComponents/CodeMirror.vue'
+import { mixin } from '@/mixins/mixin'
 
 window.CSSLint = CSSLint
 window.JSHINT = JSHINT
@@ -135,7 +133,7 @@ window.jsyaml = jsyaml
 export default {
 	mixins: [mixin],
 	components: {
-		codemirror,
+		Codemirror: codemirror,
 	},
 	props: {
 		item: {
@@ -206,7 +204,7 @@ export default {
 			this.isChange = false
 		},
 		readFile() {
-			let ext = this.getFileExt(this.item)
+			const ext = this.getFileExt(this.item)
 			let mode = mime.getType(ext) == null ? 'text/javascript' : mime.getType(ext)
 			if (ext.toLowerCase() == 'makefile') {
 				mode = 'text/x-cmake'

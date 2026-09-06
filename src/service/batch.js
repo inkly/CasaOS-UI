@@ -16,8 +16,8 @@ const batch = {
 	// download
 	download(format, files) {
 		return api.get(`${PREFIX}`, {
-			format: format,
-			files: files,
+			format,
+			files,
 		})
 	},
 

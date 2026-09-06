@@ -62,11 +62,11 @@ export default {
 	computed: {
 		pcPath() {
 			const name = this.item.path.split('/').pop()
-			return '\\\\' + this.$baseIp + `\\` + name
+			return `\\\\${this.$baseIp}\\${name}`
 		},
 		macPath() {
 			const name = this.item.path.split('/').pop()
-			return 'smb://' + this.$baseIp + `/` + name
+			return `smb://${this.$baseIp}/${name}`
 		},
 	},
 	created() {

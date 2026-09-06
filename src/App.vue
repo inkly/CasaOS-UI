@@ -132,8 +132,8 @@ _____             _____ _____
 		this.setInitLang()
 		window.addEventListener('resize', this.onWindowResize)
 		this.onWindowResize()
-		let vh = window.innerHeight * 0.01
-		this['vh'] = `${vh}px`
+		const vh = window.innerHeight * 0.01
+		this.vh = `${vh}px`
 		this.$EventBus.$on(events.OPEN_APP_IFRAME, this.openAppIframe)
 		this.$EventBus.$on(events.OPEN_APP_LAUNCHER, this.openAppLauncher)
 		this.$EventBus.$on(events.CLOSE_APP_IFRAME, this.closeAppFrame)

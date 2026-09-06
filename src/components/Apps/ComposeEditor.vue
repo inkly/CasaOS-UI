@@ -1,10 +1,40 @@
+<template>
+	<section class="modal-card-body compose-editor">
+		<p class="has-text-full-03 is-size-7 mb-2">
+			{{ $t('Edit the Docker Compose file of this app directly. Changes are validated before being applied.') }}
+		</p>
+
+		<b-message class="mb-3" size="is-small" type="is-warning">
+			{{ $t('Environment variables are shown resolved: saving from here stores the resolved values and the variables are lost.') }}
+		</b-message>
+
+		<Codemirror :options="cmOptions"
+			:value="draft"
+			class="compose-editor__area"
+			@input="onInput" />
+
+		<b-message v-if="localError" class="mt-3 mb-0" size="is-small" type="is-danger">
+			{{ localError }}
+		</b-message>
+
+		<b-message v-else-if="serverError" class="mt-3 mb-0" size="is-small" type="is-danger">
+			{{ serverError }}
+		</b-message>
+
+		<div v-if="isDirty && !localError && !serverError" class="mt-3 has-text-full-03 is-size-7">
+			{{ $t('Unsaved changes.') }}
+			<a href="#" @click.prevent="reset">{{ $t('Discard') }}</a>
+		</div>
+	</section>
+</template>
+
 <script>
+import { validateComposeYAML } from './composeValidation'
 import Codemirror from '@/components/basicComponents/CodeMirror.vue'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
 import 'codemirror/mode/yaml/yaml.js'
 import 'codemirror/addon/selection/active-line.js'
-import { validateComposeYAML } from './composeValidation'
 
 // Validation codes from composeValidation.js mapped to translatable messages.
 const MESSAGES = {
@@ -159,36 +189,6 @@ export default {
 	},
 }
 </script>
-
-<template>
-	<section class="modal-card-body compose-editor">
-		<p class="has-text-full-03 is-size-7 mb-2">
-			{{ $t('Edit the Docker Compose file of this app directly. Changes are validated before being applied.') }}
-		</p>
-
-		<b-message class="mb-3" size="is-small" type="is-warning">
-			{{ $t('Environment variables are shown resolved: saving from here stores the resolved values and the variables are lost.') }}
-		</b-message>
-
-		<Codemirror :options="cmOptions"
-			:value="draft"
-			class="compose-editor__area"
-			@input="onInput" />
-
-		<b-message v-if="localError" class="mt-3 mb-0" size="is-small" type="is-danger">
-			{{ localError }}
-		</b-message>
-
-		<b-message v-else-if="serverError" class="mt-3 mb-0" size="is-small" type="is-danger">
-			{{ serverError }}
-		</b-message>
-
-		<div v-if="isDirty && !localError && !serverError" class="mt-3 has-text-full-03 is-size-7">
-			{{ $t('Unsaved changes.') }}
-			<a href="#" @click.prevent="reset">{{ $t('Discard') }}</a>
-		</div>
-	</section>
-</template>
 
 <style lang="scss" scoped>
 .compose-editor {

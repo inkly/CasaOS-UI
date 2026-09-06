@@ -19,23 +19,23 @@
 				<!-- Circle Bg End -->
 				<transition-group class="contents" name="list-complete" tag="div">
 					<drop-item v-for="(item, index) in peersArray" :key="item.id" :center="centerPos"
-						:customClass="areaClass" :device="item" :index="initIndexArray[index]" :isFloat="isDesktop"
-						:radius="bigRadius" :showIndex="initIndexArray[index]" class="list-complete-item" @showed="
+						:custom-class="areaClass" :device="item" :index="initIndexArray[index]" :is-float="isDesktop"
+						:radius="bigRadius" :show-index="initIndexArray[index]" class="list-complete-item" @showed="
 							isFirstIn = false;
 							showAddButton = true;
 						" />
 				</transition-group>
 				<drop-add-button v-if="showAddButton && peersArray.length == 1 && isDesktop" :center="centerPos"
-					:index="peersArray.length" :isFloat="isDesktop" :radius="bigRadius"
-					:showIndex="initIndexArray[peersArray.length]" />
+					:index="peersArray.length" :is-float="isDesktop" :radius="bigRadius"
+					:show-index="initIndexArray[peersArray.length]" />
 			</div>
 			<!-- Bottom Center Icons Start -->
 			<drop-center-icon v-if="!isMobile" />
 			<!-- Bottom Center Icons End -->
 
 			<drop-add-button v-if="isDesktop ? showAddButton && peersArray.length > 1 : true" :center="centerPos"
-				:index="isDesktop ? peersArray.length : peersArray.length + 1" :isFloat="false" :radius="bigRadius"
-				:showIndex="initIndexArray[peersArray.length]" />
+				:index="isDesktop ? peersArray.length : peersArray.length + 1" :is-float="false" :radius="bigRadius"
+				:show-index="initIndexArray[peersArray.length]" />
 		</div>
 		<!-- Contents End -->
 		<drop-context-menu />
@@ -44,8 +44,8 @@
 
 <script>
 import { defineAsyncComponent } from 'vue'
-import { PeersManager, ServerConnection } from './Network.js'
 import { saveAs } from 'file-saver'
+import { PeersManager, ServerConnection } from './Network.js'
 import VueBreakpointMixin from '@/mixins/breakpoint'
 // import { v4 as uuidv4 } from "uuid";
 
@@ -85,9 +85,9 @@ export default {
 	computed: {
 		cssVariables() {
 			return {
-				'--big-radius': this.bigRadius + 'px',
-				'--contents-width': this.contentsWidth + 'px',
-				'--contents-height': this.contentsHeight + 'px',
+				'--big-radius': `${this.bigRadius}px`,
+				'--contents-width': `${this.contentsWidth}px`,
+				'--contents-height': `${this.contentsHeight}px`,
 			}
 		},
 
@@ -239,11 +239,11 @@ export default {
 
 		// Handle notify user (for sender)
 		handleNotifyUser(e) {
-			const type = e.indexOf('lost') > -1 ? 'is-danger' : 'is-success'
+			const type = e.includes('lost') ? 'is-danger' : 'is-success'
 			this.$buefy.toast.open({
 				duration: 2000,
 				message: this.$t(e),
-				type: type,
+				type,
 				container: '#drop-page',
 			})
 		},
@@ -285,7 +285,7 @@ export default {
 			} else {
 				this.peersArray.forEach((element) => {
 					if (element.id == peer.id) {
-						for (let key in element) {
+						for (const key in element) {
 							element[key] = peer[key]
 						}
 					}
@@ -330,10 +330,10 @@ export default {
 			const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
 			if (bytes === 0)
 				return '0 Bytes'
-			const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10)
+			const i = Number.parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10)
 			if (i === 0)
 				return `${bytes} ${sizes[i]}`
-			return `${parseFloat((bytes / 1024 ** i).toFixed(2))} ${sizes[i]}`
+			return `${Number.parseFloat((bytes / 1024 ** i).toFixed(2))} ${sizes[i]}`
 		},
 		guid() {
 			return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>

@@ -39,7 +39,7 @@
 		<div class="file-path-bread">
 			<b-breadcrumb size="is-small">
 				<b-breadcrumb-item v-for="(item, index) in pathArray"
-					:key="'f-' + index"
+					:key="`f-${index}`"
 					active>{{ item }}
 				</b-breadcrumb-item>
 			</b-breadcrumb>
@@ -57,13 +57,12 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin'
-
 // import mime from 'mime'
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
 import Typography from '@tiptap/extension-typography'
+import { mixin } from '@/mixins/mixin'
 
 export default {
 	mixins: [mixin],

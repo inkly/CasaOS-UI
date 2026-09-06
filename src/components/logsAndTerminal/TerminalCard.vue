@@ -13,18 +13,18 @@
 							{{ $t(message) }}
 						</b-notification>
 						<b-field :label="$t('Username')">
-							<b-input v-model="sshUser" name="username" v-on:keyup.enter="checkLogin"></b-input>
+							<b-input v-model="sshUser" name="username" @keyup.enter="checkLogin"></b-input>
 						</b-field>
 
 						<b-field :label="$t('Password')">
 							<b-input v-model="sshPassword" name="password" password-reveal type="password"
-								v-on:keyup.enter="checkLogin">
+								@keyup.enter="checkLogin">
 							</b-input>
 						</b-field>
 
 						<b-field :label="$t('Port')">
 							<b-input v-model="sshPort" name="port" type="number"
-								v-on:keyup.enter="checkLogin"></b-input>
+								@keyup.enter="checkLogin"></b-input>
 						</b-field>
 						<div class="buttons mt-5">
 							<b-button :loading="isConnecting" expanded rounded type="is-primary" @click="checkLogin">{{
@@ -104,7 +104,7 @@ export default {
 		async checkLogin() {
 			this.$messageBus('terminallogs_connect')
 			this.isConnecting = true
-			let postData = {
+			const postData = {
 				username: String(this.sshUser),
 				password: String(this.sshPassword),
 				port: String(this.sshPort),
@@ -132,8 +132,8 @@ export default {
 				cursorStyle: 'underline', // 光标样式
 				cursorBlink: true, // 光标闪烁
 				theme: { background: '#1E1E1E' },
-				rows: parseInt(this.rows), // 行数
-				cols: parseInt(this.cols), // 不指定行数，自动回车后光标从下一行开始
+				rows: Number.parseInt(this.rows), // 行数
+				cols: Number.parseInt(this.cols), // 不指定行数，自动回车后光标从下一行开始
 				fontFamily: 'Consolas, Monaco, monospace',
 			})
 			const attachAddon = new AttachAddon(this.socket)
@@ -159,7 +159,7 @@ export default {
 			this.socketOnError()
 
 			this.socket.onmessage = (event) => {
-				if (event.data == '\r\n\u001b[?2004l\rlogout\r\n') {
+				if (event.data == '\r\n\u001B[?2004l\rlogout\r\n') {
 					this.socket.close()
 					if (this.term != '')
 						this.term.dispose()

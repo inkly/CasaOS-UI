@@ -1,3 +1,24 @@
+<template>
+	<Swiper v-bind="swiperOptions" @swiper="setSwiper" @slide-change-transition-start="$messageBus('youshouldknow_slide')">
+		<SwiperSlide v-for="(noticeCard, key) in noticesData" :key="key" :class="{ _singleWidth: showFullCard }">
+			<NoticeBlock :notice-data="noticeCard" :notice-type="key" @delete-notice="refreshNotice" />
+		</SwiperSlide>
+		<SwiperSlide v-if="recommendShow">
+			<SyncBlock />
+		</SwiperSlide>
+		<SwiperSlide v-if="recommendShow">
+			<SmartBlock />
+		</SwiperSlide>
+		<template #container-end>
+			<div v-show="recommendShow || noticeLength !== 0" class="swiper-pagination"></div>
+			<img :src="require('@/assets/img/widgets/swiper-left.svg')" alt="prev"
+				class="swiper-button-prev">
+			<img :src="require('@/assets/img/widgets/swiper-right.svg')" alt="next"
+				class="swiper-button-next">
+		</template>
+	</Swiper>
+</template>
+
 <script>
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation, Pagination } from 'swiper/modules'
@@ -146,9 +167,8 @@ export default {
 			return `— / ${this.renderSize(size)}`
 		},
 		createWS(domain) {
-			let socket
 			// reference:
-			socket = new WebSocket(`${this.$wsProtocol}//${this.$baseURL}/v2/message_bus/event/${domain}`)
+			const socket = new WebSocket(`${this.$wsProtocol}//${this.$baseURL}/v2/message_bus/event/${domain}`)
 			socket.onopen = () => {
 				console.log('socket open')
 			}
@@ -196,7 +216,6 @@ export default {
 		},
 		initMessageBus() {
 			// config files
-			const subscriptionMessageSourse = ['local-storage']
 			const WSHub = Object.create(null)
 			// subscriptionMessageSourse.forEach((item) => {
 			// 	WSHub[item] = this.createWS(item)
@@ -571,27 +590,6 @@ export default {
 	},
 }
 </script>
-
-<template>
-	<Swiper v-bind="swiperOptions" @swiper="setSwiper" @slide-change-transition-start="$messageBus('youshouldknow_slide')">
-		<SwiperSlide v-for="(noticeCard, key) in noticesData" :key="key" :class="{ _singleWidth: showFullCard }">
-			<NoticeBlock :notice-data="noticeCard" :notice-type="key" @delete-notice="refreshNotice" />
-		</SwiperSlide>
-		<SwiperSlide v-if="recommendShow">
-			<SyncBlock />
-		</SwiperSlide>
-		<SwiperSlide v-if="recommendShow">
-			<SmartBlock />
-		</SwiperSlide>
-		<template #container-end>
-			<div v-show="recommendShow || noticeLength !== 0" class="swiper-pagination"></div>
-			<img :src="require('@/assets/img/widgets/swiper-left.svg')" alt="prev"
-				class="swiper-button-prev">
-			<img :src="require('@/assets/img/widgets/swiper-right.svg')" alt="next"
-				class="swiper-button-next">
-		</template>
-	</Swiper>
-</template>
 
 <style lang="scss" scoped>
 // full width to show with single notice

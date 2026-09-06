@@ -122,7 +122,7 @@ export default {
 				this.$emit('delete-notice', this.noticeData, this.noticeType)
 				return
 			}
-			let promises = []
+			const promises = []
 			for (const contentKey in this.noticeData.content) {
 				promises.push(this.$api.users.delLetter(this.noticeData.content[contentKey].messageUUID))
 			}

@@ -7,7 +7,7 @@ const file = {
 	// get file content
 	getContent(path) {
 		return api.get(`${PREFIX}/content`, {
-			path: path,
+			path,
 			timestamp: Date.now(),
 		})
 	},
@@ -15,7 +15,7 @@ const file = {
 	// download single file
 	download(path) {
 		return api.get(`${PREFIX}`, {
-			path: path,
+			path,
 			timestamp: Date.now(),
 		})
 	},
@@ -23,23 +23,23 @@ const file = {
 	// create file
 	create(path) {
 		return api.post(`${PREFIX}`, {
-			path: path,
+			path,
 		})
 	},
 
 	// rename file
 	rename(old_path, new_path) {
 		return api.put(`${PREFIX}/name`, {
-			old_path: old_path,
-			new_path: new_path,
+			old_path,
+			new_path,
 		})
 	},
 
 	// update file
 	update(path, content) {
 		return api.put(`${PREFIX}`, {
-			path: path,
-			content: content,
+			path,
+			content,
 		})
 	},
 

@@ -1,3 +1,172 @@
+<template>
+	<section style="height: calc(100vh - 12.8125rem)">
+		<b-tabs class="has-text-full-03" style="height: 100%" :model-value="firstAppName">
+			<b-tab-item v-for="(service, key) in configData.services" :key="key" :label="key" :value="key" @click="current_service = key">
+				<VeeForm :ref="`${key}valida`" as="span">
+					<b-field grouped>
+						<VeeField v-slot="{ errors, meta }" :model-value="getFirstField(service.image)" name="Image0" rules="required">
+							<b-field :label="`${$t('Docker Image')} *`" :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-3 is-flex-grow-1 mr-3">
+								<b-input :key="service.image" :readonly="state === 'update' || serviceStableVersion !== ''" :model-value="getFirstField(service.image)" :placeholder="$t('e.g.,hello-world:latest')" @update:model-value="(V) => changeIcon(V)" @blur="
+									(E) => {
+										return (service.image = service.image.split(':')[1]
+											? `${E.target._value}:${service.image.split(':')[1]}`
+											: E.target._value);
+									}
+								" />
+							</b-field>
+						</VeeField>
+
+						<b-dropdown aria-role="menu" trap-focus>
+							<template #trigger>
+								<VeeField v-slot="{ errors, meta }" :model-value="getLateField(service.image)" name="Image1" rules="required">
+									<b-field :label="$t('Tag')"
+										:message="errors"
+										:type="{ 'is-danger': errors[0], 'is-success': meta.valid }">
+										<b-input icon-pack="casa"
+											icon-right="down-outline"
+											class="is-flex-grow-1"
+											:model-value="getLateField(service.image)"
+											@update:model-value="
+												(V) => {
+													service.image = `${service.image.split(':')[0]}:${V}`;
+												}
+											" />
+									</b-field>
+								</VeeField>
+							</template>
+							<b-dropdown-item key="latest"
+								@click="
+									() => {
+										service.image = `${service.image.split(':')[0]}:latest`;
+									}
+								">
+								latest
+							</b-dropdown-item>
+							<b-dropdown-item v-show="serviceStableVersion !== '' && firstAppName === key"
+								key="stable"
+								@click="
+									() => {
+										service.image = `${service.image.split(':')[0]}:${serviceStableVersion}`;
+									}
+								">
+								stable({{ serviceStableVersion }})
+							</b-dropdown-item>
+						</b-dropdown>
+					</b-field>
+
+					<VeeField v-slot="{ errors, meta }" :model-value="ice_i18n(configData['x-casaos'].title)" name="composeAppName" rules="required">
+						<b-field :label="`${$t('App Name')} *`" :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }">
+							<b-input :placeholder="$t('e.g.,Your App Name')" :model-value="ice_i18n(configData['x-casaos'].title)" @blur="(E) => (configData['x-casaos'].title.custom = E.target._value)" />
+						</b-field>
+					</VeeField>
+
+					<b-field v-if="key === firstAppName" :label="$t('Icon URL')">
+						<p class="control">
+							<span class="button is-static container-icon">
+								<b-image :key="appIcon" :src="appIcon" :src-fallback="require('@/assets/img/app/default.svg')" class="is-32x32" ratio="1by1" />
+							</span>
+						</p>
+						<b-input v-model="configData['x-casaos'].icon" :placeholder="$t('Your custom icon URL')" expanded />
+					</b-field>
+
+					<b-field v-if="key === firstAppName" label="Web UI">
+						<b-select v-model="configData['x-casaos'].scheme">
+							<option value="http">
+								http://
+							</option>
+							<option value="https">
+								https://
+							</option>
+						</b-select>
+						<b-input v-model="configData['x-casaos'].hostname" :placeholder="baseUrl" expanded />
+						<b-autocomplete v-model="configData['x-casaos'].port_map" :data="bridgePorts(configData.services)" :open-on-focus="true" :placeholder="$t('Port')" class="has-colon" field="hostname" @select="(option) => (portSelected = option)" />
+						<b-input v-model="configData['x-casaos'].index" :placeholder="`/index.html ${$t('[Optional]')}`" expanded />
+					</b-field>
+
+					<b-field :label="$t('Network')">
+						<b-select :model-value="service.network_mode || service?.networks?.[0]" expanded placeholder="Select" @update:model-value="(v) => patchNetworkValue(v, service)">
+							<optgroup v-for="net in appendNetworks" :key="net.driver" :label="net.driver">
+								<option v-for="(option, index) in net.networks" :key="option.name + index" :value="option.name">
+									{{ option.name }}
+								</option>
+							</optgroup>
+						</b-select>
+					</b-field>
+
+					<Ports v-if="showPorts(service)" v-model="service.ports" :ports_in_use="ports_in_use" :show-host-post="showHostPort(service)" />
+
+					<VolumesInputGroup v-model="service.volumes" :label="$t('Volumes')" :message="$t('No volumes now, click “+” to add one.')" type="volume" />
+					<EnvInputGroup v-model="service.environment" :label="$t('Environment Variables')" :message="$t('No environment variables now, click “+” to add one.')" />
+					<InputGroup :devices="service.devices" :label="$t('Devices')" :message="$t('No devices now, click “+” to add one.')" type="device" />
+					<CommandsInput v-model="service.command" :label="$t('Container Command')" :message="$t('No commands now, click “+” to add one.')" />
+
+					<b-field :label="$t('Privileged')">
+						<b-switch v-model="service.privileged" />
+					</b-field>
+
+					<b-field :label="$t('Memory Limit')" class="mb-5">
+						<b-slider :custom-formatter="(v) => markData[v]" :max="markData.length - 1" :min="0" :step="1" :model-value="memoryIndex(service)" class="mx-2" @update:model-value="(v) => (service.deploy.resources.limits.memory = markData[v])">
+							<b-slider-tick v-for="(mark, index) in markData" :key="mark" :value="index">
+								{{ mark }}
+							</b-slider-tick>
+						</b-slider>
+					</b-field>
+
+					<b-field :label="$t('CPU Shares')">
+						<b-select v-model="service.cpu_shares" :placeholder="$t('Select')" expanded>
+							<option :value="10">
+								{{ $t("Low") }}
+							</option>
+							<option :value="50">
+								{{ $t("Medium") }}
+							</option>
+							<option :value="90">
+								{{ $t("High") }}
+							</option>
+						</b-select>
+					</b-field>
+
+					<b-field :label="$t('Restart Policy')">
+						<b-select v-model="service.restart" :placeholder="$t('Select')" expanded>
+							<option value="on-failure">
+								on-failure
+							</option>
+							<option value="always">
+								always
+							</option>
+							<option value="unless-stopped">
+								unless-stopped
+							</option>
+						</b-select>
+					</b-field>
+
+					<b-field :label="$t('Container Capabilities (cap-add)')">
+						<b-taginput ref="taginput" v-model="service.cap_add" :allow-new="false" :data="capArray" :open-on-focus="false" autocomplete @typing="getFilteredTags">
+							<template #default="props">
+								{{ props.option }}
+							</template>
+							<template #empty>
+								There are no items
+							</template>
+							<template #portSelected="props">
+								<b-tag v-for="(tag, index) in props.tags" :key="index" :tabstop="false" closable @close="$refs.taginput.removeTag(index, $event)">
+									{{ tag }}
+								</b-tag>
+							</template>
+						</b-taginput>
+					</b-field>
+
+					<VeeField v-slot="{ errors, meta }" :model-value="service.container_name" name="Name" rules="ContainerName">
+						<b-field :label="$t('Container Name')" :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid && service.container_name }">
+							<b-input v-model="service.container_name" :placeholder="$t('Name of app container')" />
+						</b-field>
+					</VeeField>
+				</VeeForm>
+			</b-tab-item>
+		</b-tabs>
+	</section>
+</template>
+
 <script>
 import debounce from 'lodash/debounce'
 import axios from 'axios'
@@ -194,7 +363,7 @@ export default {
 						.then((res) => {
 							this.serviceStableVersion = res.data.data.tag
 						})
-						.catch((e) => {
+						.catch(() => {
 							this.serviceStableVersion = ''
 						})
 				} else {
@@ -429,7 +598,7 @@ export default {
 				if (isString(item)) {
 					// 1\ replace variable in string for example: ${VOLUME_PATH}:/data
 					// this.volumes 可能为空。
-					Object.keys(this.volumes || {}).map((key) => {
+					Object.keys(this.volumes || {}).forEach((key) => {
 						item = item.replace(key, this.volumes[key] || '')
 					})
 					// 2\ split string
@@ -449,13 +618,14 @@ export default {
 					}
 				} else if (item) {
 					// 1\ replace value in object for example: {type: 'bind', source: '${VOLUME_PATH}', target: '/data'}
-					Object.keys(this.volumes || {}).map((key) => {
+					Object.keys(this.volumes || {}).forEach((key) => {
 						item.source = item?.source.replace(key, this?.volumes[key] || '')
 						// item.target = item?.target
 					})
 
 					return item
 				}
+				return undefined
 			})
 			isNil(composeServicesItem.volumes) && (composeServicesItem.volumes = [])
 
@@ -755,175 +925,6 @@ export default {
 	},
 }
 </script>
-
-<template>
-	<section style="height: calc(100vh - 12.8125rem)">
-		<b-tabs class="has-text-full-03" style="height: 100%" :model-value="firstAppName">
-			<b-tab-item v-for="(service, key) in configData.services" :key="key" :label="key" :value="key" @click="current_service = key">
-				<VeeForm :ref="`${key}valida`" as="span">
-					<b-field grouped>
-						<VeeField v-slot="{ errors, meta }" :model-value="getFirstField(service.image)" name="Image0" rules="required">
-							<b-field :label="`${$t('Docker Image')} *`" :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-3 is-flex-grow-1 mr-3">
-								<b-input :key="service.image" :readonly="state === 'update' || serviceStableVersion !== ''" :model-value="getFirstField(service.image)" :placeholder="$t('e.g.,hello-world:latest')" @update:model-value="(V) => changeIcon(V)" @blur="
-									(E) => {
-										return (service.image = service.image.split(':')[1]
-											? `${E.target._value}:${service.image.split(':')[1]}`
-											: E.target._value);
-									}
-								" />
-							</b-field>
-						</VeeField>
-
-						<b-dropdown aria-role="menu" trap-focus>
-							<template #trigger>
-								<VeeField v-slot="{ errors, meta }" :model-value="getLateField(service.image)" name="Image1" rules="required">
-									<b-field :label="$t('Tag')"
-										:message="errors"
-										:type="{ 'is-danger': errors[0], 'is-success': meta.valid }">
-										<b-input icon-pack="casa"
-											icon-right="down-outline"
-											class="is-flex-grow-1"
-											:model-value="getLateField(service.image)"
-											@update:model-value="
-												(V) => {
-													service.image = `${service.image.split(':')[0]}:${V}`;
-												}
-											" />
-									</b-field>
-								</VeeField>
-							</template>
-							<b-dropdown-item key="latest"
-								@click="
-									() => {
-										service.image = `${service.image.split(':')[0]}:latest`;
-									}
-								">
-								latest
-							</b-dropdown-item>
-							<b-dropdown-item v-show="serviceStableVersion !== '' && firstAppName === key"
-								key="stable"
-								@click="
-									() => {
-										service.image = `${service.image.split(':')[0]}:${serviceStableVersion}`;
-									}
-								">
-								stable({{ serviceStableVersion }})
-							</b-dropdown-item>
-						</b-dropdown>
-					</b-field>
-
-					<VeeField v-slot="{ errors, meta }" :model-value="ice_i18n(configData['x-casaos'].title)" name="composeAppName" rules="required">
-						<b-field :label="`${$t('App Name')} *`" :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }">
-							<b-input :placeholder="$t('e.g.,Your App Name')" :model-value="ice_i18n(configData['x-casaos'].title)" @blur="(E) => (configData['x-casaos'].title.custom = E.target._value)" />
-						</b-field>
-					</VeeField>
-
-					<b-field v-if="key === firstAppName" :label="$t('Icon URL')">
-						<p class="control">
-							<span class="button is-static container-icon">
-								<b-image :key="appIcon" :src="appIcon" :src-fallback="require('@/assets/img/app/default.svg')" class="is-32x32" ratio="1by1" />
-							</span>
-						</p>
-						<b-input v-model="configData['x-casaos'].icon" :placeholder="$t('Your custom icon URL')" expanded />
-					</b-field>
-
-					<b-field v-if="key === firstAppName" label="Web UI">
-						<b-select v-model="configData['x-casaos'].scheme">
-							<option value="http">
-								http://
-							</option>
-							<option value="https">
-								https://
-							</option>
-						</b-select>
-						<b-input v-model="configData['x-casaos'].hostname" :placeholder="baseUrl" expanded />
-						<b-autocomplete v-model="configData['x-casaos'].port_map" :data="bridgePorts(configData.services)" :open-on-focus="true" :placeholder="$t('Port')" class="has-colon" field="hostname" @select="(option) => (portSelected = option)" />
-						<b-input v-model="configData['x-casaos'].index" :placeholder="`/index.html ${$t('[Optional]')}`" expanded />
-					</b-field>
-
-					<b-field :label="$t('Network')">
-						<b-select :model-value="service.network_mode || service?.networks?.[0]" expanded placeholder="Select" @update:model-value="(v) => patchNetworkValue(v, service)">
-							<optgroup v-for="net in appendNetworks" :key="net.driver" :label="net.driver">
-								<option v-for="(option, index) in net.networks" :key="option.name + index" :value="option.name">
-									{{ option.name }}
-								</option>
-							</optgroup>
-						</b-select>
-					</b-field>
-
-					<Ports v-if="showPorts(service)" v-model="service.ports" :ports_in_use="ports_in_use" :show-host-post="showHostPort(service)" />
-
-					<VolumesInputGroup v-model="service.volumes" :label="$t('Volumes')" :message="$t('No volumes now, click “+” to add one.')" type="volume" />
-					<EnvInputGroup v-model="service.environment" :label="$t('Environment Variables')" :message="$t('No environment variables now, click “+” to add one.')" />
-					<InputGroup :devices="service.devices" :label="$t('Devices')" :message="$t('No devices now, click “+” to add one.')" type="device" />
-					<CommandsInput v-model="service.command" :label="$t('Container Command')" :message="$t('No commands now, click “+” to add one.')" />
-
-					<b-field :label="$t('Privileged')">
-						<b-switch v-model="service.privileged" />
-					</b-field>
-
-					<b-field :label="$t('Memory Limit')" class="mb-5">
-						<b-slider :custom-formatter="(v) => markData[v]" :max="markData.length - 1" :min="0" :step="1" :model-value="memoryIndex(service)" class="mx-2" @update:model-value="(v) => (service.deploy.resources.limits.memory = markData[v])">
-							<b-slider-tick v-for="(mark, index) in markData" :key="mark" :value="index">
-								{{ mark }}
-							</b-slider-tick>
-						</b-slider>
-					</b-field>
-
-					<b-field :label="$t('CPU Shares')">
-						<b-select v-model="service.cpu_shares" :placeholder="$t('Select')" expanded>
-							<option :value="10">
-								{{ $t("Low") }}
-							</option>
-							<option :value="50">
-								{{ $t("Medium") }}
-							</option>
-							<option :value="90">
-								{{ $t("High") }}
-							</option>
-						</b-select>
-					</b-field>
-
-					<b-field :label="$t('Restart Policy')">
-						<b-select v-model="service.restart" :placeholder="$t('Select')" expanded>
-							<option value="on-failure">
-								on-failure
-							</option>
-							<option value="always">
-								always
-							</option>
-							<option value="unless-stopped">
-								unless-stopped
-							</option>
-						</b-select>
-					</b-field>
-
-					<b-field :label="$t('Container Capabilities (cap-add)')">
-						<b-taginput ref="taginput" v-model="service.cap_add" :allow-new="false" :data="capArray" :open-on-focus="false" autocomplete @typing="getFilteredTags">
-							<template #default="props">
-								{{ props.option }}
-							</template>
-							<template #empty>
-								There are no items
-							</template>
-							<template #portSelected="props">
-								<b-tag v-for="(tag, index) in props.tags" :key="index" :tabstop="false" closable @close="$refs.taginput.removeTag(index, $event)">
-									{{ tag }}
-								</b-tag>
-							</template>
-						</b-taginput>
-					</b-field>
-
-					<VeeField v-slot="{ errors, meta }" :model-value="service.container_name" name="Name" rules="ContainerName">
-						<b-field :label="$t('Container Name')" :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid && service.container_name }">
-							<b-input v-model="service.container_name" :placeholder="$t('Name of app container')" />
-						</b-field>
-					</VeeField>
-				</VeeForm>
-			</b-tab-item>
-		</b-tabs>
-	</section>
-</template>
 
 <style lang="scss" scoped>
 .b-tabs {

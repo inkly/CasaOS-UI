@@ -99,22 +99,26 @@
 </template>
 
 <script>
-const emptyInfo = () => ({
-	supported: null,
-	manager: '',
-	reason: '',
-	updates: [],
-	count: 0,
-})
+function emptyInfo() {
+	return {
+		supported: null,
+		manager: '',
+		reason: '',
+		updates: [],
+		count: 0,
+	}
+}
 
-const emptyStatus = () => ({
-	supported: null,
-	manager: '',
-	state: 'idle',
-	log: '',
-	error: '',
-	reboot_required: false,
-})
+function emptyStatus() {
+	return {
+		supported: null,
+		manager: '',
+		state: 'idle',
+		log: '',
+		error: '',
+		reboot_required: false,
+	}
+}
 
 export default {
 	name: 'SystemPackageUpdateModal',
@@ -162,7 +166,7 @@ export default {
 						return
 					}
 				}
-			} catch (error) {
+			} catch {
 				// The package check below provides the useful error message.
 			}
 			this.checkPackages(true)

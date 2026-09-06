@@ -8,9 +8,9 @@
  */
 
 import { createRouter, createWebHashHistory } from 'vue-router'
+import route from './route.js'
 import api from '@/service/api'
 import store from '@/store'
-import route from './route.js'
 
 const routes = route
 
@@ -27,12 +27,12 @@ const router = createRouter({
 // gone: v4 has no prototype to patch, and it resolves with a NavigationFailure
 // instead of rejecting on a duplicate navigation.
 
-const needInit = async () => {
+async function needInit() {
 	if (store.state.needInitialization) {
 		return true
 	}
 	try {
-		let userStatusRes = await api.users.getUserStatus()
+		const userStatusRes = await api.users.getUserStatus()
 		if (userStatusRes.data.success === 200 && !userStatusRes.data.data.initialized) {
 			store.commit('SET_NEED_INITIALIZATION', true)
 			store.commit('SET_INIT_KEY', userStatusRes.data.data.key)
@@ -54,7 +54,7 @@ router.beforeEach(async (to, from, next) => {
 	const requireAuth = to.matched.some(record => record.meta.requireAuth)
 
 	// 判断是否需要初始化
-	let needInitRes = await needInit()
+	const needInitRes = await needInit()
 
 	if (to.path !== '/welcome') {
 		if (needInitRes) {

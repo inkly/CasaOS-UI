@@ -35,8 +35,8 @@ export default {
 			return ['has-text-white', '_is-normal', {
 				'_has-background-green': this.modal === 'is-success',
 				'_has-background-red': this.modal === 'is-danger',
-				'_tooltip-right-inline': this['isBlock'] === false,
-				'_tooltip-right-block': this['isBlock'] === true,
+				'_tooltip-right-inline': this.isBlock === false,
+				'_tooltip-right-block': this.isBlock === true,
 			}]
 		},
 	},

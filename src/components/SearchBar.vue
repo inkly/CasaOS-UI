@@ -1,3 +1,11 @@
+<template>
+	<b-field class="search-bar has-text-white mb-4" position="is-centered ">
+		<b-input v-model="keyText" class="ovh" :class="[isFocus ? 'fo' : '']" :placeholder="$t('Search...')" expanded
+			icon="search-outline" icon-pack="casa" icon-right="search-outline" icon-right-clickable size="is-medium"
+			@blur="onBlur" @focus="onFocus" @icon-right-click="gotoSearch" @keyup.enter="gotoSearch" />
+	</b-field>
+</template>
+
 <script>
 export default {
 	name: 'SearchBar',
@@ -41,14 +49,6 @@ export default {
 	},
 }
 </script>
-
-<template>
-	<b-field class="search-bar has-text-white mb-4" position="is-centered ">
-		<b-input v-model="keyText" class="ovh" :class="[isFocus ? 'fo' : '']" :placeholder="$t('Search...')" expanded
-			icon="search-outline" icon-pack="casa" icon-right="search-outline" icon-right-clickable size="is-medium"
-			@blur="onBlur" @focus="onFocus" @icon-right-click="gotoSearch" @keyup.enter="gotoSearch" />
-	</b-field>
-</template>
 
 <style lang="scss">
 .search-bar {

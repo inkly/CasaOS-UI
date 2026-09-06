@@ -15,11 +15,11 @@
 
 			<div class="columns is-mobile mt-0 mb-1">
 				<div class="column is-half has-text-centered">
-					<radial-bar :extendContent="power + temperature" :extendContentClickable="true"
+					<radial-bar :extend-content="power + temperature" :extend-content-clickable="true"
 						:percent="parseInt(cpuSeries)" label="CPU" @extendContentClick="changeFormat"></radial-bar>
 				</div>
 				<div class="column is-half has-text-centered">
-					<radial-bar :extendContent="renderSize(totalMemory)" :percent="parseInt(ramSeries)"
+					<radial-bar :extend-content="renderSize(totalMemory)" :percent="parseInt(ramSeries)"
 						label="RAM"></radial-bar>
 				</div>
 			</div>
@@ -27,7 +27,7 @@
 				<div class="more-info pt-1 pb-1">
 					<b-tabs v-model="activeTab">
 						<b-tab-item label="CPU">
-							<div v-for="(item, index) in containerCpuList" :key="item.title + index + '-cpu'">
+							<div v-for="(item, index) in containerCpuList" :key="`${item.title + index}-cpu`">
 								<div v-if="!isNaN(item.usage)" class="is-flex is-size-7 is-align-items-center mb-2">
 									<div class="is-flex-grow-1 is-flex is-align-items-center is-clipped">
 										<b-image :lazy="false" :src="item.icon"
@@ -41,7 +41,7 @@
 						</b-tab-item>
 
 						<b-tab-item label="RAM">
-							<div v-for="(item, index) in containerRamList" :key="item.title + index + '-rem'">
+							<div v-for="(item, index) in containerRamList" :key="`${item.title + index}-rem`">
 								<div v-if="!isNaN(item.usage) && renderSize(item.usage).split(' ')[0] != 0"
 									class="is-flex is-size-7 is-align-items-center mb-2">
 									<div class="is-flex-grow-1 is-flex-shrink-1 is-flex is-align-items-center is-clipped">
@@ -62,15 +62,14 @@
 
 <script>
 // import VueApexCharts from 'vue3-apexcharts'
-import smoothReflow from '@/mixins/smoothReflow'
 import orderBy from 'lodash/orderBy'
 import has from 'lodash/has'
 import slice from 'lodash/slice'
+import smoothReflow from '@/mixins/smoothReflow'
 import { mixin } from '@/mixins/mixin'
 import RadialBar from '@/components/widgets/RadialBar.vue'
 
 export default {
-	// eslint-disable-next-line vue/multi-word-component-names
 	name: 'cpu',
 	icon: 'system-outline',
 	title: 'System Status',
@@ -121,8 +120,8 @@ export default {
 		temperature() {
 			const temp
 				= this.temperatureFormat == '°C'
-					? this.orgTemperature + '°C'
-					: this.celsiusToFahrenheit(this.orgTemperature) + '°F'
+					? `${this.orgTemperature}°C`
+					: `${this.celsiusToFahrenheit(this.orgTemperature)}°F`
 			return temp
 		},
 	},
@@ -153,7 +152,7 @@ export default {
 		 * @return {fahrenheit} Number
 		 */
 		celsiusToFahrenheit(celsius) {
-			let fahrenheit = (celsius * 9) / 5 + 32
+			const fahrenheit = (celsius * 9) / 5 + 32
 			return fahrenheit
 		},
 
@@ -173,11 +172,11 @@ export default {
 			this.orgTemperature = cpu.temperature == undefined ? 0 : cpu.temperature
 			if (this.powerList.length == 2 && cpu.model === 'intel') {
 				this.power
-					= (
+					= `${(
 						(this.powerList[1].value - this.powerList[0].value)
 						/ 1000000
 						/ (this.powerList[1].timestamp - this.powerList[0].timestamp)
-					).toFixed(1) + 'W / '
+					).toFixed(1)}W / `
 			} else {
 				this.power = ''
 			}
@@ -204,8 +203,8 @@ export default {
 					}
 					id++
 					return {
-						id: id,
-						usage: isNaN(usage) || usage < 0 ? 0 : usage,
+						id,
+						usage: Number.isNaN(Number(usage)) || usage < 0 ? 0 : usage,
 						icon: item.icon,
 						title: item.title,
 					}
@@ -224,11 +223,11 @@ export default {
 							return 0
 						}
 					}
-					const used_memory = 'stats' in item.data.memory_stats ? item.data.memory_stats.usage - getCacheValue(item) : NaN
+					const used_memory = 'stats' in item.data.memory_stats ? item.data.memory_stats.usage - getCacheValue(item) : Number.NaN
 					id++
 					return {
-						id: id,
-						usage: isNaN(used_memory) ? 0 : used_memory,
+						id,
+						usage: Number.isNaN(Number(used_memory)) ? 0 : used_memory,
 						icon: item.icon,
 						title: item.title,
 					}
@@ -260,10 +259,10 @@ export default {
 		},
 	},
 	sockets: {
-		'casaos:system:utilization'(res) {
-			let data = res.Properties
-			let cpu = JSON.parse(data.sys_cpu)
-			let mem = JSON.parse(data.sys_mem)
+		'casaos:system:utilization': function (res) {
+			const data = res.Properties
+			const cpu = JSON.parse(data.sys_cpu)
+			const mem = JSON.parse(data.sys_mem)
 			this.updateCharts(cpu, mem)
 		},
 	},

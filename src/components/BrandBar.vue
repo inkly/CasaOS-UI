@@ -5,7 +5,7 @@
 		</figure>
 		<span v-if="!rssShow || rss.length === 0" class="intro-text ml-4">Made with ❤️ by IceWhale and YOU!</span>
 		<span v-else class="window ml-4">
-			<ul :style="{ '--time': 5 * line + 's', '--perc': perc, '--line': line }" class="scroll">
+			<ul :style="{ '--time': `${5 * line}s`, '--perc': perc, '--line': line }" class="scroll">
 				<li v-for="(item, key) in rss" :key="key" class="has-text-left" @click="$messageBus('connect_news')">
 					<a @click="gotoLink(item.link)" class="intro-text is-clickable" target="_blank"
 						rel="noopener noreferrer">
@@ -27,7 +27,7 @@ export default {
 	components: {},
 	computed: {
 		rssShow() {
-			let which = this.$store.state.rssSwitch
+			const which = this.$store.state.rssSwitch
 			if (which) {
 				this.parseFeed()
 			}
@@ -37,7 +37,7 @@ export default {
 			return this.rss.length
 		},
 		perc() {
-			return -(this.line - 1) / this.line * 100 + '%'
+			return `${-(this.line - 1) / this.line * 100}%`
 		},
 		isShow() {
 			return this.$route.path !== '/login' || this.$route.path !== '/welcome'
@@ -55,7 +55,7 @@ export default {
 	},
 	methods: {
 		async parseFeed() {
-			let params = await this.$api.file.getContent('/var/lib/casaos/baseinfo.conf').then((res) => {
+			const params = await this.$api.file.getContent('/var/lib/casaos/baseinfo.conf').then((res) => {
 				return JSON.parse(res.data.data)
 			})
 			this.$store.commit('SET_DEVICE_ID', params.i)
@@ -64,7 +64,7 @@ export default {
 			// query string. That is a device fingerprint sent to a third party on every
 			// dashboard load, and nothing about the feed needs it. The device id stays
 			// local: the message bus still uses it, it just never leaves the box.
-			let feed = await parse('https://blog-casaos.zimaspace.com/feed/tag/dashboard/')
+			const feed = await parse('https://blog-casaos.zimaspace.com/feed/tag/dashboard/')
 			const newFeed = feed.items.map((item) => {
 				return {
 					title: item.title,

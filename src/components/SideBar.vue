@@ -1,3 +1,17 @@
+<template>
+	<div v-if="!isLoading" ref="sidebar" :class="{ open: sidebarOpen }" class="side-bar contextmenu-canvas">
+		<div class="widgets-content contextmenu-canvas">
+			<div v-for="(item, index) in activeApps" :key="`widgets_${index}`">
+				<component :is="item.app" :class="{ 'last-block': index === activeApps.length - 1 }" />
+			</div>
+		</div>
+		<Settings v-model="widgetsSettings"
+			:class="{ 'mt-4': activeApps.length > 0 }"
+			@change="handleChange"
+			@searchBarChange="handleSearchBarChange" />
+	</div>
+</template>
+
 <script>
 import lowerFirst from 'lodash/lowerFirst'
 import camelCase from 'lodash/camelCase'
@@ -158,20 +172,6 @@ export default {
 	},
 }
 </script>
-
-<template>
-	<div v-if="!isLoading" ref="sidebar" :class="{ open: sidebarOpen }" class="side-bar contextmenu-canvas">
-		<div class="widgets-content contextmenu-canvas">
-			<div v-for="(item, index) in activeApps" :key="`widgets_${index}`">
-				<component :is="item.app" :class="{ 'last-block': index === activeApps.length - 1 }" />
-			</div>
-		</div>
-		<Settings v-model="widgetsSettings"
-			:class="{ 'mt-4': activeApps.length > 0 }"
-			@change="handleChange"
-			@searchBarChange="handleSearchBarChange" />
-	</div>
-</template>
 
 <style lang="scss">
 .side-bar {

@@ -13,7 +13,7 @@
 		</header>
 		<!-- Header End -->
 
-		<share-list-view :isLoading="isLoading" :listData="list" @change-access="changeAccess">
+		<share-list-view :is-loading="isLoading" :list-data="list" @change-access="changeAccess">
 			<div>
 				<div class="buttons is-justify-content-center">
 					<b-image :src="require('@/assets/img/share/share-empty.svg')"
@@ -102,7 +102,7 @@ export default {
 						write: false,
 					}
 				})
-			} catch (error) {
+			} catch {
 				this.isLoading = false
 				this.list = []
 			}

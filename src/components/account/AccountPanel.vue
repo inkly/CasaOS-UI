@@ -1,3 +1,118 @@
+<template>
+	<div class="modal-card w-424">
+		<VeeForm v-slot="{ handleSubmit }" as="span">
+			<!-- Modal-Card Header Start -->
+			<header class="modal-card-head">
+				<div class="is-flex-grow-1">
+					<h3 class="title is-header">
+						{{ title }}
+					</h3>
+				</div>
+				<div>
+					<b-button :label="$t('Logout')" rounded type="is-danger is-light" @click="logout" />
+				</div>
+			</header>
+			<!-- Modal-Card Header End -->
+			<!-- Modal-Card Body Start -->
+			<section class="modal-card-body " :class="bodyPadding">
+				<template v-if="state === 1">
+					<div class="is-flex is-justify-content-center mb-5">
+						<div class=" is-relative ">
+							<div class="edit-avatar is-absolute">
+								<b-icon icon="edit-outline" pack="casa" />
+								<input type="file" class="file-input" accept="image/*" @change="loadImage($event)">
+							</div>
+							<b-image :src="avatarUrl" :src-fallback="require('@/assets/img/account/default-avatar.svg')" class="is-80x80" rounded />
+						</div>
+					</div>
+					<div class="mb-55">
+						<div class="has-text-emphasis-04 has-text-gray-font mb-2">
+							{{ $t('Name') }}
+						</div>
+						<div class="is-flex is-align-items-center account-item">
+							<div class="has-text-emphasis-02 is-flex-grow-1">
+								{{ userInfo.username }}
+							</div>
+							<div class="edit-button" @click.stop="goto(2);">
+								<b-icon class="close-button ml-2 has-text-gray-font" icon="edit-outline" pack="casa" />
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="has-text-emphasis-04 has-text-gray-font mb-2">
+							{{ $t('Password') }}
+						</div>
+						<div class="is-flex is-align-items-center account-item">
+							<div class="has-text-emphasis-02 is-flex-grow-1 has-text-gray-font">
+								••••••
+							</div>
+							<div class="edit-button" @click.stop="goto(3);">
+								<b-icon class="close-button ml-2 has-text-gray-font" icon="edit-outline" pack="casa" />
+							</div>
+						</div>
+					</div>
+				</template>
+
+				<template v-else-if="state === 2">
+					<VeeField v-slot="{ errors, meta }" :model-value="user.username" name="User" rules="required">
+						<b-field :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-0 has-text-light">
+							<b-input v-model="user.username" type="text" @keyup.enter="handleSubmit(saveUser)" />
+						</b-field>
+					</VeeField>
+				</template>
+
+				<template v-else-if="state === 3">
+					<b-notification v-model="notificationShow" aria-close-label="Close notification" auto-close role="alert" type="is-danger">
+						{{ message }}
+					</b-notification>
+					<VeeField v-slot="{ errors, meta }" :model-value="oriPassword" name="oriPassword" rules="required|min:5">
+						<b-field :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-5 has-text-light">
+							<b-input v-model="oriPassword" :placeholder="$t('Original password')" password-reveal type="password" />
+						</b-field>
+					</VeeField>
+					<VeeField v-slot="{ errors, meta }" :model-value="password" name="password" rules="required|min:5">
+						<b-field :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-5 has-text-light">
+							<b-input v-model="password" :placeholder="$t('New password')" password-reveal type="password" />
+						</b-field>
+					</VeeField>
+					<VeeField v-slot="{ errors, meta }" :model-value="confirmation" name="Password Confirmation" rules="required|confirmed:@password">
+						<b-field :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-0">
+							<b-input v-model="confirmation" :placeholder="$t('Confirm the new password again')" password-reveal type="password" @keyup.enter="savePassword(savePassword)" />
+						</b-field>
+					</VeeField>
+				</template>
+
+				<template v-else-if="state === 4">
+					<div class="is-flex">
+						<div class="cropper-wrapper is-flex-grow-0 is-flex-shrink-0">
+							<Cropper :src="image.src" :debounce="false" :stencil-props="stencilProps" check-orientation :min-height="80" :min-width="80" :canvas="canvasProps" :default-size="defaultSize" @change="onChange" />
+						</div>
+						<div class=" is-flex is-justify-content-right is-align-items-center is-flex-grow-1">
+							<div class=" has-text-centered">
+								<Preview :width="80" :height="80" :image="result.image" :coordinates="result.coordinates" class="preview" />
+								<p class="has-text-emphasis-04 has-text-gray-font mt-2">
+									Preview
+								</p>
+							</div>
+						</div>
+					</div>
+				</template>
+			</section>
+			<!-- Modal-Card Body End -->
+			<!-- Modal-Card Footer Start -->
+
+			<footer v-if="state !== 1" class="modal-card-foot is-flex is-align-items-center" :class="buttonAlign">
+				<b-button :label="$t('Back')" rounded @click.stop="goto(1)" />
+				<b-button v-if="state === 2" :label="$t('Submit')" expaned rounded type="is-dark" @click="handleSubmit(saveUser)" />
+				<b-button v-else-if="state === 3" :label="$t('Submit')" expaned rounded type="is-dark" @click="handleSubmit(savePassword)" />
+				<b-button v-else-if="state === 4" :label="$t('Submit')" expaned rounded type="is-dark" @click="handleSubmit(saveAvatar)" />
+			</footer>
+			<!-- Modal-Card Footer End -->
+		</VeeForm>
+		<b-loading v-model="isLoading" :is-full-page="false" />
+	</div>
+</template>
+
 <script>
 import { Field as VeeField, Form as VeeForm } from 'vee-validate'
 import { Cropper, Preview } from 'vue-advanced-cropper'
@@ -217,121 +332,6 @@ export default {
 	},
 }
 </script>
-
-<template>
-	<div class="modal-card w-424">
-		<VeeForm v-slot="{ handleSubmit }" as="span">
-			<!-- Modal-Card Header Start -->
-			<header class="modal-card-head">
-				<div class="is-flex-grow-1">
-					<h3 class="title is-header">
-						{{ title }}
-					</h3>
-				</div>
-				<div>
-					<b-button :label="$t('Logout')" rounded type="is-danger is-light" @click="logout" />
-				</div>
-			</header>
-			<!-- Modal-Card Header End -->
-			<!-- Modal-Card Body Start -->
-			<section class="modal-card-body " :class="bodyPadding">
-				<template v-if="state === 1">
-					<div class="is-flex is-justify-content-center mb-5">
-						<div class=" is-relative ">
-							<div class="edit-avatar is-absolute">
-								<b-icon icon="edit-outline" pack="casa" />
-								<input type="file" class="file-input" accept="image/*" @change="loadImage($event)">
-							</div>
-							<b-image :src="avatarUrl" :src-fallback="require('@/assets/img/account/default-avatar.svg')" class="is-80x80" rounded />
-						</div>
-					</div>
-					<div class="mb-55">
-						<div class="has-text-emphasis-04 has-text-gray-font mb-2">
-							{{ $t('Name') }}
-						</div>
-						<div class="is-flex is-align-items-center account-item">
-							<div class="has-text-emphasis-02 is-flex-grow-1">
-								{{ userInfo.username }}
-							</div>
-							<div class="edit-button" @click.stop="goto(2);">
-								<b-icon class="close-button ml-2 has-text-gray-font" icon="edit-outline" pack="casa" />
-							</div>
-						</div>
-					</div>
-					<div>
-						<div class="has-text-emphasis-04 has-text-gray-font mb-2">
-							{{ $t('Password') }}
-						</div>
-						<div class="is-flex is-align-items-center account-item">
-							<div class="has-text-emphasis-02 is-flex-grow-1 has-text-gray-font">
-								••••••
-							</div>
-							<div class="edit-button" @click.stop="goto(3);">
-								<b-icon class="close-button ml-2 has-text-gray-font" icon="edit-outline" pack="casa" />
-							</div>
-						</div>
-					</div>
-				</template>
-
-				<template v-else-if="state === 2">
-					<VeeField v-slot="{ errors, meta }" :model-value="user.username" name="User" rules="required">
-						<b-field :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-0 has-text-light">
-							<b-input v-model="user.username" type="text" @keyup.enter="handleSubmit(saveUser)" />
-						</b-field>
-					</VeeField>
-				</template>
-
-				<template v-else-if="state === 3">
-					<b-notification v-model="notificationShow" aria-close-label="Close notification" auto-close role="alert" type="is-danger">
-						{{ message }}
-					</b-notification>
-					<VeeField v-slot="{ errors, meta }" :model-value="oriPassword" name="oriPassword" rules="required|min:5">
-						<b-field :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-5 has-text-light">
-							<b-input v-model="oriPassword" :placeholder="$t('Original password')" password-reveal type="password" />
-						</b-field>
-					</VeeField>
-					<VeeField v-slot="{ errors, meta }" :model-value="password" name="password" rules="required|min:5">
-						<b-field :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-5 has-text-light">
-							<b-input v-model="password" :placeholder="$t('New password')" password-reveal type="password" />
-						</b-field>
-					</VeeField>
-					<VeeField v-slot="{ errors, meta }" :model-value="confirmation" name="Password Confirmation" rules="required|confirmed:@password">
-						<b-field :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mb-0">
-							<b-input v-model="confirmation" :placeholder="$t('Confirm the new password again')" password-reveal type="password" @keyup.enter="savePassword(savePassword)" />
-						</b-field>
-					</VeeField>
-				</template>
-
-				<template v-else-if="state === 4">
-					<div class="is-flex">
-						<div class="cropper-wrapper is-flex-grow-0 is-flex-shrink-0">
-							<Cropper :src="image.src" :debounce="false" :stencil-props="stencilProps" check-orientation :min-height="80" :min-width="80" :canvas="canvasProps" :default-size="defaultSize" @change="onChange" />
-						</div>
-						<div class=" is-flex is-justify-content-right is-align-items-center is-flex-grow-1">
-							<div class=" has-text-centered">
-								<Preview :width="80" :height="80" :image="result.image" :coordinates="result.coordinates" class="preview" />
-								<p class="has-text-emphasis-04 has-text-gray-font mt-2">
-									Preview
-								</p>
-							</div>
-						</div>
-					</div>
-				</template>
-			</section>
-			<!-- Modal-Card Body End -->
-			<!-- Modal-Card Footer Start -->
-
-			<footer v-if="state !== 1" class="modal-card-foot is-flex is-align-items-center" :class="buttonAlign">
-				<b-button :label="$t('Back')" rounded @click.stop="goto(1)" />
-				<b-button v-if="state === 2" :label="$t('Submit')" expaned rounded type="is-dark" @click="handleSubmit(saveUser)" />
-				<b-button v-else-if="state === 3" :label="$t('Submit')" expaned rounded type="is-dark" @click="handleSubmit(savePassword)" />
-				<b-button v-else-if="state === 4" :label="$t('Submit')" expaned rounded type="is-dark" @click="handleSubmit(saveAvatar)" />
-			</footer>
-			<!-- Modal-Card Footer End -->
-		</VeeForm>
-		<b-loading v-model="isLoading" :is-full-page="false" />
-	</div>
-</template>
 
 <style lang="scss" scoped>
 .modal-card {

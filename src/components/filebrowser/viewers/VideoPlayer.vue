@@ -31,7 +31,7 @@
 					theme="#41b883" :music="{
 						title: audioTitle,
 						artist: audioArtist,
-						src: this.getFileUrl(this.item),
+						src: getFileUrl(item),
 						pic: poster,
 					}" />
 			</div>
@@ -46,10 +46,10 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin'
 import Aplayer from 'vue-aplayer'
 import Artplayer from 'artplayer'
 import * as mm from 'music-metadata-browser'
+import { mixin } from '@/mixins/mixin'
 
 Aplayer.disableVersionBadge = true
 export default {
@@ -97,7 +97,7 @@ export default {
 		this.ext = this.getFileExt(this.item, true)
 		Object.keys(this.typeMap).forEach((_type) => {
 			const extensions = this.typeMap[_type]
-			if (extensions.indexOf(this.ext) > -1) {
+			if (extensions.includes(this.ext)) {
 				this.type = _type
 			}
 		})

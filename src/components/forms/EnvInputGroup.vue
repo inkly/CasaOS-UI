@@ -11,7 +11,7 @@
 			</span>
 
 		</div>
-		<div v-for="(item, index) in items" :key="'port' + index" class="port-item  mr-4">
+		<div v-for="(item, index) in items" :key="`port${index}`" class="port-item  mr-4">
 			<b-icon class="is-clickable" icon="close-outline" pack="casa" size="is-small"
 				@click="removeItem(index)"></b-icon>
 			<template v-if="index < 1">
@@ -74,7 +74,7 @@ export default {
 	},
 	methods: {
 		addItem() {
-			let itemObj = {
+			const itemObj = {
 				container: '',
 				host: '',
 			}

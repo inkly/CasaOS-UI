@@ -19,7 +19,7 @@
 			<div class="is-flex-grow-1">
 				<b-tabs :animated="false" @update:model-value="onInput">
 					<b-tab-item :label="$t('Terminal')" value="terminal">
-						<terminal-card ref="terminal" :initWsUrl="wsUrl"></terminal-card>
+						<terminal-card ref="terminal" :init-ws-url="wsUrl"></terminal-card>
 					</b-tab-item>
 					<b-tab-item :label="$t('Logs')" value="logs">
 						<logs-card ref="logs" :data="logData"></logs-card>
@@ -36,9 +36,9 @@
 </template>
 
 <script>
+import qs from 'qs'
 import TerminalCard from './TerminalCard.vue'
 import LogsCard from './LogsCard.vue'
-import qs from 'qs'
 
 export default {
 	name: 'terminal-panel',
@@ -64,8 +64,8 @@ export default {
 	methods: {
 		getLogs() {
 			this.$api.sys.getLogs().then((res) => {
-				let data = res.data.data
-				let replaceData = data.replace(/\n(.{8})/gu, '\n')
+				const data = res.data.data
+				const replaceData = data.replace(/\n(.{8})/gu, '\n')
 				this.logData = replaceData.substring(8, replaceData.length - 1)
 			})
 		},
@@ -83,7 +83,7 @@ export default {
 			}
 		},
 		downloadSystemLog() {
-			let parameters = {
+			const parameters = {
 				token: this.$store.state.access_token,
 			}
 			window.open(`/v2/casaos/health/logs?${qs.stringify(parameters)}`, '_self')

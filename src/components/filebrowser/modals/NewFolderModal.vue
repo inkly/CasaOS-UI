@@ -18,7 +18,7 @@
 					</div>
 				</div>
 				<b-field :message="errors" :type="errorType" class="mb-3 mt-5 has-text-light" expanded>
-					<b-input v-model="folderName" v-on:keyup.enter="createFolder" ref="inputs"
+					<b-input v-model="folderName" @keyup.enter="createFolder" ref="inputs"
 						@update:model-value="folderName = folderName.replace(/\//g, '')"></b-input>
 				</b-field>
 				<div class="notification pl-4 pri-height">
@@ -51,8 +51,8 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin'
 import path from 'path'
+import { mixin } from '@/mixins/mixin'
 
 export default {
 	mixins: [mixin],
@@ -87,7 +87,7 @@ export default {
 
 			// shortcut
 			// src/components/filebrowser/components/ActionButton.vue:121
-			let newPath = path.join(this.currentPath, this.folderName)
+			const newPath = path.join(this.currentPath, this.folderName)
 
 			this.$api.folder.create(newPath).then(async (res) => {
 				if (res.data.success == 200) {
@@ -96,7 +96,7 @@ export default {
 							// get shortcut detail
 							// let shortcut = await this.$api.users.getShutcutDetail().then(v => v.data.data);
 							// let shortcut = await this.$store.dispatch('SET_SHORTCUT_DATA').then(v => v.data.data);
-							let shortcut = this.$store.state['shortcutData']
+							let shortcut = this.$store.state.shortcutData
 							// shortcut data preprocess
 							if (!shortcut) {
 								shortcut = []

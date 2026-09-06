@@ -8,7 +8,7 @@
  *
  * `$socket` lives on `globalProperties` rather than on each instance, because
  * AppStoreSourceManagement.vue reads it from `setup()` and Vue 3 runs `setup()`
- * *before* every mixin hook — there is no hook left that could install it in
+ * before* every mixin hook — there is no hook left that could install it in
  * time. The per-component handler list moved to a WeakMap to match.
  *
  * Not reimplemented, because nothing here reads them: `$socket.connected`,

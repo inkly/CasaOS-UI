@@ -40,7 +40,7 @@
 			@start="drag = true">
 			<!-- App Icon Card Start -->
 			<template #item="{ element: item }">
-				<div :id="'app-' + item.name" class="handle">
+				<div :id="`app-${item.name}`" class="handle">
 					<app-card :item="item"
 						@configApp="showConfigPanel"
 						@importApp="showContainerPanel"
@@ -50,7 +50,7 @@
 			<!-- App Icon Card End -->
 		</draggable>
 		<div v-else class="app-list contextmenu-canvas">
-			<div v-for="index in skCount" :id="'app-' + index" :key="'app-' + index" class="handle">
+			<div v-for="index in skCount" :id="`app-${index}`" :key="`app-${index}`" class="handle">
 				<app-card-skeleton :index="index"></app-card-skeleton>
 			</div>
 		</div>
@@ -70,8 +70,8 @@
 			<!-- App List Start -->
 			<div class="app-list contextmenu-canvas">
 				<!-- Application not imported Start -->
-				<div v-for="item in oldAppList" :id="'app-' + item.name" :key="'app-' + item.name" class="handle">
-					<app-card :isCasa="false"
+				<div v-for="item in oldAppList" :id="`app-${item.name}`" :key="`app-${item.name}`" class="handle">
+					<app-card :is-casa="false"
 						:item="item"
 						@configApp="showConfigPanel"
 						@importApp="showContainerPanel"
@@ -85,21 +85,20 @@
 </template>
 
 <script>
-import AppCard from './AppCard.vue'
-import AppCardSkeleton from './AppCardSkeleton.vue'
-import AppPanel from './AppPanel.vue'
-import ExternalLinkPanel from '@/components/Apps/ExternalLinkPanel'
-import AppSectionTitleTip from './AppSectionTitleTip.vue'
 import draggable from 'vuedraggable'
 import xor from 'lodash/xor'
 import concat from 'lodash/concat'
-import events from '@/events/events'
 import last from 'lodash/last'
+import isEqual from 'lodash/isEqual'
+import AppCard from './AppCard.vue'
+import AppCardSkeleton from './AppCardSkeleton.vue'
+import AppPanel from './AppPanel.vue'
+import AppSectionTitleTip from './AppSectionTitleTip.vue'
+import ExternalLinkPanel from '@/components/Apps/ExternalLinkPanel'
+import events from '@/events/events'
 import business_ShowNewAppTag from '@/mixins/app/Business_ShowNewAppTag'
 import business_LinkApp from '@/mixins/app/Business_LinkApp'
-import isEqual from 'lodash/isEqual'
 import { ice_i18n } from '@/mixins/base/common-i18n'
-import YAML from 'yamljs'
 
 const SYNCTHING_STORE_ID = 74
 
@@ -151,7 +150,7 @@ export default {
 	},
 	components: {
 		AppCard,
-		draggable,
+		Draggable: draggable,
 		AppSectionTitleTip,
 		AppCardSkeleton,
 	},
@@ -230,8 +229,8 @@ export default {
 		async getList() {
 			try {
 				const orgAppList = await this.$openAPI.appGrid.getAppGrid().then(res => res.data.data || [])
-				let orgOldAppList = [],
-					orgNewAppList = []
+				const orgOldAppList = []
+				const orgNewAppList = []
 				orgAppList.forEach((item) => {
 					item.hostname = item.hostname || this.$baseIp
 					// Container app does not have icon.
@@ -244,7 +243,7 @@ export default {
 				})
 				this.oldAppList = orgOldAppList
 
-				let listLinkApp = await this.getLinkAppList()
+				const listLinkApp = await this.getLinkAppList()
 				listLinkApp.forEach((item) => {
 					// linkApp does not have title.
 					item.title = {
@@ -252,9 +251,9 @@ export default {
 					}
 				})
 				// all app list
-				let casaAppList = concat(builtInApplications, orgNewAppList, listLinkApp)
+				const casaAppList = concat(builtInApplications, orgNewAppList, listLinkApp)
 				// get app sort info.
-				let lateSortList = await this.$api.users
+				const lateSortList = await this.$api.users
 					.getCustomStorage(orderConfig)
 					.then(res => res.data.data.data || [])
 
@@ -303,7 +302,7 @@ export default {
 		 * @return {*}
 		 */
 		getNewSortList(oriList, newList) {
-			let xorList = xor(oriList, newList)
+			const xorList = xor(oriList, newList)
 			// xorList.reverse()
 			return concat(oriList, xorList)
 		},
@@ -314,11 +313,11 @@ export default {
 		 * @return {*}
 		 */
 		saveSortData() {
-			let newList = this.appList.map((item) => {
+			const newList = this.appList.map((item) => {
 				// compose milestone :: name is unique, global index.
 				return item.name
 			})
-			let data = {
+			const data = {
 				data: newList,
 			}
 			this.$api.users.setCustomStorage(orderConfig, data)
@@ -347,7 +346,7 @@ export default {
 			const memory = this.$store.state.hardwareInfo.mem
 			const configData = {
 				networks: networks.data.data,
-				memory: memory,
+				memory,
 			}
 			this.isShowing = false
 			this.$buefy.modal.open({
@@ -366,8 +365,8 @@ export default {
 				props: {
 					id: '0',
 					state: 'install',
-					configData: configData,
-					storeId: storeId,
+					configData,
+					storeId,
 					settingData: mode !== 'custom' ? undefined : {},
 				},
 			})
@@ -375,12 +374,12 @@ export default {
 
 		/**
 		 * @description: Show Settings Panel Programmatic
-		 * @param {Object} {id:String,status:String }
-		 * @param {Boolean} isCasa
+		 * @param {object} {id:String,status:String }
+		 * @param {boolean} isCasa
 		 * @return {*}
 		 */
 		async showConfigPanel(item, isCasa) {
-			let name = item.name
+			const name = item.name
 			this.$messageBus('appsexsiting_open', name)
 			try {
 				if (item?.app_type === 'LinkApp') {
@@ -391,7 +390,7 @@ export default {
 				const memory = this.$store.state.hardwareInfo.mem
 				const configData = {
 					networks: networks.data.data,
-					memory: memory,
+					memory,
 				}
 				const ret = await this.$openAPI.appManagement.compose.myComposeApp(name, {
 					headers: {
@@ -415,10 +414,10 @@ export default {
 					props: {
 						id: name,
 						state: 'update',
-						isCasa: isCasa,
+						isCasa,
 						// 区分 terminal
 						runningStatus: item.status,
-						configData: configData,
+						configData,
 						// settingData: ret.data,
 						settingComposeData: ret.data,
 					},
@@ -430,12 +429,12 @@ export default {
 
 		async showContainerPanel(item) {
 			this.$messageBus('appsexsiting_open', item.name)
-			let id = item.name
+			const id = item.name
 			const networks = await this.$api.container.getNetworks()
 			const memory = this.$store.state.hardwareInfo.mem
 			const configData = {
 				networks: networks.data.data,
-				memory: memory,
+				memory,
 			}
 			const ret = await this.$api.container.getInfo(id)
 			this.$buefy.modal.open({
@@ -452,11 +451,11 @@ export default {
 					},
 				},
 				props: {
-					id: id,
+					id,
 					state: 'update',
 					isCasa: false,
 					runningStatus: item.status,
-					configData: configData,
+					configData,
 					settingData: ret.data.data,
 				},
 			})
@@ -489,43 +488,43 @@ export default {
 
 		scrollToNewApp() {
 			// business :: scroll to last position
-			let name = last(this.newAppIds)
-			let showEl = document.getElementById('app-' + name)
+			const name = last(this.newAppIds)
+			const showEl = document.getElementById(`app-${name}`)
 			showEl?.scrollIntoView({ behavior: 'smooth', block: 'end' })
 		},
 
 		messageBusToast(message, type) {
-			let duration = 5000
+			const duration = 5000
 			this.$buefy.toast.open({
-				message: message,
+				message,
 				duration,
 				type,
 			})
 		},
 	},
 	sockets: {
-		'app:install-end'() {
+		'app:install-end': function () {
 			this.getList().then(() => {
 				this.scrollToNewApp()
 			})
 		},
-		'app:install-error'() {
+		'app:install-error': function () {
 			this.getList().then(() => {
 				this.scrollToNewApp()
 			})
 		},
-		'app:uninstall-end'() {
+		'app:uninstall-end': function () {
 			this.getList()
 		},
-		'app:apply-changes-error'(res) {
+		'app:apply-changes-error': function (res) {
 			// toast info
 			this.messageBusToast(res.Properties.message, 'is-danger')
 		},
-		'app:apply-changes-end'(res) {
-			let languages = JSON.parse(res.Properties['app:title'])
+		'app:apply-changes-end': function (res) {
+			const languages = JSON.parse(res.Properties['app:title'])
 			const title = ice_i18n(languages)
 			// toast info
-			this.messageBusToast(title + ' is OK', 'is-success')
+			this.messageBusToast(`${title} is OK`, 'is-success')
 
 			// business :: Tagging of new app / scrollIntoView
 			this.addIdToSessionStorage(res.Properties['app:name'])
@@ -536,10 +535,10 @@ export default {
 		},
 		/**
 		 * @description: Update App Version
-		 * @param {Object} data
+		 * @param {object} data
 		 * @return {void}
 		 */
-		'app:update-end'(data) {
+		'app:update-end': function (data) {
 			if (data.Properties['docker:image:updated'] === 'true') {
 				// business :: Tagging of new app / scrollIntoView
 				this.addIdToSessionStorage(data.Properties['app:name'])
@@ -555,11 +554,11 @@ export default {
 				})
 			}
 		},
-		'app:update-error'(data) {
+		'app:update-error': function (data) {
 			if (data.Properties.cid === this.item.id) {
 				this.isUpdating = false
 				this.$buefy.toast.open({
-					message: this.$t(data.Properties['error']),
+					message: this.$t(data.Properties.error),
 					type: 'is-danger',
 				})
 			}

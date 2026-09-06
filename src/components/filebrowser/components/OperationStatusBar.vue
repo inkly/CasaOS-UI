@@ -62,7 +62,7 @@ export default {
 		},
 	},
 	sockets: {
-		'casaos:file:operate'(res) {
+		'casaos:file:operate': function (res) {
 			const file_operate = JSON.parse(res.Properties.file_operate)
 			const taskList = file_operate.data
 			this.taskList = taskList.filter((task) => {

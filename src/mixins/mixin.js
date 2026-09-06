@@ -2,7 +2,6 @@ import qs from 'qs'
 import has from 'lodash/has'
 import union from 'lodash/union'
 import copy from 'clipboard-copy'
-import dayjs from 'dayjs'
 import { renderSize } from './file_utils'
 
 const typeMap = {
@@ -30,7 +29,6 @@ const typeMap = {
 }
 const hasThumbImageType = ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp', 'svg']
 
-// eslint-disable-next-line no-unused-vars
 const filePanelMap = {
 	'code-editor': union(typeMap['text-x-generic'], typeMap['text-css'], typeMap['text-html'], typeMap['text-x-cmake'], typeMap['text-dockerfile']),
 	'video-player': union(typeMap['video-x-generic'], typeMap['audio-x-generic']),
@@ -59,7 +57,7 @@ export const mixin = {
 
 		/**
 		 * @description: Get Default Lang from browser
-		 * @return {String} lang
+		 * @return {string} lang
 		 */
 		getLangFromBrowser() {
 			let lang = navigator.language || navigator.userLanguage
@@ -69,7 +67,7 @@ export const mixin = {
 
 		/**
 		 * @description: Set Default Lang from browser
-		 * @param {String} lang
+		 * @param {string} lang
 		 * @return {void}
 		 */
 		//
@@ -81,8 +79,8 @@ export const mixin = {
 
 		/**
 		 * @description: Get file icon from file name
-		 * @param {Object} item
-		 * @return {Object}
+		 * @param {object} item
+		 * @return {object}
 		 */
 		//
 		getIconFile(item) {
@@ -114,7 +112,7 @@ export const mixin = {
 				const ext = this.getFileExt(item)
 				Object.keys(typeMap).forEach((_type) => {
 					const extensions = typeMap[_type]
-					if (extensions.indexOf(ext.toLowerCase()) > -1) {
+					if (extensions.includes(ext.toLowerCase())) {
 						icon = _type
 					}
 				})
@@ -126,7 +124,7 @@ export const mixin = {
 			let type = null
 			Object.keys(filePanelMap).forEach((_type) => {
 				const extensions = filePanelMap[_type]
-				if (extensions.indexOf(ext.toLowerCase()) > -1) {
+				if (extensions.includes(ext.toLowerCase())) {
 					type = _type
 				}
 			})
@@ -145,7 +143,7 @@ export const mixin = {
 				message: this.$t('Download in preparation...'),
 				type: 'is-white',
 			})
-			let url = this.getFileUrl(items)
+			const url = this.getFileUrl(items)
 			if (!this.downloadIframe) {
 				this.downloadIframe = document.createElement('iframe')
 				this.downloadIframe.style.display = 'none'
@@ -164,7 +162,7 @@ export const mixin = {
 		getFileUrl(items) {
 			let apiUrl = ''
 			let path = ''
-			let parameters = {
+			const parameters = {
 				token: this.$store.state.access_token,
 			}
 			if (items.constructor === Object) {
@@ -172,11 +170,11 @@ export const mixin = {
 					apiUrl = `${this.baseUrl}batch`
 					path = items.path
 					parameters.files = path
-					return apiUrl + '?' + qs.stringify(parameters)
+					return `${apiUrl}?${qs.stringify(parameters)}`
 				} else {
 					apiUrl = `/v3/file`
 					parameters.path = items.path
-					return apiUrl + '?' + qs.stringify(parameters)
+					return `${apiUrl}?${qs.stringify(parameters)}`
 				}
 			} else if (items.constructor === Array) {
 				apiUrl = `${this.baseUrl}batch`
@@ -185,7 +183,7 @@ export const mixin = {
 				})
 				path = pathArray.join(',')
 				parameters.files = path
-				return apiUrl + '?' + qs.stringify(parameters)
+				return `${apiUrl}?${qs.stringify(parameters)}`
 			}
 		},
 
@@ -195,14 +193,14 @@ export const mixin = {
 				return false
 			} else {
 				const ext = this.getFileExt(item)
-				return hasThumbImageType.indexOf(ext.toLowerCase()) > -1
+				return hasThumbImageType.includes(ext.toLowerCase())
 			}
 		},
 
 		// Get Image Thumb URL
 		getThumbUrl(item) {
-			let apiUrl = `${this.baseUrl}image?`
-			let parameters = {
+			const apiUrl = `${this.baseUrl}image?`
+			const parameters = {
 				path: item.path,
 				token: this.$store.state.access_token,
 				type: 'thumbnail',
@@ -233,13 +231,13 @@ export const mixin = {
 		},
 		/**
 		 * @description: Copy Or Cut File
-		 * @param {String} type
+		 * @param {string} type
 		 * @param {Object,Array} items
 		 * @return {void}
 		 */
 		operate(type, items) {
-			let operateObject = {
-				type: type,
+			const operateObject = {
+				type,
 			}
 			if (items.constructor === Object) {
 				operateObject.item = [
@@ -288,7 +286,7 @@ export const mixin = {
 				try {
 					const res = await this.$api.batch.delete(JSON.stringify(paths))
 					if (res.data.success === 200) {
-						const shotcutData = this.$store.state['shortcutData']
+						const shotcutData = this.$store.state.shortcutData
 						const updatedShotcutData = shotcutData.filter((item) => {
 							if (paths.includes(item.path)) {
 								deleteShortcut(item)
@@ -336,8 +334,8 @@ export const mixin = {
 			this.$api.users.setUserImage(wallpaperConfig, postData).then((res) => {
 				if (res.data.success === 200) {
 					const resData = res.data.data
-					let wallpaperData = {
-						path: 'SERVER_URL' + resData.online_path + '&time=' + new Date().getTime(),
+					const wallpaperData = {
+						path: `SERVER_URL${resData.online_path}&time=${new Date().getTime()}`,
 						from: 'Files',
 					}
 					this.$api.users.setCustomStorage(wallpaperConfig, wallpaperData).then((res) => {
@@ -369,7 +367,7 @@ export const mixin = {
 			}
 		},
 
-		toFahrenheit: function (value) {
+		toFahrenheit(value) {
 			return (32 + value * 1.8).toFixed(1)
 		},
 
@@ -383,7 +381,7 @@ export const mixin = {
 			}
 		},
 
-		dateFmt: function (value) {
+		dateFmt(value) {
 			const fileDate = new Date(value)
 			const currentDate = new Date()
 			const isSameYear = fileDate.getFullYear() === currentDate.getFullYear()
@@ -411,10 +409,10 @@ export const mixin = {
 				hour12: false,
 			}).format(fileDate)
 		},
-		coverType: function (item) {
+		coverType(item) {
 			return item.is_dir ? 'folder-cover' : 'file-cover'
 		},
-		iconType: function (item) {
+		iconType(item) {
 			return item.is_dir ? 'folder-icon' : 'files-icon'
 		},
 	},

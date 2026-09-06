@@ -26,29 +26,29 @@
 					</div>
 				</div>
 				<ul v-show="dorpdown && mergeStorageList.length > 0">
-					<tree-list-item v-for="item in mergeStorageList" :key="item.path" :isActive="isActive"
+					<tree-list-item v-for="item in mergeStorageList" :key="item.path" :is-active="isActive"
 						:item="item"></tree-list-item>
 				</ul>
 			</div>
 
 			<!-- Local Storage List Start -->
-			<tree-list-item v-for="item in localStorageList" :key="item.path" :isActive="isActive"
+			<tree-list-item v-for="item in localStorageList" :key="item.path" :is-active="isActive"
 				:item="item"></tree-list-item>
 			<!-- Local Storage List End -->
 
 			<!-- Network Storage List Start -->
-			<tree-list-item v-for="item in networkStorageList" :key="item.path" :isActive="isActive" :item="item"
-				iconName="eject" @rightIconClick="umountNetwork"></tree-list-item>
+			<tree-list-item v-for="item in networkStorageList" :key="item.path" :is-active="isActive" :item="item"
+				icon-name="eject" @rightIconClick="umountNetwork"></tree-list-item>
 			<!-- Network Storage List End -->
 
 			<!-- USB List Start -->
-			<tree-list-item v-for="item in usbStorageList" :key="item.path" :isActive="isActive" :item="item"
-				iconName="eject" @rightIconClick="umountUsb"></tree-list-item>
+			<tree-list-item v-for="item in usbStorageList" :key="item.path" :is-active="isActive" :item="item"
+				icon-name="eject" @rightIconClick="umountUsb"></tree-list-item>
 			<!-- USB List End -->
 
 			<!-- Cloud List Start -->
-			<tree-list-item v-for="item in cloudStorageList" :key="item.path" :iconType="item.icon_type"
-				:isActive="isActive" :item="item" iconName="eject" @rightIconClick="umountCloud"></tree-list-item>
+			<tree-list-item v-for="item in cloudStorageList" :key="item.path" :icon-type="item.icon_type"
+				:is-active="isActive" :item="item" icon-name="eject" @rightIconClick="umountCloud"></tree-list-item>
 			<!-- Cloud List End -->
 		</div>
 		<b-loading v-model="isLoading" :is-full-page="false"></b-loading>
@@ -56,9 +56,9 @@
 </template>
 
 <script>
+import TreeListItem from './TreeListItem.vue'
 import { mixin } from '@/mixins/mixin'
 import events from '@/events/events'
-import TreeListItem from './TreeListItem.vue'
 
 export default {
 	components: { TreeListItem },
@@ -98,7 +98,7 @@ export default {
 	},
 	computed: {
 		isActived() {
-			return '/DATA' === this.$store.state.currentPath
+			return this.$store.state.currentPath === '/DATA'
 		},
 	},
 	created() {
@@ -174,7 +174,7 @@ export default {
 			try {
 				this.mergeStorageList = []
 				const storageRes = await this.$api.storage.list()
-				let storageList = []
+				const storageList = []
 				storageRes.data.data.forEach((item) => {
 					item.children.forEach((part) => {
 						part.disk = item.path
@@ -183,7 +183,7 @@ export default {
 					})
 				})
 				mergeRes.forEach((item) => {
-					let storage = storageList.find((storage) => {
+					const storage = storageList.find((storage) => {
 						return storage.uuid === item
 					})
 					if (storage) {
@@ -357,7 +357,7 @@ export default {
 				this.dorpdown = false
 				return
 			}
-			let notFirst = await this.$api.users
+			const notFirst = await this.$api.users
 				.getCustomStorage('notFirstOpenMergerStorage')
 				.then(res => res.data.data)
 			if (notFirst) {
@@ -383,13 +383,13 @@ export default {
 		},
 	},
 	sockets: {
-		'local-storage:disk:added'() {
+		'local-storage:disk:added': function () {
 			setTimeout(() => {
 				// this.getUsbStorage()
 				this.getLocalStorage()
 			}, 500)
 		},
-		'local-storage:disk:removed'() {
+		'local-storage:disk:removed': function () {
 			setTimeout(() => {
 				// this.getUsbStorage()
 				this.getLocalStorage()
@@ -423,7 +423,7 @@ export default {
 					})
 			}, 500)
 		},
-		'casaos:file:recover'(data) {
+		'casaos:file:recover': function (data) {
 			data = data.Properties
 			let toastType
 			const reg = /^["|'](.*)["|']$/g

@@ -1,3 +1,67 @@
+<template>
+	<div v-if="!isLoading" class="out-container">
+		<!-- NavBar Start -->
+		<TopBar v-animate-css="topBarAni" :init-bar-data="barData" @showSideBar="showSideBar" />
+		<!-- NavBar End -->
+
+		<!-- Content Start -->
+		<div class="contents  pt-55 contextmenu-canvas" @contextmenu.prevent="openHomeContaxtMenu">
+			<div class="container">
+				<div class="columns is-variable is-2">
+					<div class="column is-one-quarter slider-content">
+						<!-- SideBar Start -->
+						<SideBar v-if="!hardwareInfoLoading" @searchBarChange="handleSearchBarChange" />
+						<!-- SideBar End -->
+					</div>
+					<div :class="{ open: sidebarOpen }" class="column is-three-quarters main-content">
+						<!-- MainContent Start -->
+						<div class=" contextmenu-canvas">
+							<!-- SearchBar Start -->
+							<section>
+								<transition name="fade">
+									<SearchBar v-if="searchbarShow" />
+								</transition>
+							</section>
+							<!-- SearchBar End -->
+
+							<!-- core-service Start -->
+							<section>
+								<transition name="fade">
+									<CoreService />
+								</transition>
+							</section>
+							<!-- core-service End -->
+
+							<!-- Apps Start -->
+							<section>
+								<AppSection />
+							</section>
+							<!-- Apps End -->
+
+							<!-- Shortcuts Start -->
+							<!-- <section>
+								<shortcuts></shortcuts>
+							</section> -->
+							<!-- Shortcuts End -->
+						</div>
+						<!-- MainContent End -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Content End -->
+
+		<!-- File Panel Start -->
+		<b-modal v-model="isFileActive" :can-cancel="[]" :destroy-on-hide="false" animation="zoom-in" aria-modal
+			custom-class="file-panel" has-modal-card @after-enter="afterFileEnter">
+			<template #default="props">
+				<FilePanel ref="filePanel" @close="props.close" />
+			</template>
+		</b-modal>
+		<!-- File Panel End -->
+	</div>
+</template>
+
 <script>
 import { defineAsyncComponent } from 'vue'
 import { nanoid } from 'nanoid'
@@ -260,70 +324,6 @@ export default {
 
 }
 </script>
-
-<template>
-	<div v-if="!isLoading" class="out-container">
-		<!-- NavBar Start -->
-		<TopBar v-animate-css="topBarAni" :init-bar-data="barData" @showSideBar="showSideBar" />
-		<!-- NavBar End -->
-
-		<!-- Content Start -->
-		<div class="contents  pt-55 contextmenu-canvas" @contextmenu.prevent="openHomeContaxtMenu">
-			<div class="container">
-				<div class="columns is-variable is-2">
-					<div class="column is-one-quarter slider-content">
-						<!-- SideBar Start -->
-						<SideBar v-if="!hardwareInfoLoading" @searchBarChange="handleSearchBarChange" />
-						<!-- SideBar End -->
-					</div>
-					<div :class="{ open: sidebarOpen }" class="column is-three-quarters main-content">
-						<!-- MainContent Start -->
-						<div class=" contextmenu-canvas">
-							<!-- SearchBar Start -->
-							<section>
-								<transition name="fade">
-									<SearchBar v-if="searchbarShow" />
-								</transition>
-							</section>
-							<!-- SearchBar End -->
-
-							<!-- core-service Start -->
-							<section>
-								<transition name="fade">
-									<CoreService />
-								</transition>
-							</section>
-							<!-- core-service End -->
-
-							<!-- Apps Start -->
-							<section>
-								<AppSection ref="apps" />
-							</section>
-							<!-- Apps End -->
-
-							<!-- Shortcuts Start -->
-							<!-- <section>
-								<shortcuts></shortcuts>
-							</section> -->
-							<!-- Shortcuts End -->
-						</div>
-						<!-- MainContent End -->
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- Content End -->
-
-		<!-- File Panel Start -->
-		<b-modal v-model="isFileActive" :can-cancel="[]" :destroy-on-hide="false" animation="zoom-in" aria-modal
-			custom-class="file-panel" has-modal-card @after-enter="afterFileEnter">
-			<template #default="props">
-				<FilePanel ref="filePanel" @close="props.close" />
-			</template>
-		</b-modal>
-		<!-- File Panel End -->
-	</div>
-</template>
 
 <style lang="scss" scoped>
 .out-container {

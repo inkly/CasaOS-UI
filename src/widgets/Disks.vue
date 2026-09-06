@@ -43,7 +43,7 @@
 			<div class="blur-background"></div>
 			<div class="widget-content">
 				<div class="columns is-mobile is-multiline pt-2 ">
-					<div v-for="(item) in usbDisks" :key="'usb_' + item.name" class="column is-full pb-0">
+					<div v-for="(item) in usbDisks" :key="`usb_${item.name}`" class="column is-full pb-0">
 						<div class="is-flex">
 							<div class="header-icon is-flex-shrink-0">
 								<b-image :src="require('@/assets/img/storage/USB.svg')" class="is-64x64"></b-image>
@@ -75,7 +75,6 @@ import StorageManagerPanel from '@/components/Storage/StorageManagerPanel.vue'
 import { mixin } from '@/mixins/mixin'
 
 export default {
-	// eslint-disable-next-line vue/multi-word-component-names
 	name: 'disks',
 	icon: 'storage-outline',
 	title: 'Storage Status',
@@ -134,8 +133,8 @@ export default {
 		},
 	},
 	sockets: {
-		'casaos:system:utilization'(res) {
-			let data = res.Properties
+		'casaos:system:utilization': function (res) {
+			const data = res.Properties
 			// DISK
 			this.getDiskInfo(JSON.parse(data.sys_disk))
 			// USB

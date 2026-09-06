@@ -1,124 +1,3 @@
-<script>
-import { h } from 'vue'
-import VMdEditor from '@kangc/v-md-editor'
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Autoplay, Navigation } from 'swiper/modules'
-import YAML from 'yaml'
-import business_OpenThirdApp from '@/mixins/app/Business_OpenThirdApp'
-import business_ShowNewAppTag from '@/mixins/app/Business_ShowNewAppTag'
-import commonI18n from '@/mixins/base/common-i18n'
-import app from '@/App.vue'
-
-export default {
-	name: 'AppDetailInfo',
-	components: { VMdEditor, Swiper, SwiperSlide },
-	mixins: [business_ShowNewAppTag, business_OpenThirdApp, commonI18n],
-	props: {
-		appDetailData: {
-			type: Object,
-			default: () => {},
-		},
-		installedList: {
-			type: Array,
-			default: () => {},
-		},
-		currentInstallId: {
-			type: String,
-			default: '',
-		},
-		arch: {
-			type: String,
-			default: '',
-		},
-		showDetailSwiper: {
-			type: Boolean,
-			default: false,
-		},
-		cateMenu: {
-			type: Array,
-			default: () => [],
-		},
-		close: {
-			type: Function,
-			default: () => {},
-		},
-	},
-	data() {
-		return {
-			// Image List Swiper
-			swiperOptions: {
-				modules: [Navigation, Autoplay],
-				loop: false,
-				autoplay: true,
-				observer: true,
-				spaceBetween: 24,
-				navigation: {
-					nextEl: '.swiper-button-next',
-					prevEl: '.swiper-button-prev',
-					disabledClass: 'swiper-button-disabled',
-				},
-				breakpoints: {
-					640: {
-						slidesPerView: 1,
-					},
-					768: {
-						slidesPerView: 2,
-					},
-					1366: {
-						slidesPerView: 3,
-					},
-				},
-			},
-		}
-	},
-	computed: {
-		app() {
-			return app
-		},
-		archTitle() {
-			// 如果是 arm 默认显示 armv7
-			if (this.arch === 'arm') {
-				return 'armv7'
-			}
-			return this.arch
-		},
-		unusable() {
-			return !this.appDetailData.architectures?.includes(this.arch)
-		},
-	},
-	methods: {
-		updateSwiper() {
-			this.swiper.slideTo(0, 0, false)
-		},
-		// Kept off data(): a Swiper instance behind a reactive proxy is not one
-		// Swiper recognises as its own.
-		handleSwiperReadied(swiper) {
-			this.swiper = swiper
-		},
-		getCateIcon(name) {
-			const tempO = this.cateMenu.find(item => item.name === name) || { font: 'apps' }
-			return tempO.font
-		},
-		zoomScreenshot(img) {
-			const customVNode = h('div', { class: 'modal-content' }, [h('img', { src: img })])
-
-			this.$buefy.modal.open({
-				content: [customVNode],
-				customClass: '_zoom-screenshot',
-				fullScreen: true,
-				hasModalCard: true,
-				destroyOnHide: true,
-				animation: 'zoom-in',
-				canCancel: ['outside', 'x'],
-			})
-		},
-		openConfigPanle() {
-			this.$emit('switchAppConfigContent', YAML.stringify(this.appDetailData.compose))
-		},
-	},
-}
-</script>
-
 <template>
 	<div class="modal-card app-detial">
 		<!-- Header Start -->
@@ -277,6 +156,127 @@ export default {
 		</section>
 	</div>
 </template>
+
+<script>
+import { h } from 'vue'
+import VMdEditor from '@kangc/v-md-editor'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Autoplay, Navigation } from 'swiper/modules'
+import YAML from 'yaml'
+import business_OpenThirdApp from '@/mixins/app/Business_OpenThirdApp'
+import business_ShowNewAppTag from '@/mixins/app/Business_ShowNewAppTag'
+import commonI18n from '@/mixins/base/common-i18n'
+import app from '@/App.vue'
+
+export default {
+	name: 'AppDetailInfo',
+	components: { VMdEditor, Swiper, SwiperSlide },
+	mixins: [business_ShowNewAppTag, business_OpenThirdApp, commonI18n],
+	props: {
+		appDetailData: {
+			type: Object,
+			default: () => {},
+		},
+		installedList: {
+			type: Array,
+			default: () => {},
+		},
+		currentInstallId: {
+			type: String,
+			default: '',
+		},
+		arch: {
+			type: String,
+			default: '',
+		},
+		showDetailSwiper: {
+			type: Boolean,
+			default: false,
+		},
+		cateMenu: {
+			type: Array,
+			default: () => [],
+		},
+		close: {
+			type: Function,
+			default: () => {},
+		},
+	},
+	data() {
+		return {
+			// Image List Swiper
+			swiperOptions: {
+				modules: [Navigation, Autoplay],
+				loop: false,
+				autoplay: true,
+				observer: true,
+				spaceBetween: 24,
+				navigation: {
+					nextEl: '.swiper-button-next',
+					prevEl: '.swiper-button-prev',
+					disabledClass: 'swiper-button-disabled',
+				},
+				breakpoints: {
+					640: {
+						slidesPerView: 1,
+					},
+					768: {
+						slidesPerView: 2,
+					},
+					1366: {
+						slidesPerView: 3,
+					},
+				},
+			},
+		}
+	},
+	computed: {
+		app() {
+			return app
+		},
+		archTitle() {
+			// 如果是 arm 默认显示 armv7
+			if (this.arch === 'arm') {
+				return 'armv7'
+			}
+			return this.arch
+		},
+		unusable() {
+			return !this.appDetailData.architectures?.includes(this.arch)
+		},
+	},
+	methods: {
+		updateSwiper() {
+			this.swiper.slideTo(0, 0, false)
+		},
+		// Kept off data(): a Swiper instance behind a reactive proxy is not one
+		// Swiper recognises as its own.
+		handleSwiperReadied(swiper) {
+			this.swiper = swiper
+		},
+		getCateIcon(name) {
+			const tempO = this.cateMenu.find(item => item.name === name) || { font: 'apps' }
+			return tempO.font
+		},
+		zoomScreenshot(img) {
+			const customVNode = h('div', { class: 'modal-content' }, [h('img', { src: img })])
+
+			this.$buefy.modal.open({
+				content: [customVNode],
+				customClass: '_zoom-screenshot',
+				fullScreen: true,
+				hasModalCard: true,
+				destroyOnHide: true,
+				animation: 'zoom-in',
+				canCancel: ['outside', 'x'],
+			})
+		},
+		openConfigPanle() {
+			this.$emit('switchAppConfigContent', YAML.stringify(this.appDetailData.compose))
+		},
+	},
+}
+</script>
 
 <style lang="scss">
 //The underscore "_" here represents that it is only used in this context and needs to be placed in the modularized CSS later.

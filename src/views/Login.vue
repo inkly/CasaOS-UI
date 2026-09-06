@@ -16,14 +16,14 @@
 					<b-field :label="$t('Username')" :message="errors"
 						:type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
 						class="mt-3">
-						<b-input v-model="username" :autofocus="!username" type="text" v-on:keyup.enter="handleSubmit(login)"></b-input>
+						<b-input v-model="username" :autofocus="!username" type="text" @keyup.enter="handleSubmit(login)"></b-input>
 					</b-field>
 				</VeeField>
 				<VeeField v-slot="{ errors, meta }" :model-value="password" name="Password" rules="required|min:5">
 					<b-field :label="$t('Password')" :message="errors"
 						:type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mt-2">
 						<b-input v-model="password" :autofocus="username" password-reveal
-							type="password" v-on:keyup.enter="handleSubmit(login)"></b-input>
+							type="password" @keyup.enter="handleSubmit(login)"></b-input>
 					</b-field>
 				</VeeField>
 				<b-button class="mt-5" expanded rounded type="is-primary" @click="handleSubmit(login)">{{ $t('Login') }}
@@ -53,9 +53,9 @@ export default {
 		VeeForm,
 	},
 	beforeMount() {
-		let userString = localStorage.getItem('user')
+		const userString = localStorage.getItem('user')
 		if (userString) {
-			let name = JSON.parse(userString).username || ''
+			const name = JSON.parse(userString).username || ''
 			this.username = name
 		}
 	},

@@ -17,9 +17,8 @@
 					</div>
 				</div>
 				<div class="list-container scrollbars-light pt-0 is-flex-grow-1">
-					<tree-list ref="navBar"
-						:autoLoad="true"
-						:isActive="pageType == `file`"
+					<tree-list :auto-load="true"
+						:is-active="pageType == `file`"
 						:path="rootPath"></tree-list>
 				</div>
 			</div>
@@ -39,10 +38,9 @@
 				</div>
 
 				<div class="list-container pt-0 is-flex-grow-1">
-					<mount-list ref="mountedList"
-						:autoLoad="true"
-						:hasMergerFunction="hasMergerFunction"
-						:isActive="pageType == `file`"
+					<mount-list :auto-load="true"
+						:has-merger-function="hasMergerFunction"
+						:is-active="pageType == `file`"
 						:path="rootPath"></mount-list>
 				</div>
 			</div>

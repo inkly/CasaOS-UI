@@ -47,7 +47,7 @@ export default {
 			if (this.isGird) {
 				const cw = document.getElementById(this.CARD_CONTAINER).clientWidth
 				this.cols = Math.floor(cw / this.CARD_WIDTH)
-				this.colStyle.width = (100 / this.cols).toString() + '%'
+				this.colStyle.width = `${(100 / this.cols).toString()}%`
 			}
 		},
 
@@ -57,7 +57,7 @@ export default {
 
 		/**
 		 * @description: Handle Checkbox value change
-		 * @param {Boolean} value
+		 * @param {boolean} value
 		 * @param {Int} index
 		 * @return {*}
 		 */
@@ -97,7 +97,7 @@ export default {
 					break
 			}
 		},
-		blur(evnet) {
+		blur() {
 			// make sure release shift and ctrl
 			this.isShift = false
 			this.isCtrl = false
@@ -131,8 +131,8 @@ export default {
 			this.onScroll()
 			this.downX = event.clientX - this.lipL
 			this.downY = event.clientY - this.lipT
-			this.selectBox.style.left = this.downX + 'px'
-			this.selectBox.style.top = this.downY + 'px'
+			this.selectBox.style.left = `${this.downX}px`
+			this.selectBox.style.top = `${this.downY}px`
 			document.body.addEventListener('mousemove', this.onDragSelection)
 			document.body.addEventListener('mouseup', this.onDragSelectionStop)
 			this.parentBox.addEventListener('scroll', this.onScroll)
@@ -145,10 +145,10 @@ export default {
 		 */
 		onDragSelection(event) {
 			this.isShowSeBox = true
-			this.selectBox.style.left = Math.min((event.clientX - this.lipL), this.downX) + 'px'
-			this.selectBox.style.top = Math.min((event.clientY - this.lipT), this.downY) + 'px'
-			this.selectBox.style.width = Math.abs(this.downX - (event.clientX - this.lipL)) + 'px'
-			this.selectBox.style.height = Math.abs(this.downY - (event.clientY - this.lipT)) + 'px'
+			this.selectBox.style.left = `${Math.min((event.clientX - this.lipL), this.downX)}px`
+			this.selectBox.style.top = `${Math.min((event.clientY - this.lipT), this.downY)}px`
+			this.selectBox.style.width = `${Math.abs(this.downX - (event.clientX - this.lipL))}px`
+			this.selectBox.style.height = `${Math.abs(this.downY - (event.clientY - this.lipT))}px`
 		},
 
 		/**
@@ -157,8 +157,8 @@ export default {
 		 */
 		onDragSelectionStop() {
 			this.isShowSeBox = false
-			this.selectBox.style.width = 0 + 'px'
-			this.selectBox.style.height = 0 + 'px'
+			this.selectBox.style.width = `${0}px`
+			this.selectBox.style.height = `${0}px`
 			document.body.removeEventListener('mousemove', this.onDragSelection)
 			document.body.removeEventListener('mouseup', this.onDragSelectionStop)
 		},
@@ -181,7 +181,7 @@ export default {
 		},
 
 		handleShiftClick(index) {
-			if (this.selectList.indexOf(index) === -1) {
+			if (!this.selectList.includes(index)) {
 				this.selectList.push(index)
 			}
 			if (this.selectList.length > 1) {
@@ -196,7 +196,7 @@ export default {
 		},
 
 		handleCtrlClick(index) {
-			if (this.selectList.indexOf(index) === -1) {
+			if (!this.selectList.includes(index)) {
 				this.selectList.push(index)
 			} else {
 				this.selectList.splice(this.selectList.indexOf(index), 1)

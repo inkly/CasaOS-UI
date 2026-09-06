@@ -13,7 +13,7 @@
 		<div class="content-components select-parent">
 			<div id="card-container" class="card-container">
 				<div v-for="(item, index) in listData"
-					:key="'list-' + index + item.name"
+					:key="`list-${index}${item.name}`"
 					:data-rel="index"
 					:style="colStyle"
 					class="grid-card rdata selectable">
@@ -56,17 +56,18 @@
 		</div>
 
 		<!-- Context Menu Start -->
+		<!-- eslint-disable-next-line vue/no-unused-refs -- opened by mixins/mixin.js -->
 		<context-menu ref="ctxMenu" @reload="$emit('reload')"></context-menu>
 		<!-- Context Menu End -->
 	</div>
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin'
-import ListViewMixin from '@/mixins/ListViewMixin'
 import ActionButton from './ActionButton.vue'
 import ContextMenu from './ContextMenu.vue'
 import IconContainer from './IconContainer.vue'
+import ListViewMixin from '@/mixins/ListViewMixin'
+import { mixin } from '@/mixins/mixin'
 
 export default {
 	name: 'gird-view',

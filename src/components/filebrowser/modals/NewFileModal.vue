@@ -18,7 +18,7 @@
 					</div>
 				</div>
 				<b-field :message="errors" :type="errorType" class="mb-0 mt-5 has-text-light" expanded>
-					<b-input v-model="fileName" v-on:keyup.enter="createFolder" ref="inputs"
+					<b-input v-model="fileName" @keyup.enter="createFolder" ref="inputs"
 						@update:model-value="fileName = fileName.replace(/\//g, '')"></b-input>
 				</b-field>
 			</div>
@@ -37,8 +37,8 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin'
 import path from 'path'
+import { mixin } from '@/mixins/mixin'
 
 export default {
 	mixins: [mixin],
@@ -60,7 +60,7 @@ export default {
 	methods: {
 
 		createFolder() {
-			let newPath = path.join(this.currentPath, this.fileName)
+			const newPath = path.join(this.currentPath, this.fileName)
 			this.$api.file.create(newPath).then((res) => {
 				if (res.data.success == 200) {
 					this.$emit('reload')

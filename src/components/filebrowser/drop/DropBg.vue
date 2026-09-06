@@ -35,17 +35,17 @@ export default {
 			const endScale = 1
 			gsap
 				.to(circle1, {
-					duration: duration,
+					duration,
 					autoAlpha: 0,
 					ease: 'none',
 					scale: endScale,
 					repeat: repeats,
-					repeatDelay: repeatDelay,
+					repeatDelay,
 				})
 				.then((tween) => {
 					tween.revert()
 					gsap.to(circle1, {
-						duration: duration,
+						duration,
 						autoAlpha: 0.02,
 						scale: endScale,
 						delay: repeatDelay,
@@ -53,12 +53,12 @@ export default {
 				})
 			gsap
 				.to(circle2, {
-					duration: duration,
+					duration,
 					autoAlpha: 0,
 					ease: 'none',
 					scale: endScale,
 					repeat: repeats,
-					repeatDelay: repeatDelay,
+					repeatDelay,
 					delay: gapDelay,
 				})
 				.then((tween) => {

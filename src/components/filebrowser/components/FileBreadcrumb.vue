@@ -31,7 +31,7 @@
 								</b-icon>
 							</p>
 						</template>
-						<b-dropdown-item v-for="(sitem, index) in hideItems" :key="'ff' + index" aria-role="menuitem"
+						<b-dropdown-item v-for="(sitem, index) in hideItems" :key="`ff${index}`" aria-role="menuitem"
 							@click="subOpen(sitem)">
 							{{ sitem.name }}
 						</b-dropdown-item>
@@ -44,7 +44,7 @@
 			</b-breadcrumb-item>
 		</b-breadcrumb>
 		<b-breadcrumb id="shadowBread" class="shadow" size="is-medium">
-			<b-breadcrumb-item v-for="(item, index) in pathCollection" :key="'fake' + item + index">
+			<b-breadcrumb-item v-for="(item, index) in pathCollection" :key="`fake${item}${index}`">
 				{{ item.name }}
 			</b-breadcrumb-item>
 		</b-breadcrumb>
@@ -103,14 +103,14 @@ export default {
 			return index == this.pathCollection.length - 1
 		},
 		onResize() {
-			let shadowBread = document.getElementById('shadowBread')
-			let containerWidth = document.getElementById('bread-container').clientWidth
+			const shadowBread = document.getElementById('shadowBread')
+			const containerWidth = document.getElementById('bread-container').clientWidth
 			this.$nextTick(() => {
 				this.hideItems = []
-				let shadowBreadWidth = shadowBread.clientWidth
+				const shadowBreadWidth = shadowBread.clientWidth
 				if (shadowBreadWidth > containerWidth) {
-					let shadowBreadList = shadowBread.getElementsByTagName('li')
-					let shadowBreadListWidth = map(shadowBreadList, (item) => {
+					const shadowBreadList = shadowBread.getElementsByTagName('li')
+					const shadowBreadListWidth = map(shadowBreadList, (item) => {
 						return item.clientWidth
 					})
 					this.pathCollection.forEach((item, index) => {
@@ -133,8 +133,8 @@ export default {
 			if (path == '/') {
 				path = path.substr(1)
 			}
-			let arr = path.split('/')
-			let collection = arr.map((item, index) => {
+			const arr = path.split('/')
+			const collection = arr.map((item, index) => {
 				return {
 					name: item == '' ? 'Root' : item,
 					show: true,

@@ -18,7 +18,7 @@
 			:style="cssVariables"
 			class="drop-tips">
 			<template #trigger>
-				<div ref="circleArea" class="circle-area is-clickable">
+				<div class="circle-area is-clickable">
 					<div class="up-layer">
 						<b-image :class="iconSize"
 							:src="require(`@/assets/img/drop/add_btn.svg`)"
@@ -107,13 +107,13 @@ export default {
           = this.showIndex < 5 ? this.radius : this.radius / ratio
 				return {
 					left:
-            this.center.x
+            `${this.center.x
             + (realRadius / 2) * Math.cos((angel * Math.PI) / 180)
-            + 'px',
+            }px`,
 					top:
-            this.center.y
+            `${this.center.y
             - (realRadius / 2) * Math.sin((angel * Math.PI) / 180)
-            + 'px',
+            }px`,
 				}
 			} else {
 				return {

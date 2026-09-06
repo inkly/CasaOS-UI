@@ -118,10 +118,10 @@ export default {
 				if (handler === true) {
 					return
 				}
-				this[handler].apply(this, args.slice(1))
+				this[handler](...args.slice(1))
 			}
 			args[0] = kebabCase(name)
-			this.$emit.apply(this, args)
+			this.$emit(...args)
 		},
 	},
 	created() {

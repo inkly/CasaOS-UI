@@ -1,3 +1,399 @@
+<template>
+	<div class="navbar top-bar is-flex is-align-items-center _fixed-height">
+		<div class="navbar-brand ml-4 _fixed-height">
+			<!-- SideBar Button Start -->
+			<div id="sidebar-btn" class="is-flex is-align-items-center navbar-item">
+				<b-tooltip :active="!$store.state.isMobile"
+					:label="sidebarIconLabel"
+					position="is-right"
+					type="is-dark">
+					<div role="button" @click="showSideBar">
+						<b-icon :icon="sidebarIcon" class="picon" pack="casa" size="is-20" />
+					</div>
+				</b-tooltip>
+			</div>
+			<!-- SideBar Button Start -->
+
+			<!-- Account Dropmenu Start -->
+			<b-dropdown animation="fade1"
+				aria-role="list"
+				class="navbar-item"
+				:close-on-click="true"
+				@active-change="getUserInfo">
+				<template #trigger>
+					<b-tooltip :active="!$store.state.isMobile"
+						:label="$t('Account')"
+						position="is-right"
+						type="is-dark"
+						@click="$messageBus('account_setting')">
+						<p role="button">
+							<b-icon class="picon" icon="account-outline" pack="casa" size="is-20" />
+						</p>
+					</b-tooltip>
+				</template>
+
+				<b-dropdown-item :focusable="false" aria-role="menu-item" class="p-0" custom>
+					<AccountPanel />
+				</b-dropdown-item>
+			</b-dropdown>
+			<!-- Account Dropmenu End -->
+
+			<!-- Settings Dropmenu Start -->
+			<b-dropdown ref="settingsDrop"
+				animation="fade1"
+				aria-role="list"
+				class="navbar-item"
+				@active-change="onOpen">
+				<template #trigger>
+					<b-tooltip :active="!$store.state.isMobile"
+						:label="$t('Settings')"
+						position="is-right"
+						type="is-dark"
+						@click="$messageBus('dashboardsetting')">
+						<p role="button">
+							<b-icon :class="{ 'update-icon-dot': updateInfo.need_update }"
+								class="picon"
+								icon="control-outline"
+								pack="casa"
+								size="is-20" />
+						</p>
+					</b-tooltip>
+				</template>
+
+				<b-dropdown-item :focusable="false" aria-role="menu-item" class="p-0" custom>
+					<h2 class="_title mb-4 has-text-weight-bold">
+						{{ $t("Settings") }}
+					</h2>
+					<!-- Search Engine Switch Start  -->
+					<div
+						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
+						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
+							<b-icon class="mr-1 ml-2" icon="show-search-outline" pack="casa" size="is-20" />
+							{{ $t("Show Search Bar") }}
+						</div>
+						<div>
+							<b-field>
+								<b-switch v-model="barData.search_switch"
+									class="is-flex-direction-row-reverse mr-0 _small"
+									type="is-dark"
+									@update:model-value="saveData" />
+							</b-field>
+						</div>
+					</div>
+					<!-- Search Engine Switch End  -->
+
+					<!-- Search Engine Start -->
+					<div v-if="barData.search_switch"
+						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
+						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
+							<b-icon class="mr-1 ml-2" icon="search-outline" pack="casa" size="is-20" />
+							{{ $t("Search Engine") }}
+						</div>
+						<div>
+							<b-field>
+								<b-select v-model="barData.search_engine"
+									class="set-select"
+									size="is-small"
+									@update:model-value="saveData">
+									<option v-for="item in searchEngines" :key="item.name" :value="item.url">
+										{{ item.name }}
+									</option>
+								</b-select>
+							</b-field>
+						</div>
+					</div>
+					<!-- Search Engine End -->
+
+					<!-- Language Start -->
+					<div
+						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
+						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
+							<b-icon class="mr-1 ml-2" icon="language-outline" pack="casa" size="is-20" />
+							{{ $t("Language") }}
+						</div>
+						<div>
+							<b-field>
+								<b-select v-model="barData.lang" class="set-select" size="is-small" @update:model-value="saveData">
+									<option v-for="lang in languages" :key="lang.lang" :value="lang.lang">
+										{{ lang.name }}
+									</option>
+								</b-select>
+							</b-field>
+						</div>
+					</div>
+					<!-- Language End -->
+
+					<!-- Appearance Start -->
+					<div
+						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
+						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
+							<b-icon class="mr-1 ml-2" custom-size="mdi-20px" icon="theme-light-dark" />
+							{{ $t("Appearance") }}
+						</div>
+						<div>
+							<b-field>
+								<b-select v-model="theme" class="set-select" size="is-small" @update:model-value="setThemePreference">
+									<option v-for="item in themes" :key="item.value" :value="item.value">
+										{{ $t(item.label) }}
+									</option>
+								</b-select>
+							</b-field>
+						</div>
+					</div>
+					<!-- Appearance End -->
+
+					<!-- WebUI Port Start -->
+					<div
+						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
+						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
+							<b-icon class="mr-1 ml-2" icon="port-outline" pack="casa" size="is-20" />
+							{{ $t("WebUI Port") }}
+						</div>
+						<div>
+							{{ port }}
+						</div>
+						<div class="ml-2">
+							<b-button rounded size="is-small" type="is-dark" @click="showPortPanel">
+								{{ $t("Change") }}
+							</b-button>
+						</div>
+					</div>
+					<!-- WebUI Port End -->
+
+					<!-- Background Start -->
+					<div
+						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
+						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
+							<b-icon class="mr-1 ml-2" icon="wallpaper-outline" pack="casa" size="is-20" />
+							{{ $t("Wallpaper") }}
+						</div>
+						<div class="ml-2">
+							<b-button rounded size="is-small" type="is-dark" @click="showChangeWallpaperModal">
+								{{ $t("Change") }}
+							</b-button>
+						</div>
+					</div>
+					<!-- Background End -->
+
+					<!--  Show other Docker container app(s) Switch Start  -->
+					<div v-if="$store.state.notImportList.length > 0"
+						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
+						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
+							<b-icon class="mr-1 ml-2" icon="docker-outline" pack="casa" size="is-20" />
+							{{ $t("Show other Docker container app(s)") }}
+						</div>
+						<div>
+							<b-field>
+								<b-switch v-model="barData.existing_apps_switch"
+									class="is-flex-direction-row-reverse mr-0 _small"
+									type="is-dark"
+									@update:model-value="saveData" />
+							</b-field>
+						</div>
+					</div>
+					<!--  Show other Docker container app(s) Switch End  -->
+
+					<!--  Show other Docker container app(s) Switch Start  -->
+					<div
+						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
+						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
+							<b-icon class="mr-1 ml-2" icon="news-outline" pack="casa" size="is-20" />
+							{{ $t("Show news feed from CasaOS Blog") }}
+						</div>
+						<div>
+							<b-field>
+								<b-switch v-model="rss_switch"
+									:native-value="barData.rss_switch"
+									class="is-flex-direction-row-reverse mr-0 _small"
+									type="is-dark"
+									@update:model-value="rssConfirm" />
+							</b-field>
+						</div>
+					</div>
+					<!--  Show other Docker container app(s) Switch End  -->
+					<!--  Recommended modules Switch Start  -->
+					<div
+						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
+						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
+							<b-icon class="mr-1 ml-2"
+								icon="display-applications-outline"
+								pack="casa"
+								size="is-20" />
+							{{ $t("Show Recommended Apps") }}
+						</div>
+						<div>
+							<b-field>
+								<b-switch v-model="barData.recommend_switch"
+									class="is-flex-direction-row-reverse mr-0 _small"
+									type="is-dark"
+									@update:model-value="saveData" />
+							</b-field>
+						</div>
+					</div>
+					<!-- Recommended modules Switch End  -->
+
+					<!-- Automount USB Drive Start  -->
+					<div
+						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
+						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
+							<b-icon class="mr-1 ml-2" icon="usb-outline" pack="casa" size="is-20" />
+							{{ $t("Automount USB Drive") }}
+							<b-tooltip v-if="isRaspberryPi"
+								:label="
+									$t(
+										'Enabling this function may cause boot failures when the Raspberry Pi device is booted from USB',
+									)
+								"
+								multilined
+								type="is-dark">
+								<b-icon class="ml-1" icon="question-outline" pack="casa" size="is-small" />
+							</b-tooltip>
+						</div>
+						<div>
+							<b-field>
+								<b-switch v-model="autoUsbMount"
+									class="is-flex-direction-row-reverse mr-0 _small"
+									type="is-dark"
+									@update:model-value="usbAutoMount" />
+							</b-field>
+						</div>
+					</div>
+					<!-- Automount USB Drive End  -->
+
+					<!-- Update Start -->
+					<div class="_is-large hover-effect _is-radius pr-2 mr-4 ml-4">
+						<div class="is-flex is-align-items-center">
+							<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
+								<b-icon class="mr-1 ml-2" icon="update-outline" pack="casa" size="is-20" />
+								<div :class="{ 'update-text-dot': updateInfo.need_update }">
+									{{ $t("Update") }}
+								</div>
+							</div>
+							<div class="_has-text-gray">
+								v{{ updateInfo.current_version }}
+							</div>
+						</div>
+
+						<div v-if="!updateInfo.need_update" class="is-flex is-align-items-center pl-55 ml-1 is-size-7">
+							{{ $t(latestText) }}
+							<b-icon class="ml-1" custom-size="mdi-18px" icon="check" type="is-success" />
+						</div>
+						<div v-else class="is-flex is-align-items-center is-justify-content-end update-container pl-5">
+							<div class="is-flex-grow-1 is-size-7">
+								{{ $t(updateText) }}
+							</div>
+							<b-button class="ml-2" rounded size="is-small" type="is-dark" @click="showUpdateModal">
+								{{ $t("Update") }}
+							</b-button>
+						</div>
+					</div>
+					<!-- Update End -->
+
+					<!-- System Package Update Start -->
+					<div class="_is-large hover-effect _is-radius pr-2 mr-4 ml-4">
+						<div class="is-flex is-align-items-center">
+							<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
+								<b-icon class="mr-1 ml-2" icon="update-outline" pack="casa" size="is-20" />
+								{{ $t("System packages") }}
+							</div>
+						</div>
+						<div class="is-flex is-align-items-center is-justify-content-end update-container pl-5">
+							<div class="is-flex-grow-1 is-size-7">
+								{{ $t("Check for updates") }}
+							</div>
+							<b-button class="ml-2" rounded size="is-small" type="is-dark" @click.stop="showSystemPackageUpdateModal">
+								{{ $t("Check") }}
+							</b-button>
+						</div>
+					</div>
+					<!-- System Package Update End -->
+
+					<!-- App Launching Start -->
+					<div class="_is-large hover-effect _is-radius pr-2 mr-4 ml-4">
+						<div class="is-flex is-align-items-center">
+							<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
+								<b-icon class="mr-1 ml-2" icon="display-applications-outline" pack="casa" size="is-20" />
+								{{ $t("App launching") }}
+							</div>
+						</div>
+						<div class="is-flex is-align-items-center is-justify-content-end update-container pl-5">
+							<div class="is-flex-grow-1 is-size-7">
+								{{ $t($store.state.appLaunchInIframe ? "Apps open inside CasaOS" : "Apps open in a new tab") }}
+							</div>
+							<b-button class="ml-2" rounded size="is-small" type="is-dark" @click.stop="showAppLaunchModal">
+								{{ $t("Configure") }}
+							</b-button>
+						</div>
+					</div>
+					<!-- App Launching End -->
+
+					<!-- Restart or Shutdown Start -->
+					<div
+						class="is-flex is-align-content-center is-justify-content-center _footer mt-4 pl-3 pr-3 pt-2 pb-2">
+						<div class="mr-1 column is-half is-flex is-align-items-center is-justify-content-center hover-effect is-clickable _is-radius _is-normal"
+							@click="power('Restart')">
+							<b-icon class="mr-1" icon="restart-outline" pack="casa" />
+							{{ $t(restart) }}
+						</div>
+						<div class="ml-1 column is-half is-flex is-align-items-center is-justify-content-center is-clickable hover-effect-attention _has-text-attention _is-radius"
+							@click="power('Shutdown')">
+							<b-icon class="mr-1"
+								custom-class="_has-text-attention"
+								icon="shutdown-outline"
+								pack="casa" />
+							{{ $t(shutdown) }}
+						</div>
+					</div>
+					<!-- Restart or Shutdown End -->
+				</b-dropdown-item>
+			</b-dropdown>
+			<!-- Settings Dropmenu End -->
+
+			<!-- Terminal  Start -->
+			<div class="is-flex is-align-items-center ml-3 _fixed-height" @click="showTerminalPanel">
+				<b-tooltip :active="!$store.state.isMobile"
+					:label="$t('Terminal & Logs')"
+					position="is-right"
+					style="height: 1.25rem"
+					type="is-dark">
+					<b-icon class="picon" icon="terminal-outline" pack="casa" size="is-20" />
+				</b-tooltip>
+			</div>
+			<!-- Terminal  End -->
+		</div>
+
+		<div class="navbar-menu">
+			<div class="navbar-end mr-3">
+				<!-- <b-icon pack="far" icon="comment-alt"></b-icon> -->
+			</div>
+		</div>
+
+		<b-modal v-model="showPower" :can-cancel="false" class="_modal" scroll="clip" width="20rem">
+			<b-message @close="resetPower">
+				<template #header>
+					{{ $t(showPowerTitle) }}
+					<img v-if="showPowerTitle === 'Now shutting down'"
+						:src="require('@/assets/img/loading/waiting.svg')"
+						alt="pending"
+						class="ml-1 is-24x24">
+				</template>
+				<div :class="showPowerTitle === 'Now shutting down' ? 'mb-4' : ''"
+					class="is-flex is-align-items-center is-justify-content-start _is-normal">
+					{{ $t(showPowerMessage) }}
+				</div>
+			</b-message>
+			<footer v-if="showPowerTitle !== 'Now shutting down'"
+				class="is-flex is-flex-direction-row-reverse">
+				<button
+					class="ml-2 mr-5 mt-3 mb-3 pr-4 pl-4 _is-normal _has-background-blue is-flex is-align-items-center is-justify-content-center">
+					{{ $t("Connecting") }}
+					<img :src="require('@/assets/img/power/waiting-white.svg')" alt="loading" class="ml-1">
+				</button>
+			</footer>
+		</b-modal>
+	</div>
+</template>
+
 <script>
 import AccountPanel from './account/AccountPanel.vue'
 import TerminalPanel from './logsAndTerminal/TerminalPanel.vue'
@@ -508,402 +904,6 @@ export default {
 	},
 }
 </script>
-
-<template>
-	<div class="navbar top-bar is-flex is-align-items-center _fixed-height">
-		<div class="navbar-brand ml-4 _fixed-height">
-			<!-- SideBar Button Start -->
-			<div id="sidebar-btn" class="is-flex is-align-items-center navbar-item">
-				<b-tooltip :active="!$store.state.isMobile"
-					:label="sidebarIconLabel"
-					position="is-right"
-					type="is-dark">
-					<div role="button" @click="showSideBar">
-						<b-icon :icon="sidebarIcon" class="picon" pack="casa" size="is-20" />
-					</div>
-				</b-tooltip>
-			</div>
-			<!-- SideBar Button Start -->
-
-			<!-- Account Dropmenu Start -->
-			<b-dropdown animation="fade1"
-				aria-role="list"
-				class="navbar-item"
-				:close-on-click="true"
-				@active-change="getUserInfo">
-				<template #trigger>
-					<b-tooltip :active="!$store.state.isMobile"
-						:label="$t('Account')"
-						position="is-right"
-						type="is-dark"
-						@click="$messageBus('account_setting')">
-						<p role="button">
-							<b-icon class="picon" icon="account-outline" pack="casa" size="is-20" />
-						</p>
-					</b-tooltip>
-				</template>
-
-				<b-dropdown-item :focusable="false" aria-role="menu-item" class="p-0" custom>
-					<AccountPanel />
-				</b-dropdown-item>
-			</b-dropdown>
-			<!-- Account Dropmenu End -->
-
-			<!-- Settings Dropmenu Start -->
-			<b-dropdown ref="settingsDrop"
-				animation="fade1"
-				aria-role="list"
-				class="navbar-item"
-				@active-change="onOpen">
-				<template #trigger>
-					<b-tooltip :active="!$store.state.isMobile"
-						:label="$t('Settings')"
-						position="is-right"
-						type="is-dark"
-						@click="$messageBus('dashboardsetting')">
-						<p role="button">
-							<b-icon :class="{ 'update-icon-dot': updateInfo.need_update }"
-								class="picon"
-								icon="control-outline"
-								pack="casa"
-								size="is-20" />
-						</p>
-					</b-tooltip>
-				</template>
-
-				<b-dropdown-item :focusable="false" aria-role="menu-item" class="p-0" custom>
-					<h2 class="_title mb-4 has-text-weight-bold">
-						{{ $t("Settings") }}
-					</h2>
-					<!-- Search Engine Switch Start  -->
-					<div
-						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
-						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
-							<b-icon class="mr-1 ml-2" icon="show-search-outline" pack="casa" size="is-20" />
-							{{ $t("Show Search Bar") }}
-						</div>
-						<div>
-							<b-field>
-								<b-switch v-model="barData.search_switch"
-									class="is-flex-direction-row-reverse mr-0 _small"
-									type="is-dark"
-									@update:model-value="saveData" />
-							</b-field>
-						</div>
-					</div>
-					<!-- Search Engine Switch End  -->
-
-					<!-- Search Engine Start -->
-					<div v-if="barData.search_switch"
-						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
-						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
-							<b-icon class="mr-1 ml-2" icon="search-outline" pack="casa" size="is-20" />
-							{{ $t("Search Engine") }}
-						</div>
-						<div>
-							<b-field>
-								<b-select v-model="barData.search_engine"
-									class="set-select"
-									size="is-small"
-									@update:model-value="saveData">
-									<option v-for="item in searchEngines" :key="item.name" :value="item.url">
-										{{ item.name }}
-									</option>
-								</b-select>
-							</b-field>
-						</div>
-					</div>
-					<!-- Search Engine End -->
-
-					<!-- Language Start -->
-					<div
-						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
-						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
-							<b-icon class="mr-1 ml-2" icon="language-outline" pack="casa" size="is-20" />
-							{{ $t("Language") }}
-						</div>
-						<div>
-							<b-field>
-								<b-select v-model="barData.lang" class="set-select" size="is-small" @update:model-value="saveData">
-									<option v-for="lang in languages" :key="lang.lang" :value="lang.lang">
-										{{ lang.name }}
-									</option>
-								</b-select>
-							</b-field>
-						</div>
-					</div>
-					<!-- Language End -->
-
-					<!-- Appearance Start -->
-					<div
-						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
-						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
-							<b-icon class="mr-1 ml-2" custom-size="mdi-20px" icon="theme-light-dark" />
-							{{ $t("Appearance") }}
-						</div>
-						<div>
-							<b-field>
-								<b-select v-model="theme" class="set-select" size="is-small" @update:model-value="setThemePreference">
-									<option v-for="item in themes" :key="item.value" :value="item.value">
-										{{ $t(item.label) }}
-									</option>
-								</b-select>
-							</b-field>
-						</div>
-					</div>
-					<!-- Appearance End -->
-
-					<!-- WebUI Port Start -->
-					<div
-						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
-						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
-							<b-icon class="mr-1 ml-2" icon="port-outline" pack="casa" size="is-20" />
-							{{ $t("WebUI Port") }}
-						</div>
-						<div>
-							{{ port }}
-						</div>
-						<div class="ml-2">
-							<b-button rounded size="is-small" type="is-dark" @click="showPortPanel">
-								{{ $t("Change") }}
-							</b-button>
-						</div>
-					</div>
-					<!-- WebUI Port End -->
-
-					<!-- Background Start -->
-					<div
-						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
-						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
-							<b-icon class="mr-1 ml-2" icon="wallpaper-outline" pack="casa" size="is-20" />
-							{{ $t("Wallpaper") }}
-						</div>
-						<div class="ml-2">
-							<b-button rounded size="is-small" type="is-dark" @click="showChangeWallpaperModal">
-								{{ $t("Change") }}
-							</b-button>
-						</div>
-					</div>
-					<!-- Background End -->
-
-					<!--  Show other Docker container app(s) Switch Start  -->
-					<div v-if="$store.state.notImportList.length > 0"
-						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
-						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
-							<b-icon class="mr-1 ml-2" icon="docker-outline" pack="casa" size="is-20" />
-							{{ $t("Show other Docker container app(s)") }}
-						</div>
-						<div>
-							<b-field>
-								<b-switch v-model="barData.existing_apps_switch"
-									class="is-flex-direction-row-reverse mr-0 _small"
-									type="is-dark"
-									@update:model-value="saveData" />
-							</b-field>
-						</div>
-					</div>
-					<!--  Show other Docker container app(s) Switch End  -->
-
-					<!--  Show other Docker container app(s) Switch Start  -->
-					<div
-						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
-						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
-							<b-icon class="mr-1 ml-2" icon="news-outline" pack="casa" size="is-20" />
-							{{ $t("Show news feed from CasaOS Blog") }}
-						</div>
-						<div>
-							<b-field>
-								<b-switch v-model="rss_switch"
-									:native-value="barData.rss_switch"
-									class="is-flex-direction-row-reverse mr-0 _small"
-									type="is-dark"
-									@update:model-value="rssConfirm" />
-							</b-field>
-						</div>
-					</div>
-					<!--  Show other Docker container app(s) Switch End  -->
-					<!--  Recommended modules Switch Start  -->
-					<div
-						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
-						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
-							<b-icon class="mr-1 ml-2"
-								icon="display-applications-outline"
-								pack="casa"
-								size="is-20" />
-							{{ $t("Show Recommended Apps") }}
-						</div>
-						<div>
-							<b-field>
-								<b-switch v-model="barData.recommend_switch"
-									class="is-flex-direction-row-reverse mr-0 _small"
-									type="is-dark"
-									@update:model-value="saveData" />
-							</b-field>
-						</div>
-					</div>
-					<!-- Recommended modules Switch End  -->
-
-					<!-- Automount USB Drive Start  -->
-					<div
-						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
-						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
-							<b-icon class="mr-1 ml-2" icon="usb-outline" pack="casa" size="is-20" />
-							{{ $t("Automount USB Drive") }}
-							<b-tooltip v-if="isRaspberryPi"
-								:label="
-									$t(
-										'Enabling this function may cause boot failures when the Raspberry Pi device is booted from USB',
-									)
-								"
-								multilined
-								type="is-dark">
-								<b-icon class="ml-1" icon="question-outline" pack="casa" size="is-small" />
-							</b-tooltip>
-						</div>
-						<div>
-							<b-field>
-								<b-switch v-model="autoUsbMount"
-									class="is-flex-direction-row-reverse mr-0 _small"
-									type="is-dark"
-									@update:model-value="usbAutoMount" />
-							</b-field>
-						</div>
-					</div>
-					<!-- Automount USB Drive End  -->
-
-					<!-- Update Start -->
-					<div class="_is-large hover-effect _is-radius pr-2 mr-4 ml-4">
-						<div class="is-flex is-align-items-center">
-							<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
-								<b-icon class="mr-1 ml-2" icon="update-outline" pack="casa" size="is-20" />
-								<div :class="{ 'update-text-dot': updateInfo.need_update }">
-									{{ $t("Update") }}
-								</div>
-							</div>
-							<div class="_has-text-gray">
-								v{{ updateInfo.current_version }}
-							</div>
-						</div>
-
-						<div v-if="!updateInfo.need_update" class="is-flex is-align-items-center pl-55 ml-1 is-size-7">
-							{{ $t(latestText) }}
-							<b-icon class="ml-1" custom-size="mdi-18px" icon="check" type="is-success" />
-						</div>
-						<div v-else class="is-flex is-align-items-center is-justify-content-end update-container pl-5">
-							<div class="is-flex-grow-1 is-size-7">
-								{{ $t(updateText) }}
-							</div>
-							<b-button class="ml-2" rounded size="is-small" type="is-dark" @click="showUpdateModal">
-								{{ $t("Update") }}
-							</b-button>
-						</div>
-					</div>
-					<!-- Update End -->
-
-					<!-- System Package Update Start -->
-					<div class="_is-large hover-effect _is-radius pr-2 mr-4 ml-4">
-						<div class="is-flex is-align-items-center">
-							<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
-								<b-icon class="mr-1 ml-2" icon="update-outline" pack="casa" size="is-20" />
-								{{ $t("System packages") }}
-							</div>
-						</div>
-						<div class="is-flex is-align-items-center is-justify-content-end update-container pl-5">
-							<div class="is-flex-grow-1 is-size-7">
-								{{ $t("Check for updates") }}
-							</div>
-							<b-button class="ml-2" rounded size="is-small" type="is-dark" @click.stop="showSystemPackageUpdateModal">
-								{{ $t("Check") }}
-							</b-button>
-						</div>
-					</div>
-					<!-- System Package Update End -->
-
-					<!-- App Launching Start -->
-					<div class="_is-large hover-effect _is-radius pr-2 mr-4 ml-4">
-						<div class="is-flex is-align-items-center">
-							<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
-								<b-icon class="mr-1 ml-2" icon="display-applications-outline" pack="casa" size="is-20" />
-								{{ $t("App launching") }}
-							</div>
-						</div>
-						<div class="is-flex is-align-items-center is-justify-content-end update-container pl-5">
-							<div class="is-flex-grow-1 is-size-7">
-								{{ $t($store.state.appLaunchInIframe ? "Apps open inside CasaOS" : "Apps open in a new tab") }}
-							</div>
-							<b-button class="ml-2" rounded size="is-small" type="is-dark" @click.stop="showAppLaunchModal">
-								{{ $t("Configure") }}
-							</b-button>
-						</div>
-					</div>
-					<!-- App Launching End -->
-
-					<!-- Restart or Shutdown Start -->
-					<div
-						class="is-flex is-align-content-center is-justify-content-center _footer mt-4 pl-3 pr-3 pt-2 pb-2">
-						<div class="mr-1 column is-half is-flex is-align-items-center is-justify-content-center hover-effect is-clickable _is-radius _is-normal"
-							@click="power('Restart')">
-							<b-icon class="mr-1" icon="restart-outline" pack="casa" />
-							{{ $t(restart) }}
-						</div>
-						<div class="ml-1 column is-half is-flex is-align-items-center is-justify-content-center is-clickable hover-effect-attention _has-text-attention _is-radius"
-							@click="power('Shutdown')">
-							<b-icon class="mr-1"
-								custom-class="_has-text-attention"
-								icon="shutdown-outline"
-								pack="casa" />
-							{{ $t(shutdown) }}
-						</div>
-					</div>
-					<!-- Restart or Shutdown End -->
-				</b-dropdown-item>
-			</b-dropdown>
-			<!-- Settings Dropmenu End -->
-
-			<!-- Terminal  Start -->
-			<div class="is-flex is-align-items-center ml-3 _fixed-height" @click="showTerminalPanel">
-				<b-tooltip :active="!$store.state.isMobile"
-					:label="$t('Terminal & Logs')"
-					position="is-right"
-					style="height: 1.25rem"
-					type="is-dark">
-					<b-icon class="picon" icon="terminal-outline" pack="casa" size="is-20" />
-				</b-tooltip>
-			</div>
-			<!-- Terminal  End -->
-		</div>
-
-		<div class="navbar-menu">
-			<div class="navbar-end mr-3">
-				<!-- <b-icon pack="far" icon="comment-alt"></b-icon> -->
-			</div>
-		</div>
-
-		<b-modal v-model="showPower" :can-cancel="false" class="_modal" scroll="clip" width="20rem">
-			<b-message @close="resetPower">
-				<template #header>
-					{{ $t(showPowerTitle) }}
-					<img v-if="showPowerTitle === 'Now shutting down'"
-						:src="require('@/assets/img/loading/waiting.svg')"
-						alt="pending"
-						class="ml-1 is-24x24">
-				</template>
-				<div :class="showPowerTitle === 'Now shutting down' ? 'mb-4' : ''"
-					class="is-flex is-align-items-center is-justify-content-start _is-normal">
-					{{ $t(showPowerMessage) }}
-				</div>
-			</b-message>
-			<footer v-if="showPowerTitle !== 'Now shutting down'"
-				class="is-flex is-flex-direction-row-reverse">
-				<button
-					class="ml-2 mr-5 mt-3 mb-3 pr-4 pl-4 _is-normal _has-background-blue is-flex is-align-items-center is-justify-content-center">
-					{{ $t("Connecting") }}
-					<img :src="require('@/assets/img/power/waiting-white.svg')" alt="loading" class="ml-1">
-				</button>
-			</footer>
-		</b-modal>
-	</div>
-</template>
 
 <style lang="scss">
 ._is-large {

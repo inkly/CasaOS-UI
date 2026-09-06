@@ -9,7 +9,7 @@
 
 <template>
 	<div id="login-page" class="is-flex is-justify-content-center is-align-items-center">
-		<div v-if="!isLoading" v-animate-css="initAni" :class="'step' + step" class="login-panel is-shadow">
+		<div v-if="!isLoading" v-animate-css="initAni" :class="`step${step}`" class="login-panel is-shadow">
 
 			<div v-if="step == 1" class="has-text-centered">
 				<div v-animate-css="s1Ani" class=" is-flex is-justify-content-center">
@@ -43,7 +43,7 @@
 						<b-field :label="$t('Username')" :message="errors"
 							:type="{ 'is-danger': errors[0], 'is-success': meta.valid }">
 							<b-input v-model="username" type="text"
-								v-on:keyup.enter="handleSubmit(register)"></b-input>
+								@keyup.enter="handleSubmit(register)"></b-input>
 						</b-field>
 					</VeeField>
 					<VeeField v-slot="{ errors, meta }" :model-value="password" name="password"
@@ -52,7 +52,7 @@
 							:type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
 							class="mt-4">
 							<b-input v-model="password" password-reveal type="password"
-								v-on:keyup.enter="handleSubmit(register)"></b-input>
+								@keyup.enter="handleSubmit(register)"></b-input>
 						</b-field>
 					</VeeField>
 					<VeeField v-slot="{ errors, meta }" :model-value="confirmation" name="Password Confirmation"
@@ -60,7 +60,7 @@
 						<b-field :label="$t('Confirm Password')" :message="errors"
 							:type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mt-4">
 							<b-input v-model="confirmation" password-reveal type="password"
-								v-on:keyup.enter="handleSubmit(register)"></b-input>
+								@keyup.enter="handleSubmit(register)"></b-input>
 						</b-field>
 					</VeeField>
 					<b-button class="mt-5" expanded rounded type="is-primary" @click="handleSubmit(register)">
@@ -72,7 +72,7 @@
 			<div v-if="step == 3" class="has-text-centered ">
 				<h2 class="title is-3  has-text-centered">{{ $t('All things done!') }}</h2>
 				<div class="is-flex is-align-items-center is-justify-content-center">
-					<lottie-animation :animationData="require('@/assets/ani/done.json')" :autoPlay="true" :loop="false"
+					<lottie-animation :animation-data="require('@/assets/ani/done.json')" :auto-play="true" :loop="false"
 						class="animation" @complete="complete"></lottie-animation>
 				</div>
 			</div>

@@ -1,6 +1,82 @@
+<template>
+	<div class="modal-card">
+		<!-- Modal-Card Header Start -->
+		<header class="modal-card-head">
+			<div class="is-flex-grow-1">
+				<h3 class="title is-header">
+					{{ panelTitle }}
+				</h3>
+			</div>
+			<b-icon class="close-button" icon="close-outline" pack="casa" @click="$emit('close');" />
+		</header>
+		<!-- Modal-Card Header End -->
+		<!-- Modal-Card Body Start -->
+		<section class="modal-card-body ">
+			<div class="node-card">
+				<div class="mb-0">
+					<VeeForm ref="ob1" as="span">
+						<VeeField v-slot="{ errors, meta }" :model-value="hostname" name="hostname" rules="required">
+							<b-field :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
+								class="is-flex-wrap-nowrap">
+								<template #label>
+									{{ $t('Address') }}
+									<label style="color:red">*</label>
+								</template>
+								<b-autocomplete ref="inputs" v-model="hostname" :data="filteredDataObj"
+									:placeholder="$t('Local URL,Pblic URL')" append-to-body field="hostname"
+									max-height="120px" open-on-focus />
+							</b-field>
+						</VeeField>
+
+						<div v-if="!state_hostIsExist" class="message-alert is-flex is-align-items-center">
+							<div class="left mr-2 is-flex is-align-items-center">
+								<b-icon icon="danger" pack="casa" />
+							</div>
+							<div class="main is-flex is-align-items-center">
+								{{ $t('Eg: //192.168.1.1:5000 or https://www.google.com') }}
+							</div>
+						</div>
+
+						<VeeField v-slot="{ errors, meta }" :model-value="name" name="appName" rules="required">
+							<b-field :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
+								class="is-flex-wrap-nowrap">
+								<template #label>
+									{{ $t('App Name') }}
+									<label style="color:red">*</label>
+								</template>
+								<b-input v-model="name" :disabled="disableEditName"
+									:placeholder="$t('Customize your APP name')" max-height="120px" />
+							</b-field>
+						</VeeField>
+
+						<b-field :label="$t('Icon URL')">
+							<p class="control">
+								<span class="button is-static container-icon">
+									<b-image :key="icon" :src="icon" :src-fallback="require('@/assets/img/app/default.svg')"
+										class="is-32x32" ratio="1by1" />
+								</span>
+							</p>
+							<b-input v-model="icon" :placeholder="$t('Your custom icon URL')" expanded />
+						</b-field>
+					</VeeForm>
+				</div>
+			</div>
+		</section>
+		<!-- Modal-Card Body End -->
+		<!-- Modal-Card Footer Start -->
+		<footer class="modal-card-foot is-flex is-align-items-center">
+			<div class="is-flex-grow-1"></div>
+			<div>
+				<b-button :label="$t('Connect')" :loading="isLoading" expaned rounded type="is-primary" @click="connect" />
+			</div>
+		</footer>
+		<!-- Modal-Card Footer End -->
+	</div>
+</template>
+
 <script>
-import smoothReflow from '@/mixins/smoothReflow'
 import { Field as VeeField, Form as VeeForm } from 'vee-validate'
+import smoothReflow from '@/mixins/smoothReflow'
 import Business_ShowNewAppTag from '@/mixins/app/Business_ShowNewAppTag'
 import Business_LinkApp from '@/mixins/app/Business_LinkApp'
 
@@ -86,6 +162,7 @@ export default {
 							item.icon = this.icon
 							return true
 						}
+						return false
 					})) {
 						listLinkApp = listLinkApp.concat({
 							hostname: this.hostname,
@@ -151,82 +228,6 @@ export default {
 	},
 }
 </script>
-
-<template>
-	<div class="modal-card">
-		<!-- Modal-Card Header Start -->
-		<header class="modal-card-head">
-			<div class="is-flex-grow-1">
-				<h3 class="title is-header">
-					{{ panelTitle }}
-				</h3>
-			</div>
-			<b-icon class="close-button" icon="close-outline" pack="casa" @click="$emit('close');" />
-		</header>
-		<!-- Modal-Card Header End -->
-		<!-- Modal-Card Body Start -->
-		<section class="modal-card-body ">
-			<div class="node-card">
-				<div class="mb-0">
-					<VeeForm ref="ob1" as="span">
-						<VeeField v-slot="{ errors, meta }" :model-value="hostname" name="hostname" rules="required">
-							<b-field :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
-								class="is-flex-wrap-nowrap">
-								<template #label>
-									{{ $t('Address') }}
-									<label style="color:red">*</label>
-								</template>
-								<b-autocomplete ref="inputs" v-model="hostname" :data="filteredDataObj"
-									:placeholder="$t('Local URL,Pblic URL')" append-to-body field="hostname"
-									max-height="120px" open-on-focus />
-							</b-field>
-						</VeeField>
-
-						<div v-if="!state_hostIsExist" class="message-alert is-flex is-align-items-center">
-							<div class="left mr-2 is-flex is-align-items-center">
-								<b-icon icon="danger" pack="casa" />
-							</div>
-							<div class="main is-flex is-align-items-center">
-								{{ $t('Eg: //192.168.1.1:5000 or https://www.google.com') }}
-							</div>
-						</div>
-
-						<VeeField v-slot="{ errors, meta }" :model-value="name" name="appName" rules="required">
-							<b-field :message="errors" :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
-								class="is-flex-wrap-nowrap">
-								<template #label>
-									{{ $t('App Name') }}
-									<label style="color:red">*</label>
-								</template>
-								<b-input v-model="name" :disabled="disableEditName"
-									:placeholder="$t('Customize your APP name')" max-height="120px" />
-							</b-field>
-						</VeeField>
-
-						<b-field :label="$t('Icon URL')">
-							<p class="control">
-								<span class="button is-static container-icon">
-									<b-image :key="icon" :src="icon" :src-fallback="require('@/assets/img/app/default.svg')"
-										class="is-32x32" ratio="1by1" />
-								</span>
-							</p>
-							<b-input v-model="icon" :placeholder="$t('Your custom icon URL')" expanded />
-						</b-field>
-					</VeeForm>
-				</div>
-			</div>
-		</section>
-		<!-- Modal-Card Body End -->
-		<!-- Modal-Card Footer Start -->
-		<footer class="modal-card-foot is-flex is-align-items-center">
-			<div class="is-flex-grow-1"></div>
-			<div>
-				<b-button :label="$t('Connect')" :loading="isLoading" expaned rounded type="is-primary" @click="connect" />
-			</div>
-		</footer>
-		<!-- Modal-Card Footer End -->
-	</div>
-</template>
 
 <style lang="scss" scoped>
 .modal-card {

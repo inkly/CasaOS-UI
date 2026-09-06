@@ -1,10 +1,8 @@
+const process = require('node:process')
 const webpack = require('webpack')
-const path = require('path')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
-const dotenv = require('dotenv')
 
 const isProd = process.env.NODE_ENV === 'production'
-const TerserPlugin = require('terser-webpack-plugin')
 
 module.exports = {
 	publicPath: '/',

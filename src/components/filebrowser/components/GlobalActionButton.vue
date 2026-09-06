@@ -10,7 +10,7 @@
 -->
 <template>
 	<div class="action-btn">
-		<b-dropdown ref="moreBtn" :mobile-modal="false" :triggers="['click', 'context']" animation="fade1"
+		<b-dropdown :mobile-modal="false" :triggers="['click', 'context']" animation="fade1"
 			append-to-body aria-role="list" class="file-dropdown" close-on-click position="is-bottom-right">
 			<template #trigger>
 				<b-button :label="$t('Upload or Create')" class="mr-2" icon-left="book-arrow-up" rounded

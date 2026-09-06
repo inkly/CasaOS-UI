@@ -1,13 +1,11 @@
+import {
+	AppStoreMethodsApi,
+	ComposeMethodsApiFactory,
+	Configuration,
+	InternalMethodsApiFactory,
+} from '@icewhale/casaos-appmanagement-openapi'
 import { instance } from '@/service/service'
 // app_management
-import {
-	Configuration,
-	ComposeMethodsApiFactory,
-	InternalMethodsApiFactory,
-	AppStoreMethodsApiFactory,
-	AppStoreMethodsApiFp,
-	AppStoreMethodsApi,
-} from '@icewhale/casaos-appmanagement-openapi'
 
 // 初始化 openapi 配置
 const config = new Configuration({})

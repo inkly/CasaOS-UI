@@ -28,7 +28,7 @@
 					<b-button :type="type" class="width" rounded size="is-small"
 						@click="showStorageSettingsModal">{{ $t('Merge Storages') }}
 					</b-button>
-					<cToolTip isBlock modal="is-success"></cToolTip>
+					<cToolTip is-block modal="is-success"></cToolTip>
 				</div>
 				<p v-if="usePercent >= 80" class="has-text-right">
 					<a rel="noopener" href="https://wiki.casaos.io/zh/guides" target="_blank">{{ $t("Free up storage") }}</a>
@@ -49,7 +49,7 @@ export default {
 	name: 'storage-combination',
 	mixins: [mixin],
 	components: {
-		cToolTip,
+		CToolTip: cToolTip,
 	},
 	props: {
 		storageData: {

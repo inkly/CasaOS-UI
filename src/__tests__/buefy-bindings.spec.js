@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { readdirSync, readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
@@ -32,8 +32,9 @@ const sources = collect(src)
 // Tags whose own `value` prop survives 3.1.0 and never was a v-model.
 const valueIsItsOwnProp = new Set(['b-progress', 'b-tab-item', 'b-dropdown-item', 'b-slider-tick'])
 
-const isDirective = (prop, name, arg) =>
-	prop.type === 7 && prop.name === name && prop.arg?.content === arg
+function isDirective(prop, name, arg) {
+	return prop.type === 7 && prop.name === name && prop.arg?.content === arg
+}
 
 function inspect(node, file, found) {
 	if (node.type === 1 && node.tag.startsWith('b-')) {

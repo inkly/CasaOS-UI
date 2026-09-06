@@ -59,7 +59,7 @@ export default {
 	},
 	methods: {
 		create() {
-			let path = `${this.initPath}/${this.name}`
+			const path = `${this.initPath}/${this.name}`
 			if (this.isDir) {
 				this.$api.folder.create(path).then((res) => {
 					if (res.data.success == 200) {

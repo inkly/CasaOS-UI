@@ -72,7 +72,7 @@
 
 		<!-- Player Start -->
 		<div class=" v-container pl-4 pr-4">
-			<viewer ref="viewer" :images="currentItemArray" :options="viewerOptions" class="viewer" @inited="inited">
+			<viewer :images="currentItemArray" :options="viewerOptions" class="viewer" @inited="inited">
 				<template #default="scope">
 					<img alt="image" v-for="src in scope.images" :key="src" :src="src">
 				</template>
@@ -84,9 +84,9 @@
 </template>
 
 <script>
+import { component as Viewer } from 'v-viewer'
 import { mixin } from '@/mixins/mixin'
 import 'viewerjs/dist/viewer.css'
-import { component as Viewer } from 'v-viewer'
 
 const XIMAGES = ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp', 'svg', 'tiff']
 export default {
@@ -182,7 +182,7 @@ export default {
 		filterImages() {
 			this.itemList = this.list.filter((item) => {
 				const ext = this.getFileExt(item)
-				return (!item.is_dir && XIMAGES.indexOf(ext.toLowerCase()) > -1)
+				return (!item.is_dir && XIMAGES.includes(ext.toLowerCase()))
 			})
 		},
 		getCurrentImageIndex() {

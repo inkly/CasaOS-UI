@@ -37,8 +37,8 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin'
 import VueOfficePdf from '@vue-office/pdf'
+import { mixin } from '@/mixins/mixin'
 
 export default {
 	mixins: [mixin],

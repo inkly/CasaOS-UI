@@ -10,7 +10,7 @@
 -->
 <template>
 	<div class="action-btn">
-		<b-dropdown :id="'dr-' + index" ref="dropDown" :position="'is-' + verticalPos + '-left'" animation="fade1" append-to-body
+		<b-dropdown :id="`dr-${index}`" :position="`is-${verticalPos}-left`" animation="fade1" append-to-body
 			aria-role="list" class="file-dropdown" close-on-click>
 			<template #trigger>
 				<p role="button">
@@ -63,7 +63,7 @@ export default {
 					},
 				},
 				props: {
-					item: item,
+					item,
 				},
 			})
 		},

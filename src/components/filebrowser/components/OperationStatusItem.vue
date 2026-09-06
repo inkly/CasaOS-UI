@@ -48,7 +48,7 @@ export default {
 		},
 		progressBarStyle() {
 			return {
-				width: (100 * this.progress).toString() + '%',
+				width: `${(100 * this.progress).toString()}%`,
 			}
 		},
 		opType() {

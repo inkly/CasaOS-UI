@@ -53,7 +53,8 @@ export default {
 		},
 		updateLogText() {
 			// The installer writes plain text; drop the colour codes a sub-command may leave behind.
-			return this.updateLogs.replace(/\u001b\[[0-9;]*m/g, '')
+			// eslint-disable-next-line no-control-regex -- strips ANSI colour codes from the update log
+			return this.updateLogs.replace(/\u001B\[[0-9;]*m/g, '')
 		},
 	},
 	watch: {

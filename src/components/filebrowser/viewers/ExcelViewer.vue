@@ -37,8 +37,8 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin'
 import VueOfficeExcel from '@vue-office/excel'
+import { mixin } from '@/mixins/mixin'
 import '@vue-office/excel/lib/index.css'
 
 export default {

@@ -1,3 +1,127 @@
+<template>
+	<div class="common-card is-flex is-align-items-center is-justify-content-center  app-card"
+		@mouseleave="hover = true" @mouseover="hover = true">
+		<!-- Action Button Start -->
+		<div v-if="item.app_type !== 'system' && !isContainerApp && !isUninstalling" class="action-btn">
+			<b-dropdown ref="dro" :mobile-modal="false" :triggers="['contextmenu', 'click']" animation="fade1"
+				append-to-body aria-role="list" class="app-card-drop" :position="dropdownPosition"
+				@active-change="setDropState">
+				<template #trigger>
+					<p role="button" @click="handleDorpdownPosition">
+						<b-icon class="is-clickable" icon="dots-vertical-outline" pack="casa" />
+					</p>
+				</template>
+
+				<b-dropdown-item :focusable="false" aria-role="menu-item" custom>
+					<b-button v-if="item.status === 'running'" expanded tag="a" type="is-text" @click="openApp(item)">
+						{{
+							$t('Open') }}
+					</b-button>
+					<b-button v-else expanded tag="a" type="is-text" @click="openApp(item)">
+						{{
+							$t('launch-and-open') }}
+					</b-button>
+					<b-button v-if="isV2App" expanded icon-pack="casa" icon-right="question-outline" size="is-16"
+						type="is-text" @click="openTips(item.name)">
+						{{ $t('Tips') }}
+					</b-button>
+					<b-button v-if="isV2App || isLinkApp" expanded type="is-text" @click="configApp()">
+						{{
+							$t('Setting')
+						}}
+					</b-button>
+
+					<b-button v-if="isV2App && !item.is_uncontrolled" expanded type="is-text" @click="checkAppVersion(item.name)">
+						{{
+							$t('Check then update')
+						}}
+						<b-loading :active="isCheckThenUpdate || isUpdating" :is-full-page="false">
+							<img :src="require('@/assets/img/loading/waiting.svg')" alt="pending" class="ml-4 is-24x24">
+						</b-loading>
+					</b-button>
+
+					<b-button v-if="isV1App" expanded type="is-text" @click="exportYAML(item)">
+						{{
+							$t('Export as Compose')
+						}}
+					</b-button>
+
+					<b-button v-if="isV1App" :loading="isRebuilding" expanded type="is-text" @click="rebuild(item)">
+						{{
+							$t('Rebuild')
+						}}
+					</b-button>
+
+					<b-button v-if="isLinkApp" class="mb-1" expanded type="is-text" @click="uninstallApp(true)">
+						{{ $t('Delete') }}
+						<b-loading v-model="isUninstalling" :is-full-page="false">
+							<img :src="require('@/assets/img/loading/waiting.svg')" alt="pending" class="ml-4 is-24x24">
+						</b-loading>
+					</b-button>
+					<b-button v-else class="has-text-red" expanded type="is-text" @click="uninstallConfirm">
+						{{ $t('Uninstall') }}
+						<b-loading v-model="isUninstalling" :is-full-page="false">
+							<img :src="require('@/assets/img/loading/waiting.svg')" alt="pending" class="ml-4 is-24x24">
+						</b-loading>
+					</b-button>
+
+					<div v-if="!isLinkApp" class="gap">
+						<div class="columns is-gapless _b-bor is-flex">
+							<div class="column is-flex is-justify-content-center is-align-items-center">
+								<b-button :loading="isRestarting" expanded type="is-text" :disabled="item.status !== 'running'"
+									@click="restartApp">
+									<b-icon custom-size="is-size-20px" icon="restart-outline" pack="casa" />
+								</b-button>
+							</div>
+							<div class="column is-flex is-justify-content-center is-align-items-center">
+								<b-button :class="item.status" :loading="isStarting" class="has-text-red" expanded
+									type="is-text" @click="toggle(item)">
+									<b-icon custom-size="is-size-20px" icon="shutdown-outline" pack="casa"
+										:custom-class="shutDownClass" />
+								</b-button>
+							</div>
+						</div>
+					</div>
+				</b-dropdown-item>
+			</b-dropdown>
+		</div>
+		<!-- Action Button End -->
+		<div class="blur-background"></div>
+		<div class="cards-content">
+			<!-- Card Content Start -->
+			<b-tooltip :always="isActiveTooltip" :animated="true" :label="tooltipLabel" :triggers="tooltipTriger"
+				animation="fade1" class="in-card" type="is-white">
+				<div class="has-text-centered is-flex is-justify-content-center is-flex-direction-column pt-5 pb-3px img-c">
+					<div class="is-flex is-justify-content-center">
+						<div class="is-relative">
+							<b-image :class="dotClass(item.status, isLoading)" :src="item.icon"
+								:src-fallback="require('@/assets/img/app/default.svg')" class="is-64x64"
+								webp-fallback=".jpg" @click="openApp(item)" />
+							<!-- Unstable -->
+							<CTooltip v-if="newAppIds.includes(item.name)" class="__position" content="NEW" />
+						</div>
+
+						<!-- Loading Bar Start -->
+						<b-loading :active="isLoading" :can-cancel="false" :is-full-page="false"
+							class="has-background-gray-800 op80 is-64x64"
+							style="top: auto;bottom: auto; right: auto; left: auto; border-radius: 11.5px">
+							<img :src="require('@/assets/img/loading/waiting-white.svg')" alt="loading" class="is-20x20">
+						</b-loading>
+						<!-- Loading Bar End -->
+					</div>
+
+					<p class="mt-3 one-line">
+						<a class="one-line" style="cursor:default">
+							{{ i18n(item.title) }}
+						</a>
+					</p>
+				</div>
+			</b-tooltip>
+			<!-- Card Content End -->
+		</div>
+	</div>
+</template>
+
 <script>
 import isNull from 'lodash/isNull'
 import YAML from 'yaml'
@@ -668,130 +792,6 @@ export default {
 
 }
 </script>
-
-<template>
-	<div class="common-card is-flex is-align-items-center is-justify-content-center  app-card"
-		@mouseleave="hover = true" @mouseover="hover = true">
-		<!-- Action Button Start -->
-		<div v-if="item.app_type !== 'system' && !isContainerApp && !isUninstalling" class="action-btn">
-			<b-dropdown ref="dro" :mobile-modal="false" :triggers="['contextmenu', 'click']" animation="fade1"
-				append-to-body aria-role="list" class="app-card-drop" :position="dropdownPosition"
-				@active-change="setDropState">
-				<template #trigger>
-					<p role="button" @click="handleDorpdownPosition">
-						<b-icon class="is-clickable" icon="dots-vertical-outline" pack="casa" />
-					</p>
-				</template>
-
-				<b-dropdown-item :focusable="false" aria-role="menu-item" custom>
-					<b-button v-if="item.status === 'running'" expanded tag="a" type="is-text" @click="openApp(item)">
-						{{
-							$t('Open') }}
-					</b-button>
-					<b-button v-else expanded tag="a" type="is-text" @click="openApp(item)">
-						{{
-							$t('launch-and-open') }}
-					</b-button>
-					<b-button v-if="isV2App" expanded icon-pack="casa" icon-right="question-outline" size="is-16"
-						type="is-text" @click="openTips(item.name)">
-						{{ $t('Tips') }}
-					</b-button>
-					<b-button v-if="isV2App || isLinkApp" expanded type="is-text" @click="configApp()">
-						{{
-							$t('Setting')
-						}}
-					</b-button>
-
-					<b-button v-if="isV2App && !item.is_uncontrolled" expanded type="is-text" @click="checkAppVersion(item.name)">
-						{{
-							$t('Check then update')
-						}}
-						<b-loading :active="isCheckThenUpdate || isUpdating" :is-full-page="false">
-							<img :src="require('@/assets/img/loading/waiting.svg')" alt="pending" class="ml-4 is-24x24">
-						</b-loading>
-					</b-button>
-
-					<b-button v-if="isV1App" expanded type="is-text" @click="exportYAML(item)">
-						{{
-							$t('Export as Compose')
-						}}
-					</b-button>
-
-					<b-button v-if="isV1App" :loading="isRebuilding" expanded type="is-text" @click="rebuild(item)">
-						{{
-							$t('Rebuild')
-						}}
-					</b-button>
-
-					<b-button v-if="isLinkApp" class="mb-1" expanded type="is-text" @click="uninstallApp(true)">
-						{{ $t('Delete') }}
-						<b-loading v-model="isUninstalling" :is-full-page="false">
-							<img :src="require('@/assets/img/loading/waiting.svg')" alt="pending" class="ml-4 is-24x24">
-						</b-loading>
-					</b-button>
-					<b-button v-else class="has-text-red" expanded type="is-text" @click="uninstallConfirm">
-						{{ $t('Uninstall') }}
-						<b-loading v-model="isUninstalling" :is-full-page="false">
-							<img :src="require('@/assets/img/loading/waiting.svg')" alt="pending" class="ml-4 is-24x24">
-						</b-loading>
-					</b-button>
-
-					<div v-if="!isLinkApp" class="gap">
-						<div class="columns is-gapless _b-bor is-flex">
-							<div class="column is-flex is-justify-content-center is-align-items-center">
-								<b-button :loading="isRestarting" expanded type="is-text" :disabled="item.status !== 'running'"
-									@click="restartApp">
-									<b-icon custom-size="is-size-20px" icon="restart-outline" pack="casa" />
-								</b-button>
-							</div>
-							<div class="column is-flex is-justify-content-center is-align-items-center">
-								<b-button :class="item.status" :loading="isStarting" class="has-text-red" expanded
-									type="is-text" @click="toggle(item)">
-									<b-icon custom-size="is-size-20px" icon="shutdown-outline" pack="casa"
-										:custom-class="shutDownClass" />
-								</b-button>
-							</div>
-						</div>
-					</div>
-				</b-dropdown-item>
-			</b-dropdown>
-		</div>
-		<!-- Action Button End -->
-		<div class="blur-background"></div>
-		<div class="cards-content">
-			<!-- Card Content Start -->
-			<b-tooltip :always="isActiveTooltip" :animated="true" :label="tooltipLabel" :triggers="tooltipTriger"
-				animation="fade1" class="in-card" type="is-white">
-				<div class="has-text-centered is-flex is-justify-content-center is-flex-direction-column pt-5 pb-3px img-c">
-					<div class="is-flex is-justify-content-center">
-						<div class="is-relative">
-							<b-image :class="dotClass(item.status, isLoading)" :src="item.icon"
-								:src-fallback="require('@/assets/img/app/default.svg')" class="is-64x64"
-								webp-fallback=".jpg" @click="openApp(item)" />
-							<!-- Unstable -->
-							<CTooltip v-if="newAppIds.includes(item.name)" class="__position" content="NEW" />
-						</div>
-
-						<!-- Loading Bar Start -->
-						<b-loading :active="isLoading" :can-cancel="false" :is-full-page="false"
-							class="has-background-gray-800 op80 is-64x64"
-							style="top: auto;bottom: auto; right: auto; left: auto; border-radius: 11.5px">
-							<img :src="require('@/assets/img/loading/waiting-white.svg')" alt="loading" class="is-20x20">
-						</b-loading>
-						<!-- Loading Bar End -->
-					</div>
-
-					<p class="mt-3 one-line">
-						<a class="one-line" style="cursor:default">
-							{{ i18n(item.title) }}
-						</a>
-					</p>
-				</div>
-			</b-tooltip>
-			<!-- Card Content End -->
-		</div>
-	</div>
-</template>
 
 <style lang="scss">
 .pb-3px {

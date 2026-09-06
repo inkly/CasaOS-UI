@@ -58,7 +58,6 @@ const widgetsComponents = require.context(
 )
 
 export default {
-	// eslint-disable-next-line vue/multi-word-component-names
 	name: 'settings',
 	data() {
 		return {
@@ -103,13 +102,13 @@ export default {
 	},
 	methods: {
 		getIcon(value) {
-			let obj = find(this.apps, (o) => {
+			const obj = find(this.apps, (o) => {
 				return o.app.default.name === value
 			})
 			return obj.app.default.icon
 		},
 		getTitle(value) {
-			let obj = find(this.apps, (o) => {
+			const obj = find(this.apps, (o) => {
 				return o.app.default.name === value
 			})
 			return obj.app.default.title

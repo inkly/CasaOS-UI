@@ -1,17 +1,17 @@
 import 'intersection-observer'
 import { createApp } from 'vue'
+import Buefy from 'buefy'
+import VueFullscreen from 'vue-fullscreen'
+import VueDOMPurifyHTML from 'vue-dompurify-html'
 import App from '@/App.vue'
 import router from '@/router'
 import store from '@/store'
 import i18n from '@/plugins/i18n'
 import api from '@/service/api.js'
 import openAPI from '@/service/index.js'
-import Buefy from 'buefy'
-import VueFullscreen from 'vue-fullscreen'
 import socketPlugin from '@/plugins/socket.js'
 import createEventBus from '@/events/eventBus.js'
 import messageBus from '@/events/index.js'
-import VueDOMPurifyHTML from 'vue-dompurify-html'
 // vee-validate 4 throws `No such validator '<name>' exists.` for a rule nobody
 // registered, so the rules are defined once here instead of by whichever form
 // happens to be imported first. Ports.vue and StorageManagerPanel.vue name
@@ -38,7 +38,6 @@ const localhost = document.location.host
 const localhostName = document.location.hostname
 const baseIp = isDev ? `${devIp}` : `${localhostName}`
 const baseURL = isDev ? `${devIp}:${devPort}` : `${localhost}`
-const wsURL = `${wsProtocol}//${baseURL}`
 
 const socket = io({
 	transports: ['websocket', 'polling'],

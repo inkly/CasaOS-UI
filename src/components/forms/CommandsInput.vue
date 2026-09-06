@@ -12,7 +12,7 @@
 			</span>
 		</div>
 
-		<div class="port-item  mr-4" v-for="(item, index) in items" :key="'port' + index">
+		<div class="port-item  mr-4" v-for="(item, index) in items" :key="`port${index}`">
 			<b-icon icon="close-outline" pack="casa" size="is-small" class="is-clickable"
 				@click="removeItem(index)"></b-icon>
 			<b-field expanded>

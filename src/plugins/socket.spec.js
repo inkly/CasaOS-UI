@@ -43,7 +43,7 @@ describe('socket plugin', () => {
 		const wrapper = mountWith(socket, {
 			data: () => ({ widget: 'cpu' }),
 			sockets: {
-				'casaos:system:utilization'(res) {
+				'casaos:system:utilization': function (res) {
 					seen.push([this.widget, res])
 				},
 			},

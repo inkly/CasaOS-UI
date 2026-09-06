@@ -1,7 +1,7 @@
 <template>
 	<h1 class="has-text-grey-100 is-flex-shrink-1 is-flex-grow-1 ml-2 mb-0 contextmenu-canvas home-app-tip">
 		<b-tooltip :active="active" always position="is-right" type="is-dark">
-			<template v-slot:content>
+			<template #content>
 				<div class="mr-1">{{ $t(label) }}</div>
 				<div class="is-clickable" @click="hideTip">
 					<b-icon icon="close-xs-outline" pack="casa"></b-icon>

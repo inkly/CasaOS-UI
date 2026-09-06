@@ -1,24 +1,23 @@
 <template>
 	<div class="ul">
 		<!-- Root List Start -->
-		<tree-list-item v-for="item in rootDataList" :key="item.path" :isActive="isActive" :item="item"
-			iconColor="casa-color-blue"></tree-list-item>
+		<tree-list-item v-for="item in rootDataList" :key="item.path" :is-active="isActive" :item="item"
+			icon-color="casa-color-blue"></tree-list-item>
 		<!-- Root List End -->
 
 		<!-- Data List Start -->
-		<tree-list-item v-for="item in dataList" :key="item.path" :isActive="isActive" :isShare="checkSharevisibility(item)"
-			:item="item" iconColor="casa-color-blue"></tree-list-item>
+		<tree-list-item v-for="item in dataList" :key="item.path" :is-active="isActive" :is-share="checkSharevisibility(item)"
+			:item="item" icon-color="casa-color-blue"></tree-list-item>
 		<!-- Data List End -->
 
 	</div>
 </template>
 
 <script>
+import has from 'lodash/has'
+import TreeListItem from './TreeListItem.vue'
 import { mixin } from '@/mixins/mixin'
 import events from '@/events/events'
-import has from 'lodash/has'
-
-import TreeListItem from './TreeListItem.vue'
 
 export default {
 	mixins: [mixin],
@@ -130,7 +129,7 @@ export default {
 			this.shortcutList = this.$store.state.shortcutData
 
 			this.dataList = [...this.initFolders, ...this.shortcutList]
-			let contactList = []
+			const contactList = []
 			contactList.push(...newList.data.data.content, ...dataList.data.data.content, ...this.shortcutList)
 			this.dataList.forEach((dir) => {
 				dir.icon = dir.icon == 'folder' ? 'folder-outline' : dir.icon

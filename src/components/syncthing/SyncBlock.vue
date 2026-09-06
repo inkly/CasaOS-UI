@@ -136,10 +136,10 @@ export default {
 
 	},
 	sockets: {
-		'app:install-end'() {
+		'app:install-end': function () {
 			this.checkSyncStatus()
 		},
-		'app:install-error'() {
+		'app:install-error': function () {
 			this.checkSyncStatus()
 		},
 	},

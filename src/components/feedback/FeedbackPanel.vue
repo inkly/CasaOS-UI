@@ -74,11 +74,11 @@ export default {
 			const option = {
 				labels: 'feedback',
 				template: 'feedback.yml',
-				title: '[Feedback]' + this.postTitle,
+				title: `[Feedback]${this.postTitle}`,
 				description: this.postBody,
 				additional: this.feedBody,
 			}
-			let repoUrl = new URL(`https://github.com/IceWhaleTech/CasaOS/issues/new`)
+			const repoUrl = new URL(`https://github.com/IceWhaleTech/CasaOS/issues/new`)
 			for (const optionElement in option) {
 				repoUrl.searchParams.set(optionElement, option[optionElement])
 			}

@@ -98,9 +98,9 @@ export default {
 		composeData: {
 			handler() {
 				// Get tips in compose.
-				let getValueByPath = this.composeData['x-casaos']
-				if (getValueByPath?.['tips']?.['custom'] || getValueByPath?.['tips']?.['before_install']) {
-					this.tips = getValueByPath['tips']['custom'] || ice_i18n(getValueByPath['tips']['before_install'])
+				const getValueByPath = this.composeData['x-casaos']
+				if (getValueByPath?.tips?.custom || getValueByPath?.tips?.before_install) {
+					this.tips = getValueByPath.tips.custom || ice_i18n(getValueByPath.tips.before_install)
 				} else {
 					this.tips = ''
 				}
@@ -129,7 +129,7 @@ export default {
 			// 更新
 			// TODO 因为异步，不清楚是否保存成功
 			this.tempTips = this.tips
-			let realComposeData = this.getCompleteComposeData()
+			const realComposeData = this.getCompleteComposeData()
 			this.$openAPI.appManagement.compose.applyComposeAppSettings(this.name, YAML.stringify(realComposeData)).then((res) => {
 				if (res.status === 200) {
 					this.$buefy.toast.open({
@@ -160,7 +160,7 @@ export default {
 				body.push({value, content: {default: content}});
 			}); */
 
-			let result = merge(this.composeData, {
+			const result = merge(this.composeData, {
 				'x-casaos': {
 					tips: {
 						custom: this.tips,

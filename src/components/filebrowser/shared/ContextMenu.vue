@@ -11,8 +11,8 @@
 <template>
 	<div>
 
-		<div :style="{ top: y + 'px', left: x + 'px' }" class="action-btn context-menu">
-			<b-dropdown id="'dr-share'" ref="dropDown" :animation="ani" :position="'is-' + verticalPos + '-' + horizontalPos" append-to-body
+		<div :style="{ top: `${y}px`, left: `${x}px` }" class="action-btn context-menu">
+			<b-dropdown id="'dr-share'" ref="dropDown" :animation="ani" :position="`is-${verticalPos}-${horizontalPos}`" append-to-body
 				aria-role="list" class="file-dropdown" close-on-click>
 				<b-dropdown-item aria-role="menuitem" @click="getShareLink(item)">
 					{{ $t('Get Share Link') }}
@@ -31,9 +31,9 @@
 </template>
 
 <script>
+import ShareDetial from './ShareDetial.vue'
 import { mixin } from '@/mixins/mixin'
 import events from '@/events/events'
-import ShareDetial from './ShareDetial.vue'
 
 export default {
 	mixins: [mixin],
@@ -70,7 +70,7 @@ export default {
 				scroll: 'keep',
 				animation: 'zoom-in',
 				props: {
-					item: item,
+					item,
 				},
 			})
 		},

@@ -16,8 +16,8 @@ export default function messageBus(name, params) {
 	}
 	try {
 		message_bus[name](params).then((res) => {
-			let properties = res.properties
-			let eventName = res.name
+			const properties = res.properties
+			const eventName = res.name
 			api.post(`/v2/message_bus/event/casaos-ui/${eventName}`, properties)
 		})
 	} catch (error) {

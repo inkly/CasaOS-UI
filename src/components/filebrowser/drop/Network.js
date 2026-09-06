@@ -65,7 +65,7 @@ export class ServerConnection {
 	}
 
 	deleteSelf(peers) {
-		peers.forEach((element) => {
+		peers.forEach(() => {
 			// element.rtcSupported = true
 		})
 		return peers
@@ -88,7 +88,7 @@ export class ServerConnection {
 		// hack to detect if deployment or development environment
 		const protocol = location.protocol.startsWith('https') ? 'wss' : 'ws'
 		const webrtc = window.isRtcSupported ? '/webrtc' : '/fallback'
-		const url = protocol + '://localhost:3000' + location.pathname + 'server' + webrtc
+		const url = `${protocol}://localhost:3000${location.pathname}server${webrtc}`
 		return url
 	}
 
@@ -166,11 +166,11 @@ export class Peer {
 	}
 
 	_onPartitionEnd(offset) {
-		this.sendJSON({ type: 'partition', offset: offset })
+		this.sendJSON({ type: 'partition', offset })
 	}
 
 	_onReceivedPartitionEnd(offset) {
-		this.sendJSON({ type: 'partition-received', offset: offset })
+		this.sendJSON({ type: 'partition-received', offset })
 	}
 
 	_sendNextPartition() {
@@ -180,7 +180,7 @@ export class Peer {
 	}
 
 	_sendProgress(progress) {
-		this.sendJSON({ type: 'progress', progress: progress })
+		this.sendJSON({ type: 'progress', progress })
 	}
 
 	_onMessage(message) {
@@ -239,7 +239,7 @@ export class Peer {
 	_onDownloadProgress(progress) {
 		this.bus.$emit('file-progress', {
 			sender: this._peerId,
-			progress: progress,
+			progress,
 			filesQueue: this._filesQueue.length + 1,
 			files: this._files,
 		})
@@ -248,7 +248,7 @@ export class Peer {
 	_onFileReceived(proxyFile, from) {
 		const file = {
 			file: proxyFile,
-			from: from,
+			from,
 		}
 		this.bus.$emit('file-received', file)
 		this.sendJSON({ type: 'transfer-complete' })
@@ -302,7 +302,7 @@ class RTCPeer extends Peer {
 		this._conn.oniceconnectionstatechange = e => this._onIceConnectionStateChange(e)
 	}
 
-	_closeConnection(e) {
+	_closeConnection() {
 		if (!this._conn)
 			return
 		this._conn.close()
@@ -565,18 +565,18 @@ class FileDigester {
 		this._bytesReceived += chunk.byteLength || chunk.size
 		// const totalChunks = this._buffer.length;
 		this.progress = this._bytesReceived / this._size
-		if (isNaN(this.progress))
+		if (Number.isNaN(Number(this.progress)))
 			this.progress = 1
 
 		if (this._bytesReceived < this._size)
 			return
 		// we are done
-		let blob = new Blob(this._buffer, { type: this._mime })
+		const blob = new Blob(this._buffer, { type: this._mime })
 		this._callback({
 			name: this._name,
 			mime: this._mime,
 			size: this._size,
-			blob: blob,
+			blob,
 		})
 	}
 }

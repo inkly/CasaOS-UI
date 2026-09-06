@@ -9,7 +9,7 @@
 			<div class="is-flex-grow-1">
 				<b-tabs :animated="false" @update:model-value="onInput">
 					<b-tab-item :label="$t('Terminal')" value="terminal">
-						<terminal-card ref="terminal" :initWsUrl="wsUrl"></terminal-card>
+						<terminal-card ref="terminal" :init-ws-url="wsUrl"></terminal-card>
 					</b-tab-item>
 					<b-tab-item :label="$t('Logs')" value="logs">
 						<logs-card ref="logs" :data="logData"></logs-card>

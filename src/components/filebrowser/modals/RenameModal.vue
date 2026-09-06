@@ -17,7 +17,7 @@
 					</div>
 				</div>
 				<b-field :message="errors" :type="errorType" class="mb-3 mt-5 has-text-light" expanded>
-					<b-input ref="rinput" v-model="fileName" v-on:keyup.enter="saveNewName"
+					<b-input ref="rinput" v-model="fileName" @keyup.enter="saveNewName"
 						@update:model-value="fileName = fileName.replace(/\//g, '')"></b-input>
 				</b-field>
 			</div>
@@ -36,8 +36,8 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin'
 import path from 'path'
+import { mixin } from '@/mixins/mixin'
 
 export default {
 	mixins: [mixin],
@@ -59,7 +59,7 @@ export default {
 
 	methods: {
 		saveNewName() {
-			let newPath = path.join(this.$store.state.currentPath, this.fileName)
+			const newPath = path.join(this.$store.state.currentPath, this.fileName)
 			if (this.item.name === this.fileName) {
 				this.$emit('close')
 				return false

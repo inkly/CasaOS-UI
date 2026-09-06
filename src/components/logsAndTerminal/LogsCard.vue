@@ -62,8 +62,8 @@ export default {
 			}
 		},
 		srcollToBottom() {
-			let logs = document.getElementById('logs')
-			let logsConetent = document.querySelector('#logs .content')
+			const logs = document.getElementById('logs')
+			const logsConetent = document.querySelector('#logs .content')
 			this.$nextTick(() => {
 				logs.scrollTo(0, logsConetent.clientHeight)
 			})

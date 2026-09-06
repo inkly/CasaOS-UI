@@ -10,7 +10,7 @@
 -->
 <template>
 	<div>
-		<div :class="{ active: active }"
+		<div :class="{ active }"
 			class="is-flex list-item new-list-item"
 			@click.prevent="$emit('open');$messageBus('files_filesdrop_tab')">
 			<div

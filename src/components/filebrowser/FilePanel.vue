@@ -30,7 +30,7 @@
 									</div>
 								</div>
 								<div class="list-container scrollbars-light pt-0 is-flex-grow-1">
-									<tree-list ref="navBar" :autoLoad="true" :isActive="pageType == `file`"
+									<tree-list :auto-load="true" :is-active="pageType == `file`"
 										:path="rootPath"></tree-list>
 								</div>
 							</div>
@@ -50,8 +50,8 @@
 								</div>
 
 								<div class="list-container pt-0 is-flex-grow-1">
-									<mount-list ref="mountedList" :autoLoad="true"
-										:hasMergerFunction="hasMergerFunction" :isActive="pageType == `file`"
+									<mount-list :auto-load="true"
+										:has-merger-function="hasMergerFunction" :is-active="pageType == `file`"
 										:path="rootPath"></mount-list>
 								</div>
 							</div>
@@ -164,7 +164,7 @@
 								</div>
 								<!-- Drag and Drop Mask End -->
 
-								<component :is="listView" ref="listview" :list-data="listData" :isLoading="isLoading"
+								<component :is="listView" ref="listview" :list-data="listData" :is-loading="isLoading"
 									@change="handelListChange" @gotoFolder="getFileList" @reload="reload"
 									@showDetailModal="showDetailModal">
 									<empty-holder v-if="isEmpty" @newFile="showNewFileModal"
@@ -176,7 +176,7 @@
 
 							<!-- Upload List Start -->
 							<div v-show="showUploadList" class="upload-list">
-								<b-collapse ref="uploadList" v-model="openUploadList" animation="slide1"
+								<b-collapse v-model="openUploadList" animation="slide1"
 									aria-id="contentIdForA11y3" class="card">
 									<template #trigger>
 										<div :aria-expanded="openUploadList" aria-controls="contentIdForA11y3"
@@ -216,7 +216,7 @@
 
 				<!-- Drop Page Start -->
 				<template v-else-if="pageType == `drop`">
-					<drop-page ref="dropPage" @close="$emit('close')"></drop-page>
+					<drop-page @close="$emit('close')"></drop-page>
 				</template>
 				<!-- Drop Page End -->
 				<!-- Main Content End -->
@@ -233,11 +233,6 @@
 import { defineAsyncComponent } from 'vue'
 import orderBy from 'lodash/orderBy'
 import dropRight from 'lodash/dropRight'
-
-import { mixin } from '@/mixins/mixin'
-import { filterHiddenFiles } from '@/mixins/file_utils'
-import VueBreakpointMixin from '@/mixins/breakpoint'
-import events from '@/events/events'
 
 import TreeList from './sidebar/TreeList.vue'
 import MountList from './sidebar/MountList.vue'
@@ -267,10 +262,14 @@ import OperationStatusBar from './components/OperationStatusBar.vue'
 import GlobalActionButton from './components/GlobalActionButton.vue'
 import MountActionButton from './components/MountActionButton.vue'
 // storage settings requirement document
+import DropEntryButton from './drop/DropEntryButton.vue'
 import MergeStorages from '@/components/Storage/MergeStorages.vue'
 
 // Drop
-import DropEntryButton from './drop/DropEntryButton.vue'
+import events from '@/events/events'
+import VueBreakpointMixin from '@/mixins/breakpoint'
+import { filterHiddenFiles } from '@/mixins/file_utils'
+import { mixin } from '@/mixins/mixin'
 
 const SHOW_HIDDEN_FILES_STORAGE_KEY = 'casaos-filebrowser-show-hidden-files'
 
@@ -377,7 +376,7 @@ export default {
 		}
 		// get merge info
 		try {
-			let hasMergeState = await this.$api.local_storage
+			const hasMergeState = await this.$api.local_storage
 				.getMergerfsInfo()
 				.then(res => res.status)
 			this.hasMergerFunction = hasMergeState == 200
@@ -550,7 +549,7 @@ export default {
 		 * @return {*}
 		 */
 		init(path) {
-			let initPath = path || this.rootPath
+			const initPath = path || this.rootPath
 			if (this.isCreated) {
 				this.getFileList(initPath)
 				// this.$refs.mountedList.getStorageList();
@@ -561,7 +560,7 @@ export default {
 
 		/**
 		 * @description: Get File Tree List
-		 * @param {String} path
+		 * @param {string} path
 		 * @return {*}
 		 */
 		getFileList(path) {
@@ -720,11 +719,11 @@ export default {
 		backLevel() {
 			if (this.isModalOpen)
 				return false
-			let pathArr = this.$store.state.currentPath.substr(1).split('/')
+			const pathArr = this.$store.state.currentPath.substr(1).split('/')
 			if (pathArr.length == 1) {
 				return false
 			}
-			let newPath = '/' + dropRight(pathArr).join('/')
+			const newPath = `/${dropRight(pathArr).join('/')}`
 			this.getFileList(newPath)
 		},
 
@@ -736,7 +735,7 @@ export default {
 			if (this.$store.state.operateObject == null)
 				return false
 			this.isPasting = true
-			let operateObject = this.$store.state.operateObject
+			const operateObject = this.$store.state.operateObject
 			operateObject.to = this.$store.state.currentPath
 			operateObject.style = style
 
@@ -838,7 +837,7 @@ export default {
 
 		/**
 		 * @description: Show Detail Modal
-		 * @param {Object} item
+		 * @param {object} item
 		 * @return {*}
 		 */
 		showDetailModal(item) {
@@ -857,7 +856,7 @@ export default {
 					scroll: 'keep',
 					animation: 'zoom-in',
 					props: {
-						item: item,
+						item,
 					},
 					events: {
 						close: () => {
@@ -926,7 +925,7 @@ export default {
 
 		/**
 		 * @description: Show Rename Modal
-		 * @param {Object} item
+		 * @param {object} item
 		 * @return {*}
 		 */
 		showRenameModal(item) {
@@ -948,7 +947,7 @@ export default {
 					},
 				},
 				props: {
-					item: item,
+					item,
 				},
 			})
 		},
@@ -1094,7 +1093,7 @@ export default {
 				scroll: 'keep',
 				animation: 'zoom-in',
 				props: {
-					item: item,
+					item,
 				},
 			})
 		},
@@ -1115,7 +1114,7 @@ export default {
 			try {
 				mergeStorageList = await this.$api.local_storage
 					.getMergerfsInfo()
-					.then(res => res.data.data[0]['source_volume_uuids'])
+					.then(res => res.data.data[0].source_volume_uuids)
 			} catch (e) {
 				mergeStorageList = []
 				console.log(e)
@@ -1146,7 +1145,7 @@ export default {
 		},
 	},
 	sockets: {
-		'casaos:file:operate'(res) {
+		'casaos:file:operate': function (res) {
 			const file_operate = JSON.parse(res.Properties.file_operate)
 			const taskList = file_operate.data
 			taskList.forEach((task) => {
@@ -1155,7 +1154,7 @@ export default {
 				}
 			})
 		},
-		'casaos:system:utilization'() {
+		'casaos:system:utilization': function () {
 			// USB
 			// this.usbDisks = data.body.sys_usb
 		},
@@ -1163,7 +1162,7 @@ export default {
 			// Storage
 			this.reload()
 		},
-		'local-storage:disk:added'() {
+		'local-storage:disk:added': function () {
 			setTimeout(() => {
 				if (this.currentPath == '/DATA') {
 					this.reload()

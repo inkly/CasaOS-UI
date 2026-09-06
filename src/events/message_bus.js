@@ -16,18 +16,18 @@ async function intermediateProcessor(name, ownParameter) {
 		casaos_lang: '123456789',
 	}
 	if (typeof window !== 'undefined') {
-		let state = await import('../store').then(module => module.default)
+		const state = await import('../store').then(module => module.default)
 		store = state.state
 	}
-	let publicParameter = {
+	const publicParameter = {
 		device_id: store.device_id.toString(),
 		access_id: store.access_id.toString(),
 		casaos_lang: store.casaos_lang.toString(),
 	}
 
 	return {
-		sourceID: sourceID,
-		name: name,
+		sourceID,
+		name,
 		properties: {
 			...publicParameter,
 			...ownParameter,

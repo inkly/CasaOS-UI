@@ -15,13 +15,13 @@ const instance = axios.create({
 	withCredentials: false,
 })
 
-const getLangFromBrowser = () => {
+function getLangFromBrowser() {
 	let lang = navigator.language || navigator.userLanguage
 	lang = lang.toLowerCase().replace('-', '_')
 	return lang
 }
 
-const getInitLang = () => {
+function getInitLang() {
 	const lang = localStorage.getItem('lang') || getLangFromBrowser()
 	return lang
 }
@@ -29,7 +29,7 @@ const getInitLang = () => {
 // Interception before request initiation
 instance.interceptors.request.use(
 	(config) => {
-		config.headers.common['Language'] = getInitLang()
+		config.headers.common.Language = getInitLang()
 		const token = localStorage.getItem('access_token')
 		const rtoken = localStorage.getItem('refresh_token')
 		if (token) {
@@ -71,7 +71,7 @@ instance.interceptors.response.use(
 				isRefreshing = true
 
 				instance.post('/v1/users/refresh', {
-					refresh_token: refresh_token,
+					refresh_token,
 				}).then((tokenRes) => {
 					if (tokenRes.data.success == 200) {
 						localStorage.setItem('access_token', tokenRes.data.data.access_token)
@@ -109,9 +109,9 @@ instance.interceptors.response.use(
 	},
 )
 
-const testVisionNum = (prefix) => {
+function testVisionNum(prefix) {
 	// default version number is /v1
-	if (/^http/.test(prefix) || /^\/v[2-9]/.test(prefix)) {
+	if (prefix.startsWith('http') || /^\/v[2-9]/.test(prefix)) {
 		return prefix
 	} else {
 		return `/v1${prefix}`
@@ -127,7 +127,7 @@ const api = {
 		if (_this) {
 			return instance.get(url, {
 				params: data,
-				cancelToken: new CancelToken(function executor(c) {
+				cancelToken: new CancelToken((c) => {
 					_this.cancelRequest = c
 				}),
 			})
@@ -147,7 +147,7 @@ const api = {
 	},
 	delete(url, data) {
 		url = testVisionNum(url)
-		return instance.delete(url, { data: data })
+		return instance.delete(url, { data })
 	},
 	patch(url, data) {
 		url = testVisionNum(url)

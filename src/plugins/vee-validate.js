@@ -22,7 +22,7 @@ function isEmpty(value) {
 }
 
 function isValidContainerName(value) {
-	let reg = /^[a-z0-9A-Z\-_]+$/
+	const reg = /^[\w\-]+$/
 	return reg.test(value) && value.length <= 32
 }
 
@@ -40,7 +40,7 @@ defineRule('yaml_port', (value) => {
 	// Written as one literal rather than assembled from strings: moving this
 	// rule between two APIs is exactly how the escapes were lost once already.
 	// An IP with an optional port range, or a bare port range.
-	const regExp = /^((\d{1,3}\.){3}\d{1,3}(:\d{1,5}(-\d{1,5})?)?)|(^\d{1,5}(-\d{1,5})?)$/
+	const regExp = /^(?:\d{1,3}\.){3}\d{1,3}(?::\d{1,5}(?:-\d{1,5})?)?|^\d{1,5}(?:-\d{1,5})?$/
 	return regExp.test(value)
 })
 

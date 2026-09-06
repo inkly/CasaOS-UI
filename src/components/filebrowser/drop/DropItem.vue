@@ -48,14 +48,14 @@
 							class="is-48x48 mr-0 ml-0 no-click"></b-image>
 					</div>
 					<vue-ellipse-progress v-show="progress > 0"
-						:emptyThickness="2"
+						:empty-thickness="2"
 						:legend="false"
 						:progress="progress"
 						:size="80"
 						:thickness="2"
 						animation="default 0 0"
-						emptyColor="#ffffff"
-						lineMode="in-over"></vue-ellipse-progress>
+						empty-color="#ffffff"
+						line-mode="in-over"></vue-ellipse-progress>
 				</div>
 			</b-tooltip>
 			<div ref="deviceName" class="device-name has-text-full-03">
@@ -67,10 +67,10 @@
 
 <script>
 import { VueEllipseProgress } from 'vue-ellipse-progress'
-import events from '@/events/events'
 import { gsap } from 'gsap'
 import CustomEase from 'gsap/CustomEase'
 import delay from 'lodash/delay'
+import events from '@/events/events'
 
 export default {
 	name: 'drop-item',
@@ -137,13 +137,13 @@ export default {
 			const realRadius = this.index < 5 ? this.radius : this.radius / ratio
 			return {
 				left:
-					this.center.x
+					`${this.center.x
 					+ (realRadius / 2) * Math.cos((angel * Math.PI) / 180)
-					+ 'px',
+					}px`,
 				top:
-					this.center.y
+					`${this.center.y
 					- (realRadius / 2) * Math.sin((angel * Math.PI) / 180)
-					+ 'px',
+					}px`,
 			}
 		},
 		tipPosition() {
@@ -204,7 +204,7 @@ export default {
 	},
 	watch: {
 		device: {
-			handler: function (val) {
+			handler(val) {
 				this.isDisabled = val.offline
 			},
 			deep: true,
@@ -245,7 +245,7 @@ export default {
 
 			this.receivedfiles = message.text
 		})
-		this.$EventBus.$on('close-connection', (e) => {
+		this.$EventBus.$on('close-connection', () => {
 			this.progress = 0
 			this.uploadDisabled = false
 		})
@@ -321,7 +321,7 @@ export default {
 		fileDroped(files) {
 			this.$messageBus('files_filesdrop_start')
 			this.$EventBus.$emit('files-selected', {
-				files: files,
+				files,
 				to: this.device.id,
 				from: localStorage.getItem('peerid'),
 			})

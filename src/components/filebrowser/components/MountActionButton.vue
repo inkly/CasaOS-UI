@@ -10,7 +10,7 @@
 -->
 <template>
 	<div class="action-btn">
-		<b-dropdown id="location-drop" ref="dropDown" animation="fade1" append-to-body aria-role="list"
+		<b-dropdown id="location-drop" animation="fade1" append-to-body aria-role="list"
 			class="file-dropdown"
 			close-on-click position="is-bottom-left">
 			<template #trigger>
@@ -26,13 +26,13 @@
 
 			</b-dropdown-item>
 			<hr v-if="platforms.length > 0" class="dropdown-divider">
-			<b-dropdown-item v-for="(driver, index) in platforms" :key="index + 'platform'" aria-role="menuitem"
+			<b-dropdown-item v-for="(driver, index) in platforms" :key="`${index}platform`" aria-role="menuitem"
 				@click="auth(driver)">
 				<div class="is-flex is-align-items-center">
 					<div class="img-container mr-1">
 						<b-image :src="driver.icon" class="is-16x16"></b-image>
 					</div>
-					{{ $t("Connect " + driver.name) }}
+					{{ $t(`Connect ${driver.name}`) }}
 				</div>
 			</b-dropdown-item>
 			<hr v-if="platforms.length > 0" class="dropdown-divider">
@@ -95,8 +95,9 @@ export default {
 			const customHeight = 700
 			const iTop = (window.screen.height - 30 - customHeight) / 2
 			const iLeft = (window.screen.width - 10 - customWidth) / 2
-			const authUrl = driver.auth_url.replace('${HOST}', encodeURI(this.$protocol + '//' + this.$baseURL)).replace('redirect_uri=http%', 'redirect_uri=https%')
-			window.open(authUrl, driver.name, 'height=' + customHeight + ',,innerHeight=' + customHeight + ',width=' + customWidth + ',innerWidth=' + customWidth + ',top=' + iTop + ',left=' + iLeft + ',toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no')
+			// eslint-disable-next-line no-template-curly-in-string -- the API sends auth_url with a literal ${HOST} placeholder
+			const authUrl = driver.auth_url.replace('${HOST}', encodeURI(`${this.$protocol}//${this.$baseURL}`)).replace('redirect_uri=http%', 'redirect_uri=https%')
+			window.open(authUrl, driver.name, `height=${customHeight},,innerHeight=${customHeight},width=${customWidth},innerWidth=${customWidth},top=${iTop},left=${iLeft},toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no`)
 		},
 		// Show Disk Management Panel
 		showDiskManagement() {

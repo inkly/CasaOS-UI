@@ -24,7 +24,7 @@
 		<section class="modal-card-body">
 
 			<ul class="folder-list scrollbars-light mt-5 mb-5">
-				<li v-for="(item, index) in rootDataList" :key="'rs' + index">
+				<li v-for="(item, index) in rootDataList" :key="`rs${index}`">
 					<div class="is-flex list-item new-list-item is-align-items-center disbiled">
 						<div class="cover ml-2 mr-2 is-flex-shrink-0  is-flex is-align-items-center">
 							<b-icon :icon="item.icon" :pack="item.pack" class="casa-color-blue" custom-size="casa-28px"></b-icon>
@@ -35,7 +35,7 @@
 						</div>
 					</div>
 				</li>
-				<li v-for="(item, index) in dataList" :key="'s' + index">
+				<li v-for="(item, index) in dataList" :key="`s${index}`">
 					<div v-if="item.visible" class="is-flex list-item new-list-item is-align-items-center" @click="toggle(item)">
 						<div class="cover ml-2 mr-2 is-flex-shrink-0 is-flex is-align-items-center">
 							<b-icon :icon="item.icon" :pack="item.pack" class="casa-color-blue" custom-size="casa-28px"></b-icon>
@@ -177,7 +177,7 @@ export default {
 			try {
 				const response = await this.$api.samba.getUsers()
 				this.users = response.data.data || []
-			} catch (error) {
+			} catch {
 				// Without a list the switch simply has nothing to offer; sharing
 				// without an account still works.
 				this.users = []

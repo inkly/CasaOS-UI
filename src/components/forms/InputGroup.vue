@@ -11,7 +11,7 @@
 			</span>
 		</div>
 
-		<div v-for="(item, index) in items" :key="'port' + index" class="port-item  mr-4">
+		<div v-for="(item, index) in items" :key="`port${index}`" class="port-item  mr-4">
 			<b-icon class="is-clickable" icon="close-outline" pack="casa" size="is-small"
 				@click="removeItem(index)"></b-icon>
 			<template v-if="index < 1">
@@ -61,6 +61,8 @@ const props = defineProps({
 	},
 })
 
+const emit = defineEmits(['change'])
+
 const items = computed({
 	get() {
 		return props.devices
@@ -70,15 +72,15 @@ const items = computed({
 	},
 })
 
-const addItem = () => {
-	let itemObj = {
+function addItem() {
+	const itemObj = {
 		container: '',
 		host: '',
 	}
 	items.value.push(itemObj)
 }
 
-const removeItem = (index) => {
+function removeItem(index) {
 	items.value.splice(index, 1)
 }
 defineExpose({

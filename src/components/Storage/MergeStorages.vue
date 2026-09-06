@@ -140,7 +140,7 @@
 				<div class="message-danger left mr-2 is-flex is-align-items-center">
 					<b-icon class="is-38x38" custom-size="is-size-2" icon="danger" pack="casa"></b-icon>
 				</div>
-				{{ $t('APPs is running') + ` , ` + $t('restart APPs to continue.') }}
+				{{ `${$t('APPs is running')} , ${$t('restart APPs to continue.')}` }}
 			</div>
 			<div v-if="currentStep === 4" class="is-flex is-align-items-center font">
 				<div class="message-danger left mr-2 is-flex is-align-items-center">
@@ -179,10 +179,10 @@
 </template>
 
 <script>
+import filter from 'lodash/filter'
 import { mixin } from '@/mixins/mixin'
 import events from '@/events/events'
 import cToolTip from '@/components/basicComponents/tooltip/tooltip.vue'
-import filter from 'lodash/filter'
 import { ice_i18n } from '@/mixins/base/common-i18n'
 
 export default {
@@ -196,7 +196,7 @@ export default {
 		},
 	},
 	components: {
-		cToolTip,
+		CToolTip: cToolTip,
 	},
 	mounted() {
 		this.checkBoxGroup.push(...this.mergeStorageList)
@@ -482,7 +482,7 @@ export default {
 		//
 		async submit(e, nextStep = false) {
 			// operation : split the mergerfs
-			let notSplit = this.mergeStorageList.every(item => this.checkBoxGroup.includes(item) || this.checkBoxMissGroup.includes(item))
+			const notSplit = this.mergeStorageList.every(item => this.checkBoxGroup.includes(item) || this.checkBoxMissGroup.includes(item))
 			if (this.isRemovingMerge || notSplit || nextStep) {
 				// get docker info
 				let dockerInfo = await this.$openAPI.appGrid.getAppGrid().then(res => res.data.data || [])

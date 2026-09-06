@@ -61,7 +61,7 @@ export default {
 				return
 			}
 			const imgUrl = this.getThumbUrl(this.item)
-			let img = new Image()
+			const img = new Image()
 			img.crossOrigin = location.host
 			img.src = imgUrl
 			img.onload = () => {

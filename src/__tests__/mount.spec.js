@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 import Buefy from 'buefy'
-import VAnimateCss from '@/plugins/animate-css'
 import VueDOMPurifyHTML from 'vue-dompurify-html'
 import { h } from 'vue'
 import { config, shallowMount } from '@vue/test-utils'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import VAnimateCss from '@/plugins/animate-css'
 import createEventBus from '@/events/eventBus'
 
 /**

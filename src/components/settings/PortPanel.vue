@@ -11,7 +11,7 @@
 		<!-- Modal-Card Body Start -->
 		<section class="modal-card-body ">
 			<b-field :message="errors" :type="errorType" class="has-text-light mb-0" expanded>
-				<b-input ref="finput" v-model="port" type="number" v-on:keyup.enter="savePort" @update:model-value="checkPort"></b-input>
+				<b-input ref="finput" v-model="port" type="number" @keyup.enter="savePort" @update:model-value="checkPort"></b-input>
 			</b-field>
 		</section>
 		<!-- Modal-Card Body End -->
@@ -94,7 +94,7 @@ export default {
 		checkUpdate() {
 			this.timer = setInterval(() => {
 				const checkUrl = `${this.$protocol}//${this.$baseIp}:${this.port}`
-				this.$api.sys.checkUiPort(checkUrl + '/v1/gateway/port').then((res) => {
+				this.$api.sys.checkUiPort(`${checkUrl}/v1/gateway/port`).then((res) => {
 					if (res.data.success == 200) {
 						clearInterval(this.timer)
 						const url = `${this.$protocol}//${this.$baseIp}:${res.data.data}`

@@ -29,7 +29,7 @@
 					<b-tabs v-model="activeTab" :animated="false">
 						<b-tab-item :label="$t('Storage')" class="scrollbars-light-auto tab-item">
 							<template v-if="storageData.length">
-								<storage-item v-for="(item, index) in storageData" :key="'storage' + index" :item="item"
+								<storage-item v-for="(item, index) in storageData" :key="`storage${index}`" :item="item"
 									@getDiskList="getDiskList"></storage-item>
 							</template>
 							<div v-else class="has-text-centered has-text-grey-light mt-6">
@@ -38,7 +38,7 @@
 						</b-tab-item>
 						<b-tab-item :label="$t('Merged Storage')" class="scrollbars-light-auto tab-item">
 							<storage-combination v-if="mergeConbinationsStorageData.length"
-								:storageData="mergeConbinationsStorageData"
+								:storage-data="mergeConbinationsStorageData"
 								:type="state_mainstorage_operability"
 								@merge-success="showMergedStorage"
 								@reload="getDiskList"></storage-combination>
@@ -48,12 +48,12 @@
 									<b-button :type="state_mainstorage_operability" rounded
 										@click="showStorageSettingsModal">{{ $t('Merge Storages') }}
 									</b-button>
-									<cToolTip isBlock></cToolTip>
+									<cToolTip is-block></cToolTip>
 								</div>
 							</div>
 						</b-tab-item>
 						<b-tab-item :label="$t('Drive')" class="scrollbars-light-auto tab-item">
-							<drive-item v-for="(item, index) in diskData" :key="'disk' + index" :item="item"></drive-item>
+							<drive-item v-for="(item, index) in diskData" :key="`disk${index}`" :item="item"></drive-item>
 						</b-tab-item>
 					</b-tabs>
 
@@ -139,7 +139,7 @@
 		<section v-if="isCreating" class="modal-card-body ">
 			<div class="installing-warpper mt-6 mb-6">
 				<div class="is-flex is-align-items-center is-justify-content-center mb-5">
-					<lottie-animation :animationData="require('@/assets/ani/creating.json')" :autoPlay="true" :loop="true"
+					<lottie-animation :animation-data="require('@/assets/ani/creating.json')" :auto-play="true" :loop="true"
 						class="creating-animation"></lottie-animation>
 				</div>
 				<h3 class="title is-4 has-text-centered has-text-weight-light">{{ $t('Creation in progress') }}...</h3>
@@ -166,15 +166,15 @@
 <script>
 import { defineAsyncComponent } from 'vue'
 import LottieAnimation from 'lottie-web-vue'
-import smoothReflow from '@/mixins/smoothReflow'
 import delay from 'lodash/delay'
 import max from 'lodash/max'
 import orderBy from 'lodash/orderBy'
 import { Field as VeeField, Form as VeeForm } from 'vee-validate'
-import { mixin } from '@/mixins/mixin'
 import DriveItem from './DriveItem.vue'
 import StorageItem from './StorageItem.vue'
 import StorageCombination from './StorageCombination.vue'
+import { mixin } from '@/mixins/mixin'
+import smoothReflow from '@/mixins/smoothReflow'
 import cToolTip from '@/components/basicComponents/tooltip/tooltip.vue'
 import events from '@/events/events'
 
@@ -187,7 +187,7 @@ export default {
 		DriveItem,
 		StorageItem,
 		StorageCombination,
-		cToolTip: cToolTip,
+		CToolTip: cToolTip,
 	},
 	mixins: [smoothReflow, mixin],
 	data() {
@@ -261,8 +261,8 @@ export default {
 		})
 
 		// Get disk list
-		let _this = this
-		delay(function () {
+		const _this = this
+		delay(() => {
 			_this.getDiskList()
 		}, 150)
 
@@ -318,7 +318,7 @@ export default {
 			try {
 				// get storage list info
 				const storageRes = await this.$api.storage.list({ system: 'show' }).then(v => v.data.data)
-				let storageArray = []
+				const storageArray = []
 				storageRes.forEach((item) => {
 					item.children.forEach((part) => {
 						part.disk = item.path
@@ -359,8 +359,8 @@ export default {
 					})
 				})
 				// sort
-				let storageArraySort = orderBy(storageArray, ['diskName', 'label'], ['desc', 'asc'])
-				let mergeConbinationsSort = orderBy(mergeConbinations, ['diskName', 'label'], ['desc', 'asc'])
+				const storageArraySort = orderBy(storageArray, ['diskName', 'label'], ['desc', 'asc'])
+				const mergeConbinationsSort = orderBy(mergeConbinations, ['diskName', 'label'], ['desc', 'asc'])
 
 				const remapStorage = (storage) => {
 					const size = Number(storage.size)
@@ -390,20 +390,20 @@ export default {
 				this.storageData = storageArraySort.map(remapStorage)
 				this.mergeConbinationsStorageData = mergeConbinationsSort.map(remapStorage)
 
-				let diskNumArray = this.storageData.map((storage) => {
+				const diskNumArray = this.storageData.map((storage) => {
 					if (storage.name.includes('Storage')) {
-						let diskNum = storage.name.replace('Storage', '')
+						const diskNum = storage.name.replace('Storage', '')
 						return (/^\d+$/.test(diskNum)) ? Number(diskNum) : 0
 					} else {
 						return 0
 					}
 				})
-				let nextMaxNum = max(diskNumArray) + 1
+				const nextMaxNum = max(diskNumArray) + 1
 				if (this.unDiskData.length > 0) {
 					this.createStoragePath = this.unDiskData[0].path
 					this.createStorageSeiral = this.unDiskData[0].serial
 					this.createStorageType = this.getDiskType(this.unDiskData[0])
-					this.createStorageName = 'Storage' + nextMaxNum
+					this.createStorageName = `Storage${nextMaxNum}`
 					this.activeDisk = 0
 				}
 				if (showDefault) {
@@ -453,16 +453,16 @@ export default {
 		showCreate() {
 			this.$messageBus('storagemanager_createstorage')
 			this.creatIsShow = true
-			let diskNumArray = this.storageData.map((disk) => {
+			const diskNumArray = this.storageData.map((disk) => {
 				if (disk.name.includes('Storage')) {
-					let diskNum = disk.name.replace('Storage', '')
+					const diskNum = disk.name.replace('Storage', '')
 					return (/^\d+$/.test(diskNum)) ? Number(diskNum) : 0
 				} else {
 					return 0
 				}
 			})
-			let nextMaxNum = max(diskNumArray) + 1
-			this.createStorageName = 'Storage' + nextMaxNum
+			const nextMaxNum = max(diskNumArray) + 1
+			this.createStorageName = `Storage${nextMaxNum}`
 		},
 
 		// show storage settings modal
@@ -510,13 +510,13 @@ export default {
 
 		/**
 		 * @description: Validate form async
-		 * @param {Object} ref ref of component
-		 * @return {Boolean}
+		 * @param {object} ref ref of component
+		 * @return {boolean}
 		 */
 		async checkStep(ref) {
 			// vee-validate 3 resolves to a Boolean, v4 to { valid, ... } — and an
 			// object is always truthy, so read `.valid` whenever it is there.
-			let result = await ref.validate()
+			const result = await ref.validate()
 			return result?.valid ?? result
 		},
 		/**
@@ -543,10 +543,10 @@ export default {
 		},
 		submitCreate(format) {
 			this.isCreating = true
-			let data = {
+			const data = {
 				path: this.createStoragePath,
 				name: this.createStorageName,
-				format: format,
+				format,
 			}
 			this.$api.storage.create(data).then((res) => {
 				if (res.status === 200) {

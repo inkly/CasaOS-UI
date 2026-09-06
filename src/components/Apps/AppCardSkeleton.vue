@@ -32,7 +32,7 @@ export default {
 	data() {
 		return {
 			animation: {
-				animationDelay: this.index * this.gap + 's',
+				animationDelay: `${this.index * this.gap}s`,
 			},
 		}
 	},

@@ -11,12 +11,12 @@
 			</span>
 
 		</div>
-		<div v-for="(item, index) in items" :key="'port' + index + item.protocol" class="port-item mr-4">
+		<div v-for="(item, index) in items" :key="`port${index}${item.protocol}`" class="port-item mr-4">
 			<b-icon class="is-clickable" icon="close-outline" pack="casa" size="is-small" @click="removeItem(index)"></b-icon>
 			<b-field grouped>
 				<VeeField v-if="showHostPost" v-slot="{ errors, meta }"
 					:model-value="item.host_ip ? `${item.host_ip}:${item.published}` : item.published" :name="`host-${index}`"
-					:rules="'yaml_port|not_in_ports:' + invalidPortsInUse(item.published, item.protocol)">
+					:rules="`yaml_port|not_in_ports:${invalidPortsInUse(item.published, item.protocol)}`">
 					<!-- Only show title when the first item. -->
 					<b-field :label="index < 1 ? $t('Host') : ''"
 						:type="{ 'is-danger': errors[0], 'is-success': meta.valid }" expanded>
@@ -85,7 +85,7 @@ export default {
 	},
 	methods: {
 		addItem() {
-			let itemObj = {
+			const itemObj = {
 				target: '',
 				published: '',
 				host_ip: '',
@@ -113,10 +113,10 @@ export default {
 			// The host's port input is String Type.
 			// port = port - 0;
 			if (type === 'both') {
-				return (this.ports_in_use?.['udp'] || []).includes(port) || (this.ports_in_use?.['tcp'] || []).includes(port)
+				return (this.ports_in_use?.udp || []).includes(port) || (this.ports_in_use?.tcp || []).includes(port)
 			}
 			if (type) {
-				return (this.ports_in_use?.[type] || this.ports_in_use?.[type.toUpperCase()] || []).includes(port + '')
+				return (this.ports_in_use?.[type] || this.ports_in_use?.[type.toUpperCase()] || []).includes(`${port}`)
 			}
 			return false
 		},

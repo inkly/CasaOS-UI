@@ -14,6 +14,12 @@
  * CodeMirror events it re-emitted under two spellings each. No call site used
  * one; both change their options through the instance, not through the prop.
  -->
+<template>
+	<div class="vue-codemirror">
+		<textarea ref="textarea"></textarea>
+	</div>
+</template>
+
 <script>
 import CodeMirror from 'codemirror'
 
@@ -65,9 +71,3 @@ export default {
 	},
 }
 </script>
-
-<template>
-	<div class="vue-codemirror">
-		<textarea ref="textarea"></textarea>
-	</div>
-</template>

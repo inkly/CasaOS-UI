@@ -16,7 +16,7 @@ vi.mock('@/assets/lang', () => ({ default: { en_us: {} } }))
  * array to vue-i18n 9, which throws where vue-i18n 8 translated it, and Vue
  * replaced the throwing Field with a comment node.
  */
-describe('Login', () => {
+describe('login', () => {
 	it('renders the username and password inputs', () => {
 		const wrapper = mount(Login, { global: { plugins: [Buefy, i18n] } })
 		expect(wrapper.findAll('input')).toHaveLength(2)

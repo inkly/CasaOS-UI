@@ -98,7 +98,7 @@ const container = {
 	// update container state
 	updateState(id, state) {
 		return api.put(`${PREFIX}/${id}/state`, {
-			state: state,
+			state,
 		})
 	},
 
