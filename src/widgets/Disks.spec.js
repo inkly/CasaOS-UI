@@ -59,6 +59,8 @@ describe('drive item', () => {
 		['a passed disk', { health: true, smart_status: 'passed' }, 'Healthy'],
 		['a failed disk', { health: false, smart_status: 'failed' }, 'Damage'],
 		['a disk without SMART data', { health: true, smart_status: 'unavailable' }, 'N/A'],
+		['an older LocalStorage sending health as the string "true"', { health: 'true' }, 'Healthy'],
+		['an older LocalStorage sending health as the string "false"', { health: 'false' }, 'Damage'],
 		['an older LocalStorage without smart_status', { health: true }, 'Healthy'],
 	]
 

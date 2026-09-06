@@ -380,7 +380,8 @@ export const mixin = {
 			if (disk && typeof disk.smart_status === 'string') {
 				return disk.smart_status
 			}
-			return disk && disk.health ? 'passed' : 'failed'
+			// an older LocalStorage: sys_disk carries a bool, /v1/disks the string "true"/"false"
+			return disk && (disk.health === true || disk.health === 'true') ? 'passed' : 'failed'
 		},
 
 		getProgressType(per) {
