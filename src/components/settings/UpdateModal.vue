@@ -11,7 +11,7 @@
 		<!-- Modal-Card Body Start -->
 		<section class="modal-card-body ">
 			<div ref="log" class="node-card fixed-height">
-				<div v-if="!isUpdating" class="update-info-container  is-size-14px" v-dompurify-html="markdownToHtml"></div>
+				<div v-if="!isUpdating" v-dompurify-html="markdownToHtml" class="update-info-container  is-size-14px"></div>
 				<pre v-else class="update-log is-size-14px">{{ updateLogText }}</pre>
 			</div>
 		</section>
@@ -42,6 +42,7 @@ export default {
 		return {
 			timer: 0,
 			updateTimer: 0,
+			reloading: false,
 			isUpdating: false,
 			markdown: ``,
 			updateLogs: ``,
@@ -87,13 +88,13 @@ export default {
 				this.$api.file.getContent(`/var/log/casaos/upgrade.log`).then((res) => {
 					this.updateLogs = res.data.data
 					if (this.updateLogs.includes(`CasaOS upgrade successfully`)) {
-						localStorage.setItem('is_update', 'true')
 						clearInterval(this.updateTimer)
-						setTimeout(() => {
-							// The route change alone keeps the pre-upgrade bundle running (and
-							// its light-only chrome); the reload loads the UI just installed.
-							this.$router.replace({ path: '/logout' }).then(() => location.reload())
-						}, 1000)
+						// responses still in flight carry the same line: reload once
+						if (this.reloading)
+							return
+						this.reloading = true
+						localStorage.setItem('is_update', 'true')
+						this.reloadWhenBackendIsBack()
 					} else if (this.updateLogs.includes(`CasaOS upgrade failed`)) {
 						this.$buefy.toast.open({
 							message: this.$t(`There seems to be a problem with the upgrade process, please try again!`),
@@ -106,6 +107,35 @@ export default {
 					}
 				}).catch(() => {}) // the services restart mid-update; the log comes back with them
 			}, 200)
+		},
+		/**
+		 * The upgrade restarts every service and rotates the token keys, so this
+		 * session is over either way. Signing out through the router awaited an
+		 * API call in its guard; started while the services restarted, that call
+		 * settled only after the user had signed in again, and the guard's /logout
+		 * branch then removed the fresh tokens. The session is cleared here, and
+		 * the page reloads - into the UI just installed - once the backend answers,
+		 * or after two minutes regardless. Each probe is given three seconds: a
+		 * probe left pending by a restarting service must not hold the reload.
+		 */
+		reloadWhenBackendIsBack() {
+			for (const key of ['access_token', 'refresh_token', 'user', 'wallpaper'])
+				localStorage.removeItem(key)
+
+			const deadline = Date.now() + 120000
+			const probe = () => Promise.race([
+				this.$api.users.getUserStatus(),
+				new Promise((_, reject) => setTimeout(() => reject(new Error('no answer')), 3000)),
+			])
+			const poll = () => probe()
+				.then(() => location.reload())
+				.catch(() => {
+					if (Date.now() < deadline)
+						setTimeout(poll, 1000)
+					else
+						location.reload()
+				})
+			setTimeout(poll, 1000)
 		},
 		/**
 		 * @description: check update state if is_need is false then reload page
