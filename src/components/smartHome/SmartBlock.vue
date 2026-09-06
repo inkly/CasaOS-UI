@@ -7,7 +7,7 @@
 				<div class="info ">
 					<div class="des two-line  is-size-14px">
 						{{
-						$t('We want to give you a smart home experience with privacy, high speed, and localized storage.')
+							$t('We want to give you a smart home experience with privacy, high speed, and localized storage.')
 						}}
 					</div>
 				</div>
@@ -16,7 +16,7 @@
 			<div class="buttons is-flex is-flex-shrink-0 is-flex-direction-row-reverse">
 				<b-button class="mb-0" rounded size="is-small" type="is-primary" @click="goToDiscord">{{
 					$t('In development')
-					}}
+				}}
 				</b-button>
 			</div>
 		</div>
@@ -26,7 +26,7 @@
 
 <script>
 export default {
-	name: "smart-block",
+	name: 'smart-block',
 	methods: {
 		goToDiscord() {
 			this.$buefy.dialog.confirm({
@@ -37,10 +37,10 @@ export default {
 				confirmText: this.$t('Go'),
 				cancelText: this.$t('Cancel'),
 				onConfirm: () => {
-					window.open('https://discord.gg/Gx4BCEtHjx', '_blank', 'noopener');
-				}
+					window.open('https://discord.gg/Gx4BCEtHjx', '_blank', 'noopener')
+				},
 			})
-		}
+		},
 	},
 }
 </script>

@@ -19,10 +19,11 @@
 </template>
 
 <script>
-import DOMPurify from 'dompurify';
-import { parse} from 'rss-to-json'
+import DOMPurify from 'dompurify'
+import { parse } from 'rss-to-json'
+
 export default {
-	name: "brand-bar",
+	name: 'brand-bar',
 	components: {},
 	computed: {
 		rssShow() {
@@ -45,16 +46,16 @@ export default {
 	watch: {
 		isShow(val) {
 			val && this.parseFeed()
-		}
+		},
 	},
 	data() {
 		return {
 			rss: [],
-		};
+		}
 	},
 	methods: {
-		async parseFeed() {			
-			let params = await this.$api.file.getContent('/var/lib/casaos/baseinfo.conf').then(res => {
+		async parseFeed() {
+			let params = await this.$api.file.getContent('/var/lib/casaos/baseinfo.conf').then((res) => {
 				return JSON.parse(res.data.data)
 			})
 			this.$store.commit('SET_DEVICE_ID', params.i)
@@ -64,21 +65,19 @@ export default {
 			// dashboard load, and nothing about the feed needs it. The device id stays
 			// local: the message bus still uses it, it just never leaves the box.
 			let feed = await parse('https://blog-casaos.zimaspace.com/feed/tag/dashboard/')
-			const newFeed = feed.items.map(item => {
+			const newFeed = feed.items.map((item) => {
 				return {
 					title: item.title,
-					link: DOMPurify.sanitize(item.link, { ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.1-9]+(?:[^a-z+.1-9]|$))/i })
+					link: DOMPurify.sanitize(item.link, { ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.1-9]+(?:[^a-z+.1-9]|$))/i }),
 				}
 			})
 			this.rss = newFeed
-			
-			
 		},
 
 		gotoLink(link) {
 			window.open(link, '_blank')
-		}
-	}
+		},
+	},
 }
 </script>
 

@@ -1,9 +1,8 @@
 <template>
 	<div id="select-container" class="node-list fliebroswer is-flex is-flex-direction-column w-full scroll-container scrollbars-light ">
 
-
 		<div class=" is-flex-grow-1 is-flex">
-			<div  class="is-relative is-grow-1 w-full" :class="containerHeight"
+			<div class="is-relative is-grow-1 w-full" :class="containerHeight"
 				@contextmenu.prevent="openContextMenu" @mousedown.stop="onDragSelectionStart">
 				<!-- Empty Content Slot Start -->
 				<div v-if="listData.length == 0 && !isLoading"
@@ -11,9 +10,9 @@
 					<slot></slot>
 				</div>
 				<!-- Empty Content Slot End -->
-				<div class="select-parent"  >
+				<div class="select-parent">
 					<!-- Table header Start -->
-					<div class="table-thead is-unselectable" >
+					<div class="table-thead is-unselectable">
 						<div class="tr-wrapper">
 							<div class="tr">
 								<div class="th"></div>
@@ -35,9 +34,9 @@
 						<div v-for="(item, index) in listData" :key="'list-' + index + item.name" :data-rel="index"
 							class="tr-wrapper rdata">
 							<div :class="{
-								isCutting: getCardState(item),
-								active: item.isSelected,
-							}" class="tr is-unselectable" @click="onCardClick($event, item, index)"
+									isCutting: getCardState(item),
+									active: item.isSelected,
+								}" class="tr is-unselectable" @click="onCardClick($event, item, index)"
 								@contextmenu.prevent="openContextMenu($event, item)" @mousedown.stop="">
 								<div class="td is-flex is-flex-direction-column justify-content-center">
 									<!-- CheckBox Start -->
@@ -85,19 +84,18 @@
 			<!-- Context Menu End -->
 		</div>
 
-
 	</div>
 </template>
-  
+
 <script>
-import { mixin } from "@/mixins/mixin";
-import ListViewMixin from "@/mixins/ListViewMixin";
-import ActionButton from "./ActionButton.vue";
-import ContextMenu from "./ContextMenu.vue";
-import ListIconContainer from "./ListIconContainer.vue";
+import { mixin } from '@/mixins/mixin'
+import ListViewMixin from '@/mixins/ListViewMixin'
+import ActionButton from './ActionButton.vue'
+import ContextMenu from './ContextMenu.vue'
+import ListIconContainer from './ListIconContainer.vue'
 
 export default {
-	name: "list-view",
+	name: 'list-view',
 	components: {
 		ActionButton,
 		ContextMenu,
@@ -108,7 +106,7 @@ export default {
 		return {
 			cols: 1000,
 			colStyle: {
-				width: "",
+				width: '',
 			},
 			headerList: [
 				{
@@ -129,35 +127,34 @@ export default {
 					sort: 'size',
 				},
 			],
-		};
+		}
 	},
 
 	created() {
-		this.SELECT_BOX = "selection";
-		this.PARENT_BOX = "select-container";
-		this.SELECT_ITEM = ".tr-wrapper";
-		this.M_WIDTH = 768;
+		this.SELECT_BOX = 'selection'
+		this.PARENT_BOX = 'select-container'
+		this.SELECT_ITEM = '.tr-wrapper'
+		this.M_WIDTH = 768
 	},
 	computed: {
 		containerHeight() {
-			return this.isMobile ? "mobile-list-height" : "";
+			return this.isMobile ? 'mobile-list-height' : ''
 		},
 		sort() {
-			return this.$store.state.sort;
+			return this.$store.state.sort
 		},
 		order() {
-			return this.$store.state.order;
+			return this.$store.state.order
 		},
 	},
 	methods: {
 		onHeaderClick(header) {
 			if (this.sort === header.sort) {
-				this.$emit('reorder', { sort: header.sort, order: this.order === 'asc' ? 'desc' : 'asc' });
+				this.$emit('reorder', { sort: header.sort, order: this.order === 'asc' ? 'desc' : 'asc' })
 			} else {
-				this.$emit('reorder', { sort: header.sort, order: 'asc' });
+				this.$emit('reorder', { sort: header.sort, order: 'asc' })
 			}
-		}
+		},
 	},
-};
+}
 </script>
-  

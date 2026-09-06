@@ -48,19 +48,19 @@
 </template>
 
 <script>
-import { defineAsyncComponent } from 'vue';
+import { defineAsyncComponent } from 'vue'
 // import VueApexCharts from 'vue3-apexcharts'
-import { mixin } from '@/mixins/mixin';
+import { mixin } from '@/mixins/mixin'
 
 export default {
 	mixins: [mixin],
 	// eslint-disable-next-line vue/multi-word-component-names
 	name: 'network',
-	icon: "network-outline",
-	title: "Network Status",
+	icon: 'network-outline',
+	title: 'Network Status',
 	initShow: true,
 	components: {
-		VueApexCharts: defineAsyncComponent(() => import("vue3-apexcharts"))
+		VueApexCharts: defineAsyncComponent(() => import('vue3-apexcharts')),
 	},
 	data() {
 		return {
@@ -103,8 +103,8 @@ export default {
 					},
 					yaxis: {
 						lines: {
-							show: true
-						}
+							show: true,
+						},
 					},
 				},
 				tooltip: {
@@ -117,11 +117,11 @@ export default {
 						show: false,
 					},
 					tooltip: {
-						enabled: false
+						enabled: false,
 					},
 					axisBorder: {
 						show: false,
-					}
+					},
 				},
 				yaxis: {
 					labels: {
@@ -149,8 +149,8 @@ export default {
 				legend: {
 					show: false,
 					position: 'top',
-					horizontalAlign: 'left'
-				}
+					horizontalAlign: 'left',
+				},
 			},
 		}
 	},
@@ -159,7 +159,6 @@ export default {
 
 		// select the network last time
 		localStorage.getItem('networkId') && (this.networkId = localStorage.getItem('networkId'))
-
 	},
 
 	watch: {
@@ -167,7 +166,7 @@ export default {
 			if (val !== oldVal) {
 				localStorage.setItem('networkId', val)
 			}
-		}
+		},
 	},
 
 	methods: {
@@ -180,16 +179,16 @@ export default {
 					this.networks[index] = [
 						{
 							name: 'Up',
-							data: ["0"],
+							data: ['0'],
 							cacheData: 0,
-							cacheTime: 0
+							cacheTime: 0,
 						},
 						{
 							name: 'Down',
-							data: ["0"],
+							data: ['0'],
 							cacheData: 0,
-							cacheTime: 0
-						}
+							cacheTime: 0,
+						},
 					]
 				}
 				// Send Data
@@ -200,8 +199,8 @@ export default {
 					const timeGap = this.networks[index][0].cacheTime == 0 ? 2 : el.time - this.networks[index][0].cacheTime
 					this.networks[index][0].data.push(this.covertToKB((el.bytesSent - this.networks[index][0].cacheData) / timeGap))
 				}
-				this.networks[index][0].cacheData = el.bytesSent;
-				this.networks[index][0].cacheTime = el.time;
+				this.networks[index][0].cacheData = el.bytesSent
+				this.networks[index][0].cacheTime = el.time
 
 				// RecvData
 				if (this.networks[index][1].data.length >= 60) {
@@ -211,9 +210,9 @@ export default {
 					const timeGap = this.networks[index][1].cacheTime == 0 ? 2 : el.time - this.networks[index][1].cacheTime
 					this.networks[index][1].data.push(this.covertToKB((el.bytesRecv - this.networks[index][1].cacheData) / timeGap))
 				}
-				this.networks[index][1].cacheData = el.bytesRecv;
-				this.networks[index][1].cacheTime = el.time;
-			});
+				this.networks[index][1].cacheData = el.bytesRecv
+				this.networks[index][1].cacheTime = el.time
+			})
 			this.networkId = this.networkId > this.networks.length - 1 ? 0 : this.networkId
 			this.$refs.chart?.updateSeries(this.networks[this.networkId])
 			if (this.networks) {
@@ -224,20 +223,20 @@ export default {
 			}
 		},
 		covertToKB(bytes) {
-			return (bytes / 1024).toFixed(0) > 0 ? (bytes / 1024).toFixed(0) : 0;
-		}
+			return (bytes / 1024).toFixed(0) > 0 ? (bytes / 1024).toFixed(0) : 0
+		},
 	},
 	sockets: {
 		// sys_net(data) {
 		// 	this.initNetwork = data.data
 		// 	this.buildDatas(this.initNetwork)
 		// },
-		"casaos:system:utilization"(res) {
+		'casaos:system:utilization'(res) {
 			let data = res.Properties
 			this.initNetwork = JSON.parse(data.sys_net)
 			this.buildDatas(this.initNetwork)
-		}
-	}
+		},
+	},
 }
 </script>
 

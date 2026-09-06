@@ -4,13 +4,13 @@
  * @LastEditors: Jerryk jerry@icewhale.org
  * @LastEditTime: 2022-08-04 10:45:33
  * @FilePath: \CasaOS-UI\src\service\storage.js
- * @Description: 
- * 
- * Copyright (c) 2022 by IceWhale, All Rights Reserved. 
+ * @Description:
+ *
+ * Copyright (c) 2022 by IceWhale, All Rights Reserved.
  */
-import {api} from "./service.js";
+import { api } from './service.js'
 
-const PREFIX = "/storage";
+const PREFIX = '/storage'
 const storage = {
 	// get storage list
 	list(data) {
@@ -19,22 +19,22 @@ const storage = {
 
 	// create storage
 	create(data) {
-		return api.post(`${PREFIX}`, data);
+		return api.post(`${PREFIX}`, data)
 	},
 
 	// format storage
 	format(data) {
-		return api.put(`${PREFIX}`, data);
+		return api.put(`${PREFIX}`, data)
 	},
 
 	// rename storage
 	rename(data) {
-		return api.put(`${PREFIX}/rename`, data);
+		return api.put(`${PREFIX}/rename`, data)
 	},
 
 	// delete storage
 	delete(data) {
-		return api.delete(`${PREFIX}`, data);
-	}
+		return api.delete(`${PREFIX}`, data)
+	},
 }
-export default storage;
+export default storage

@@ -1,53 +1,47 @@
 <template>
-  <section
-    aria-modal="true"
-    class="app-iframe-overlay"
-    role="dialog"
-    :aria-label="appName"
-  >
-    <transition name="c-zoom-in" appear>
-      <div class="app-iframe-dialog">
-        <header class="app-iframe-header is-flex is-align-items-center">
-          <h1 class="app-iframe-title is-flex-grow-1 mb-0">
-            {{ appName }}
-          </h1>
-          <button
-            class="app-iframe-close"
-            type="button"
-            :aria-label="$t('Close')"
-            :title="$t('Close')"
-            @click="$emit('close')"
-          >
-            <b-icon custom-size="casa-24px" icon="close-outline" pack="casa" />
-          </button>
-        </header>
-        <div class="app-iframe-content">
-          <iframe
-            :src="url"
-            :title="appName"
-            allow="autoplay; fullscreen"
-            allowfullscreen
-            class="app-iframe"
-          />
-        </div>
-      </div>
-    </transition>
-  </section>
+	<section aria-modal="true"
+		class="app-iframe-overlay"
+		role="dialog"
+		:aria-label="appName">
+		<transition name="c-zoom-in" appear>
+			<div class="app-iframe-dialog">
+				<header class="app-iframe-header is-flex is-align-items-center">
+					<h1 class="app-iframe-title is-flex-grow-1 mb-0">
+						{{ appName }}
+					</h1>
+					<button class="app-iframe-close"
+						type="button"
+						:aria-label="$t('Close')"
+						:title="$t('Close')"
+						@click="$emit('close')">
+						<b-icon custom-size="casa-24px" icon="close-outline" pack="casa" />
+					</button>
+				</header>
+				<div class="app-iframe-content">
+					<iframe :src="url"
+						:title="appName"
+						allow="autoplay; fullscreen"
+						allowfullscreen
+						class="app-iframe"></iframe>
+				</div>
+			</div>
+		</transition>
+	</section>
 </template>
 
 <script>
 export default {
-  name: 'AppIframe',
-  props: {
-    appName: {
-      type: String,
-      default: '',
-    },
-    url: {
-      type: String,
-      required: true,
-    },
-  },
+	name: 'AppIframe',
+	props: {
+		appName: {
+			type: String,
+			default: '',
+		},
+		url: {
+			type: String,
+			required: true,
+		},
+	},
 }
 </script>
 

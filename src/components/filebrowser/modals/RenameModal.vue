@@ -13,7 +13,7 @@
 			<div class="node-card">
 				<div class="cover is-flex is-justify-content-center is-align-items-center">
 					<div :class="coverType(item)">
-						<img :class="iconType(item)" :src="getIconFile(item)" alt="folder" />
+						<img :class="iconType(item)" :src="getIconFile(item)" alt="folder">
 					</div>
 				</div>
 				<b-field :message="errors" :type="errorType" class="mb-3 mt-5 has-text-light" expanded>
@@ -24,7 +24,7 @@
 
 		</section>
 		<!-- Modal-Card Body End -->
-		<!-- Modal-Card Footer Start-->
+		<!-- Modal-Card Footer Start -->
 		<footer class="modal-card-foot is-flex is-align-items-center">
 			<div class="is-flex-grow-1"></div>
 			<div>
@@ -36,24 +36,24 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin';
+import { mixin } from '@/mixins/mixin'
 import path from 'path'
 
 export default {
 	mixins: [mixin],
 	props: {
-		item: Object
+		item: Object,
 	},
 	data() {
 		return {
 			fileName: this.item.name,
-			errorType: "is-success",
-			errors: ""
+			errorType: 'is-success',
+			errors: '',
 		}
 	},
 	mounted() {
 		this.$nextTick(() => {
-			this.$refs.rinput.getElement().select();
+			this.$refs.rinput.getElement().select()
 		})
 	},
 
@@ -61,19 +61,19 @@ export default {
 		saveNewName() {
 			let newPath = path.join(this.$store.state.currentPath, this.fileName)
 			if (this.item.name === this.fileName) {
-				this.$emit("close")
+				this.$emit('close')
 				return false
 			}
-			this.$api.file.rename(this.item.path, newPath).then(res => {
+			this.$api.file.rename(this.item.path, newPath).then((res) => {
 				if (res.data.success == 200) {
-					this.$emit("reload")
-					this.$emit("close")
+					this.$emit('reload')
+					this.$emit('close')
 				} else {
-					this.errorType = "is-danger"
+					this.errorType = 'is-danger'
 					this.errors = res.data.message
 				}
 			})
-		}
+		},
 	},
 
 }

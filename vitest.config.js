@@ -1,6 +1,6 @@
-import {fileURLToPath} from 'node:url'
+import { fileURLToPath } from 'node:url'
 import vue from '@vitejs/plugin-vue'
-import {defineConfig} from 'vitest/config'
+import { defineConfig } from 'vitest/config'
 
 // Templates and option blocks reach for assets with webpack's require().
 // @vitejs/plugin-vue2 rewrote those into imports; @vitejs/plugin-vue leaves
@@ -12,12 +12,13 @@ const webpackAssetRequire = {
 	name: 'webpack-asset-require',
 	enforce: 'post',
 	transform(code, id) {
-		if (!id.includes('.vue') || !code.includes('require(')) return null
+		if (!id.includes('.vue') || !code.includes('require('))
+			return null
 		return code.replace(
 			/require\(\s*["'`](@\/assets\/[^"'`]+\.(?:svg|png|jpe?g|gif|webp))["'`]\s*\)/g,
-			(_match, assetPath) => JSON.stringify(assetPath)
+			(_match, assetPath) => JSON.stringify(assetPath),
 		)
-	}
+	},
 }
 
 export default defineConfig({
@@ -30,28 +31,28 @@ export default defineConfig({
 			// because neither package exports the dist file by subpath.
 			{
 				find: /^@vue\/test-utils$/,
-				replacement: fileURLToPath(new URL('./node_modules/@vue/test-utils/dist/vue-test-utils.esm-bundler.mjs', import.meta.url))
+				replacement: fileURLToPath(new URL('./node_modules/@vue/test-utils/dist/vue-test-utils.esm-bundler.mjs', import.meta.url)),
 			},
 			{
 				find: /^vee-validate$/,
-				replacement: fileURLToPath(new URL('./node_modules/vee-validate/dist/vee-validate.mjs', import.meta.url))
+				replacement: fileURLToPath(new URL('./node_modules/vee-validate/dist/vee-validate.mjs', import.meta.url)),
 			},
 			// Same story: buefy has no `exports` map at all, so `main` wins. A
 			// shallow mount never renders a Buefy slot and survives it; a real one
 			// dies in renderSlot with `Cannot read properties of null (reading 'ce')`.
 			{
 				find: /^buefy$/,
-				replacement: fileURLToPath(new URL('./node_modules/buefy/dist/buefy.esm.js', import.meta.url))
+				replacement: fileURLToPath(new URL('./node_modules/buefy/dist/buefy.esm.js', import.meta.url)),
 			},
-			{find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url))}
+			{ find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
 		],
 		// vue-cli resolves extensionless imports of .vue files; vite does not.
-		extensions: ['.mjs', '.js', '.json', '.vue']
+		extensions: ['.mjs', '.js', '.json', '.vue'],
 	},
 	test: {
 		// resolve.alias only reaches what vite processes. Left externalised, these
 		// packages require('vue') through Node and get their own copy - a second Vue
 		// carries its own reactivity and injection, so no <Field> finds its <Form>.
-		server: {deps: {inline: [/@vue\/test-utils/, /vee-validate/, /buefy/, /vue-dompurify-html/, /vue-i18n/]}}
-	}
+		server: { deps: { inline: [/@vue\/test-utils/, /vee-validate/, /buefy/, /vue-dompurify-html/, /vue-i18n/] } },
+	},
 })

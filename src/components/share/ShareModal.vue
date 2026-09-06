@@ -6,7 +6,7 @@
 				<h3 class="title is-3">{{ $t('Share CasaOS') }}</h3>
 			</div>
 			<div>
-				<button class="delete" type="button" @click="$emit('close')"/>
+				<button class="delete" type="button" @click="$emit('close')"></button>
 			</div>
 		</header>
 		<!-- Modal-Card Header End -->
@@ -17,16 +17,16 @@
 				<div>
 					<div class=" is-size-14px">{{
 						$t('Please invite more friends who are concerned about family and data privacy to join and use CasaOS.')
-						}}
+					}}
 					</div>
 
 					<b-image :src="require('@/assets/img//social/share_img.png')"
-							 class="share-img-shadow share-img"></b-image>
+						class="share-img-shadow share-img"></b-image>
 				</div>
 
 				<div class="buttons is-justify-content-center mb-6 mt-4">
 					<a v-for="site in shareSites" :key="site" :class="`share-network-${site}`"
-					   href="javascript:void(0)" @click="share(site)">
+						href="javascript:void(0)" @click="share(site)">
 						<b-button :icon-left="site" :type="`is-${site}`" class="ml-3 mr-3" icon-pack="casa">
 							Share
 						</b-button>
@@ -40,14 +40,14 @@
 </template>
 
 <script>
-import {marked} from 'marked'
-import shareTo  from '@/service/share'
+import { marked } from 'marked'
+import shareTo from '@/service/share'
 
 export default {
 	props: {
 		changeLog: {
 			type: String,
-			default: ""
+			default: '',
 		},
 	},
 	data() {
@@ -59,14 +59,14 @@ export default {
 			shareSites: [
 				'facebook',
 				'twitter',
-				'reddit'
-			]
-		};
+				'reddit',
+			],
+		}
 	},
 	computed: {
 		markdownToHtml() {
-			return marked.parse(this.changeLog);
-		}
+			return marked.parse(this.changeLog)
+		},
 	},
 	methods: {
 		share(site) {
@@ -74,8 +74,8 @@ export default {
 				url: this.githubUrl,
 				title: this.shareTitle,
 				description: this.shareTitle,
-				hashtags: 'homecloud,opensource'
-			});
+				hashtags: 'homecloud,opensource',
+			})
 		},
 
 		/**
@@ -83,8 +83,8 @@ export default {
 		 * @return {*} void
 		 */
 		async updateSystem() {
-			this.isUpdating = true;
-			await this.$api.sys.updateCasaOS();
+			this.isUpdating = true
+			await this.$api.sys.updateCasaOS()
 			this.getUpdateLogs()
 		},
 
@@ -94,27 +94,25 @@ export default {
 		 */
 		getUpdateLogs() {
 			this.updateTimer = setInterval(() => {
-				this.$api.file.getContent(`/var/log/casaos/upgrade.log`).then(res => {
-
-					this.updateLogs = res.data.data;
+				this.$api.file.getContent(`/var/log/casaos/upgrade.log`).then((res) => {
+					this.updateLogs = res.data.data
 					if (this.updateLogs.includes(`CasaOS upgrade successfully`)) {
-						clearInterval(this.updateTimer);
+						clearInterval(this.updateTimer)
 						setTimeout(() => {
-							location.reload();
-						}, 1000);
+							location.reload()
+						}, 1000)
 					} else if (this.updateLogs.includes(`CasaOS upgrade failed`)) {
 						this.$buefy.toast.open({
 							message: this.$t(`There seems to be a problem with the upgrade process, please try again!`),
-							type: 'is-danger'
+							type: 'is-danger',
 						})
-						clearInterval(this.updateTimer);
+						clearInterval(this.updateTimer)
 						setTimeout(() => {
-							this.isUpdating = false;
-						}, 1000);
-
+							this.isUpdating = false
+						}, 1000)
 					}
 				})
-			}, 200);
+			}, 200)
 		},
 		/**
 		 * @description: check update state if is_need is false then reload page
@@ -122,11 +120,11 @@ export default {
 		 */
 		checkUpdateState() {
 			this.timer = setInterval(() => {
-				this.$api.sys.getVersion().then(res => {
+				this.$api.sys.getVersion().then((res) => {
 					if (res.data.success == 200) {
 						if (!res.data.data.is_need) {
-							clearInterval(this.timer);
-							location.reload();
+							clearInterval(this.timer)
+							location.reload()
 						}
 					}
 				})

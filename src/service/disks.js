@@ -6,28 +6,28 @@
  * @Description: Disk API
  * @FilePath: \CasaOS-UI\src\service\disks.js
  */
-import {api} from "./service.js";
+import { api } from './service.js'
 
-const PREFIX = "/disks";
+const PREFIX = '/disks'
 const disks = {
 
 	// get disk list
 	getDiskList(data) {
-		return api.get(`${PREFIX}`, data);
+		return api.get(`${PREFIX}`, data)
 	},
 
 	umount(data) {
-		return api.delete(`${PREFIX}`, data);
+		return api.delete(`${PREFIX}`, data)
 	},
 
 	// Get usbs
 	getUsbs() {
-		return api.get(`${PREFIX}/usb`);
+		return api.get(`${PREFIX}/usb`)
 	},
 
 	// Umount usb
 	umountUsb(data) {
-		return api.delete(`${PREFIX}/usb`, data);
-	}
+		return api.delete(`${PREFIX}/usb`, data)
+	},
 }
-export default disks;
+export default disks

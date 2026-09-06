@@ -19,35 +19,35 @@ vi.mock('lottie-web-vue', () => ({ default: { name: 'lottie-animation', template
 // Every $api call returns a promise that never settles; the network is not what
 // this test is about.
 const apiHandler = {
-  get: () => new Proxy(() => {}, apiHandler),
-  apply: () => new Promise(() => {}),
+	get: () => new Proxy(() => {}, apiHandler),
+	apply: () => new Promise(() => {}),
 }
 const $api = new Proxy(() => {}, apiHandler)
 
 const mocks = {
-  $t: key => key,
-  $api,
-  $openAPI: $api,
-  $EventBus: { $on: () => {}, $off: () => {}, $emit: () => {} },
-  $store: { state: { networkStorage: [] }, commit: () => {}, dispatch: () => Promise.resolve() },
+	$t: key => key,
+	$api,
+	$openAPI: $api,
+	$EventBus: { $on: () => {}, $off: () => {}, $emit: () => {} },
+	$store: { state: { networkStorage: [] }, commit: () => {}, dispatch: () => Promise.resolve() },
 }
 
 beforeAll(() => {
-  config.global.plugins = [Buefy]
+	config.global.plugins = [Buefy]
 })
 
 describe('storageManagerPanel checkStep', () => {
-  const cases = [
-    ['vee-validate 3, valid', true, true],
-    ['vee-validate 3, invalid', false, false],
-    ['vee-validate 4, valid', { valid: true, errors: {} }, true],
-    ['vee-validate 4, invalid', { valid: false, errors: { StorageName: 'required' } }, false],
-  ]
+	const cases = [
+		['vee-validate 3, valid', true, true],
+		['vee-validate 3, invalid', false, false],
+		['vee-validate 4, valid', { valid: true, errors: {} }, true],
+		['vee-validate 4, invalid', { valid: false, errors: { StorageName: 'required' } }, false],
+	]
 
-  it.each(cases)('reduces %s to a Boolean', async (_label, resolved, expected) => {
-    const wrapper = shallowMount(StorageManagerPanel, { global: { mocks } })
-    const answer = await wrapper.vm.checkStep({ validate: () => Promise.resolve(resolved) })
-    expect(answer).toBe(expected)
-    wrapper.unmount()
-  })
+	it.each(cases)('reduces %s to a Boolean', async (_label, resolved, expected) => {
+		const wrapper = shallowMount(StorageManagerPanel, { global: { mocks } })
+		const answer = await wrapper.vm.checkStep({ validate: () => Promise.resolve(resolved) })
+		expect(answer).toBe(expected)
+		wrapper.unmount()
+	})
 })

@@ -14,7 +14,7 @@
 					<div class="card-container">
 						<div v-for="(item, index) in listData" :key="'list-' + index + item.path" :data-rel="index"
 							class="tr-wrapper rdata" @contextmenu.prevent="openContextMenu($event, item)">
-							<div :class="{ 'active': item.isSelected }" class="tr is-unselectable">
+							<div :class="{ active: item.isSelected }" class="tr is-unselectable">
 
 								<div class="td">
 									<!-- CheckBox Start -->
@@ -33,8 +33,8 @@
 									<div class="action-wrapper mr-3">
 										<!-- Access Button Start -->
 										<b-button class="mr-2" icon-left="account-lock-outline" rounded size="is-small"
-												  :title="$t('Who can open this folder')"
-												  @click.stop="$emit('change-access', item)"></b-button>
+											:title="$t('Who can open this folder')"
+											@click.stop="$emit('change-access', item)"></b-button>
 										<!-- Access Button End -->
 										<!-- Action Button Start -->
 										<action-button :index="index" :item="item"></action-button>
@@ -59,35 +59,35 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin';
-import ActionButton from './ActionButton.vue';
-import ContextMenu from './ContextMenu.vue';
-import ListIconContainer from "../components/ListIconContainer.vue"
+import { mixin } from '@/mixins/mixin'
+import ActionButton from './ActionButton.vue'
+import ContextMenu from './ContextMenu.vue'
+import ListIconContainer from '../components/ListIconContainer.vue'
 
 export default {
 	props: {
 		listData: Array,
-		isLoading: Boolean
+		isLoading: Boolean,
 	},
 	components: {
 		ActionButton,
 		ContextMenu,
-		ListIconContainer
+		ListIconContainer,
 	},
 	mixins: [mixin],
 
 	data() {
 		return {
-			isMobile: false
+			isMobile: false,
 		}
 	},
 	created() {
-		this.M_WIDTH = 768;
+		this.M_WIDTH = 768
 	},
 
 	mounted() {
-		window.addEventListener('resize', this.onResize);
-		this.onResize();
+		window.addEventListener('resize', this.onResize)
+		this.onResize()
 	},
 
 	methods: {

@@ -13,7 +13,7 @@ describe('renderSize', () => {
 		[1024 ** 4, '1 TB'],
 		[1024 ** 5, '1 PB'],
 		[2 * 1024 ** 5, '2 PB'],
-		[1024**6, '1 EB'],
+		[1024 ** 6, '1 EB'],
 	])('format %s bytes as %s', (bytes, formattedSize) => {
 		expect(renderSize(bytes)).toEqual(formattedSize)
 	})

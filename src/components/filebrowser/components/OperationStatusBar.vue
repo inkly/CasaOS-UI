@@ -4,14 +4,14 @@
  * @LastEditors: Jerryk jerry@icewhale.org
  * @LastEditTime: 2022-07-14 12:13:15
  * @FilePath: \CasaOS-UI\src\components\filebrowser\components\OperationStatusBar.vue
- * @Description: 
- * 
- * Copyright (c) 2022 by IceWhale, All Rights Reserved. 
+ * @Description:
+ *
+ * Copyright (c) 2022 by IceWhale, All Rights Reserved.
 -->
 <template>
 	<div v-if="isShow" class="mr-2 operation-status-bar">
 		<b-tooltip :auto-close="['outside']" :triggers="['click']" content-class="tasks-popover"
-				   position="is-bottom" type="is-white">
+			position="is-bottom" type="is-white">
 			<template #content>
 				<div class="is-flex is-align-items-center">
 					<div class=" is-flex-grow-1">
@@ -19,7 +19,7 @@
 					</div>
 					<div class=" is-flex-shrink-0 mr-2">
 						<b-button :label="$t('cancel-all')" :loading="isLoading" class="mr-2" rounded size="is-small"
-								  type="is-primary is-light" @click="cancel"/>
+							type="is-primary is-light" @click="cancel" />
 					</div>
 				</div>
 
@@ -33,43 +33,43 @@
 </template>
 
 <script>
-import OperationStatusItem from './OperationStatusItem.vue';
+import OperationStatusItem from './OperationStatusItem.vue'
 
 export default {
-	name: "operation-status-bar",
+	name: 'operation-status-bar',
 	components: {
 		OperationStatusItem,
 	},
 	data() {
 		return {
 			taskList: [],
-			isLoading: false
+			isLoading: false,
 		}
 	},
 	computed: {
 		isShow() {
 			return this.taskList.length > 0
-		}
+		},
 	},
 	methods: {
 		cancel() {
 			this.isLoading = true
-			this.$api.batch.deleteTask(0).then(res => {
+			this.$api.batch.deleteTask(0).then((res) => {
 				if (res.data.success == 200) {
 					this.isLoading = false
 				}
 			})
-		}
+		},
 	},
 	sockets: {
-		"casaos:file:operate"(res) {
+		'casaos:file:operate'(res) {
 			const file_operate = JSON.parse(res.Properties.file_operate)
 			const taskList = file_operate.data
-			this.taskList = taskList.filter(task => {
+			this.taskList = taskList.filter((task) => {
 				return !task.finished
 			})
-		}
-	}
+		},
+	},
 }
 </script>
 

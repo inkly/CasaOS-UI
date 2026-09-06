@@ -1,6 +1,5 @@
-
 import { createI18n } from 'vue-i18n'
-import messages       from '@/assets/lang'
+import messages from '@/assets/lang'
 
 // legacy: true keeps $t / $i18n injected on every component, so none of the
 // 710 call sites change. silentFallbackWarn is new and necessary: 86 keys
@@ -15,5 +14,5 @@ export default createI18n({
 	silentTranslationWarn: true,
 	silentFallbackWarn: true,
 	warnHtmlInMessage: 'off',
-	messages
+	messages,
 })

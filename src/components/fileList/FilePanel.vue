@@ -31,7 +31,7 @@
 			</div>
 		</section>
 		<!-- Modal-Card Body End -->
-		<!-- Modal-Card Footer Start-->
+		<!-- Modal-Card Footer Start -->
 		<footer class="modal-card-foot is-flex is-align-items-center">
 			<div class="is-flex-grow-1">
 				<div v-if="path.startsWith('/DATA')">
@@ -54,18 +54,18 @@
 				<b-button :label="$t('Select')" rounded type="is-primary" @click="selectFile()" />
 			</div>
 		</footer>
-		<!-- Modal-Card Footer End-->
+		<!-- Modal-Card Footer End -->
 	</div>
 </template>
 
 <script>
-import ListItem from "./ListItem.vue"
+import ListItem from './ListItem.vue'
 import CreatePanel from './CreatePanel.vue'
 import trimStart from 'lodash/trimStart'
 import dropRight from 'lodash/dropRight'
 
 export default {
-	name: "file-panel",
+	name: 'file-panel',
 	components: {
 		ListItem,
 	},
@@ -81,13 +81,13 @@ export default {
 		rootPath: String,
 		showFile: {
 			type: Boolean,
-			default: true
+			default: true,
 		},
 	},
 	computed: {
 		// get Last foler name for breadcrumb
 		lastFolder() {
-			return this.path.split("/").pop()
+			return this.path.split('/').pop()
 		},
 		// check show breadcrumb
 		showPopUp() {
@@ -95,33 +95,33 @@ export default {
 		},
 		// check show breadcrumb dots
 		showDots() {
-			return this.path.split("/").length > 3
+			return this.path.split('/').length > 3
 		},
 		// Root Name
 		rootName() {
-			return trimStart(this.rootPath, '/');
+			return trimStart(this.rootPath, '/')
 		},
 	},
 	created() {
-		this.path = (this.path == this.rootPath) ? this.path : this.path.split("/").length <= 2 ? '/' : dropRight(this.path.split("/"), 1).join("/")
-		this.getFileList(this.path, true);
+		this.path = (this.path == this.rootPath) ? this.path : this.path.split('/').length <= 2 ? '/' : dropRight(this.path.split('/'), 1).join('/')
+		this.getFileList(this.path, true)
 	},
 
 	methods: {
 		// get file list from api
 		getFileList(path, locate = false) {
-			this.$api.folder.getList(path).then(res => {
+			this.$api.folder.getList(path).then((res) => {
 				if (res.data.success == 200) {
 					this.path = path
 					if (this.showFile) {
-						this.fileList = res.data.data.content;
+						this.fileList = res.data.data.content
 					} else {
 						this.fileList = res.data.data.content.filter((item) => {
 							return item.is_dir
-						});
+						})
 					}
 					if (locate) {
-						this.locateFile();
+						this.locateFile()
 					} else {
 						this.activePath = path
 					}
@@ -140,19 +140,19 @@ export default {
 
 		// get parent list
 		getParentList() {
-			let backDir = dropRight(this.path.split("/"), 1).join("/");
+			let backDir = dropRight(this.path.split('/'), 1).join('/')
 			console.log('backDir', backDir)
-			if (backDir === "")
-				backDir = "/"
+			if (backDir === '')
+				backDir = '/'
 
-			this.getFileList(backDir);
+			this.getFileList(backDir)
 		},
 		selectFile() {
-			this.$emit('close');
-			this.$emit('updatePath', this.activePath);
+			this.$emit('close')
+			this.$emit('updatePath', this.activePath)
 		},
 		activeFile(val) {
-			this.activePath = (this.activePath == val) ? this.path : val;
+			this.activePath = (this.activePath == val) ? this.path : val
 		},
 		checkActive(val) {
 			return this.activePath == val
@@ -165,24 +165,24 @@ export default {
 				customClass: 'file-sel-modal',
 				trapFocus: true,
 				canCancel: [],
-				scroll: "keep",
-				animation: "zoom-in",
+				scroll: 'keep',
+				animation: 'zoom-in',
 				events: {
-					'reloadPath': (path) => {
-
-						this.getFileList(this.path);
-						this.activePath = path;
-					}
+					reloadPath: (path) => {
+						this.getFileList(this.path)
+						this.activePath = path
+					},
 				},
 				props: {
-					initPath: (this.path == "") ? this.rootPath : this.path,
-					isDir: isFolder
-				}
+					initPath: (this.path == '') ? this.rootPath : this.path,
+					isDir: isFolder,
+				},
 			})
-		}
+		},
 	},
 }
 </script>
+
 <style lang="scss" scoped>
 .file-sel-modal {
 	.breadcrumb {

@@ -4,26 +4,26 @@
  * @LastEditors: Jerryk jerry@icewhale.org
  * @LastEditTime: 2022-08-02 12:15:00
  * @FilePath: \CasaOS-UI\src\components\filebrowser\components\ListIconContainer.vue
- * @Description: 
- * 
- * Copyright (c) 2022 by IceWhale, All Rights Reserved. 
+ * @Description:
+ *
+ * Copyright (c) 2022 by IceWhale, All Rights Reserved.
 -->
 <template>
 	<div :class="coverType(item)">
 		<transition name="fade">
-			<img v-if="showThumb" key="thumb" :class="isWide?'thumb-w':'thumb-h'" :src="imageData" alt="folder"
-				 class="is-absolute"/>
-			<img v-else key="icon" :class="iconType(item)" :src="getIconFile(item)" alt="folder"/>
+			<img v-if="showThumb" key="thumb" :class="isWide ? 'thumb-w' : 'thumb-h'" :src="imageData" alt="folder"
+				class="is-absolute">
+			<img v-else key="icon" :class="iconType(item)" :src="getIconFile(item)" alt="folder">
 		</transition>
 		<div class="overlay-layer">
 			<b-icon v-if="isShared" class="share-icon casa-color-green casa-shape-rounded casa-shape-16px" custom-size="casa-12px"
-					icon="share" pack="casa"></b-icon>
+				icon="share" pack="casa"></b-icon>
 		</div>
 	</div>
 </template>
 
 <script>
-import {mixin}            from '@/mixins/mixin';
+import { mixin } from '@/mixins/mixin'
 import IconContainerMixin from '@/mixins/IconContainerMixin'
 
 export default {

@@ -2,15 +2,15 @@ import has from 'lodash/has'
 
 export default {
 	props: {
-		item: {}
+		item: {},
 	},
 	data() {
 		return {
 			isLoaded: false,
-			imageData: "",
+			imageData: '',
 			isWide: true,
 			io: {},
-			inViewPort: false
+			inViewPort: false,
 		}
 	},
 	computed: {
@@ -23,7 +23,7 @@ export default {
 				return false
 			} else {
 				if (has(extensions, 'share')) {
-					return extensions.share.shared === "true"
+					return extensions.share.shared === 'true'
 				} else {
 					return false
 				}
@@ -36,9 +36,9 @@ export default {
 	watch: {
 		inViewPort(value) {
 			if (value) {
-				this.loadImage();
+				this.loadImage()
 			}
-		}
+		},
 	},
 	created() {
 		this.io = new IntersectionObserver((events) => {
@@ -51,7 +51,7 @@ export default {
 	},
 	mounted() {
 		if (this.hasThumb(this.item)) {
-			this.io.observe(this.$el);
+			this.io.observe(this.$el)
 		}
 	},
 	methods: {
@@ -61,23 +61,22 @@ export default {
 				return
 			}
 			const imgUrl = this.getThumbUrl(this.item)
-			let img = new Image();
-			img.crossOrigin = location.host;
-			img.src = imgUrl;
+			let img = new Image()
+			img.crossOrigin = location.host
+			img.src = imgUrl
 			img.onload = () => {
-				const canvas = document.createElement('canvas');
-				canvas.width = img.width;
-				canvas.height = img.height;
-				const ctx = canvas.getContext('2d');
-				ctx.drawImage(img, 0, 0, img.width, img.height);
+				const canvas = document.createElement('canvas')
+				canvas.width = img.width
+				canvas.height = img.height
+				const ctx = canvas.getContext('2d')
+				ctx.drawImage(img, 0, 0, img.width, img.height)
 				this.isWide = img.width > img.height
 				this.isLoaded = true
-				this.imageData = canvas.toDataURL('image/png');
-			};
-			img.onerror = (e, s) => {
-				console.log(e, s);
+				this.imageData = canvas.toDataURL('image/png')
 			}
-
-		}
+			img.onerror = (e, s) => {
+				console.log(e, s)
+			}
+		},
 	},
 }

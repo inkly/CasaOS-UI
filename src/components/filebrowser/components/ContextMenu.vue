@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { mixin, wallpaperType } from '@/mixins/mixin';
+import { mixin, wallpaperType } from '@/mixins/mixin'
 import has from 'lodash/has'
 
 export default {
@@ -114,17 +114,17 @@ export default {
 	inject: ['filePanel'],
 	data() {
 		return {
-			verticalPos: "bottom",
-			horizontalPos: "right",
+			verticalPos: 'bottom',
+			horizontalPos: 'right',
 			isConfirmed: false,
 			x: Number,
 			y: Number,
 			showDetail: false,
 			showSingleEdit: true,
-			ani: "fade1",
+			ani: 'fade1',
 			item: {},
 			items: [],
-			hasPasteData: this.$store.state.operateObject != null
+			hasPasteData: this.$store.state.operateObject != null,
 		}
 	},
 
@@ -141,31 +141,31 @@ export default {
 				return false
 			} else {
 				if (has(extensions, 'share')) {
-					return extensions.share.shared === "true"
+					return extensions.share.shared === 'true'
 				} else {
 					return false
 				}
 			}
 		},
 		isMounted() {
-			return this.item.extensions ? this.item.extensions.mounted : false;
-		}
+			return this.item.extensions ? this.item.extensions.mounted : false
+		},
 	},
 	watch: {
 		'$store.state.operateObject': {
 			handler(val) {
 				this.hasPasteData = (val != null)
 			},
-			deep: true
+			deep: true,
 		},
 		showDetial(val) {
 			if (!val) {
-				this.assignBtn();
+				this.assignBtn()
 			}
-		}
+		},
 	},
 	mounted() {
-		this.assignBtn();
+		this.assignBtn()
 	},
 	methods: {
 		open(event, item) {
@@ -174,7 +174,7 @@ export default {
 			if (!bounced) {
 				this.showDetail = (item != undefined)
 				if (this.showDetail) {
-					const isInSelected = this.filePanel.selectedArray.some(obj => {
+					const isInSelected = this.filePanel.selectedArray.some((obj) => {
 						return item.path == obj.path
 					})
 					if (this.filePanel.selectedArray.length > 1 && isInSelected) {
@@ -193,10 +193,10 @@ export default {
 					this.y = event.clientY
 
 					const rightOffset = window.innerWidth - event.clientX - 128
-					this.horizontalPos = rightOffset > 0 ? "right" : "left"
+					this.horizontalPos = rightOffset > 0 ? 'right' : 'left'
 					const bottomOffset = window.innerHeight - event.clientY - 270
-					this.verticalPos = bottomOffset > 0 ? "bottom" : "top"
-					this.$refs.dropDown.isActive = true;
+					this.verticalPos = bottomOffset > 0 ? 'bottom' : 'top'
+					this.$refs.dropDown.isActive = true
 				})
 			}
 		},
@@ -204,7 +204,7 @@ export default {
 			this.$nextTick(() => {
 				this.filePanel.uploaderInstance.assignBrowse(document.getElementById('upfileBtn'))
 				this.filePanel.uploaderInstance.assignBrowse(document.getElementById('upfolderBtn'), true)
-			});
+			})
 		},
 		dorpActiveChange($event, el) {
 			if ($event) {
@@ -217,20 +217,20 @@ export default {
 		},
 
 		// Paste File
-		paste(style = "overwrite") {
+		paste(style = 'overwrite') {
 			this.$refs.dropDown.toggle()
 			this.filePanel.paste(style)
 		},
 		download() {
 			this.$refs.dropDown.toggle()
 			const downItem = (this.items.length == 1) ? this.items[0] : this.items
-			this.downloadFile(downItem);
+			this.downloadFile(downItem)
 		},
 		async shareFoler() {
 			this.$refs.dropDown.toggle()
 			const data = [{
 				path: this.item.path,
-				anonymous: true
+				anonymous: true,
 			}]
 			try {
 				await this.$api.samba.createShare(data)
@@ -240,7 +240,7 @@ export default {
 				this.isSaving = false
 				this.$buefy.toast.open({
 					message: error.response.data.message,
-					type: 'is-danger'
+					type: 'is-danger',
 				})
 			}
 		},
@@ -256,7 +256,7 @@ export default {
 		uploadFile() {
 			this.$refs.dropDown.toggle()
 			this.filePanel.uploaderInstance.opts.query.path = this.filePanel.currentPath
-		}
+		},
 
 	},
 }

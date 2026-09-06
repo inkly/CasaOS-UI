@@ -66,8 +66,8 @@ const Welcome = () => import('@/views/Welcome.vue')
 // is not what these tests are about, and a fake payload would only feed each
 // component a shape it does not expect.
 const apiHandler = {
-  get: () => new Proxy(() => {}, apiHandler),
-  apply: () => new Promise(() => {}),
+	get: () => new Proxy(() => {}, apiHandler),
+	apply: () => new Promise(() => {}),
 }
 const $api = new Proxy(() => {}, apiHandler)
 
@@ -75,138 +75,138 @@ const $api = new Proxy(() => {}, apiHandler)
 const uploaderStub = { assignDrop() {}, on() {}, off() {}, cancel() {} }
 
 const state = {
-  isMobile: false,
-  sidebarOpen: false,
-  siteLoading: false,
-  needInitialization: false,
-  existingAppsSwitch: true,
-  recommendSwitch: true,
-  rssSwitch: false,
-  searchEngine: 'google',
-  searchEngineSwitch: true,
-  appLaunchInIframe: false,
-  appLaunchExceptions: [],
-  hardwareInfo: { cpu: { num: 1, percent: 0 }, mem: { total: 1, used: 0 }, net: [], disk: {} },
-  user: { username: 'tester', avatar: '', role: 'admin' },
-  currentPath: '/',
-  isViewGird: true,
-  operateObject: null,
-  networkStorage: [],
-  shortcutData: [],
-  notImportList: [],
-  wallpaperObject: { path: '', from: 'Built-in' },
+	isMobile: false,
+	sidebarOpen: false,
+	siteLoading: false,
+	needInitialization: false,
+	existingAppsSwitch: true,
+	recommendSwitch: true,
+	rssSwitch: false,
+	searchEngine: 'google',
+	searchEngineSwitch: true,
+	appLaunchInIframe: false,
+	appLaunchExceptions: [],
+	hardwareInfo: { cpu: { num: 1, percent: 0 }, mem: { total: 1, used: 0 }, net: [], disk: {} },
+	user: { username: 'tester', avatar: '', role: 'admin' },
+	currentPath: '/',
+	isViewGird: true,
+	operateObject: null,
+	networkStorage: [],
+	shortcutData: [],
+	notImportList: [],
+	wallpaperObject: { path: '', from: 'Built-in' },
 }
 
 const mocks = {
-  $t: key => key,
-  $tc: key => key,
-  $te: () => true,
-  $i18n: { locale: 'en_us', t: key => key },
-  $api,
-  $openAPI: $api,
-  $EventBus: createEventBus(),
-  $messageBus: Object.assign(() => {}, { on: () => {}, off: () => {}, emit: () => {} }),
-  $baseIp: '127.0.0.1',
-  $baseURL: '127.0.0.1',
-  $protocol: 'http:',
-  $wsProtocol: 'ws:',
-  $route: { path: '/', name: 'home', params: {}, query: {}, meta: {} },
-  $router: { push: () => {}, replace: () => {} },
-  $store: { state, getters: {}, commit: () => {}, dispatch: () => Promise.resolve() },
+	$t: key => key,
+	$tc: key => key,
+	$te: () => true,
+	$i18n: { locale: 'en_us', t: key => key },
+	$api,
+	$openAPI: $api,
+	$EventBus: createEventBus(),
+	$messageBus: Object.assign(() => {}, { on: () => {}, off: () => {}, emit: () => {} }),
+	$baseIp: '127.0.0.1',
+	$baseURL: '127.0.0.1',
+	$protocol: 'http:',
+	$wsProtocol: 'ws:',
+	$route: { path: '/', name: 'home', params: {}, query: {}, meta: {} },
+	$router: { push: () => {}, replace: () => {} },
+	$store: { state, getters: {}, commit: () => {}, dispatch: () => Promise.resolve() },
 }
 
 let problems = []
 
 beforeAll(() => {
-  // Mirrors the plugin stack main.js installs, minus the ones that need a live
-  // socket; a plugin that stops loading is exactly what should fail here.
-  // @vue/test-utils 2 builds a fresh app per mount, so plugins and app-level
-  // config are declared on config.global rather than on a Vue singleton.
-  config.global.plugins = [Buefy, VueDOMPurifyHTML, VAnimateCss]
-  config.global.config.warnHandler = msg => problems.push(msg)
+	// Mirrors the plugin stack main.js installs, minus the ones that need a live
+	// socket; a plugin that stops loading is exactly what should fail here.
+	// @vue/test-utils 2 builds a fresh app per mount, so plugins and app-level
+	// config are declared on config.global rather than on a Vue singleton.
+	config.global.plugins = [Buefy, VueDOMPurifyHTML, VAnimateCss]
+	config.global.config.warnHandler = msg => problems.push(msg)
 })
 
 beforeEach(() => {
-  problems = []
+	problems = []
 })
 
 async function mountOk(load, { mocks: extra = {}, stubs = {}, provide = {}, ...rest } = {}) {
-  // warnHandler only ever sees a warning raised against a mounted app. One
-  // raised at import time has no current instance and goes to console.warn
-  // instead, so without this spy a test can pass while sitting on a pile of
-  // them. Same array, same assertion.
-  const warnSpy = vi.spyOn(console, 'warn').mockImplementation((...args) => {
-    problems.push(args.map(String).join(' '))
-  })
-  try {
-    const { default: Component } = await load()
-    // test-utils 2 moved mocks / stubs / provide under `global`; slots, propsData
-    // and attachTo stay top level. vue-router 4 registers its components as
-    // RouterView / RouterLink, so the kebab stub key no longer matches.
-    const wrapper = shallowMount(Component, {
-      global: {
-        mocks: { ...mocks, ...extra },
-        stubs: { RouterView: true, RouterLink: true, ...stubs },
-        provide,
-      },
-      ...rest,
-    })
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
-    expect(wrapper.element).toBeTruthy()
-    expect(problems).toEqual([])
-    wrapper.unmount()
-  } finally {
-    warnSpy.mockRestore()
-  }
+	// warnHandler only ever sees a warning raised against a mounted app. One
+	// raised at import time has no current instance and goes to console.warn
+	// instead, so without this spy a test can pass while sitting on a pile of
+	// them. Same array, same assertion.
+	const warnSpy = vi.spyOn(console, 'warn').mockImplementation((...args) => {
+		problems.push(args.map(String).join(' '))
+	})
+	try {
+		const { default: Component } = await load()
+		// test-utils 2 moved mocks / stubs / provide under `global`; slots, propsData
+		// and attachTo stay top level. vue-router 4 registers its components as
+		// RouterView / RouterLink, so the kebab stub key no longer matches.
+		const wrapper = shallowMount(Component, {
+			global: {
+				mocks: { ...mocks, ...extra },
+				stubs: { RouterView: true, RouterLink: true, ...stubs },
+				provide,
+			},
+			...rest,
+		})
+		await wrapper.vm.$nextTick()
+		await wrapper.vm.$nextTick()
+		expect(wrapper.element).toBeTruthy()
+		expect(problems).toEqual([])
+		wrapper.unmount()
+	} finally {
+		warnSpy.mockRestore()
+	}
 }
 
 describe('component smoke tests', () => {
-  it('mounts App', () => mountOk(App))
-  it('mounts TopBar', () => mountOk(TopBar, {
-    propsData: { initBarData: { lang: 'en_us', search_engine: 'https://duckduckgo.com/?q=', search_switch: true, recommend_switch: true, existing_apps_switch: true, rss_switch: false } },
-  }))
-  it('mounts BrandBar', () => mountOk(BrandBar))
-  it('mounts ContactBar', () => mountOk(ContactBar))
-  it('mounts SearchBar', () => mountOk(SearchBar))
-  it('mounts AppCard', () => mountOk(AppCard, {
-    propsData: { item: { id: '1', name: 'Test', title: { en_us: 'Test' }, icon: '', status: 'running', app_type: 'system', index: '', port_map: '', host: '', protocol: 'http' } },
-    provide: { homeShowFiles: () => {}, openAppStore: () => {} },
-  }))
-  // Open, with slot content: closed and empty it renders one hidden div and
-  // the test would only prove the SFC parsed.
-  it('mounts AppSideBar', () => mountOk(AppSideBar, {
-    propsData: { open: true },
-    slots: { default: '<p>panel</p>' },
-  }))
-  it('mounts UpdateModal', () => mountOk(UpdateModal, { propsData: { changeLog: '# hi' } }))
-  it('mounts Ports', () => mountOk(Ports, { propsData: { modelValue: [], showHostPost: true } }))
-  it('mounts Login', () => mountOk(Login))
-  // The one Home child that carries the carousel. shallowMount stubs the
-  // Swiper tags, so what this guards is the swiper/vue import resolving
-  // against this Vue: the previous carousel threw at import in the bundle.
-  it('mounts CoreService', () => mountOk(CoreService, { provide: { homeShowFiles: () => {} } }))
-  it('mounts Clock', () => mountOk(Clock))
-  it('mounts Network', () => mountOk(Network))
-  it('mounts ListView', () => mountOk(ListView, { propsData: { listData: [] }, attachTo: document.body }))
+	it('mounts App', () => mountOk(App))
+	it('mounts TopBar', () => mountOk(TopBar, {
+		propsData: { initBarData: { lang: 'en_us', search_engine: 'https://duckduckgo.com/?q=', search_switch: true, recommend_switch: true, existing_apps_switch: true, rss_switch: false } },
+	}))
+	it('mounts BrandBar', () => mountOk(BrandBar))
+	it('mounts ContactBar', () => mountOk(ContactBar))
+	it('mounts SearchBar', () => mountOk(SearchBar))
+	it('mounts AppCard', () => mountOk(AppCard, {
+		propsData: { item: { id: '1', name: 'Test', title: { en_us: 'Test' }, icon: '', status: 'running', app_type: 'system', index: '', port_map: '', host: '', protocol: 'http' } },
+		provide: { homeShowFiles: () => {}, openAppStore: () => {} },
+	}))
+	// Open, with slot content: closed and empty it renders one hidden div and
+	// the test would only prove the SFC parsed.
+	it('mounts AppSideBar', () => mountOk(AppSideBar, {
+		propsData: { open: true },
+		slots: { default: '<p>panel</p>' },
+	}))
+	it('mounts UpdateModal', () => mountOk(UpdateModal, { propsData: { changeLog: '# hi' } }))
+	it('mounts Ports', () => mountOk(Ports, { propsData: { modelValue: [], showHostPost: true } }))
+	it('mounts Login', () => mountOk(Login))
+	// The one Home child that carries the carousel. shallowMount stubs the
+	// Swiper tags, so what this guards is the swiper/vue import resolving
+	// against this Vue: the previous carousel threw at import in the bundle.
+	it('mounts CoreService', () => mountOk(CoreService, { provide: { homeShowFiles: () => {} } }))
+	it('mounts Clock', () => mountOk(Clock))
+	it('mounts Network', () => mountOk(Network))
+	it('mounts ListView', () => mountOk(ListView, { propsData: { listData: [] }, attachTo: document.body }))
 
-  // mounted() reaches into $refs.uploader.uploader for the vue-simple-uploader
-  // handle, which a bare stub does not carry.
-  it('mounts FilePanel', () => mountOk(FilePanel, {
-    stubs: { Uploader: { render: () => h('div'), data: () => ({ uploader: uploaderStub }) } },
-  }))
-  // mounted() measures .action-area, which lives in this component's own template.
-  // beforeUnmount() tears down a peer manager that mounted() only builds a second
-  // later, so this case is also what proves that teardown is guarded.
-  it('mounts DropPage', () => mountOk(DropPage, {
-    attachTo: document.body,
-  }))
-  it('mounts ShareListPage', () => mountOk(ShareListPage))
-  it('mounts CasaWallpaper', () => mountOk(CasaWallpaper))
-  it('mounts StorageManagerPanel', () => mountOk(StorageManagerPanel))
-  it('mounts AccountPanel', () => mountOk(AccountPanel))
-  it('mounts ComposeConfig', () => mountOk(ComposeConfig, {
-    propsData: { totalMemory: 1, networks: [], capArray: [] },
-  }))
-  it('mounts Welcome', () => mountOk(Welcome))
+	// mounted() reaches into $refs.uploader.uploader for the vue-simple-uploader
+	// handle, which a bare stub does not carry.
+	it('mounts FilePanel', () => mountOk(FilePanel, {
+		stubs: { Uploader: { render: () => h('div'), data: () => ({ uploader: uploaderStub }) } },
+	}))
+	// mounted() measures .action-area, which lives in this component's own template.
+	// beforeUnmount() tears down a peer manager that mounted() only builds a second
+	// later, so this case is also what proves that teardown is guarded.
+	it('mounts DropPage', () => mountOk(DropPage, {
+		attachTo: document.body,
+	}))
+	it('mounts ShareListPage', () => mountOk(ShareListPage))
+	it('mounts CasaWallpaper', () => mountOk(CasaWallpaper))
+	it('mounts StorageManagerPanel', () => mountOk(StorageManagerPanel))
+	it('mounts AccountPanel', () => mountOk(AccountPanel))
+	it('mounts ComposeConfig', () => mountOk(ComposeConfig, {
+		propsData: { totalMemory: 1, networks: [], capArray: [] },
+	}))
+	it('mounts Welcome', () => mountOk(Welcome))
 })

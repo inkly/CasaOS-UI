@@ -1,4 +1,3 @@
-
 <template>
 	<b-input v-model="path" :placeholder="placeholder" expanded icon-right="image-filter-center-focus-strong"
 		icon-right-clickable @update:model-value="handleInput" @icon-right-click="selectFile"></b-input>
@@ -7,42 +6,42 @@
 <script>
 import FilePanel from '../fileList/FilePanel.vue'
 
-const DATA_PATH = "/"
-const DEV_PATH = "/dev"
+const DATA_PATH = '/'
+const DEV_PATH = '/dev'
 export default {
-	name: "iconInput",
+	name: 'iconInput',
 	props: {
 		modelValue: String,
 		type: String,
-		placeholder: String
+		placeholder: String,
 	},
 	data() {
 		return {
-			path: this.modelValue
+			path: this.modelValue,
 		}
 	},
 
 	computed: {
 
 		initPath() {
-			if (this.type == "device") {
-				return (this.path == "") ? DEV_PATH : this.path
+			if (this.type == 'device') {
+				return (this.path == '') ? DEV_PATH : this.path
 			} else {
-				return (this.path == "") ? DATA_PATH : this.path
+				return (this.path == '') ? DATA_PATH : this.path
 			}
 		},
 		rootPath() {
-			if (this.type == "device") {
+			if (this.type == 'device') {
 				return DEV_PATH
 			} else {
 				return DATA_PATH
 			}
-		}
+		},
 	},
 	watch: {
 		modelValue(val) {
 			this.path = val
-		}
+		},
 	},
 	methods: {
 		handleInput() {
@@ -51,7 +50,7 @@ export default {
 			this.$emit('input', this.path)
 		},
 		selectFile() {
-			this.showFileModal();
+			this.showFileModal()
 		},
 		showFileModal() {
 			this.$buefy.modal.open({
@@ -60,22 +59,22 @@ export default {
 				customClass: 'file-sel-modal',
 				trapFocus: true,
 				canCancel: [],
-				scroll: "keep",
-				animation: "zoom-in",
+				scroll: 'keep',
+				animation: 'zoom-in',
 				events: {
-					'updatePath': (e) => {
+					updatePath: (e) => {
 						this.path = e
 						this.$emit('update:modelValue', this.path)
 						this.$emit('change', this.path)
 						this.$emit('input', this.path)
-					}
+					},
 				},
 				props: {
 					initPath: this.initPath,
-					rootPath: this.rootPath
-				}
+					rootPath: this.rootPath,
+				},
 			})
-		}
+		},
 	},
 }
 </script>

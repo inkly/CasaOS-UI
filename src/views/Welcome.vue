@@ -19,14 +19,14 @@
 				</div>
 
 				<h2 v-animate-css="s2Ani" class="title is-2 mb-5 has-text-centered __attached_title">{{
-						$t('Welcome to CasaOS')
-					}}</h2>
+					$t('Welcome to CasaOS')
+				}}</h2>
 				<h2 v-animate-css="s3Ani" class="subtitle  has-text-centered __attached_sub_title">{{
-						$t(`Let's create your initial account`)
-					}}</h2>
+					$t(`Let's create your initial account`)
+				}}</h2>
 				<b-button v-animate-css="s4Ani" class="mt-2" rounded type="is-primary" @click="goToStep(2)">{{
-						$t(`Go →`)
-					}}
+					$t(`Go →`)
+				}}
 				</b-button>
 			</div>
 
@@ -35,32 +35,32 @@
 				<div class="is-flex is-justify-content-center ">
 					<div class="has-text-centered">
 						<b-image :src="require('@/assets/img/account/default-avatar.svg')" class="is-128x128"
-								 rounded></b-image>
+							rounded></b-image>
 					</div>
 				</div>
 				<VeeForm v-slot="{ handleSubmit }" as="span">
 					<VeeField v-slot="{ errors, meta }" :model-value="username" name="User" rules="required">
 						<b-field :label="$t('Username')" :message="errors"
-								 :type="{ 'is-danger': errors[0], 'is-success': meta.valid }">
+							:type="{ 'is-danger': errors[0], 'is-success': meta.valid }">
 							<b-input v-model="username" type="text"
-									 v-on:keyup.enter="handleSubmit(register)"></b-input>
+								v-on:keyup.enter="handleSubmit(register)"></b-input>
 						</b-field>
 					</VeeField>
 					<VeeField v-slot="{ errors, meta }" :model-value="password" name="password"
-										rules="required|min:5">
+						rules="required|min:5">
 						<b-field :label="$t('Password')" :message="errors"
-								 :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
-								 class="mt-4">
+							:type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
+							class="mt-4">
 							<b-input v-model="password" password-reveal type="password"
-									 v-on:keyup.enter="handleSubmit(register)"></b-input>
+								v-on:keyup.enter="handleSubmit(register)"></b-input>
 						</b-field>
 					</VeeField>
 					<VeeField v-slot="{ errors, meta }" :model-value="confirmation" name="Password Confirmation"
-										rules="required|confirmed:@password">
+						rules="required|confirmed:@password">
 						<b-field :label="$t('Confirm Password')" :message="errors"
-								 :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mt-4">
+							:type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mt-4">
 							<b-input v-model="confirmation" password-reveal type="password"
-									 v-on:keyup.enter="handleSubmit(register)"></b-input>
+								v-on:keyup.enter="handleSubmit(register)"></b-input>
 						</b-field>
 					</VeeField>
 					<b-button class="mt-5" expanded rounded type="is-primary" @click="handleSubmit(register)">
@@ -73,7 +73,7 @@
 				<h2 class="title is-3  has-text-centered">{{ $t('All things done!') }}</h2>
 				<div class="is-flex is-align-items-center is-justify-content-center">
 					<lottie-animation :animationData="require('@/assets/ani/done.json')" :autoPlay="true" :loop="false"
-									  class="animation" @complete="complete"></lottie-animation>
+						class="animation" @complete="complete"></lottie-animation>
 				</div>
 			</div>
 		</div>
@@ -81,55 +81,55 @@
 </template>
 
 <script>
-import {Field as VeeField, Form as VeeForm} from "vee-validate";
-import LottieAnimation                          from "lottie-web-vue";
-import smoothReflow                             from '@/mixins/smoothReflow'
+import { Field as VeeField, Form as VeeForm } from 'vee-validate'
+import LottieAnimation from 'lottie-web-vue'
+import smoothReflow from '@/mixins/smoothReflow'
 
 export default {
 
-	name: "welcome-page",
+	name: 'welcome-page',
 	mixins: [smoothReflow],
 	data() {
 		return {
 			step: 1,
 			username: '',
 			password: '',
-			confirmation: "",
+			confirmation: '',
 			isLoading: true,
 			isLogin: false,
-			message: "",
+			message: '',
 			notificationShow: false,
 			initAni: {
 				classes: 'zoomIn',
 				delay: 1000,
-				duration: 700
+				duration: 700,
 			},
 			s1Ani: {
 				classes: 'fadeInUp',
 				delay: 1300,
-				duration: 700
+				duration: 700,
 			},
 			s2Ani: {
 				classes: 'fadeInUp',
 				delay: 1700,
-				duration: 700
+				duration: 700,
 			},
 			s3Ani: {
 				classes: 'fadeInUp',
 				delay: 1900,
-				duration: 700
+				duration: 700,
 			},
 			s4Ani: {
 				classes: 'fadeIn',
 				delay: 2500,
-				duration: 700
-			}
+				duration: 700,
+			},
 		}
 	},
 	components: {
 		VeeField,
 		VeeForm,
-		LottieAnimation
+		LottieAnimation,
 	},
 
 	mounted() {
@@ -137,8 +137,7 @@ export default {
 			el: '.login-panel',
 			property: ['height', 'width'],
 		})
-		this.isLoading = false;
-
+		this.isLoading = false
 	},
 
 	methods: {
@@ -147,22 +146,22 @@ export default {
 		 * @return {*}
 		 */
 		register() {
-			const initKey = this.$store.state.initKey;
-			this.$api.users.register(this.username, this.password, initKey).then(res => {
+			const initKey = this.$store.state.initKey
+			this.$api.users.register(this.username, this.password, initKey).then((res) => {
 				if (res.data.success == 200) {
 					this.login().then(() => {
 						// First login set default app order
-						this.$api.users.setCustomStorage("app_order", {data: ["App Store", "Files"]})
-					});
-					this.goToStep(3);
+						this.$api.users.setCustomStorage('app_order', { data: ['App Store', 'Files'] })
+					})
+					this.goToStep(3)
 				}
-			}).catch(err => {
+			}).catch((err) => {
 				this.$buefy.toast.open({
 					message: err.response.data.message,
 					type: 'is-danger',
 					position: 'is-top',
 					duration: 5000,
-					queue: false
+					queue: false,
 				})
 			})
 		},
@@ -174,27 +173,26 @@ export default {
 		async login() {
 			const userRes = await this.$api.users.login(this.username, this.password)
 			if (userRes.data.success == 200) {
-				localStorage.setItem("access_token", userRes.data.data.token.access_token);
-				localStorage.setItem("refresh_token", userRes.data.data.token.refresh_token);
-				localStorage.setItem("expires_at", userRes.data.data.token.expires_at);
-				localStorage.setItem("user", JSON.stringify(userRes.data.data.user));
+				localStorage.setItem('access_token', userRes.data.data.token.access_token)
+				localStorage.setItem('refresh_token', userRes.data.data.token.refresh_token)
+				localStorage.setItem('expires_at', userRes.data.data.token.expires_at)
+				localStorage.setItem('user', JSON.stringify(userRes.data.data.user))
 
-				this.$store.commit("SET_NEED_INITIALIZATION", false);
-				this.$store.commit("SET_INIT_KEY", "");
-				this.$store.commit("SET_USER", userRes.data.data.user);
-				this.$store.commit("SET_ACCESS_TOKEN", userRes.data.data.token.access_token);
-				this.$store.commit("SET_REFRESH_TOKEN", userRes.data.data.token.refresh_token);
+				this.$store.commit('SET_NEED_INITIALIZATION', false)
+				this.$store.commit('SET_INIT_KEY', '')
+				this.$store.commit('SET_USER', userRes.data.data.user)
+				this.$store.commit('SET_ACCESS_TOKEN', userRes.data.data.token.access_token)
+				this.$store.commit('SET_REFRESH_TOKEN', userRes.data.data.token.refresh_token)
 
-				const versionRes = await this.$api.sys.getVersion();
+				const versionRes = await this.$api.sys.getVersion()
 				if (versionRes.data.success == 200) {
-					localStorage.setItem("version", versionRes.data.data.current_version);
+					localStorage.setItem('version', versionRes.data.data.current_version)
 				}
-				sessionStorage.setItem("fromWelcome", true);
+				sessionStorage.setItem('fromWelcome', true)
 				this.isLogin = true
-
 			} else {
 				this.isLogin = false
-				this.message = this.$t("Username or Password error!")
+				this.message = this.$t('Username or Password error!')
 				this.notificationShow = true
 			}
 		},
@@ -203,12 +201,12 @@ export default {
 		},
 		complete() {
 			if (this.isLogin) {
-				this.$router.push("/");
+				this.$router.push('/')
 			} else {
-				this.$router.push("/login");
+				this.$router.push('/login')
 			}
-		}
-	}
+		},
+	},
 }
 </script>
 
@@ -300,7 +298,6 @@ export default {
 		}
 	}
 }
-
 
 // Temporary
 .__attached_title {

@@ -25,15 +25,15 @@
 
 		</section>
 		<!-- Modal-Card Body End -->
-		<!-- Modal-Card Footer Start-->
+		<!-- Modal-Card Footer Start -->
 		<footer class="modal-card-foot is-flex is-align-items-center">
 			<div class="is-flex-grow-1"></div>
 			<div>
-				<b-button :label="$t('Cancel')" rounded @click="$emit('close')"/>
-				<b-button :label="$t('Submit')" rounded type="is-primary" @click="create()"/>
+				<b-button :label="$t('Cancel')" rounded @click="$emit('close')" />
+				<b-button :label="$t('Submit')" rounded type="is-primary" @click="create()" />
 			</div>
 		</footer>
-		<!-- Modal-Card Footer End-->
+		<!-- Modal-Card Footer End -->
 	</div>
 </template>
 
@@ -46,47 +46,47 @@ export default {
 	},
 	data() {
 		return {
-			name: "",
-			message: "",
-			errorType: ""
+			name: '',
+			message: '',
+			errorType: '',
 		}
 	},
 
 	computed: {
 		title() {
-			return this.isDir ? "Create Folder" : "Create File";
-		}
+			return this.isDir ? 'Create Folder' : 'Create File'
+		},
 	},
 	methods: {
 		create() {
 			let path = `${this.initPath}/${this.name}`
 			if (this.isDir) {
-				this.$api.folder.create(path).then(res => {
+				this.$api.folder.create(path).then((res) => {
 					if (res.data.success == 200) {
-						this.successCallBack(path);
+						this.successCallBack(path)
 					} else {
-						this.errorCallBack(res.data.message);
+						this.errorCallBack(res.data.message)
 					}
 				})
 			} else {
-				this.$api.file.create(path).then(res => {
+				this.$api.file.create(path).then((res) => {
 					if (res.data.success == 200) {
-						this.successCallBack(path);
+						this.successCallBack(path)
 					} else {
-						this.errorType = "is-danger"
-						this.errorCallBack(res.data.message);
+						this.errorType = 'is-danger'
+						this.errorCallBack(res.data.message)
 					}
 				})
 			}
 		},
 		successCallBack(path) {
-			this.message = ""
-			this.errorType = ""
-			this.$emit('close');
-			this.$emit("reloadPath", path)
+			this.message = ''
+			this.errorType = ''
+			this.$emit('close')
+			this.$emit('reloadPath', path)
 		},
 		errorCallBack(message) {
-			this.errorType = "is-danger"
+			this.errorType = 'is-danger'
 			this.message = message
 		},
 	},

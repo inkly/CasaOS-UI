@@ -14,9 +14,8 @@
 							</h4>
 
 							<p class="has-text-left is-size-7 has-text-grey-light	">{{ $t('Single Drive Storage') }}, <span
-									class="is-uppercase">{{ item.fsType }}</span>
-								<b-tooltip
-									:label="$t('CasaOS reserves 1% of file space when creating storage in EXT4 format.')"
+								class="is-uppercase">{{ item.fsType }}</span>
+								<b-tooltip :label="$t('CasaOS reserves 1% of file space when creating storage in EXT4 format.')"
 									append-to-body>
 									<b-icon class="mr-2 " icon="question-outline" pack="casa" size="is-small"></b-icon>
 								</b-tooltip>
@@ -25,7 +24,7 @@
 								$t("Available Total", {
 									name: item.diskName,
 									avl: renderSize(item.availSize),
-									total: renderSize(item.size)
+									total: renderSize(item.size),
 								})
 							}}</p>
 						</div>
@@ -38,15 +37,15 @@
 </template>
 
 <script>
-import { mixin } from "@/mixins/mixin";
+import { mixin } from '@/mixins/mixin'
 
 export default {
-	name: "AppsInstallationLocation",
+	name: 'AppsInstallationLocation',
 	mixins: [mixin],
 	props: {
 		item: {
 			type: Object,
-			default: null
+			default: null,
 		},
 	},
 	data() {
@@ -73,7 +72,7 @@ export default {
 				size: 1234567,
 				health: true,
 				temperature: 100,
-			}]
+			}],
 		}
 	},
 	computed: {
@@ -82,8 +81,8 @@ export default {
 				this.$emit('selection', this.item.mount_point)
 				return this.item.mount_point
 			}
-			return ""
-		}
+			return ''
+		},
 	},
 }
 </script>

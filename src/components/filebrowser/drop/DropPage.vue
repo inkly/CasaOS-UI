@@ -22,7 +22,7 @@
 						:customClass="areaClass" :device="item" :index="initIndexArray[index]" :isFloat="isDesktop"
 						:radius="bigRadius" :showIndex="initIndexArray[index]" class="list-complete-item" @showed="
 							isFirstIn = false;
-						showAddButton = true;
+							showAddButton = true;
 						" />
 				</transition-group>
 				<drop-add-button v-if="showAddButton && peersArray.length == 1 && isDesktop" :center="centerPos"
@@ -43,22 +43,22 @@
 </template>
 
 <script>
-import { defineAsyncComponent } from "vue";
-import { PeersManager, ServerConnection } from "./Network.js";
-import { saveAs } from "file-saver";
-import VueBreakpointMixin from "@/mixins/breakpoint";
+import { defineAsyncComponent } from 'vue'
+import { PeersManager, ServerConnection } from './Network.js'
+import { saveAs } from 'file-saver'
+import VueBreakpointMixin from '@/mixins/breakpoint'
 // import { v4 as uuidv4 } from "uuid";
 
 export default {
-	name: "drop-page",
+	name: 'drop-page',
 	mixins: [VueBreakpointMixin],
 	components: {
-		DropItem: defineAsyncComponent(() => import("./DropItem.vue")),
-		DropContextMenu: defineAsyncComponent(() => import("./DropContextMenu.vue")),
-		DropCenterIcon: defineAsyncComponent(() => import("./DropCenterIcon.vue")),
-		DropBg: defineAsyncComponent(() => import("./DropBg.vue")),
-		DropAddButton: defineAsyncComponent(() => import("./DropAddButton.vue")),
-		SidebarMenuButton: defineAsyncComponent(() => import("../components/SidebarMenuButton.vue")),
+		DropItem: defineAsyncComponent(() => import('./DropItem.vue')),
+		DropContextMenu: defineAsyncComponent(() => import('./DropContextMenu.vue')),
+		DropCenterIcon: defineAsyncComponent(() => import('./DropCenterIcon.vue')),
+		DropBg: defineAsyncComponent(() => import('./DropBg.vue')),
+		DropAddButton: defineAsyncComponent(() => import('./DropAddButton.vue')),
+		SidebarMenuButton: defineAsyncComponent(() => import('../components/SidebarMenuButton.vue')),
 	},
 	data() {
 		return {
@@ -74,191 +74,192 @@ export default {
 			},
 			progress: 0,
 			peersArray: [],
-			selfId: "",
+			selfId: '',
 			filesQueue: [],
 			busy: false,
 			showAddButton: false,
 			webscoketServer: null,
 			peersManager: null,
-		};
+		}
 	},
 	computed: {
 		cssVariables() {
 			return {
-				"--big-radius": this.bigRadius + "px",
-				"--contents-width": this.contentsWidth + "px",
-				"--contents-height": this.contentsHeight + "px",
-			};
+				'--big-radius': this.bigRadius + 'px',
+				'--contents-width': this.contentsWidth + 'px',
+				'--contents-height': this.contentsHeight + 'px',
+			}
 		},
 
 		areaClass() {
 			if (this.isDesktop) {
-				return "desktop";
+				return 'desktop'
 			} else if (this.isTablet) {
-				return "tablet";
+				return 'tablet'
 			} else {
-				return "mobile";
+				return 'mobile'
 			}
 		},
 		addButtonIndex() {
 			if (this.isDesktop) {
-				return this.peersArray.length;
+				return this.peersArray.length
 			} else {
-				return this.peersArray.length + 1;
+				return this.peersArray.length + 1
 			}
 		},
 		initIndexArray() {
 			return this.isDesktop
 				? [8, 6, 2, 3, 1, 7, 4, 0, 9, 5]
-				: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+				: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 		},
 	},
 	created() {
-		this.selfId = localStorage.getItem("peerid");
+		this.selfId = localStorage.getItem('peerid')
 	},
 	beforeUnmount() {
-		this.$EventBus.$emit("pagehide");
-		window.removeEventListener("resize", this.resize);
-		document.ondragover = null; // 拖拽进入
+		this.$EventBus.$emit('pagehide')
+		window.removeEventListener('resize', this.resize)
+		document.ondragover = null // 拖拽进入
 
 		// mounted() only builds it after a one second timer, so leaving the page
 		// straight away used to throw here.
-		this.peersManager?.destory();
-		this.peersManager = null;
-		this.webscoketServer = null;
-		this.peersArray = [];
+		this.peersManager?.destory()
+		this.peersManager = null
+		this.webscoketServer = null
+		this.peersArray = []
 	},
 	mounted() {
-		window.addEventListener("resize", this.resize);
-		this.resize();
+		window.addEventListener('resize', this.resize)
+		this.resize()
 		document.ondragover = function (e) {
-			e.preventDefault();
-		}; // 拖拽进入
+			e.preventDefault()
+		} // 拖拽进入
 
-		const delay = this.isMobile ? 0 : 1000;
+		const delay = this.isMobile ? 0 : 1000
 
 		this.$nextTick(() => {
 			setTimeout(() => {
-				this.initServer();
-			}, delay);
-		});
+				this.initServer()
+			}, delay)
+		})
 	},
 	methods: {
 		// Init Ws Server
 		initServer() {
-			const access_token = localStorage.getItem("access_token");
-			const url = `${this.$wsProtocol}//${this.$baseURL}/v1/file/ws?token=${access_token}&peer=${this.selfId}`;
-			console.log(url);
-			
+			const access_token = localStorage.getItem('access_token')
+			const url = `${this.$wsProtocol}//${this.$baseURL}/v1/file/ws?token=${access_token}&peer=${this.selfId}`
+			console.log(url)
+
 			//   const url = `${this.$wsProtocol}//192.168.2.243/v1/file/ws?token=${access_token}&peer=${this.selfId}`;
 			//   const url = `ws://localhost:3000/server/webrtc?peer=${this.selfId}`;
-			this.webscoketServer = new ServerConnection(url, this.$EventBus);
+			this.webscoketServer = new ServerConnection(url, this.$EventBus)
 			// const peers = new PeersManager(server);
-			this.peersManager = new PeersManager(this.webscoketServer, this.$EventBus);
+			this.peersManager = new PeersManager(this.webscoketServer, this.$EventBus)
 			// 初始化列表
-			this.$EventBus.$on("peers", this.handlePeers);
+			this.$EventBus.$on('peers', this.handlePeers)
 			// 获取我是我
-			this.$EventBus.$on("display-name", this.handleSelfJoined);
+			this.$EventBus.$on('display-name', this.handleSelfJoined)
 			// 节点加入
-			this.$EventBus.$on("peer-joined", this.handlePeerJoined);
+			this.$EventBus.$on('peer-joined', this.handlePeerJoined)
 			// 节点离开
-			this.$EventBus.$on("peer-left", this.handlePeerleft);
+			this.$EventBus.$on('peer-left', this.handlePeerleft)
 
 			// 通知接收者一个文件接收完毕
-			this.$EventBus.$on("file-received", this.handleFileReceived);
+			this.$EventBus.$on('file-received', this.handleFileReceived)
 
 			// 通知发送者一个文件发送完毕
-			this.$EventBus.$on("notify-user", this.handleNotifyUser);
+			this.$EventBus.$on('notify-user', this.handleNotifyUser)
 		},
 
 		// Handle file received (from other peer)
 		handleFileReceived(e) {
-			this.nextFile(e);
+			this.nextFile(e)
 		},
 
 		nextFile(nextFile) {
-			if (nextFile) this.filesQueue.push(nextFile);
-			if (this.busy) return;
-			this.busy = true;
-			const file = this.filesQueue.shift();
-			this.displayFile(file);
+			if (nextFile)
+				this.filesQueue.push(nextFile)
+			if (this.busy)
+				return
+			this.busy = true
+			const file = this.filesQueue.shift()
+			this.displayFile(file)
 		},
 		dequeueFile() {
 			if (!this.filesQueue.length) {
 				// nothing to do
-				this.busy = false;
-				return;
+				this.busy = false
+				return
 			}
 			// dequeue next file
 			setTimeout(() => {
-				this.busy = false;
-				this.nextFile();
-			}, 300);
+				this.busy = false
+				this.nextFile()
+			}, 300)
 		},
 
 		getDeviceNameFromPeerList(deviceId) {
-			let deviceName = "";
+			let deviceName = ''
 			this.peersArray.forEach((peer) => {
 				if (peer.id === deviceId) {
-					deviceName = peer.name.displayName;
+					deviceName = peer.name.displayName
 				}
-			});
-			return deviceName;
+			})
+			return deviceName
 		},
 
 		displayFile(file) {
 			this.$buefy.snackbar.open({
 				indefinite: true,
-				message: this.$t("Save {name} {size} from {device}.", {
+				message: this.$t('Save {name} {size} from {device}.', {
 					name: file.file.name,
 					size: this.renderSize(file.file.size),
 					device: this.getDeviceNameFromPeerList(file.from),
 				}),
-				type: "is-file",
-				cancelText: this.$t("Ignore"),
-				actionText: this.$t("Save"),
-				position: "is-bottom",
-				container: "#drop-page",
+				type: 'is-file',
+				cancelText: this.$t('Ignore'),
+				actionText: this.$t('Save'),
+				position: 'is-bottom',
+				container: '#drop-page',
 				onAction: () => {
-					saveAs(file.file.blob, file.file.name);
-					this.dequeueFile();
+					saveAs(file.file.blob, file.file.name)
+					this.dequeueFile()
 				},
-			});
+			})
 			document
-				.querySelector("#drop-page .snackbar .is-cancel")
-				.addEventListener("click", this.onSnackbarClose);
+				.querySelector('#drop-page .snackbar .is-cancel')
+				.addEventListener('click', this.onSnackbarClose)
 		},
 		onSnackbarClose() {
 			document
-				.querySelector("#drop-page .snackbar .is-cancel")
-				.removeEventListener("click", this.onSnackbarClose);
-			this.dequeueFile();
+				.querySelector('#drop-page .snackbar .is-cancel')
+				.removeEventListener('click', this.onSnackbarClose)
+			this.dequeueFile()
 		},
 
 		// Handle notify user (for sender)
 		handleNotifyUser(e) {
-			const type = e.indexOf("lost") > -1 ? "is-danger" : "is-success";
+			const type = e.indexOf('lost') > -1 ? 'is-danger' : 'is-success'
 			this.$buefy.toast.open({
 				duration: 2000,
 				message: this.$t(e),
 				type: type,
-				container: "#drop-page",
-			});
+				container: '#drop-page',
+			})
 		},
 
 		// handelPeers
 		handlePeers(peers) {
-			this.peersArray = peers;
+			this.peersArray = peers
 			// Only listen to peer join event once
-			this.$EventBus.$off("peers");
-
+			this.$EventBus.$off('peers')
 		},
 
 		// Handle Self Joined
 		handleSelfJoined(e) {
-			const message = e.message;
-			const uuid = message.id || localStorage.getItem("peerid");
-			localStorage.setItem("peerid", uuid);
+			const message = e.message
+			const uuid = message.id || localStorage.getItem('peerid')
+			localStorage.setItem('peerid', uuid)
 			this.selfPeer = {
 				id: uuid,
 				name: {
@@ -266,82 +267,83 @@ export default {
 					displayName: message.displayName,
 				},
 				rtcSupported: true,
-			};
-			const even = (element) => element.id === uuid;
-			const isInlist = this.peersArray.some(even);
+			}
+			const even = element => element.id === uuid
+			const isInlist = this.peersArray.some(even)
 			if (!isInlist) {
-				this.peersArray.push(this.selfPeer);
+				this.peersArray.push(this.selfPeer)
 			}
 		},
 
 		// Handle peer joined
 		handlePeerJoined(e) {
-			const peer = e;
-			const even = (element) => element.id === peer.id;
-			const isInlist = this.peersArray.some(even);
+			const peer = e
+			const even = element => element.id === peer.id
+			const isInlist = this.peersArray.some(even)
 			if (!isInlist) {
-				this.peersArray.push(peer);
+				this.peersArray.push(peer)
 			} else {
 				this.peersArray.forEach((element) => {
 					if (element.id == peer.id) {
 						for (let key in element) {
-							element[key] = peer[key];
+							element[key] = peer[key]
 						}
 					}
-				});
+				})
 			}
 		},
 		// Handle peer left
 		handlePeerleft(e) {
 			this.peersArray = this.peersArray.filter((peer) => {
-				return peer.id !== e;
-			});
+				return peer.id !== e
+			})
 		},
 		// handleResize
 		resize() {
-			const gap = 120;
-			const cWidth = document.querySelector(".action-area").clientWidth - gap;
-			const cHeight =
-				document.querySelector(".action-area").clientHeight -
-				gap / 2 -
-				this.bottomGap;
+			const gap = 120
+			const cWidth = document.querySelector('.action-area').clientWidth - gap
+			const cHeight
+				= document.querySelector('.action-area').clientHeight
+				- gap / 2
+				- this.bottomGap
 
 			if (cWidth > cHeight * 2) {
-				this.contentsWidth = cHeight * 2;
-				this.contentsHeight = cHeight + this.bottomGap;
+				this.contentsWidth = cHeight * 2
+				this.contentsHeight = cHeight + this.bottomGap
 			} else {
-				this.contentsWidth = cWidth;
-				this.contentsHeight = cWidth / 2 + this.bottomGap;
+				this.contentsWidth = cWidth
+				this.contentsHeight = cWidth / 2 + this.bottomGap
 			}
 
-			this.bigRadius = this.contentsWidth;
+			this.bigRadius = this.contentsWidth
 
-			this.getCenterPos();
+			this.getCenterPos()
 		},
 		// get center position
 		getCenterPos() {
 			this.centerPos = {
 				x: this.contentsWidth / 2,
 				y: this.contentsHeight - this.bottomGap,
-			};
+			}
 		},
 		renderSize(bytes) {
-			const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-			if (bytes === 0) return "0 Bytes";
-			const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
-			if (i === 0) return `${bytes} ${sizes[i]}`;
-			return `${parseFloat((bytes / 1024 ** i).toFixed(2))} ${sizes[i]}`;
+			const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+			if (bytes === 0)
+				return '0 Bytes'
+			const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10)
+			if (i === 0)
+				return `${bytes} ${sizes[i]}`
+			return `${parseFloat((bytes / 1024 ** i).toFixed(2))} ${sizes[i]}`
 		},
 		guid() {
-			return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+			return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
 				(
-					c ^
-					(crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-				).toString(16)
-			);
+					c
+					^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+				).toString(16))
 		},
 	},
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -21,19 +21,19 @@ export default {
 	props: {
 		index: {
 			type: Number,
-			default: 0
+			default: 0,
 		},
 		gap: {
 			type: Number,
-			default: 0.2
-		}
+			default: 0.2,
+		},
 	},
 
 	data() {
 		return {
 			animation: {
 				animationDelay: this.index * this.gap + 's',
-			}
+			},
 		}
 	},
 

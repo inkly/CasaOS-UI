@@ -2,7 +2,7 @@
 	<div class="mb-5">
 		<div class="field is-flex is-align-items-center mb-2">
 			<label class="label mb-0 is-flex-grow-1">{{ label }}</label>
-			<b-button  icon-left="plus-outline" icon-pack="casa" rounded size="is-small" @click="addItem">{{ $t('Add') }}</b-button>
+			<b-button icon-left="plus-outline" icon-pack="casa" rounded size="is-small" @click="addItem">{{ $t('Add') }}</b-button>
 		</div>
 		<div v-if="items.length == 0" class="is-flex is-align-items-center mb-5 info">
 			<b-icon icon="warning-solid" size="is-small" pack="casa" class="mr-2 "></b-icon>
@@ -46,7 +46,6 @@
 import { computed } from 'vue'
 import IconInput from './IconInput.vue'
 
-
 const props = defineProps({
 	devices: Array,
 	label: String,
@@ -54,11 +53,11 @@ const props = defineProps({
 	type: String,
 	name1: {
 		type: String,
-		default: "Container"
+		default: 'Container',
 	},
 	name2: {
 		type: String,
-		default: "Host"
+		default: 'Host',
 	},
 })
 
@@ -68,13 +67,13 @@ const items = computed({
 	},
 	set(val) {
 		emit('change', val)
-	}
+	},
 })
 
 const addItem = () => {
 	let itemObj = {
-		container: "",
-		host: ""
+		container: '',
+		host: '',
 	}
 	items.value.push(itemObj)
 }
@@ -85,7 +84,6 @@ const removeItem = (index) => {
 defineExpose({
 	items,
 	addItem,
-	removeItem
+	removeItem,
 })
-
 </script>

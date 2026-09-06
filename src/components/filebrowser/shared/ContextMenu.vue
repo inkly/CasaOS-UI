@@ -11,9 +11,9 @@
 <template>
 	<div>
 
-		<div :style="{top:y + 'px',left:x+'px'}" class="action-btn context-menu">
-			<b-dropdown id="'dr-share'" ref="dropDown" :animation="ani" :position="'is-'+verticalPos+'-'+horizontalPos" append-to-body
-						aria-role="list" class="file-dropdown" close-on-click>
+		<div :style="{ top: y + 'px', left: x + 'px' }" class="action-btn context-menu">
+			<b-dropdown id="'dr-share'" ref="dropDown" :animation="ani" :position="'is-' + verticalPos + '-' + horizontalPos" append-to-body
+				aria-role="list" class="file-dropdown" close-on-click>
 				<b-dropdown-item aria-role="menuitem" @click="getShareLink(item)">
 					{{ $t('Get Share Link') }}
 				</b-dropdown-item>
@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import {mixin}     from '@/mixins/mixin';
-import events      from '@/events/events';
+import { mixin } from '@/mixins/mixin'
+import events from '@/events/events'
 import ShareDetial from './ShareDetial.vue'
 
 export default {
@@ -40,11 +40,11 @@ export default {
 	inject: ['filePanel'],
 	data() {
 		return {
-			verticalPos: "bottom",
-			horizontalPos: "right",
+			verticalPos: 'bottom',
+			horizontalPos: 'right',
 			x: Number,
 			y: Number,
-			ani: "fade1",
+			ani: 'fade1',
 			item: {},
 		}
 	},
@@ -56,8 +56,8 @@ export default {
 				this.x = event.clientX
 				this.y = event.clientY
 				const rightOffset = window.innerWidth - event.clientX - 184
-				this.horizontalPos = rightOffset > 0 ? "right" : "left"
-				this.$refs.dropDown.isActive = true;
+				this.horizontalPos = rightOffset > 0 ? 'right' : 'left'
+				this.$refs.dropDown.isActive = true
 			})
 		},
 		getShareLink(item) {
@@ -67,20 +67,20 @@ export default {
 				customClass: 'share-detial-panel file-modal',
 				trapFocus: true,
 				canCancel: [''],
-				scroll: "keep",
-				animation: "zoom-in",
+				scroll: 'keep',
+				animation: 'zoom-in',
 				props: {
-					item: item
-				}
+					item: item,
+				},
 			})
 		},
 		unShare() {
-			this.$EventBus.$emit(events.UN_SHARE, this.item);
+			this.$EventBus.$emit(events.UN_SHARE, this.item)
 		},
 
 		goto() {
-			this.$EventBus.$emit(events.GOTO, this.item);
-		}
+			this.$EventBus.$emit(events.GOTO, this.item)
+		},
 	},
 }
 </script>

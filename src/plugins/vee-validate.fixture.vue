@@ -24,20 +24,20 @@
 </template>
 
 <script>
-import { Field as VeeField, Form as VeeForm } from 'vee-validate';
+import { Field as VeeField, Form as VeeForm } from 'vee-validate'
 
 export default {
 	name: 'vee-validate-fixture',
 	components: {
 		VeeField,
-		VeeForm
+		VeeForm,
 	},
 	data() {
 		return {
 			password: '',
 			confirmation: '',
 			port: '',
-			containerName: ''
+			containerName: '',
 		}
 	},
 	methods: {
@@ -46,7 +46,7 @@ export default {
 		},
 		validateRow(row) {
 			return this.$refs[`row${row}valida`]
-		}
+		},
 	},
 }
 </script>

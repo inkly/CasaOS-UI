@@ -15,26 +15,26 @@ export default {
 	install(app) {
 		app.directive('animate-css', {
 			beforeMount(el, binding) {
-				const value = typeof binding.value === 'string' ? { classes: binding.value } : binding.value;
+				const value = typeof binding.value === 'string' ? { classes: binding.value } : binding.value
 				if (!value || !value.classes) {
-					return;
+					return
 				}
 
-				const { classes, duration, delay, iteration } = value;
+				const { classes, duration, delay, iteration } = value
 				if (duration) {
-					el.style.animationDuration = `${duration}ms`;
+					el.style.animationDuration = `${duration}ms`
 				}
 				if (delay) {
-					el.style.animationDelay = `${delay}ms`;
+					el.style.animationDelay = `${delay}ms`
 				}
 				if (iteration) {
-					el.style.animationIterationCount = `${iteration}`;
+					el.style.animationIterationCount = `${iteration}`
 				}
 
-				const added = ['animated', ...classes.trim().split(/\s+/)];
-				el.classList.add(...added);
-				el.addEventListener('animationend', () => el.classList.remove(...added), { once: true });
+				const added = ['animated', ...classes.trim().split(/\s+/)]
+				el.classList.add(...added)
+				el.addEventListener('animationend', () => el.classList.remove(...added), { once: true })
 			},
-		});
+		})
 	},
 }

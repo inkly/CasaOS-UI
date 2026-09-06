@@ -4,15 +4,15 @@
  * @LastEditors: Jerryk jerry@icewhale.org
  * @LastEditTime: 2022-06-02 19:54:35
  * @FilePath: \CasaOS-UI\src\store\index.js
- * @Description: 
- * 
- * Copyright (c) 2022 by IceWhale, All Rights Reserved. 
+ * @Description:
+ *
+ * Copyright (c) 2022 by IceWhale, All Rights Reserved.
  */
-import { createStore } from 'vuex';
-import state     from './state';
-import getters   from './getters';
-import mutations from './mutations';
-import actions   from './actions';
+import { createStore } from 'vuex'
+import state from './state'
+import getters from './getters'
+import mutations from './mutations'
+import actions from './actions'
 
 export default createStore({
 	state,

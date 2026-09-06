@@ -84,9 +84,9 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin';
+import { mixin } from '@/mixins/mixin'
 import 'viewerjs/dist/viewer.css'
-import { component as Viewer } from "v-viewer"
+import { component as Viewer } from 'v-viewer'
 
 const XIMAGES = ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp', 'svg', 'tiff']
 export default {
@@ -97,15 +97,15 @@ export default {
 			default: () => {
 				return {
 					path: '',
-					name: ''
+					name: '',
 				}
-			}
+			},
 		},
 
-		list: []
+		list: [],
 	},
 	components: {
-		Viewer
+		Viewer,
 	},
 	data() {
 		return {
@@ -117,12 +117,12 @@ export default {
 			currentItemArray: [],
 			viewer: {},
 			viewerOptions: {
-				button: false,    //Hide FullScreen Button
-				toolbar: false,   //Hide Toolbar
-				title: false,     //Hide Title
-				navbar: false,    //Hide Navbar
-				backdrop: false,  //Hide Background
-				transition: false,//Without css3 animation
+				button: false, // Hide FullScreen Button
+				toolbar: false, // Hide Toolbar
+				title: false, // Hide Title
+				navbar: false, // Hide Navbar
+				backdrop: false, // Hide Background
+				transition: false, // Without css3 animation
 				inline: true,
 				initialViewIndex: 0,
 			},
@@ -144,30 +144,29 @@ export default {
 	mounted() {
 		window.onkeyup = (e) => {
 			switch (e.code) {
-
 				case 'ArrowRight':
 					this.next()
-					break;
+					break
 				case 'ArrowLeft':
 					this.prev()
-					break;
+					break
 			}
-		};
+		}
 	},
 
 	methods: {
 		close() {
-			this.$emit("close");
+			this.$emit('close')
 		},
 		inited(viewer) {
 			this.viewer = viewer
 			this.viewer.show()
 			this.onMouseMove()
 		},
-    download() {
-      this.$refs.dropDown?.toggle()
-      this.downloadFile(this.currentItem)
-    },
+		download() {
+			this.$refs.dropDown?.toggle()
+			this.downloadFile(this.currentItem)
+		},
 		next() {
 			if (this.currentItemIndex < this.itemList.length - 1) {
 				this.currentItemIndex++
@@ -181,7 +180,7 @@ export default {
 			}
 		},
 		filterImages() {
-			this.itemList = this.list.filter(item => {
+			this.itemList = this.list.filter((item) => {
 				const ext = this.getFileExt(item)
 				return (!item.is_dir && XIMAGES.indexOf(ext.toLowerCase()) > -1)
 			})
@@ -199,16 +198,16 @@ export default {
 		},
 		// Hide Toolbar after 5 seconds
 		onMouseMove() {
-			this.isMoving = true;
+			this.isMoving = true
 			if (this.timeout !== null) {
-				clearTimeout(this.timeout);
+				clearTimeout(this.timeout)
 			}
 			this.timeout = setTimeout(() => {
-				this.isMoving = false;
-				this.timeout = null;
-			}, 5000);
-		}
-	}
+				this.isMoving = false
+				this.timeout = null
+			}, 5000)
+		},
+	},
 }
 </script>
 

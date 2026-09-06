@@ -31,7 +31,7 @@ export default {
 	name: COMPONENT_NAME,
 	provide() {
 		return {
-			uploader: this
+			uploader: this,
 		}
 	},
 	props: {
@@ -39,11 +39,11 @@ export default {
 			type: Object,
 			default() {
 				return {}
-			}
+			},
 		},
 		autoStart: {
 			type: Boolean,
-			default: true
+			default: true,
 		},
 		fileStatusText: {
 			type: [Object, Function],
@@ -53,16 +53,16 @@ export default {
 					error: 'error',
 					Uploading: 'Uploading',
 					paused: 'paused',
-					waiting: 'waiting'
+					waiting: 'waiting',
 				}
-			}
-		}
+			},
+		},
 	},
 	data() {
 		return {
 			started: false,
 			files: [],
-			fileList: []
+			fileList: [],
 		}
 	},
 	methods: {
@@ -90,9 +90,9 @@ export default {
 		filesSubmitted() {
 			this.files = this.uploader.files
 			this.fileList = this.uploader.fileList
-			this.$api.sys.getVersion().then(res => {
+			this.$api.sys.getVersion().then((res) => {
 				if (this.autoStart && res.status === 200) {
-					this.uploader.opts.headers.Authorization = this.$store.state.access_token || localStorage.getItem("access_token")
+					this.uploader.opts.headers.Authorization = this.$store.state.access_token || localStorage.getItem('access_token')
 					this.uploader.upload()
 				}
 			})
@@ -103,7 +103,7 @@ export default {
 				message: JSON.parse(message).message,
 				type: 'is-danger',
 				position: 'is-top',
-				duration: 5000
+				duration: 5000,
 			})
 		},
 		allEvent(...args) {
@@ -111,7 +111,7 @@ export default {
 			const EVENTSMAP = {
 				[FILE_ADDED_EVENT]: true,
 				[FILES_ADDED_EVENT]: true,
-				[UPLOAD_START_EVENT]: 'uploadStart'
+				[UPLOAD_START_EVENT]: 'uploadStart',
 			}
 			const handler = EVENTSMAP[name]
 			if (handler) {
@@ -122,7 +122,7 @@ export default {
 			}
 			args[0] = kebabCase(name)
 			this.$emit.apply(this, args)
-		}
+		},
 	},
 	created() {
 		// eslint-disable-next-line vue/no-mutating-props
@@ -154,7 +154,7 @@ export default {
 		UploaderList,
 		// UploaderFiles,
 		// UploaderFile
-	}
+	},
 }
 </script>
 

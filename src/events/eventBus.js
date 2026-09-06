@@ -7,23 +7,22 @@ import mitt from 'mitt'
  * `off(type, handler)` removes that exact reference and no other.
  */
 export default function createEventBus() {
-  const emitter = mitt()
+	const emitter = mitt()
 
-  // Vue wrapped every subscriber in its own error handler, so one throwing
-  // listener never stopped the others. mitt does not, and these events drive
-  // whole panels, so keep the isolation rather than inherit a silent
-  // cross-panel failure. Iterating a copy also makes a handler that
-  // unsubscribes itself safe.
-  const emit = (type, payload) => {
-    for (const handler of [...(emitter.all.get(type) || [])]) {
-      try {
-        handler(payload)
-      }
-      catch (error) {
-        console.error(`[EventBus] handler for "${type}" threw`, error)
-      }
-    }
-  }
+	// Vue wrapped every subscriber in its own error handler, so one throwing
+	// listener never stopped the others. mitt does not, and these events drive
+	// whole panels, so keep the isolation rather than inherit a silent
+	// cross-panel failure. Iterating a copy also makes a handler that
+	// unsubscribes itself safe.
+	const emit = (type, payload) => {
+		for (const handler of [...(emitter.all.get(type) || [])]) {
+			try {
+				handler(payload)
+			} catch (error) {
+				console.error(`[EventBus] handler for "${type}" threw`, error)
+			}
+		}
+	}
 
-  return { $on: emitter.on, $off: emitter.off, $emit: emit }
+	return { $on: emitter.on, $off: emitter.off, $emit: emit }
 }

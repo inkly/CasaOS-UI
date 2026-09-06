@@ -6,7 +6,7 @@ const QUERIES = {
 	isMobile: '(max-width: 767.98px)',
 	isTablet: '(min-width: 768px) and (max-width: 1023.98px)',
 	isDesktop: '(min-width: 1024px)',
-};
+}
 
 export default {
 	data() {
@@ -19,19 +19,19 @@ export default {
 
 	created() {
 		this.breakpointWatchers = Object.keys(QUERIES).map((name) => {
-			const query = window.matchMedia(QUERIES[name]);
+			const query = window.matchMedia(QUERIES[name])
 			const onChange = () => {
 				this[name] = query.matches
-			};
-			onChange();
-			query.addEventListener('change', onChange);
+			}
+			onChange()
+			query.addEventListener('change', onChange)
 			return { query, onChange }
-		});
+		})
 	},
 
 	beforeUnmount() {
 		this.breakpointWatchers.forEach(({ query, onChange }) => {
-			query.removeEventListener('change', onChange);
-		});
+			query.removeEventListener('change', onChange)
+		})
 	},
 }

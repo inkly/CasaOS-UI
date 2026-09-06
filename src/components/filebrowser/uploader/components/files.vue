@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import {uploaderMixin} from '../common/mixins'
-import UploaderFile    from './file.vue'
+import { uploaderMixin } from '../common/mixins'
+import UploaderFile from './file.vue'
 
 const COMPONENT_NAME = 'uploader-files'
 
@@ -22,11 +22,11 @@ export default {
 	computed: {
 		files() {
 			return this.uploader.files
-		}
+		},
 	},
 	components: {
-		UploaderFile
-	}
+		UploaderFile,
+	},
 }
 </script>
 

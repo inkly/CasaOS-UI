@@ -1,21 +1,21 @@
 <template>
 	<div :class="{ '_max-width-320': currentStep === 1 || currentStep === 3 || currentStep === 4 }" class="modal-card">
-		<!--    head-->
+		<!--    head -->
 		<header :class="{ 'pri-head': currentStep <= 2 }" class="modal-card-head ">
 			<b-icon v-if="currentStep === 1" class="mr-2 has-text-red" custom-class="_has-text-red-default"
-					icon="danger"
-					pack="casa" size="is-20"></b-icon>
+				icon="danger"
+				pack="casa" size="is-20"></b-icon>
 			<div class="is-flex-grow-1">
 				<h3 class=" title is-3">{{ $t(title) }}
 					<cToolTip v-if="currentStep === 0" modal="is-success"></cToolTip>
 				</h3>
 			</div>
-			<button class="delete" type="button" @click="cancel"/>
+			<button class="delete" type="button" @click="cancel"></button>
 		</header>
-		<!--remind-->
+		<!-- remind -->
 
 		<section v-if="currentStep === 0"
-				 class="notification is-overlay mr-5 ml-5 mb-0 pr-0 pl-0 pt-5 pb-3 non-backgroud">
+			class="notification is-overlay mr-5 ml-5 mb-0 pr-0 pl-0 pt-5 pb-3 non-backgroud">
 			<div v-if="currentStep === 0" class="_is-normal _has-text-gray-600 mb-4">
 				{{ $t('Selected external storage will be merged into CasaOS HD.') }}
 				<div class="mt-1">{{ $t('System AppData remains available at /DATA/AppData.') }}</div>
@@ -35,8 +35,8 @@
 				</div>
 				<div class="is-flex is-flex-shrink-0 is-flex-direction-column is-justify-content-center mr-2">
 					<span class="is-uppercase _is-text-full-03 _has-text-gray-600">{{
-							renderSize(systemStorage.size - systemStorage.availSize)
-						}}/{{ renderSize(systemStorage.size) }}</span>
+						renderSize(systemStorage.size - systemStorage.availSize)
+					}}/{{ renderSize(systemStorage.size) }}</span>
 				</div>
 				<b-checkbox v-model="systemStorageSelected" disabled class="mr-2"></b-checkbox>
 			</div>
@@ -46,77 +46,77 @@
 					<b-icon icon="storage-other" pack="casa" size="is-20"></b-icon>
 				</div>
 				<div class="is-flex is-flex-grow-1 is-flex-direction-column is-justify-content-center ">
-          <span class="is-uppercase one-line _is-text-emphasis-03 _has-text-gray-800">{{
-				  item.name || item.path || $t('undefined')
-			  }}</span>
+					<span class="is-uppercase one-line _is-text-emphasis-03 _has-text-gray-800">{{
+						item.name || item.path || $t('undefined')
+					}}</span>
 				</div>
 				<div class="is-flex is-flex-shrink-0 is-flex-direction-column is-justify-content-center mr-2">
-          <span class="is-uppercase _is-text-full-03 _has-text-gray-600">{{
-				  renderSize(item.size -
-					  item.availSize)
-			  }}/{{ renderSize(item.size) }}</span>
+					<span class="is-uppercase _is-text-full-03 _has-text-gray-600">{{
+						renderSize(item.size
+							- item.availSize)
+					}}/{{ renderSize(item.size) }}</span>
 				</div>
 				<b-checkbox v-model="checkBoxGroup" :disabled="item.persistedIn !== 'casaos' || item.isSystem"
-							:native-value="item.uuid" class="mr-2"></b-checkbox>
+					:native-value="item.uuid" class="mr-2"></b-checkbox>
 			</div>
 
 			<div v-for="(item, index) in storageMissData" :key="item.path + index"
-				 class="is-flex mb-1 radius _height-40">
+				class="is-flex mb-1 radius _height-40">
 				<div class="ml-2 mr-1 is-flex is-align-items-center _has-text-gray-600">
 					<b-icon icon="storage-other" pack="casa" size="is-20"></b-icon>
 				</div>
 				<div class="is-flex is-flex-grow-1 is-flex-direction-column is-justify-content-center ">
-          <span class="is-uppercase one-line  _is-text-emphasis-03 _has-text-gray-800">{{
-				  item.name || item.path || $t('undefined')
-			  }}</span>
+					<span class="is-uppercase one-line  _is-text-emphasis-03 _has-text-gray-800">{{
+						item.name || item.path || $t('undefined')
+					}}</span>
 				</div>
 				<div class="is-flex is-flex-shrink-0 is-flex-direction-column is-justify-content-center mr-2">
-          <span class="is-flex is-align-items-center has-text-danger small-font">
-            <b-icon class="warn" custom-size="casa-16px" icon="danger" pack="casa"></b-icon>
-            {{ $t('Missing') }}
-          </span>
+					<span class="is-flex is-align-items-center has-text-danger small-font">
+						<b-icon class="warn" custom-size="casa-16px" icon="danger" pack="casa"></b-icon>
+						{{ $t('Missing') }}
+					</span>
 				</div>
 				<b-checkbox v-model="checkBoxMissGroup" :native-value="item.path" class="mr-2"></b-checkbox>
 			</div>
 		</section>
 
 		<div v-if="currentStep === 0 && externalStorageCount < 1"
-			 class="_has-background-yellow-default _has-text-white _is-normal is-flex is-align-items-center font ml-5 mr-5 mb-4 pt-2 pb-2 _radius-line">
+			class="_has-background-yellow-default _has-text-white _is-normal is-flex is-align-items-center font ml-5 mr-5 mb-4 pt-2 pb-2 _radius-line">
 			<div class="is-flex left ml-3 mr-2 is-align-items-center">
 				<b-icon class="is-16x16" custom-size="casa-19px" icon="danger" pack="casa"></b-icon>
 			</div>
 			{{ $t('At least one extra hard drive is needed for this feature.') }}
 		</div>
 		<div v-if="currentStep === 0 && storageMissData.length > 0"
-			 class="_has-background-yellow-default _has-text-white _is-normal is-flex is-align-items-center font ml-5 mr-5 mb-4 pt-2 pb-2 _radius-line">
+			class="_has-background-yellow-default _has-text-white _is-normal is-flex is-align-items-center font ml-5 mr-5 mb-4 pt-2 pb-2 _radius-line">
 			<div class="is-flex left ml-3 mr-2 is-align-items-center">
 				<b-icon class="is-16x16" custom-size="casa-19px" icon="danger" pack="casa"></b-icon>
 			</div>
 			{{ $t('Missing storage will be excluded while disconnected and rejoined when available.') }}
 		</div>
 		<div v-if="currentStep === 0 && isRemovingMerge"
-			 class="_has-background-yellow-default _has-text-white _is-normal is-flex is-align-items-center font ml-5 mr-5 mb-4 pt-2 pb-2 _radius-line">
+			class="_has-background-yellow-default _has-text-white _is-normal is-flex is-align-items-center font ml-5 mr-5 mb-4 pt-2 pb-2 _radius-line">
 			<div class="is-flex left ml-3 mr-2 is-align-items-center">
 				<b-icon class="is-16x16" custom-size="casa-19px" icon="danger" pack="casa"></b-icon>
 			</div>
 			{{ $t('Removing merged storage hides external files from /DATA but does not delete them. System AppData will be restored.') }}
 		</div>
 		<div v-if="currentStep === 0 && checkBoxGroup.length > 0"
-			 class="_has-background-yellow-default _has-text-white _is-normal is-flex is-align-items-center font ml-5 mr-5 mb-4 pt-2 pb-2 _radius-line">
+			class="_has-background-yellow-default _has-text-white _is-normal is-flex is-align-items-center font ml-5 mr-5 mb-4 pt-2 pb-2 _radius-line">
 			<div class="is-flex left ml-3 mr-2 is-align-items-center">
 				<b-icon class="is-16x16" custom-size="casa-19px" icon="danger" pack="casa"></b-icon>
 			</div>
 			{{ $t('If the chosen storage is not empty, format better first.') }}
 		</div>
 		<div v-if="currentStep === 0 && isSplit"
-			 class="_has-background-red-default _has-text-white _is-normal is-flex is-align-items-center ml-5 mr-5 mb-4 pt-2 pb-2 _radius-line">
+			class="_has-background-red-default _has-text-white _is-normal is-flex is-align-items-center ml-5 mr-5 mb-4 pt-2 pb-2 _radius-line">
 			<div class="is-flex left ml-3 mr-2 is-align-items-center">
 				<b-icon custom-size="casa-19px" icon="danger" pack="casa"></b-icon>
 			</div>
 			{{ $t('Please back up your data in storage, otherwise the data may be lost.') }}
 		</div>
 		<div v-if="currentStep === 0"
-			 class="_has-background-red-default _has-text-white _is-normal is-flex is-align-items-center ml-5 mr-5 mb-4 pt-2 pb-2 _radius-line">
+			class="_has-background-red-default _has-text-white _is-normal is-flex is-align-items-center ml-5 mr-5 mb-4 pt-2 pb-2 _radius-line">
 			<div class="is-flex left ml-3 mr-2 is-align-items-center">
 				<b-icon custom-size="casa-19px" icon="danger" pack="casa"></b-icon>
 			</div>
@@ -124,17 +124,17 @@
 		</div>
 
 		<section v-if="currentStep > 0"
-				 class="notification is-overlay mr-5 ml-5 mb-0 pr-0 pl-0 pt-5 pb-4 non-backgroud">
+			class="notification is-overlay mr-5 ml-5 mb-0 pr-0 pl-0 pt-5 pb-4 non-backgroud">
 			<div v-if="currentStep === 1" class="is-flex is-align-items-center _is-normal">
-				{{ isRemovingMerge ? $t('The merged view will be removed. External disk data will not be deleted.') :
-					$t('Existing data outside AppData may be hidden while merged storage is active. AppData remains on system storage.') }}
+				{{ isRemovingMerge ? $t('The merged view will be removed. External disk data will not be deleted.')
+					: $t('Existing data outside AppData may be hidden while merged storage is active. AppData remains on system storage.') }}
 			</div>
 			<template v-if="currentStep === 2">
 				<div class="font">
 					{{ $t('Enter "I AM SURE" to proceed with the operation.') }}
 				</div>
 				<b-input ref="inputPassword" v-model="password" class="mt-4" password-reveal
-						 @keyup.enter="verifyOperate(password)"></b-input>
+					@keyup.enter="verifyOperate(password)"></b-input>
 			</template>
 			<div v-if="currentStep === 3" class="is-flex is-align-items-center font">
 				<div class="message-danger left mr-2 is-flex is-align-items-center">
@@ -154,53 +154,53 @@
 			<div class="is-flex-grow-1"></div>
 			<div v-if="currentStep === 0 && mergeStorageList.length > 0" class="mr-4">
 				<b-button :label="$t('Remove Merged Storage')" :loading="isConnecting"
-						  class="_has-background-red-default _radius-line _has-text-white" expaned
-						  @click="removeMergedStorage"/>
+					class="_has-background-red-default _radius-line _has-text-white" expaned
+					@click="removeMergedStorage" />
 			</div>
 			<div class="mr-4">
 				<b-button v-show="currentStep > 2 || currentStep === 1" :label="$t('Cancel')"
-						  class="_has-background-gray-100 _radius-line" expaned @click="currentStep = 0"/>
+					class="_has-background-gray-100 _radius-line" expaned @click="currentStep = 0" />
 			</div>
 			<div>
 				<b-button v-show="currentStep === 0" :label="$t(affirm)" :loading="isConnecting" expaned rounded
-						  type="is-primary" @click="test"/>
+					type="is-primary" @click="test" />
 				<b-button v-show="currentStep === 1" :label="$t(affirm)" :loading="isConnecting"
-						  class="_has-background-red-default _radius-line _has-text-white" expaned
-						  @click="currentStep = 2"/>
+					class="_has-background-red-default _radius-line _has-text-white" expaned
+					@click="currentStep = 2" />
 				<b-button v-show="currentStep === 2" :label="$t(affirm)" :loading="isConnecting" expaned rounded
-						  type="is-primary" @click="verifyOperate(password)"/>
+					type="is-primary" @click="verifyOperate(password)" />
 				<b-button v-show="currentStep === 3" :label="$t(affirm)" :loading="isConnecting" expaned rounded
-						  type="is-primary" @click="restart"/>
+					type="is-primary" @click="restart" />
 				<b-button v-show="currentStep === 4" :label="$t(affirm)" :loading="isConnecting" expaned rounded
-						  type="is-primary" @click="restart"/>
+					type="is-primary" @click="restart" />
 			</div>
 		</footer>
 	</div>
 </template>
 
 <script>
-import {mixin}    from "@/mixins/mixin";
-import events     from '@/events/events';
-import cToolTip   from '@/components/basicComponents/tooltip/tooltip.vue';
-import filter     from 'lodash/filter';
-import {ice_i18n} from "@/mixins/base/common-i18n";
+import { mixin } from '@/mixins/mixin'
+import events from '@/events/events'
+import cToolTip from '@/components/basicComponents/tooltip/tooltip.vue'
+import filter from 'lodash/filter'
+import { ice_i18n } from '@/mixins/base/common-i18n'
 
 export default {
-	name: "MergeStorages",
+	name: 'MergeStorages',
 	mixins: [mixin],
 	props: {
 		mergeStorageList: {
 			type: Array,
 			required: true,
-			default: () => []
+			default: () => [],
 		},
 	},
 	components: {
-		cToolTip
+		cToolTip,
 	},
 	mounted() {
 		this.checkBoxGroup.push(...this.mergeStorageList)
-		this.getDiskList();
+		this.getDiskList()
 	},
 	watch: {
 		// 0 default :mainstorage settings
@@ -211,39 +211,38 @@ export default {
 		currentStep(val) {
 			switch (val) {
 				case 0:
-					this.title = "Merge Storages";
-					this.affirm = "Submit";
-					break;
+					this.title = 'Merge Storages'
+					this.affirm = 'Submit'
+					break
 				case 2:
-					this.title = "Data Protected";
-					this.affirm = "Submit";
+					this.title = 'Data Protected'
+					this.affirm = 'Submit'
 					this.$nextTick(() => {
-						this.$refs.inputPassword.focus();
-					});
-					break;
+						this.$refs.inputPassword.focus()
+					})
+					break
 				case 3:
-					this.title = "APPs Restart";
-					this.affirm = "Restart";
-					break;
+					this.title = 'APPs Restart'
+					this.affirm = 'Restart'
+					break
 				case 4:
-					this.title = "APP Restart";
-					this.affirm = "Restart";
-					break;
+					this.title = 'APP Restart'
+					this.affirm = 'Restart'
+					break
 				default:
-					break;
+					break
 			}
-
-		}
+		},
 	},
 	computed: {
 		extended() {
-			return this.checkBoxGroup.join(":")
+			return this.checkBoxGroup.join(':')
 		},
 		externalStorageCount() {
 			return this.storageData.filter(item => !item.isSystem && item.persistedIn === 'casaos').length
 		},
 		isRemovingMerge() {
-			const hasExternalSelection = this.checkBoxGroup.some(uuid => {
+			const hasExternalSelection = this.checkBoxGroup.some((uuid) => {
 				const storage = this.storageData.find(item => item.uuid === uuid)
 				return storage ? !storage.isSystem : this.checkBoxMissGroup.includes(uuid)
 			}) || this.checkBoxMissGroup.length > 0
@@ -251,7 +250,7 @@ export default {
 		},
 		isSplit() {
 			return !this.mergeStorageList.every(item => this.checkBoxGroup.includes(item) || this.checkBoxMissGroup.includes(item))
-		}
+		},
 	},
 	data() {
 		return {
@@ -265,14 +264,13 @@ export default {
 			checkBoxMissGroup: [],
 			isConnecting: false,
 			currentStep: 0,
-			title: "Merge Storages",
-			affirm: "Submit",
+			title: 'Merge Storages',
+			affirm: 'Submit',
 			password: '',
 			runName: '',
-			notEmpty: false
+			notEmpty: false,
 		}
-	}
-	,
+	},
 	methods: {
 		/**
 		 * @description: Get disk list
@@ -285,7 +283,7 @@ export default {
 			// const storageRes = await this.$api.storage.list({system: "show"})
 			let sourceBasePath = '/var/lib/casaos/files'
 			try {
-				const mergeInfo = await this.$api.local_storage.getMergerfsInfo().then(res => {
+				const mergeInfo = await this.$api.local_storage.getMergerfsInfo().then((res) => {
 					const data = res.data.data
 					return Array.isArray(data) ? data[0] : data
 				})
@@ -296,12 +294,12 @@ export default {
 				console.log(e)
 			}
 
-			const storageRes = await this.$api.storage.list({system: "show"})
+			const storageRes = await this.$api.storage.list({ system: 'show' })
 			const allStorage = []
 			const storageMissArray = []
 			let testMergeMiss = [...this.mergeStorageList]
-			storageRes.data.data.forEach(item => {
-				item.children.forEach(part => {
+			storageRes.data.data.forEach((item) => {
+				item.children.forEach((part) => {
 					part.disk = item.path
 					part.diskName = item.disk_name
 					allStorage.push(part)
@@ -310,39 +308,43 @@ export default {
 			})
 
 			const systemStorage = allStorage
-				.filter(storage => {
+				.filter((storage) => {
 					const mountPoint = storage.mount_point
 					return storage.diskName === 'System' || (mountPoint && (mountPoint === '/'
 						|| sourceBasePath === mountPoint
 						|| sourceBasePath.startsWith(`${mountPoint.replace(/\/$/, '')}/`)))
 				})
 				.sort((a, b) => {
-					if (a.diskName === 'System' && b.diskName !== 'System') return -1
-					if (a.diskName !== 'System' && b.diskName === 'System') return 1
+					if (a.diskName === 'System' && b.diskName !== 'System')
+						return -1
+					if (a.diskName !== 'System' && b.diskName === 'System')
+						return 1
 					return (b.mount_point || '').length - (a.mount_point || '').length
 				})[0]
 			const storageArray = allStorage.filter(storage => storage.diskName !== 'System' && storage !== systemStorage)
-			this.systemStorage = systemStorage ? {
-				uuid: systemStorage.uuid,
-				size: systemStorage.size,
-				availSize: systemStorage.avail,
-				displayPath: '/var/lib/casaos/files',
-			} : null
+			this.systemStorage = systemStorage
+				? {
+						uuid: systemStorage.uuid,
+						size: systemStorage.size,
+						availSize: systemStorage.avail,
+						displayPath: '/var/lib/casaos/files',
+					}
+				: null
 			this.checkBoxMissGroup = []
-			this.checkBoxMissGroup.push(...testMergeMiss);
-			testMergeMiss.forEach(item => {
+			this.checkBoxMissGroup.push(...testMergeMiss)
+			testMergeMiss.forEach((item) => {
 				storageMissArray.push({
-					"uuid": "",
-					"mount_point": "",
-					"size": "",
-					"avail": "",
-					"type": "",
-					"path": item,
-					"drive_name": "",
-					"label": "",
-					"persisted_in": "",
-					"disk": "",
-					"diskName": ""
+					uuid: '',
+					mount_point: '',
+					size: '',
+					avail: '',
+					type: '',
+					path: item,
+					drive_name: '',
+					label: '',
+					persisted_in: '',
+					disk: '',
+					diskName: '',
 				})
 			})
 
@@ -350,7 +352,7 @@ export default {
 				return {
 					uuid: storage.uuid,
 					name: storage.label,
-					isSystem: storage.diskName === "System",
+					isSystem: storage.diskName === 'System',
 					fsType: storage.type,
 					size: storage.size,
 					availSize: storage.avail,
@@ -367,7 +369,7 @@ export default {
 				return {
 					uuid: storage.uuid,
 					name: storage.label,
-					isSystem: storage.diskName === "System",
+					isSystem: storage.diskName === 'System',
 					fsType: storage.type,
 					size: storage.size,
 					availSize: storage.avail,
@@ -388,22 +390,22 @@ export default {
 		async updateMerge(dockerInfo) {
 			const sourceVolumeUuids = [...new Set([
 				...this.checkBoxGroup,
-				...this.checkBoxMissGroup
+				...this.checkBoxMissGroup,
 			])].filter(uuid => uuid && (!this.systemStorage || uuid !== this.systemStorage.uuid))
 
 			try {
 				await this.$api.local_storage.updateMergerfsInfo({
-					"fstype": "fuse.mergerfs",
-					"mount_point": "/DATA",
-					"source_base_path": "",
-					"source_volume_uuids": sourceVolumeUuids
+					fstype: 'fuse.mergerfs',
+					mount_point: '/DATA',
+					source_base_path: '',
+					source_volume_uuids: sourceVolumeUuids,
 				})
 
-				await Promise.all(dockerInfo.map(async item => {
-					if (item.app_type === "v2app") {
-						await this.$openAPI.appCompose.setComposeAppStatus(item.name, "start")
+				await Promise.all(dockerInfo.map(async (item) => {
+					if (item.app_type === 'v2app') {
+						await this.$openAPI.appCompose.setComposeAppStatus(item.name, 'start')
 					} else {
-						await this.$api.container.updateState(item.name, "start")
+						await this.$api.container.updateState(item.name, 'start')
 					}
 				}))
 
@@ -422,16 +424,15 @@ export default {
 			} catch (e) {
 				this.$buefy.toast.open({
 					message: e.response?.data?.data || e.response?.data?.message || e.message,
-					type: "is-danger",
-					position: "is-top",
+					type: 'is-danger',
+					position: 'is-top',
 					duration: 5000,
 				})
 				console.error(e)
 			} finally {
 				this.isConnecting = false
 			}
-		}
-		,
+		},
 
 		cancel() {
 			this.$emit('close')
@@ -442,8 +443,8 @@ export default {
 			this.test()
 		},
 		async test() {
-			if (!this.isRemovingMerge && this.mergeStorageList.length === 0 &&
-				this.checkBoxGroup.length === 0 && this.checkBoxMissGroup.length === 0) {
+			if (!this.isRemovingMerge && this.mergeStorageList.length === 0
+				&& this.checkBoxGroup.length === 0 && this.checkBoxMissGroup.length === 0) {
 				this.$buefy.toast.open({
 					message: this.$t('Select at least one external storage source.'),
 					type: 'is-danger',
@@ -454,16 +455,16 @@ export default {
 			}
 			this.isConnecting = true
 			// submit
-			this.$messageBus('storagemanager_mergestorage');
-			this.notEmpty = await this.$api.folder.getFolderSize('/DATA').then(res => {
+			this.$messageBus('storagemanager_mergestorage')
+			this.notEmpty = await this.$api.folder.getFolderSize('/DATA').then((res) => {
 				return res.data.data
-			}).catch(e => {
+			}).catch((e) => {
 				this.$buefy.toast.open({
 					message: e.response?.data?.data || e.response?.data?.message || e.message,
-					type: "is-danger",
-					position: "is-top",
+					type: 'is-danger',
+					position: 'is-top',
 					duration: 5000,
-				});
+				})
 				console.error(e)
 				return false
 			}).then(() => {
@@ -471,8 +472,8 @@ export default {
 			})
 			// business :: If storage is empty, no reminder
 			if (this.notEmpty) {
-				this.title = this.isRemovingMerge ? "Remove Merged Storage" : "Reset Warning"
-				this.affirm = this.isRemovingMerge ? "Remove" : "Reset"
+				this.title = this.isRemovingMerge ? 'Remove Merged Storage' : 'Reset Warning'
+				this.affirm = this.isRemovingMerge ? 'Remove' : 'Reset'
 				this.currentStep = 1
 			} else {
 				this.submit()
@@ -485,7 +486,7 @@ export default {
 			if (this.isRemovingMerge || notSplit || nextStep) {
 				// get docker info
 				let dockerInfo = await this.$openAPI.appGrid.getAppGrid().then(res => res.data.data || [])
-				dockerInfo = filter(dockerInfo, {status: "running"})
+				dockerInfo = filter(dockerInfo, { status: 'running' })
 				if (this.notEmpty) {
 					this.restart()
 					return
@@ -511,14 +512,14 @@ export default {
 				// 将所有应用重启。
 				// 1、 获取应用信息，主要是运行中的应用. 2、关闭应用 3、合并磁盘 4、启动应用
 				let dockerInfo = await this.$openAPI.appGrid.getAppGrid().then(res => res.data.data || [])
-				dockerInfo = filter(dockerInfo, {status: "running"})
+				dockerInfo = filter(dockerInfo, { status: 'running' })
 				const container = this.$api.container
 				const compose = this.$openAPI.appCompose
-				await Promise.all(dockerInfo.map(async item => {
-					if (item.app_type === "v2app") {
+				await Promise.all(dockerInfo.map(async (item) => {
+					if (item.app_type === 'v2app') {
 						await compose.setComposeAppStatus(item.name, 'stop')
 					} else {
-						await container.updateState(item.name, "stop")
+						await container.updateState(item.name, 'stop')
 					}
 				}))
 
@@ -533,33 +534,32 @@ export default {
 						})
 						return
 					}
-					await this.$api.local_storage.initMergerfs({"mount_point": "/DATA"})
+					await this.$api.local_storage.initMergerfs({ mount_point: '/DATA' })
 				}
 				await this.updateMerge(dockerInfo)
 			} catch (e) {
 				this.isConnecting = false
 				this.$buefy.toast.open({
 					message: e.response?.data?.data || e.response?.data?.message || e.message,
-					position: "is-top",
+					position: 'is-top',
 					type: 'is-danger',
 					duration: 5000,
 				})
 				console.error(e)
 			}
-
 		},
 
 		verifyOperate(content) {
-			if (content === "I AM SURE") {
-				this.submit(null, true);
+			if (content === 'I AM SURE') {
+				this.submit(null, true)
 				return
 			}
 			this.$buefy.toast.open({
 				duration: 5000,
-				message: this.$t("Incorrect input."),
-				type: 'is-danger'
+				message: this.$t('Incorrect input.'),
+				type: 'is-danger',
 			})
-		}
+		},
 
 	}
 	,
@@ -755,6 +755,7 @@ export default {
 	max-width: 20rem;
 }
 </style>
+
 <style lang="scss">
 .pri-mtr-3px .control-label {
 	display: none;

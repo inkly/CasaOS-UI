@@ -1,60 +1,56 @@
 <template>
-	<div id="app" :class="{'is-dark-bg':$route.meta.showBackground}" class="is-flex is-flex-direction-column" :style="{'--vh': vh}" >
+	<div id="app" :class="{ 'is-dark-bg': $route.meta.showBackground }" class="is-flex is-flex-direction-column" :style="{ '--vh': vh }">
 		<template v-if="$route.meta.showBackground">
 			<!-- Background Layer Start -->
-			<casa-wallpaper :animate="isWelcome?initAni:noneAni"></casa-wallpaper>
+			<casa-wallpaper :animate="isWelcome ? initAni : noneAni"></casa-wallpaper>
 			<!-- Background Layer End -->
 
 			<div class="base-bar is-flex"
-				 style="background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, var(--casa-under-wallpaper) 100%);">
+				style="background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, var(--casa-under-wallpaper) 100%);">
 				<!-- BrandBar Start -->
 				<brand-bar v-if="!$store.state.isMobile && $route.path === '/'"
-						   v-animate-css="brandAni"></brand-bar>
+					v-animate-css="brandAni"></brand-bar>
 				<!-- BrandBar End -->
 				<!-- ContactBar Start -->
 				<contact-bar v-if="!$store.state.isMobile && $route.path === '/'"
-							 v-animate-css="contactAni"></contact-bar>
+					v-animate-css="contactAni"></contact-bar>
 				<!-- ContactBar End -->
 			</div>
 
 		</template>
 
 		<!-- Router View Start -->
-		<router-view/>
+		<router-view />
 		<!-- Router View End -->
 
-		<app-launcher-check
-			v-if="appLauncher"
-			:app-detail="appLauncher"
-		/>
-		<app-iframe
-			v-if="appIframe"
+		<app-launcher-check v-if="appLauncher"
+			:app-detail="appLauncher" />
+		<app-iframe v-if="appIframe"
 			:app-name="appIframe.name"
 			:url="appIframe.url"
-			@close="closeAppFrame"
-		/>
+			@close="closeAppFrame" />
 
 	</div>
 </template>
 
 <script>
-import BrandBar      from './components/BrandBar.vue'
-import ContactBar    from './components/ContactBar.vue'
+import BrandBar from './components/BrandBar.vue'
+import ContactBar from './components/ContactBar.vue'
 import CasaWallpaper from './components/wallpaper/CasaWallpaper.vue'
 import AppIframe from './components/Apps/AppIframe.vue'
 import AppLauncherCheck from './views/AppLauncherCheck.vue'
-import {mixin}       from './mixins/mixin';
+import { mixin } from './mixins/mixin'
 import events from '@/events/events'
 
 const customIconConfig = {
 	customIconPacks: {
-		'casa': {
+		casa: {
 			sizes: {
 				'default': 'is-size-4',
 				'is-20': 'is-size-5',
 				'is-small': '',
 				'is-medium': 'is-size-3',
-				'is-large': 'is-size-1'
+				'is-large': 'is-size-1',
 			},
 			iconPrefix: 'casa-',
 			internalIcons: {
@@ -71,10 +67,10 @@ const customIconConfig = {
 				'eye-off': 'eye-off',
 				'menu-down': 'arrow-dropdown',
 				'menu-up': 'arrow-dropup',
-				'close-circle': 'close-circle-outline'
-			}
+				'close-circle': 'close-circle-outline',
+			},
 		},
-	}
+	},
 }
 
 export default {
@@ -88,30 +84,29 @@ export default {
 	mixins: [mixin],
 	data() {
 		return {
-			//isLoading: true,
+			// isLoading: true,
 			steps: [],
 			noneAni: {
 				classes: 'fadeIn',
-				duration: 500
+				duration: 500,
 			},
 			initAni: {
 				classes: 'zoomOutIn',
-				duration: 2500
+				duration: 2500,
 			},
 			brandAni: {
-				classes: "fadeInLeft",
-				duration: 700
+				classes: 'fadeInLeft',
+				duration: 700,
 			},
 			contactAni: {
-				classes: "fadeInRight",
-				duration: 700
+				classes: 'fadeInRight',
+				duration: 700,
 			},
-			"vh": "0px",
+			vh: '0px',
 			appIframe: null,
 			appLauncher: null,
 		}
 	},
-
 
 	computed: {
 		isLoading() {
@@ -119,7 +114,7 @@ export default {
 		},
 		isWelcome() {
 			return this.$store.state.needInitialization
-		}
+		},
 	},
 
 	created() {
@@ -129,22 +124,22 @@ _____             _____ _____
 |   --| .'|_ -| .'|  |  |__   |
 |_____|__,|___|__,|_____|_____|
 -- Made by IceWhale with YOU --
-`, `font-family: monospace`);
+`, `font-family: monospace`)
 
 		this.$buefy.config.setOptions(customIconConfig)
 	},
 	mounted() {
-		this.setInitLang();
-		window.addEventListener('resize', this.onWindowResize);
-		this.onWindowResize();
-		let vh = window.innerHeight * 0.01;
-		this["vh"] = `${vh}px`;
+		this.setInitLang()
+		window.addEventListener('resize', this.onWindowResize)
+		this.onWindowResize()
+		let vh = window.innerHeight * 0.01
+		this['vh'] = `${vh}px`
 		this.$EventBus.$on(events.OPEN_APP_IFRAME, this.openAppIframe)
 		this.$EventBus.$on(events.OPEN_APP_LAUNCHER, this.openAppLauncher)
 		this.$EventBus.$on(events.CLOSE_APP_IFRAME, this.closeAppFrame)
 	},
 	beforeUnmount() {
-		window.removeEventListener('resize', this.onWindowResize);
+		window.removeEventListener('resize', this.onWindowResize)
 		this.$EventBus.$off(events.OPEN_APP_IFRAME, this.openAppIframe)
 		this.$EventBus.$off(events.OPEN_APP_LAUNCHER, this.openAppLauncher)
 		this.$EventBus.$off(events.CLOSE_APP_IFRAME, this.closeAppFrame)
@@ -168,8 +163,8 @@ _____             _____ _____
 		 */
 		setInitLang() {
 			let lang = localStorage.getItem('lang') ? localStorage.getItem('lang') : this.getLangFromBrowser()
-			lang = lang.includes("_") ? lang : "en_us";
-			this.setLang(lang);
+			lang = lang.includes('_') ? lang : 'en_us'
+			this.setLang(lang)
 		},
 		/**
 		 * @description: Handle on Window reize
@@ -182,7 +177,7 @@ _____             _____ _____
 	},
 	sockets: {
 		connect() {
-			console.log('socket connected');
+			console.log('socket connected')
 		},
 
 	},

@@ -16,12 +16,12 @@
 			</div>
 		</section>
 		<!-- Modal-Card Body End -->
-		<!-- Modal-Card Footer Start-->
+		<!-- Modal-Card Footer Start -->
 		<footer class="modal-card-foot is-flex is-align-items-center">
 			<div class="is-flex-grow-1"></div>
 			<div>
 				<b-button :label="$t('Upgrade Now')" :loading="isUpdating" expaned rounded type="is-primary"
-						  @click="updateSystem"/>
+					@click="updateSystem" />
 			</div>
 		</footer>
 		<!-- Modal-Card Footer End -->
@@ -29,13 +29,13 @@
 </template>
 
 <script>
-import {marked} from 'marked'
+import { marked } from 'marked'
 
 export default {
 	props: {
 		changeLog: {
 			type: String,
-			default: ""
+			default: '',
 		},
 	},
 	data() {
@@ -44,25 +44,26 @@ export default {
 			updateTimer: 0,
 			isUpdating: false,
 			markdown: ``,
-			updateLogs: ``
-		};
+			updateLogs: ``,
+		}
 	},
 	computed: {
 		markdownToHtml() {
-			return marked.parse(this.changeLog);
+			return marked.parse(this.changeLog)
 		},
 		updateLogText() {
 			// The installer writes plain text; drop the colour codes a sub-command may leave behind.
-			return this.updateLogs.replace(/\u001b\[[0-9;]*m/g, '');
-		}
+			return this.updateLogs.replace(/\u001b\[[0-9;]*m/g, '')
+		},
 	},
 	watch: {
 		updateLogs() {
 			this.$nextTick(() => {
-				const log = this.$refs.log;
-				if (log) log.scrollTop = log.scrollHeight;
-			});
-		}
+				const log = this.$refs.log
+				if (log)
+					log.scrollTop = log.scrollHeight
+			})
+		},
 	},
 	methods: {
 		/**
@@ -70,8 +71,8 @@ export default {
 		 * @return {*} void
 		 */
 		async updateSystem() {
-			this.isUpdating = true;
-			await this.$api.sys.updateCasaOS();
+			this.isUpdating = true
+			await this.$api.sys.updateCasaOS()
 			// this.checkUpdateState();
 			this.getUpdateLogs()
 		},
@@ -82,30 +83,28 @@ export default {
 		 */
 		getUpdateLogs() {
 			this.updateTimer = setInterval(() => {
-				this.$api.file.getContent(`/var/log/casaos/upgrade.log`).then(res => {
-
-					this.updateLogs = res.data.data;
+				this.$api.file.getContent(`/var/log/casaos/upgrade.log`).then((res) => {
+					this.updateLogs = res.data.data
 					if (this.updateLogs.includes(`CasaOS upgrade successfully`)) {
 						localStorage.setItem('is_update', 'true')
-						clearInterval(this.updateTimer);
+						clearInterval(this.updateTimer)
 						setTimeout(() => {
 							this.$router.replace({
-								path: '/logout'
+								path: '/logout',
 							})
-						}, 1000);
+						}, 1000)
 					} else if (this.updateLogs.includes(`CasaOS upgrade failed`)) {
 						this.$buefy.toast.open({
 							message: this.$t(`There seems to be a problem with the upgrade process, please try again!`),
-							type: 'is-danger'
+							type: 'is-danger',
 						})
-						clearInterval(this.updateTimer);
+						clearInterval(this.updateTimer)
 						setTimeout(() => {
-							this.isUpdating = false;
-						}, 1000);
-
+							this.isUpdating = false
+						}, 1000)
 					}
-				}).catch(() => {}); // the services restart mid-update; the log comes back with them
-			}, 200);
+				}).catch(() => {}) // the services restart mid-update; the log comes back with them
+			}, 200)
 		},
 		/**
 		 * @description: check update state if is_need is false then reload page
@@ -113,11 +112,11 @@ export default {
 		 */
 		checkUpdateState() {
 			this.timer = setInterval(() => {
-				this.$api.sys.getVersion().then(res => {
+				this.$api.sys.getVersion().then((res) => {
 					if (res.data.success == 200) {
 						if (!res.data.data.is_need) {
-							clearInterval(this.timer);
-							location.reload();
+							clearInterval(this.timer)
+							location.reload()
 						}
 					}
 				})

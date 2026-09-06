@@ -1,6 +1,6 @@
 <template>
 	<div class="li">
-		<div v-if="item.visible" :class="{ 'active': isActived }" class="is-flex list-item new-list-item"
+		<div v-if="item.visible" :class="{ active: isActived }" class="is-flex list-item new-list-item"
 			@click="open(item.path)">
 			<div class="cover mr-2 is-flex-shrink-0 is-relative is-flex is-align-items-center">
 				<template v-if="item.icon !== 'danger'">
@@ -25,38 +25,37 @@
 </template>
 
 <script>
-
 export default {
 	inject: ['filePanel'],
 	components: {},
 	props: {
 		item: {
 			type: Object,
-			default: null
+			default: null,
 		},
 		iconColor: {
 			type: String,
-			default: ''
+			default: '',
 		},
 		iconType: {
 			type: String,
-			default: 'font'
+			default: 'font',
 		},
 		iconName: {
 			type: String,
-			default: ''
+			default: '',
 		},
 		isShare: {
 			type: Boolean,
-			default: false
+			default: false,
 		},
 		isShow: {
 			type: Boolean,
-			default: true
+			default: true,
 		},
 		isActive: {
 			type: Boolean,
-			default: false
+			default: false,
 		},
 	},
 	data() {
@@ -65,11 +64,11 @@ export default {
 	computed: {
 		isActived() {
 			if (!this.isActive) {
-				return false;
+				return false
 			}
 			if (this.item.path == this.$store.state.currentPath) {
 				return true
-			} else if (this.item.path != this.$store.state.currentPath && this.item.path != "/" && this.item.path != "/DATA") {
+			} else if (this.item.path != this.$store.state.currentPath && this.item.path != '/' && this.item.path != '/DATA') {
 				if (this.$store.state.currentPath.indexOf(`${this.item.path}/`) != -1) {
 					return true
 				} else {
@@ -78,20 +77,19 @@ export default {
 			} else {
 				return false
 			}
-
 		},
 		isIconFont() {
 			return this.iconType == 'font'
-		}
+		},
 	},
 
 	methods: {
 		open() {
-			this.filePanel.getFileList(this.item.path);
+			this.filePanel.getFileList(this.item.path)
 		},
 
 		rightIconClick() {
-			this.$emit('rightIconClick', this.item);
+			this.$emit('rightIconClick', this.item)
 		},
 	},
 }
@@ -110,7 +108,6 @@ export default {
 		right: -0.15rem;
 		bottom: -0.1rem;
 	}
-
 
 }
 

@@ -8,9 +8,9 @@
  */
 
 import { createRouter, createWebHashHistory } from 'vue-router'
-import api       from '@/service/api'
-import store     from '@/store'
-import route     from './route.js'
+import api from '@/service/api'
+import store from '@/store'
+import route from './route.js'
 
 const routes = route
 
@@ -20,7 +20,7 @@ const routes = route
 // test runner where BASE_URL is undefined.
 const router = createRouter({
 	history: createWebHashHistory(process.env.BASE_URL),
-	routes
+	routes,
 })
 
 // The VueRouter.prototype.push catch-monkeypatch that used to live here is
@@ -32,12 +32,12 @@ const needInit = async () => {
 		return true
 	}
 	try {
-		let userStatusRes = await api.users.getUserStatus();
+		let userStatusRes = await api.users.getUserStatus()
 		if (userStatusRes.data.success === 200 && !userStatusRes.data.data.initialized) {
 			store.commit('SET_NEED_INITIALIZATION', true)
 			store.commit('SET_INIT_KEY', userStatusRes.data.data.key)
-			localStorage.removeItem("access_token");
-			localStorage.removeItem("refresh_token");
+			localStorage.removeItem('access_token')
+			localStorage.removeItem('refresh_token')
 			return true
 		} else {
 			return false
@@ -48,21 +48,20 @@ const needInit = async () => {
 	}
 }
 
-
 router.beforeEach(async (to, from, next) => {
-	const accessToken = localStorage.getItem("access_token");
-	const version = localStorage.getItem("version");
-	const requireAuth = to.matched.some(record => record.meta.requireAuth);
+	const accessToken = localStorage.getItem('access_token')
+	const version = localStorage.getItem('version')
+	const requireAuth = to.matched.some(record => record.meta.requireAuth)
 
 	// 判断是否需要初始化
-	let needInitRes = await needInit();
+	let needInitRes = await needInit()
 
 	if (to.path !== '/welcome') {
 		if (needInitRes) {
-			next('/welcome');
+			next('/welcome')
 		} else {
 			if (requireAuth && !accessToken) {
-				next('/login');
+				next('/login')
 			} else {
 				// The `return`s matter: all three of these used to fall through to
 				// the unconditional next() below. v4 applies only the first call,
@@ -70,37 +69,36 @@ router.beforeEach(async (to, from, next) => {
 				// called more than once` on every login, logout and version-less
 				// boot.
 				switch (to.path) {
-					case "/login":
+					case '/login':
 						if (accessToken) {
-							return next('/');
+							return next('/')
 						}
-						break;
+						break
 
-					case "/logout":
-						localStorage.removeItem("access_token");
-						localStorage.removeItem("refresh_token");
-						localStorage.removeItem("wallpaper");
-						localStorage.removeItem("user");
-						return next('/login');
+					case '/logout':
+						localStorage.removeItem('access_token')
+						localStorage.removeItem('refresh_token')
+						localStorage.removeItem('wallpaper')
+						localStorage.removeItem('user')
+						return next('/login')
 
 					default:
 						if (version == null) {
-							localStorage.removeItem("access_token");
-							return next('/login');
+							localStorage.removeItem('access_token')
+							return next('/login')
 						}
-						break;
+						break
 				}
-				next();
+				next()
 			}
 		}
 	} else {
 		if (needInitRes) {
-			next();
+			next()
 		} else {
-			next("/login");
+			next('/login')
 		}
 	}
-});
-
+})
 
 export default router

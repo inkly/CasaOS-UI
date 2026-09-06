@@ -4,51 +4,51 @@
  * @LastEditors: Jerryk jerry@icewhale.org
  * @LastEditTime: 2022-07-14 10:21:43
  * @FilePath: \CasaOS-UI\src\service\apps.js
- * @Description: 
- * 
- * Copyright (c) 2022 by IceWhale, All Rights Reserved. 
+ * @Description:
+ *
+ * Copyright (c) 2022 by IceWhale, All Rights Reserved.
  */
-import {api} from "./service.js";
+import { api } from './service.js'
 
-const PREFIX = "/apps";
-const PREFIX2 = "/v2/app_management";
+const PREFIX = '/apps'
+const PREFIX2 = '/v2/app_management'
 
 const apps = {
 	// get app list
 	getAppList(data) {
-		return api.get(`${PREFIX}`, data);
+		return api.get(`${PREFIX}`, data)
 	},
 
-	//v2:: get app list
+	// v2:: get app list
 	getAppListV2(data) {
-		return api.get(`${PREFIX2}/apps`, data);
+		return api.get(`${PREFIX2}/apps`, data)
 	},
 
 	// Get app info
 	getAppInfo(id) {
-		return api.get(`${PREFIX}/${id}`);
+		return api.get(`${PREFIX}/${id}`)
 	},
 
-	//v2:: Get app info about store。
+	// v2:: Get app info about store。
 	getAppInfoV2(id) {
-		return api.get(`${PREFIX2}/apps/${id}`);
+		return api.get(`${PREFIX2}/apps/${id}`)
 	},
 
-	//v2:: Get app info about config。
+	// v2:: Get app info about config。
 	getAppConfigV2(id) {
-		return api.get(`${PREFIX2}/container/${id}`);
+		return api.get(`${PREFIX2}/container/${id}`)
 	},
 
 	// Check app version
 	checkAppVersion(id) {
-		return api.patch(`${PREFIX2}/container/${id}`);
+		return api.patch(`${PREFIX2}/container/${id}`)
 	},
 
 	// Check port
 	checkPort() {
-		return api.get(`/v2/casaos/health/ports`);
-	}
+		return api.get(`/v2/casaos/health/ports`)
+	},
 
 }
 
-export default apps;
+export default apps

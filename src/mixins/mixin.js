@@ -6,43 +6,42 @@ import dayjs from 'dayjs'
 import { renderSize } from './file_utils'
 
 const typeMap = {
-	"image-x-generic": ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp', 'svg', 'tiff'],
-	"video-x-generic": ['mkv', 'mp4', '3gp', 'avi', 'm2ts', 'webm', 'flv', 'vob', 'ts', 'mts', 'mov', 'wmv', 'rm', 'rmvb', 'asf', 'wmv', 'mpg', 'm4v', 'mpeg', 'f4v'],
-	"audio-x-generic": ['aac', 'aiff', 'alac', 'amr', 'ape', 'flac', 'm4a', 'mp3', 'ogg', 'opus', 'wma', 'wav'],
-	"text-x-generic": ['txt', 'log', 'pages', 'conf', 'config', 'list', 'ini', 'toml', 'cfg', 'rc', 'env', 'service', 'conf.d', 'htaccess', 'gitconfig', 'vim', 'curlrc', 'wgetrc', 'gitignore'],
-	"text-markdown": ['md'],
-	"text-css": ['php', 'css', 'less', 'scss', 'sass', 'aspx', 'lua', 'vue', 'js', 'go', 'asp', 'bat', 'c', 'cpp', 'cs', 'json', 'py', 'perl', 'sh', 'xml', 'yaml', 'vb', 'vbs', 'sql', 'swift', 'rust', 'rs', 'jsp', 'yml', 'r', 'pl', 'rb', 'src', 'h', 'tex', 'rtf', 'jsonld', 'ttl', 'n3', 'rss', 'atom', 'srt', 'ass', 'tsv', 'vcard', 'asc', 'url', 'diff', 'plaintext'],
-	"text-html": ['html', 'htm', 'shtml', 'shtm'],
-	"application-vnd.ms-word": ['doc', 'docx', 'wps'],
-	"application-vnd.ms-excel": ['xls', 'xlsx', 'csv'],
-	"application-vnd.ms-powerpoint": ['ppt', 'pptx'],
-	"application-pdf": ['pdf'],
-	"application-photoshop": ['psd', 'psb'],
-	"application-illustrator": ['ai', 'eps'],
-	"application-x-wine-extension-cpl": ['exe'],
-	"application-apk": ['apk'],
-	"application-x-zip": ['zip', 'rar', '7z', 'gz', 'ace', 'xz'],
-	"application-x-cd-image": ['iso', 'img', 'vmdk', 'raw', 'vhd'],
-	"application-x-apple": ['dmg', 'ipa', 'pkg'],
-	"application-x-pem-key": ['pem', 'crt', 'ca-bundle', 'p7b', 'p7s', 'der', 'cer', 'pfx', 'p12'],
-	"text-x-cmake": ['makefile', 'cmake', 'dockerfile'],
-	"text-dockerfile": ['dockerfile'],
+	'image-x-generic': ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp', 'svg', 'tiff'],
+	'video-x-generic': ['mkv', 'mp4', '3gp', 'avi', 'm2ts', 'webm', 'flv', 'vob', 'ts', 'mts', 'mov', 'wmv', 'rm', 'rmvb', 'asf', 'wmv', 'mpg', 'm4v', 'mpeg', 'f4v'],
+	'audio-x-generic': ['aac', 'aiff', 'alac', 'amr', 'ape', 'flac', 'm4a', 'mp3', 'ogg', 'opus', 'wma', 'wav'],
+	'text-x-generic': ['txt', 'log', 'pages', 'conf', 'config', 'list', 'ini', 'toml', 'cfg', 'rc', 'env', 'service', 'conf.d', 'htaccess', 'gitconfig', 'vim', 'curlrc', 'wgetrc', 'gitignore'],
+	'text-markdown': ['md'],
+	'text-css': ['php', 'css', 'less', 'scss', 'sass', 'aspx', 'lua', 'vue', 'js', 'go', 'asp', 'bat', 'c', 'cpp', 'cs', 'json', 'py', 'perl', 'sh', 'xml', 'yaml', 'vb', 'vbs', 'sql', 'swift', 'rust', 'rs', 'jsp', 'yml', 'r', 'pl', 'rb', 'src', 'h', 'tex', 'rtf', 'jsonld', 'ttl', 'n3', 'rss', 'atom', 'srt', 'ass', 'tsv', 'vcard', 'asc', 'url', 'diff', 'plaintext'],
+	'text-html': ['html', 'htm', 'shtml', 'shtm'],
+	'application-vnd.ms-word': ['doc', 'docx', 'wps'],
+	'application-vnd.ms-excel': ['xls', 'xlsx', 'csv'],
+	'application-vnd.ms-powerpoint': ['ppt', 'pptx'],
+	'application-pdf': ['pdf'],
+	'application-photoshop': ['psd', 'psb'],
+	'application-illustrator': ['ai', 'eps'],
+	'application-x-wine-extension-cpl': ['exe'],
+	'application-apk': ['apk'],
+	'application-x-zip': ['zip', 'rar', '7z', 'gz', 'ace', 'xz'],
+	'application-x-cd-image': ['iso', 'img', 'vmdk', 'raw', 'vhd'],
+	'application-x-apple': ['dmg', 'ipa', 'pkg'],
+	'application-x-pem-key': ['pem', 'crt', 'ca-bundle', 'p7b', 'p7s', 'der', 'cer', 'pfx', 'p12'],
+	'text-x-cmake': ['makefile', 'cmake', 'dockerfile'],
+	'text-dockerfile': ['dockerfile'],
 }
 const hasThumbImageType = ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp', 'svg']
 
 // eslint-disable-next-line no-unused-vars
 const filePanelMap = {
 	'code-editor': union(typeMap['text-x-generic'], typeMap['text-css'], typeMap['text-html'], typeMap['text-x-cmake'], typeMap['text-dockerfile']),
-	"video-player": union(typeMap['video-x-generic'], typeMap['audio-x-generic']),
-	"image-viewer": typeMap['image-x-generic'],
-	"doc-viewer": union(typeMap['application-vnd.ms-word']),
-	"excel-viewer": union(typeMap['application-vnd.ms-excel']),
+	'video-player': union(typeMap['video-x-generic'], typeMap['audio-x-generic']),
+	'image-viewer': typeMap['image-x-generic'],
+	'doc-viewer': union(typeMap['application-vnd.ms-word']),
+	'excel-viewer': union(typeMap['application-vnd.ms-excel']),
 	// "mark-down-editor":typeMap['text-markdown'],
-	"pdf-viewer": typeMap['application-pdf'],
+	'pdf-viewer': typeMap['application-pdf'],
 }
 export const wallpaperType = ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'svg']
-const wallpaperConfig = "wallpaper"
-
+const wallpaperConfig = 'wallpaper'
 
 export const mixin = {
 	data() {
@@ -52,10 +51,10 @@ export const mixin = {
 		}
 	},
 	mounted() {
-		this.typeMap = typeMap;
+		this.typeMap = typeMap
 	},
 
-	methods: {		
+	methods: {
 		renderSize,
 
 		/**
@@ -63,11 +62,10 @@ export const mixin = {
 		 * @return {String} lang
 		 */
 		getLangFromBrowser() {
-			let lang = navigator.language || navigator.userLanguage;
-			lang = lang.toLowerCase().replace("-", "_");
+			let lang = navigator.language || navigator.userLanguage
+			lang = lang.toLowerCase().replace('-', '_')
 			return lang
 		},
-
 
 		/**
 		 * @description: Set Default Lang from browser
@@ -76,11 +74,10 @@ export const mixin = {
 		 */
 		//
 		setLang(lang) {
-			this.$store.commit('SET_LANGUAGE', lang);
+			this.$store.commit('SET_LANGUAGE', lang)
 			localStorage.setItem('lang', lang)
-			this.$i18n.locale = lang;
+			this.$i18n.locale = lang
 		},
-
 
 		/**
 		 * @description: Get file icon from file name
@@ -89,32 +86,32 @@ export const mixin = {
 		 */
 		//
 		getIconFile(item) {
-			const isDir = (has(item, 'is_dir') || has(item, "isFolder")) ? item.is_dir : false;
-			let icon = "unknown";
+			const isDir = (has(item, 'is_dir') || has(item, 'isFolder')) ? item.is_dir : false
+			let icon = 'unknown'
 			if (isDir) {
-				if (item.type == "application") {
-					icon = "folder-application"
-				} else if (item.type == "usb") {
-					icon = "folder-usb"
-				} else if (["sata", "nvme", "spi", "sas"].includes(item.type)) {
-					icon = "folder-hdd"
-				} else if (item.type == "home") {
-					icon = "folder-root"
-				} else if (item.name == "Media") {
-					icon = "folder-video"
-				} else if (item.name == "Downloads") {
-					icon = "folder-download"
-				} else if (item.name == "Documents") {
-					icon = "folder-documents"
-				} else if (item.name == "Gallery") {
-					icon = "folder-pictures"
-				} else if (item.name == "AppData") {
-					icon = "folder-application"
+				if (item.type == 'application') {
+					icon = 'folder-application'
+				} else if (item.type == 'usb') {
+					icon = 'folder-usb'
+				} else if (['sata', 'nvme', 'spi', 'sas'].includes(item.type)) {
+					icon = 'folder-hdd'
+				} else if (item.type == 'home') {
+					icon = 'folder-root'
+				} else if (item.name == 'Media') {
+					icon = 'folder-video'
+				} else if (item.name == 'Downloads') {
+					icon = 'folder-download'
+				} else if (item.name == 'Documents') {
+					icon = 'folder-documents'
+				} else if (item.name == 'Gallery') {
+					icon = 'folder-pictures'
+				} else if (item.name == 'AppData') {
+					icon = 'folder-application'
 				} else {
-					icon = "folder-default"
+					icon = 'folder-default'
 				}
 			} else {
-				const ext = this.getFileExt(item);
+				const ext = this.getFileExt(item)
 				Object.keys(typeMap).forEach((_type) => {
 					const extensions = typeMap[_type]
 					if (extensions.indexOf(ext.toLowerCase()) > -1) {
@@ -125,7 +122,7 @@ export const mixin = {
 			return require(`@/assets/img/filebrowser/${icon}.svg`)
 		},
 		getPanelType(item) {
-			const ext = this.getFileExt(item);
+			const ext = this.getFileExt(item)
 			let type = null
 			Object.keys(filePanelMap).forEach((_type) => {
 				const extensions = filePanelMap[_type]
@@ -136,7 +133,7 @@ export const mixin = {
 			return type
 		},
 		getFileExt(item) {
-			return item.name.substring(item.name.lastIndexOf('.') + 1);
+			return item.name.substring(item.name.lastIndexOf('.') + 1)
 		},
 		/**
 		 * @description: Download File
@@ -146,15 +143,15 @@ export const mixin = {
 		downloadFile(items) {
 			this.$buefy.toast.open({
 				message: this.$t('Download in preparation...'),
-				type: 'is-white'
+				type: 'is-white',
 			})
 			let url = this.getFileUrl(items)
 			if (!this.downloadIframe) {
-				this.downloadIframe = document.createElement('iframe');
-				this.downloadIframe.style.display = 'none';
-				document.body.appendChild(this.downloadIframe);
+				this.downloadIframe = document.createElement('iframe')
+				this.downloadIframe.style.display = 'none'
+				document.body.appendChild(this.downloadIframe)
 			}
-			this.downloadIframe.src = url;
+			this.downloadIframe.src = url
 			// window.open(url, '_blank');
 		},
 		// Download Button Action
@@ -165,30 +162,30 @@ export const mixin = {
 
 		// Get File Download URL
 		getFileUrl(items) {
-			let apiUrl = ""
-			let path = ""
+			let apiUrl = ''
+			let path = ''
 			let parameters = {
-				token: this.$store.state.access_token
+				token: this.$store.state.access_token,
 			}
 			if (items.constructor === Object) {
 				if (items.is_dir) {
-					apiUrl = `${this.baseUrl}batch`;
+					apiUrl = `${this.baseUrl}batch`
 					path = items.path
 					parameters.files = path
-					return apiUrl + "?" + qs.stringify(parameters)
+					return apiUrl + '?' + qs.stringify(parameters)
 				} else {
-					apiUrl = `/v3/file`;
+					apiUrl = `/v3/file`
 					parameters.path = items.path
-					return apiUrl + "?" + qs.stringify(parameters)
+					return apiUrl + '?' + qs.stringify(parameters)
 				}
 			} else if (items.constructor === Array) {
-				apiUrl = `${this.baseUrl}batch`;
-				const pathArray = items.map(o => {
+				apiUrl = `${this.baseUrl}batch`
+				const pathArray = items.map((o) => {
 					return o.path
 				})
-				path = pathArray.join(",")
+				path = pathArray.join(',')
 				parameters.files = path
-				return apiUrl + "?" + qs.stringify(parameters)
+				return apiUrl + '?' + qs.stringify(parameters)
 			}
 		},
 
@@ -197,19 +194,18 @@ export const mixin = {
 			if (item.is_dir) {
 				return false
 			} else {
-				const ext = this.getFileExt(item);
+				const ext = this.getFileExt(item)
 				return hasThumbImageType.indexOf(ext.toLowerCase()) > -1
 			}
-
 		},
 
 		// Get Image Thumb URL
 		getThumbUrl(item) {
-			let apiUrl = `${this.baseUrl}image?`;
+			let apiUrl = `${this.baseUrl}image?`
 			let parameters = {
 				path: item.path,
 				token: this.$store.state.access_token,
-				type: "thumbnail"
+				type: 'thumbnail',
 			}
 			return apiUrl + qs.stringify(parameters)
 		},
@@ -220,7 +216,7 @@ export const mixin = {
 			copy(this.item.path)
 			this.$buefy.toast.open({
 				message: this.$t('Copied to clipboard'),
-				type: 'is-success'
+				type: 'is-success',
 			})
 		},
 		/**
@@ -231,7 +227,7 @@ export const mixin = {
 		openContextMenu(e, item) {
 			if (item) {
 				e.cancelBubble = true
-				document.dispatchEvent(new CustomEvent('contextmenu'));
+				document.dispatchEvent(new CustomEvent('contextmenu'))
 			}
 			this.$refs.ctxMenu.open(e, item)
 		},
@@ -250,10 +246,10 @@ export const mixin = {
 					{
 						from: items.path,
 
-					}
+					},
 				]
 			} else if (items.constructor === Array) {
-				operateObject.item = items.map(o => {
+				operateObject.item = items.map((o) => {
 					return {
 						from: o.path,
 					}
@@ -263,7 +259,6 @@ export const mixin = {
 			if (this.$refs.dropDown !== undefined) {
 				this.$refs.dropDown.toggle()
 			}
-
 		},
 
 		/**
@@ -274,60 +269,60 @@ export const mixin = {
 		deleteItem(items) {
 			const deleteShare = async (shareId) => {
 				try {
-					await this.$api.samba.deleteShare(shareId);
+					await this.$api.samba.deleteShare(shareId)
 				} catch (e) {
-					console.log(`${e} in delete shortcut`);
+					console.log(`${e} in delete shortcut`)
 				}
-			};
+			}
 
 			const deleteShortcut = async (item) => {
 				try {
-					await deleteShare(item.extensions.share.id);
-					this.$store.commit('REMOVE_SHORTCUT', item.path);
+					await deleteShare(item.extensions.share.id)
+					this.$store.commit('REMOVE_SHORTCUT', item.path)
 				} catch (e) {
-					console.log(`${e} in delete shortcut`);
+					console.log(`${e} in delete shortcut`)
 				}
-			};
+			}
 
 			const deleteItems = async (paths) => {
 				try {
-					const res = await this.$api.batch.delete(JSON.stringify(paths));
+					const res = await this.$api.batch.delete(JSON.stringify(paths))
 					if (res.data.success === 200) {
-						const shotcutData = this.$store.state['shortcutData'];
+						const shotcutData = this.$store.state['shortcutData']
 						const updatedShotcutData = shotcutData.filter((item) => {
 							if (paths.includes(item.path)) {
-								deleteShortcut(item);
-								return false;
+								deleteShortcut(item)
+								return false
 							}
-							return true;
-						});
-						await this.$store.dispatch('SET_SHORTCUT_DATA', updatedShotcutData);
+							return true
+						})
+						await this.$store.dispatch('SET_SHORTCUT_DATA', updatedShotcutData)
 						if (this.$refs.dropDown !== undefined) {
-							this.$refs.dropDown.toggle();
-							this.$emit("reload");
+							this.$refs.dropDown.toggle()
+							this.$emit('reload')
 						}
-						if (typeof this.reload === "function") {
-							this.reload();
+						if (typeof this.reload === 'function') {
+							this.reload()
 						}
 					} else {
 						this.$buefy.toast.open({
 							message: res.data.message,
-							type: 'is-danger'
-						});
+							type: 'is-danger',
+						})
 					}
 				} catch (e) {
-					console.log(`${e} in deleteItem`);
+					console.log(`${e} in deleteItem`)
 				}
-			};
-
-			let paths = [];
-			if (items.constructor === Object) {
-				paths = [items.path];
-			} else if (items.constructor === Array) {
-				paths = items.map((o) => o.path);
 			}
 
-			deleteItems(paths);
+			let paths = []
+			if (items.constructor === Object) {
+				paths = [items.path]
+			} else if (items.constructor === Array) {
+				paths = items.map(o => o.path)
+			}
+
+			deleteItems(paths)
 		},
 		/**
 		 * @description: Set an image as wallpaper
@@ -338,35 +333,34 @@ export const mixin = {
 			const postData = {
 				path: item.path,
 			}
-			this.$api.users.setUserImage(wallpaperConfig, postData).then(res => {
+			this.$api.users.setUserImage(wallpaperConfig, postData).then((res) => {
 				if (res.data.success === 200) {
 					const resData = res.data.data
 					let wallpaperData = {
-						path: "SERVER_URL" + resData.online_path + "&time=" + new Date().getTime(),
-						from: "Files"
+						path: 'SERVER_URL' + resData.online_path + '&time=' + new Date().getTime(),
+						from: 'Files',
 					}
-					this.$api.users.setCustomStorage(wallpaperConfig, wallpaperData).then(res => {
+					this.$api.users.setCustomStorage(wallpaperConfig, wallpaperData).then((res) => {
 						if (res.data.success === 200) {
 							this.$store.commit('SET_WALLPAPER', {
 								path: res.data.data.path,
-								from: res.data.data.from
+								from: res.data.data.from,
 							})
 							this.$buefy.toast.open({
 								message: this.$t('Set wallpaper successfully.'),
-								type: 'is-success'
+								type: 'is-success',
 							})
 						} else {
 							this.$buefy.toast.open({
 								message: this.$t('Save failed, please try again!'),
-								type: 'is-danger'
+								type: 'is-danger',
 							})
 						}
-
 					})
 				} else {
 					this.$buefy.toast.open({
 						message: this.$t('Save failed, please try again!'),
-						type: 'is-danger'
+						type: 'is-danger',
 					})
 				}
 			})
@@ -376,26 +370,26 @@ export const mixin = {
 		},
 
 		toFahrenheit: function (value) {
-			return (32 + value * 1.8).toFixed(1);
+			return (32 + value * 1.8).toFixed(1)
 		},
 
 		getProgressType(per) {
 			if (per >= 0 && per < 80) {
-				return "is-primary"
+				return 'is-primary'
 			} else if (per >= 80 && per < 90) {
-				return "is-warning"
+				return 'is-warning'
 			} else {
-				return "is-danger"
+				return 'is-danger'
 			}
 		},
 
 		dateFmt: function (value) {
-			const fileDate = new Date(value);
-			const currentDate = new Date();
-			const isSameYear = fileDate.getFullYear() === currentDate.getFullYear();
+			const fileDate = new Date(value)
+			const currentDate = new Date()
+			const isSameYear = fileDate.getFullYear() === currentDate.getFullYear()
 
 			// 获取当前语言环境，默认为浏览器语言
-			const locale = (window.localStorage.getItem('lang') || navigator.language || 'en').replace('_', '-');
+			const locale = (window.localStorage.getItem('lang') || navigator.language || 'en').replace('_', '-')
 
 			if (isSameYear) {
 				// 当前年份：只显示月日和时间
@@ -404,7 +398,7 @@ export const mixin = {
 					day: 'numeric',
 					hour: '2-digit',
 					minute: '2-digit',
-					hour12: false
+					hour12: false,
 				}).format(fileDate)
 			}
 			// 不同年份：显示完整日期和时间
@@ -414,14 +408,14 @@ export const mixin = {
 				day: 'numeric',
 				hour: '2-digit',
 				minute: '2-digit',
-				hour12: false
+				hour12: false,
 			}).format(fileDate)
 		},
 		coverType: function (item) {
-			return item.is_dir ? "folder-cover" : "file-cover"
+			return item.is_dir ? 'folder-cover' : 'file-cover'
 		},
 		iconType: function (item) {
-			return item.is_dir ? "folder-icon" : "files-icon"
+			return item.is_dir ? 'folder-icon' : 'files-icon'
 		},
 	},
 }

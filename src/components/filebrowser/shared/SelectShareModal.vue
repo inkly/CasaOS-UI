@@ -16,7 +16,7 @@
 				<h3 class="title is-3">{{ $t('Select Shared Folder') }}</h3>
 			</div>
 			<div>
-				<button class="delete" type="button" @click="$emit('close')"/>
+				<button class="delete" type="button" @click="$emit('close')"></button>
 			</div>
 		</header>
 		<!-- Modal-Card Header End -->
@@ -24,7 +24,7 @@
 		<section class="modal-card-body">
 
 			<ul class="folder-list scrollbars-light mt-5 mb-5">
-				<li v-for="(item,index) in rootDataList" :key="'rs'+index">
+				<li v-for="(item, index) in rootDataList" :key="'rs' + index">
 					<div class="is-flex list-item new-list-item is-align-items-center disbiled">
 						<div class="cover ml-2 mr-2 is-flex-shrink-0  is-flex is-align-items-center">
 							<b-icon :icon="item.icon" :pack="item.pack" class="casa-color-blue" custom-size="casa-28px"></b-icon>
@@ -35,7 +35,7 @@
 						</div>
 					</div>
 				</li>
-				<li v-for="(item,index) in dataList" :key="'s'+index">
+				<li v-for="(item, index) in dataList" :key="'s' + index">
 					<div v-if="item.visible" class="is-flex list-item new-list-item is-align-items-center" @click="toggle(item)">
 						<div class="cover ml-2 mr-2 is-flex-shrink-0 is-flex is-align-items-center">
 							<b-icon :icon="item.icon" :pack="item.pack" class="casa-color-blue" custom-size="casa-28px"></b-icon>
@@ -74,14 +74,14 @@
 			</p>
 		</section>
 		<!-- Access End -->
-		<!-- Modal-Card Footer Start-->
+		<!-- Modal-Card Footer Start -->
 		<footer class="modal-card-foot is-flex is-align-items-center">
 			<div class="is-flex-grow-1"></div>
 			<div>
-				<b-button :disabled="requireAccount && !username" :label="$t('Submit')" :loading="isSaving" rounded type="is-primary" @click="saveShares"/>
+				<b-button :disabled="requireAccount && !username" :label="$t('Submit')" :loading="isSaving" rounded type="is-primary" @click="saveShares" />
 			</div>
 		</footer>
-		<!-- Modal-Card Footer End-->
+		<!-- Modal-Card Footer End -->
 	</div>
 </template>
 
@@ -109,7 +109,7 @@ export default {
 					path: '/',
 					visible: true,
 					selected: false,
-					extensions: null
+					extensions: null,
 				},
 			],
 
@@ -121,7 +121,7 @@ export default {
 					path: '/DATA',
 					visible: true,
 					selected: true,
-					extensions: null
+					extensions: null,
 				},
 				{
 					name: 'Documents',
@@ -130,7 +130,7 @@ export default {
 					path: '/DATA/Documents',
 					visible: true,
 					selected: true,
-					extensions: null
+					extensions: null,
 				},
 				{
 					name: 'Downloads',
@@ -139,7 +139,7 @@ export default {
 					path: '/DATA/Downloads',
 					visible: true,
 					selected: true,
-					extensions: null
+					extensions: null,
 				},
 				{
 					name: 'Gallery',
@@ -148,7 +148,7 @@ export default {
 					path: '/DATA/Gallery',
 					visible: true,
 					selected: true,
-					extensions: null
+					extensions: null,
 				},
 				{
 					name: 'Media',
@@ -157,7 +157,7 @@ export default {
 					path: '/DATA/Media',
 					visible: true,
 					selected: true,
-					extensions: null
+					extensions: null,
 				},
 
 			],
@@ -197,8 +197,8 @@ export default {
 				scroll: 'keep',
 				animation: 'zoom-in',
 				events: {
-					close: () => this.loadUsers()
-				}
+					close: () => this.loadUsers(),
+				},
 			})
 		},
 
@@ -213,9 +213,9 @@ export default {
 			this.dataList = [...this.initFolders, ...this.shortcutList]
 			const contactList = []
 			contactList.push(...newList.data.data.content, ...dataList.data.data.content, ...this.shortcutList)
-			this.dataList.forEach(dir => {
+			this.dataList.forEach((dir) => {
 				dir.visible = contactList.some(item => item.path == dir.path && item.is_dir)
-				dir.extensions = contactList.find(item => item.path == dir.path && item.is_dir).extensions;
+				dir.extensions = contactList.find(item => item.path == dir.path && item.is_dir).extensions
 			})
 		},
 		/**
@@ -235,12 +235,12 @@ export default {
 			this.isSaving = true
 			const selectedList = this.dataList.filter(item => item.selected)
 			const username = this.requireAccount ? this.username : ''
-			const data = selectedList.map(item => {
+			const data = selectedList.map((item) => {
 				return {
 					path: item.path,
 					anonymous: username === '',
 					username,
-					time_machine: this.timeMachine
+					time_machine: this.timeMachine,
 				}
 			})
 			try {
@@ -252,7 +252,7 @@ export default {
 				this.isSaving = false
 				this.$buefy.toast.open({
 					message: error.response.data.message,
-					type: 'is-danger'
+					type: 'is-danger',
 				})
 			}
 		},

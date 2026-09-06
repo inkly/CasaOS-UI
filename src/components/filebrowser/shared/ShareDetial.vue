@@ -4,9 +4,9 @@
  * @LastEditors: Jerryk jerry@icewhale.org
  * @LastEditTime: 2022-08-02 11:28:28
  * @FilePath: \CasaOS-UI\src\components\filebrowser\shared\ShareDetial.vue
- * @Description: 
- * 
- * Copyright (c) 2022 by IceWhale, All Rights Reserved. 
+ * @Description:
+ *
+ * Copyright (c) 2022 by IceWhale, All Rights Reserved.
 -->
 <template>
 	<div class="modal-card">
@@ -16,7 +16,7 @@
 				<h3 class="title is-3">{{ $t('Folder has been shared') }}</h3>
 			</div>
 			<div>
-				<button class="delete" type="button" @click="$emit('close')"/>
+				<button class="delete" type="button" @click="$emit('close')"></button>
 			</div>
 		</header>
 		<!-- Modal-Card Header End -->
@@ -28,21 +28,21 @@
 				</div>
 				<b-field :label="$t('PC ( Windows explorer )')" class="mb-5" horizontal>
 					<b-input :model-value="pcPath" expanded icon-pack="casa" icon-right="copy" icon-right-clickable name="subject"
-							 readonly @icon-right-click="copyToClipboard(pcPath)"></b-input>
+						readonly @icon-right-click="copyToClipboard(pcPath)"></b-input>
 				</b-field>
 				<b-field :label="$t('Mac ( Finder )')" class="mb-5" horizontal>
 					<b-input :model-value="macPath" expanded icon-pack="casa" icon-right="copy" icon-right-clickable name="subject"
-							 readonly @icon-right-click="copyToClipboard(macPath)"></b-input>
+						readonly @icon-right-click="copyToClipboard(macPath)"></b-input>
 				</b-field>
 			</div>
 
 		</section>
 		<!-- Modal-Card Body End -->
-		<!-- Modal-Card Footer Start-->
+		<!-- Modal-Card Footer Start -->
 		<footer class="modal-card-foot is-flex is-align-items-center">
 			<div class="is-flex-grow-1"></div>
 			<div>
-				<b-button :label="$t('I Got it')" expaned rounded type="is-primary" @click="$emit('close')"/>
+				<b-button :label="$t('I Got it')" expaned rounded type="is-primary" @click="$emit('close')" />
 			</div>
 		</footer>
 		<!-- Modal-Card Footer End -->
@@ -56,17 +56,17 @@ export default {
 	props: {
 		item: {
 			type: Object,
-			default: () => ({})
+			default: () => ({}),
 		},
 	},
 	computed: {
 		pcPath() {
 			const name = this.item.path.split('/').pop()
-			return "\\\\" + this.$baseIp + `\\` + name
+			return '\\\\' + this.$baseIp + `\\` + name
 		},
 		macPath() {
 			const name = this.item.path.split('/').pop()
-			return "smb://" + this.$baseIp + `/` + name
+			return 'smb://' + this.$baseIp + `/` + name
 		},
 	},
 	created() {
@@ -77,9 +77,9 @@ export default {
 			copy(value)
 			this.$buefy.toast.open({
 				message: this.$t('Copied to clipboard'),
-				type: 'is-success'
+				type: 'is-success',
 			})
-		}
+		},
 	},
 }
 </script>

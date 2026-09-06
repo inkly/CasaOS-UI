@@ -1,4 +1,3 @@
-
 <template>
 	<div class="overlay">
 		<header class="modal-card-head">
@@ -45,8 +44,7 @@
 </template>
 
 <script>
-
-import { mixin } from '@/mixins/mixin';
+import { mixin } from '@/mixins/mixin'
 
 import mime from 'mime'
 // Core
@@ -124,20 +122,20 @@ import 'codemirror/mode/rust/rust'
 import 'codemirror/mode/shell/shell'
 
 // Lint libs
-import { CSSLint } from "csslint";
-import { JSHINT } from "jshint";
-import jsonlint from "jsonlint-mod";
-import jsyaml from "js-yaml";
+import { CSSLint } from 'csslint'
+import { JSHINT } from 'jshint'
+import jsonlint from 'jsonlint-mod'
+import jsyaml from 'js-yaml'
 
-window.CSSLint = CSSLint;
-window.JSHINT = JSHINT;
-window.jsonlint = jsonlint;
-window.jsyaml = jsyaml;
+window.CSSLint = CSSLint
+window.JSHINT = JSHINT
+window.jsonlint = jsonlint
+window.jsyaml = jsyaml
 
 export default {
 	mixins: [mixin],
 	components: {
-		codemirror
+		codemirror,
 	},
 	props: {
 		item: {
@@ -145,14 +143,14 @@ export default {
 			default: () => {
 				return {
 					path: '',
-					name: ''
+					name: '',
 				}
-			}
+			},
 		},
 	},
 	data() {
 		return {
-			code: "",
+			code: '',
 			isChange: false,
 			cmOptions: {
 				tabSize: 4,
@@ -162,29 +160,29 @@ export default {
 				line: true,
 				lint: true,
 				foldGutter: true,
-				gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],
+				gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
 				highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true },
-				mode: "text/javascript",
+				mode: 'text/javascript',
 				// hint.js options
 				hintOptions: {
-					completeSingle: false
+					completeSingle: false,
 				},
-				keyMap: "sublime",
+				keyMap: 'sublime',
 				matchBrackets: true,
 				showCursorWhenSelecting: true,
-				theme: "monokai",
+				theme: 'monokai',
 				extraKeys: {
-					'Ctrl': "autocomplete",
+					'Ctrl': 'autocomplete',
 					'Ctrl-S': () => {
 						this.saveFile()
 					},
 					'Cmd-S': () => {
 						this.saveFile()
-					}
+					},
 				},
-				scrollbarStyle: "overlay",
+				scrollbarStyle: 'overlay',
 
-			}
+			},
 		}
 	},
 
@@ -193,13 +191,12 @@ export default {
 			return this.$refs.cmEditor.codemirror
 		},
 		pathArray() {
-			return this.item.path.substr(1).split("/");
-		}
+			return this.item.path.substr(1).split('/')
+		},
 	},
 	mounted() {
-		this.readFile();
+		this.readFile()
 	},
-
 
 	methods: {
 		onCmCodeChange() {
@@ -210,18 +207,18 @@ export default {
 		},
 		readFile() {
 			let ext = this.getFileExt(this.item)
-			let mode = mime.getType(ext) == null ? "text/javascript" : mime.getType(ext)
-			if (ext.toLowerCase() == "makefile") {
+			let mode = mime.getType(ext) == null ? 'text/javascript' : mime.getType(ext)
+			if (ext.toLowerCase() == 'makefile') {
 				mode = 'text/x-cmake'
-			} else if (ext.toLowerCase() == "py") {
+			} else if (ext.toLowerCase() == 'py') {
 				mode = 'text/x-python'
-			} else if (ext.toLowerCase() == "go") {
+			} else if (ext.toLowerCase() == 'go') {
 				mode = 'text/x-go'
-			} else if (ext.toLowerCase() == "vue") {
+			} else if (ext.toLowerCase() == 'vue') {
 				mode = 'text/x-vue'
 			}
-			this.codemirror.setOption("mode", mode);
-			this.$api.file.download(this.item.path).then(res => {
+			this.codemirror.setOption('mode', mode)
+			this.$api.file.download(this.item.path).then((res) => {
 				this.code = typeof res.data === 'object'
 					? JSON.stringify(res.data, null, 2)
 					: String(res.data)
@@ -232,27 +229,27 @@ export default {
 		},
 		saveFile(leave = false) {
 			const content = this.codemirror.getValue()
-			this.$api.file.update(this.item.path, content).then(res => {
+			this.$api.file.update(this.item.path, content).then((res) => {
 				if (res.data.success == 200) {
 					// this.readFile();
 					this.isChange = false
 					this.$buefy.toast.open({
 						message: this.$t('Saved'),
-						type: 'is-success'
+						type: 'is-success',
 					})
 					if (leave) {
-						this.$emit("close");
+						this.$emit('close')
 					}
 				} else {
 					this.$buefy.toast.open({
 						message: res.data.message,
-						type: 'is-danger'
+						type: 'is-danger',
 					})
 				}
 			})
 		},
 		download() {
-			this.downloadFile(this.item);
+			this.downloadFile(this.item)
 		},
 		close() {
 			if (this.isChange) {
@@ -265,16 +262,16 @@ export default {
 					confirmText: this.$t('Save'),
 					cancelText: this.$t('Don’t Save'),
 					onConfirm: () => {
-						this.saveFile(true);
+						this.saveFile(true)
 					},
 					onCancel: () => {
-						this.$emit("close");
-					}
+						this.$emit('close')
+					},
 				})
 			} else {
-				this.$emit("close");
+				this.$emit('close')
 			}
-		}
+		},
 	},
 
 }

@@ -14,11 +14,11 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin';
-import events from '@/events/events';
+import { mixin } from '@/mixins/mixin'
+import events from '@/events/events'
 import has from 'lodash/has'
 
-import TreeListItem from './TreeListItem.vue';
+import TreeListItem from './TreeListItem.vue'
 
 export default {
 	mixins: [mixin],
@@ -29,15 +29,15 @@ export default {
 	props: {
 		path: {
 			type: String,
-			default: ""
+			default: '',
 		},
 		autoLoad: {
 			type: Boolean,
-			default: false
+			default: false,
 		},
 		isActive: {
 			type: Boolean,
-			default: true
+			default: true,
 		},
 	},
 	data() {
@@ -50,7 +50,7 @@ export default {
 					path: '/',
 					visible: true,
 					selected: true,
-					extensions: null
+					extensions: null,
 				},
 			],
 
@@ -62,7 +62,7 @@ export default {
 					path: '/DATA',
 					visible: true,
 					selected: true,
-					extensions: null
+					extensions: null,
 				},
 				{
 					name: 'Documents',
@@ -71,7 +71,7 @@ export default {
 					path: '/DATA/Documents',
 					visible: true,
 					selected: true,
-					extensions: null
+					extensions: null,
 				},
 				{
 					name: 'Downloads',
@@ -80,7 +80,7 @@ export default {
 					path: '/DATA/Downloads',
 					visible: true,
 					selected: true,
-					extensions: null
+					extensions: null,
 				},
 				{
 					name: 'Gallery',
@@ -89,7 +89,7 @@ export default {
 					path: '/DATA/Gallery',
 					visible: true,
 					selected: true,
-					extensions: null
+					extensions: null,
 				},
 				{
 					name: 'Media',
@@ -98,7 +98,7 @@ export default {
 					path: '/DATA/Media',
 					visible: true,
 					selected: true,
-					extensions: null
+					extensions: null,
 				},
 
 			],
@@ -111,17 +111,16 @@ export default {
 		try {
 			await this.$store.dispatch('GET_SHORTCUT_DATA')
 		} catch (e) {
-			console.log(e);
+			console.log(e)
 		}
 		this.getNewList()
 	},
 
 	mounted() {
-		this.$EventBus.$on(events.RELOAD_FILE_LIST, this.getNewList);
+		this.$EventBus.$on(events.RELOAD_FILE_LIST, this.getNewList)
 
 		this.shortcutList = this.$store.state.shortcutData
 		this.dataList = [...this.initFolders, ...this.shortcutList]
-
 	},
 	methods: {
 		async getNewList() {
@@ -131,16 +130,14 @@ export default {
 			this.shortcutList = this.$store.state.shortcutData
 
 			this.dataList = [...this.initFolders, ...this.shortcutList]
-			let contactList = [];
-			contactList.push(...newList.data.data.content, ...dataList.data.data.content, ...this.shortcutList);
-			this.dataList.forEach(dir => {
-				dir.icon = dir.icon == 'folder' ? 'folder-outline' : dir.icon;
-				dir.visible = contactList.some(item => item.path == dir.path && item.is_dir);
+			let contactList = []
+			contactList.push(...newList.data.data.content, ...dataList.data.data.content, ...this.shortcutList)
+			this.dataList.forEach((dir) => {
+				dir.icon = dir.icon == 'folder' ? 'folder-outline' : dir.icon
+				dir.visible = contactList.some(item => item.path == dir.path && item.is_dir)
 				const isInArray = contactList.find(item => item.path == dir.path && item.is_dir)
-				dir.extensions = isInArray ? isInArray.extensions : null;
+				dir.extensions = isInArray ? isInArray.extensions : null
 			})
-
-
 		},
 
 		checkSharevisibility(item) {
@@ -149,7 +146,7 @@ export default {
 				return false
 			} else {
 				if (has(extensions, 'share')) {
-					return extensions.share.shared === "true"
+					return extensions.share.shared === 'true'
 				} else {
 					return false
 				}
@@ -159,4 +156,3 @@ export default {
 	},
 }
 </script>
-

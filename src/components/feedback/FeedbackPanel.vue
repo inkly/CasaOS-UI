@@ -6,17 +6,17 @@
 
 			<h3 class="title is-3">{{ $t('Feedback / Issue Report') }}</h3>
 			<div class="close-container">
-				<button class="delete" type="button" @click="$emit('close')"/>
+				<button class="delete" type="button" @click="$emit('close')"></button>
 			</div>
 
 			<div class="is-flex-grow-1 is-relative">
 				<b-field :label="$t('Title')">
 					<b-input v-model="postTitle" :placeholder="$t('Start with [Issue], [App Request], or [Feature Request]...')"
-							 maxlength="100"></b-input>
+						maxlength="100"></b-input>
 				</b-field>
 				<b-field :label="$t('Description')">
 					<b-input v-model="postBody" :placeholder="$t('The more details provided, the easier this feedback or issue gets addressed.')" maxlength="500"
-							 type="textarea"></b-input>
+						type="textarea"></b-input>
 				</b-field>
 				<b-field :label="$t('System infomation')">
 					<div class="feedback-info-container is-size-14px" v-dompurify-html="markdownToHtml"></div>
@@ -25,15 +25,15 @@
 		</section>
 
 		<!-- Modal-Card Body End -->
-		<!-- Modal-Card Footer Start-->
+		<!-- Modal-Card Footer Start -->
 		<footer class="modal-card-foot is-flex is-align-items-center ">
 			<div class="is-flex-grow-1">
 				<a class="is-size-14px" rel="noopener"
-				   href="https://github.com/IceWhaleTech/CasaOS/issues/new/choose"
-				   target="_blank">{{ $t('For more feedback options, visit CasaOS project on GitHub...') }}</a>
+					href="https://github.com/IceWhaleTech/CasaOS/issues/new/choose"
+					target="_blank">{{ $t('For more feedback options, visit CasaOS project on GitHub...') }}</a>
 			</div>
 			<div>
-				<b-button :label="$t('Submit')" rounded type="is-primary" @click="submitIssue"/>
+				<b-button :label="$t('Submit')" rounded type="is-primary" @click="submitIssue" />
 			</div>
 		</footer>
 		<!-- Modal-Card Footer End -->
@@ -42,50 +42,49 @@
 </template>
 
 <script>
-
 import browserInfo from 'browser-info'
-import {marked}    from 'marked'
+import { marked } from 'marked'
 
 export default {
-	name: "feedback-panel",
+	name: 'feedback-panel',
 	components: {},
 	data() {
 		return {
 			isLoading: false,
-			feedBody: "",
-			postTitle: "",
-			postBody: "",
+			feedBody: '',
+			postTitle: '',
+			postBody: '',
 		}
 	},
 
 	computed: {
 		markdownToHtml() {
-			return marked.parse(this.feedBody);
-		}
+			return marked.parse(this.feedBody)
+		},
 	},
 
 	mounted() {
-		this.$api.sys.getDebugInfo().then(res => {
-			const browserInfos = browserInfo();
-			this.feedBody = res.data.data.replace("$Browser$", browserInfos.name).replace("$Version$", browserInfos.fullVersion);
+		this.$api.sys.getDebugInfo().then((res) => {
+			const browserInfos = browserInfo()
+			this.feedBody = res.data.data.replace('$Browser$', browserInfos.name).replace('$Version$', browserInfos.fullVersion)
 		})
 	},
 	methods: {
 		submitIssue() {
 			const option = {
-				labels: "feedback",
-				template: "feedback.yml",
-				title: "[Feedback]" + this.postTitle,
+				labels: 'feedback',
+				template: 'feedback.yml',
+				title: '[Feedback]' + this.postTitle,
 				description: this.postBody,
 				additional: this.feedBody,
 			}
-			let repoUrl = new URL(`https://github.com/IceWhaleTech/CasaOS/issues/new`);
+			let repoUrl = new URL(`https://github.com/IceWhaleTech/CasaOS/issues/new`)
 			for (const optionElement in option) {
-				repoUrl.searchParams.set(optionElement, option[optionElement]);
+				repoUrl.searchParams.set(optionElement, option[optionElement])
 			}
-			window.open(repoUrl, '_blank');
-			this.$emit('close');
-		}
+			window.open(repoUrl, '_blank')
+			this.$emit('close')
+		},
 	},
 }
 </script>

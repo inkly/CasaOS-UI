@@ -9,36 +9,36 @@
 </template>
 
 <script>
-import dateFormat from "dateformat";
+import dateFormat from 'dateformat'
 
 export default {
 	// eslint-disable-next-line vue/multi-word-component-names
-	name: "clock",
-	icon: "time-outline",
-	title: "Time",
+	name: 'clock',
+	icon: 'time-outline',
+	title: 'Time',
 	initShow: true,
 	data() {
 		return {
 			timer: 0,
-			timeText: "",
-			dateText: "",
-			lang: this.$i18n.locale.replace("_", "-"),
-			timeFormat: localStorage.getItem("timeFormat") ? localStorage.getItem("timeFormat") : "HH:MM",
-		};
+			timeText: '',
+			dateText: '',
+			lang: this.$i18n.locale.replace('_', '-'),
+			timeFormat: localStorage.getItem('timeFormat') ? localStorage.getItem('timeFormat') : 'HH:MM',
+		}
 	},
 	mounted() {
 		if (this.timer) {
-			clearInterval(this.timer);
+			clearInterval(this.timer)
 		}
-		this.updateClock();
+		this.updateClock()
 		this.timer = setInterval(() => {
-			this.updateClock();
-		}, 1000);
+			this.updateClock()
+		}, 1000)
 	},
 	watch: {
-		"$i18n.locale": {
+		'$i18n.locale': {
 			handler(data) {
-				this.lang = data.replace("_", "-");
+				this.lang = data.replace('_', '-')
 			},
 			deep: true,
 		},
@@ -46,23 +46,23 @@ export default {
 
 	methods: {
 		updateClock() {
-			const today = new Date();
+			const today = new Date()
 
-			this.timeText = dateFormat(today, this.timeFormat);
+			this.timeText = dateFormat(today, this.timeFormat)
 			this.dateText = today.toLocaleDateString(this.lang, {
-				weekday: "long",
-				year: "numeric",
-				month: "long",
-				day: "numeric",
-			});
+				weekday: 'long',
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric',
+			})
 		},
 		changeFormat() {
-			this.timeFormat = this.timeFormat == "HH:MM" ? "h:MM TT" : "HH:MM";
-			localStorage.setItem("timeFormat", this.timeFormat);
-			this.updateClock();
+			this.timeFormat = this.timeFormat == 'HH:MM' ? 'h:MM TT' : 'HH:MM'
+			localStorage.setItem('timeFormat', this.timeFormat)
+			this.updateClock()
 		},
 	},
-};
+}
 </script>
 
 <style lang="scss" scoped>

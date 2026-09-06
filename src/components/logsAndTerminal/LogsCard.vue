@@ -12,11 +12,11 @@
 
 <script>
 export default {
-	name: "logs-card",
+	name: 'logs-card',
 	data() {
 		return {
 			fullscreen: false,
-			state: true
+			state: true,
 		}
 	},
 	props: {
@@ -24,21 +24,21 @@ export default {
 	},
 	computed: {
 		buttonSzie() {
-			return this.$store.state.device == "mobile" ? 'is-small' : ''
+			return this.$store.state.device == 'mobile' ? 'is-small' : ''
 		},
 		buttonIcon() {
-			return this.fullscreen ? "fullscreen-exit" : "fullscreen"
-		}
+			return this.fullscreen ? 'fullscreen-exit' : 'fullscreen'
+		},
 	},
 	beforeUnmount() {
 		window.removeEventListener('resize', this.onWindowResize)
 	},
 	created() {
-		window.addEventListener('resize', this.onWindowResize);
-		this.onWindowResize();
+		window.addEventListener('resize', this.onWindowResize)
+		this.onWindowResize()
 	},
 	mounted() {
-		this.onWindowResize();
+		this.onWindowResize()
 	},
 	methods: {
 
@@ -47,27 +47,27 @@ export default {
 		},
 		onWindowResize() {
 
-
 		},
 		getTop(e) {
-			let offset = e.offsetTop;
-			if (e.offsetParent != null) offset += this.getTop(e.offsetParent);
-			return offset;
+			let offset = e.offsetTop
+			if (e.offsetParent != null)
+				offset += this.getTop(e.offsetParent)
+			return offset
 		},
 		active(state) {
-			this.state = state;
+			this.state = state
 			if (state) {
-				this.onWindowResize();
-				this.srcollToBottom();
+				this.onWindowResize()
+				this.srcollToBottom()
 			}
 		},
 		srcollToBottom() {
-			let logs = document.getElementById("logs")
-			let logsConetent = document.querySelector("#logs .content");
+			let logs = document.getElementById('logs')
+			let logsConetent = document.querySelector('#logs .content')
 			this.$nextTick(() => {
-				logs.scrollTo(0, logsConetent.clientHeight);
+				logs.scrollTo(0, logsConetent.clientHeight)
 			})
-		}
+		},
 	},
 }
 </script>

@@ -1,6 +1,6 @@
-import {api} from "./service.js";
+import { api } from './service.js'
 
-const PREFIX = "/file"
+const PREFIX = '/file'
 
 const file = {
 
@@ -8,41 +8,41 @@ const file = {
 	getContent(path) {
 		return api.get(`${PREFIX}/content`, {
 			path: path,
-			timestamp: Date.now()
-		});
+			timestamp: Date.now(),
+		})
 	},
 
 	// download single file
 	download(path) {
 		return api.get(`${PREFIX}`, {
 			path: path,
-			timestamp: Date.now()
-		});
+			timestamp: Date.now(),
+		})
 	},
 
 	// create file
 	create(path) {
 		return api.post(`${PREFIX}`, {
-			path: path
-		});
+			path: path,
+		})
 	},
 
 	// rename file
 	rename(old_path, new_path) {
 		return api.put(`${PREFIX}/name`, {
 			old_path: old_path,
-			new_path: new_path
-		});
+			new_path: new_path,
+		})
 	},
 
 	// update file
 	update(path, content) {
 		return api.put(`${PREFIX}`, {
 			path: path,
-			content: content
-		});
+			content: content,
+		})
 	},
 
 }
 
-export default file;
+export default file

@@ -39,7 +39,7 @@
 			</div>
 		</section>
 		<!-- Modal-Card Body End -->
-		<!-- Modal-Card Footer Start-->
+		<!-- Modal-Card Footer Start -->
 		<footer class="modal-card-foot is-flex is-align-items-center">
 			<div class="is-flex-grow-1"></div>
 			<div>
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-const wallpaperConfig = "wallpaper"
+const wallpaperConfig = 'wallpaper'
 import Uploader from 'simple-uploader.js'
 
 export default {
@@ -62,23 +62,23 @@ export default {
 			isUpLoading: false,
 			uploader: null,
 			attributes: {
-				accept: 'image/png, image/jpeg, image/svg+xml, image/bmp, image/png, image/gif'
+				accept: 'image/png, image/jpeg, image/svg+xml, image/bmp, image/png, image/gif',
 			},
 			wallpaperItems: [
 				{
-					name: "Built-in wallpaper 1",
-					path: require('@/assets/background/wallpaper01.jpg')
+					name: 'Built-in wallpaper 1',
+					path: require('@/assets/background/wallpaper01.jpg'),
 				},
 				{
-					name: "Built-in wallpaper 2",
-					path: require('@/assets/background/wallpaper02.jpg')
-				}
+					name: 'Built-in wallpaper 2',
+					path: require('@/assets/background/wallpaper02.jpg'),
+				},
 			],
 			backgroundStyleObj: {
-				backgroundImage: `url(${this.parseUrl(this.$store.state.wallpaperObject.path)})`
+				backgroundImage: `url(${this.parseUrl(this.$store.state.wallpaperObject.path)})`,
 			},
 			path: this.$store.state.wallpaperObject.path,
-			from: this.$store.state.wallpaperObject.from
+			from: this.$store.state.wallpaperObject.from,
 		}
 	},
 	components: {},
@@ -87,18 +87,17 @@ export default {
 			target: this.getTargetUrl(),
 			singleFile: true,
 			testChunks: false,
-			uploadMethod: "POST",
+			uploadMethod: 'POST',
 			allowDuplicateUploads: true,
-			chunkSize: 1024 * 1024 * 1024 * 1024
-		});
-
+			chunkSize: 1024 * 1024 * 1024 * 1024,
+		})
 	},
 	mounted() {
 		this.uploader.assignBrowse(document.getElementById('upload-wallpaper'), false, true, this.attributes)
 		this.uploader.on('filesSubmitted', () => {
 			this.isUpLoading = true
-			this.$api.sys.getVersion().then(res => {
-				this.uploader.opts.headers.Authorization = this.$store.state.access_token || localStorage.getItem("access_token")
+			this.$api.sys.getVersion().then((res) => {
+				this.uploader.opts.headers.Authorization = this.$store.state.access_token || localStorage.getItem('access_token')
 				this.uploader.upload()
 			})
 		})
@@ -106,7 +105,7 @@ export default {
 			this.isUpLoading = false
 			this.$buefy.toast.open({
 				message: this.$t('Upload failed, please try again!'),
-				type: 'is-danger'
+				type: 'is-danger',
 			})
 		})
 		this.uploader.on('fileSuccess', (rootFile, file, message) => {
@@ -114,52 +113,48 @@ export default {
 			const res = JSON.parse(message)
 
 			if (res.success === 200) {
-				const uploadPath = "SERVER_URL" + res.data.online_path + "&time=" + new Date().getTime()
+				const uploadPath = 'SERVER_URL' + res.data.online_path + '&time=' + new Date().getTime()
 				this.backgroundStyleObj.backgroundImage = `url(${this.parseUrl(uploadPath)})`
 				this.path = uploadPath
-				this.from = "Upload"
-
+				this.from = 'Upload'
 			} else {
 				this.$buefy.toast.open({
 					message: res.message,
-					type: 'is-danger'
+					type: 'is-danger',
 				})
 			}
 		})
-
 	},
 	methods: {
 		saveChange() {
 			let data = {
 				path: this.path,
-				from: this.from
+				from: this.from,
 			}
 			this.isLoading = true
-			this.$api.users.setCustomStorage(wallpaperConfig, data).then(res => {
+			this.$api.users.setCustomStorage(wallpaperConfig, data).then((res) => {
 				this.isLoading = false
 				if (res.data.success === 200) {
 					this.$messageBus('dashboardsetting_wallpaper', res.data.data.path.toString())
-					this.$emit("close")
+					this.$emit('close')
 					setTimeout(() => {
 						this.$store.commit('SET_WALLPAPER', {
 							path: res.data.data.path,
-							from: res.data.data.from
+							from: res.data.data.from,
 						})
 					}, 300)
-
 				} else {
 					this.$buefy.toast.open({
 						message: this.$t('Save failed, please try again!'),
-						type: 'is-danger'
+						type: 'is-danger',
 					})
 				}
-
 			})
 		},
 		changeWallpaper(path) {
 			this.backgroundStyleObj.backgroundImage = `url(${this.parseUrl(path)})`
 			this.path = path
-			this.from = "Built-in"
+			this.from = 'Built-in'
 		},
 
 		checkActive(path) {
@@ -169,14 +164,14 @@ export default {
 			return this.from == from
 		},
 		getTargetUrl() {
-			const accessToken = localStorage.getItem("access_token")
+			const accessToken = localStorage.getItem('access_token')
 			return `${this.$protocol}//${this.$baseURL}/v1/users/current/image/${wallpaperConfig}?token=${accessToken}&type=wallpaper`
 		},
 		parseUrl(serverUrl) {
 			const newUrl = serverUrl.replace('SERVER_URL', `${this.$protocol}//${this.$baseURL}`)
-			return newUrl;
+			return newUrl
 		},
-	}
+	},
 }
 </script>
 

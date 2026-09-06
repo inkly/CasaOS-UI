@@ -19,18 +19,17 @@ import VueDOMPurifyHTML from 'vue-dompurify-html'
 import '@/plugins/vee-validate'
 import { applyThemePreference, readThemePreference } from '@/mixins/app/themePreference'
 
-
 // Import Styles
 import '@/assets/scss/app.scss'
-import VAnimateCss from '@/plugins/animate-css';
+import VAnimateCss from '@/plugins/animate-css'
 
 // The inline script in public/index.html stamped data-theme before the first
 // paint; from here on the module owns it and follows the OS while on 'system'.
 applyThemePreference(readThemePreference())
 
-const io = require("socket.io-client");
+const io = require('socket.io-client')
 
-const isDev = process.env.NODE_ENV === 'dev';
+const isDev = process.env.NODE_ENV === 'dev'
 const protocol = document.location.protocol
 const wsProtocol = protocol === 'https:' ? 'wss:' : 'ws:'
 const devIp = process.env.VUE_APP_DEV_IP
@@ -41,34 +40,33 @@ const baseIp = isDev ? `${devIp}` : `${localhostName}`
 const baseURL = isDev ? `${devIp}:${devPort}` : `${localhost}`
 const wsURL = `${wsProtocol}//${baseURL}`
 
-const socket = io( {
+const socket = io({
 	transports: ['websocket', 'polling'],
 	path: '/v2/message_bus/socket.io/',
-});
+})
 
 const app = createApp(App)
 
 app.use(Buefy)
 app.use(VueFullscreen)
-app.use(VAnimateCss);
-app.use(socketPlugin, socket);
+app.use(VAnimateCss)
+app.use(socketPlugin, socket)
 app.use(VueDOMPurifyHTML, {
 	default: {
-		ALLOWED_ATTR: ['target', 'href']
-	}
-});
+		ALLOWED_ATTR: ['target', 'href'],
+	},
+})
 
-app.config.globalProperties.$api = api;
-app.config.globalProperties.$openAPI = openAPI;
-app.config.globalProperties.$baseIp = baseIp;
-app.config.globalProperties.$baseURL = baseURL;
-app.config.globalProperties.$protocol = protocol;
-app.config.globalProperties.$wsProtocol = wsProtocol;
-
+app.config.globalProperties.$api = api
+app.config.globalProperties.$openAPI = openAPI
+app.config.globalProperties.$baseIp = baseIp
+app.config.globalProperties.$baseURL = baseURL
+app.config.globalProperties.$protocol = protocol
+app.config.globalProperties.$wsProtocol = wsProtocol
 
 // Create an EventBus
-app.config.globalProperties.$EventBus = createEventBus();
-app.config.globalProperties.$messageBus = messageBus;
+app.config.globalProperties.$EventBus = createEventBus()
+app.config.globalProperties.$messageBus = messageBus
 
 app.use(router)
 app.use(store)

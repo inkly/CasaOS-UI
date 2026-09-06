@@ -14,20 +14,20 @@
 
 <script>
 export default {
-	name: "app-section-title-tip",
+	name: 'app-section-title-tip',
 	props: {
 		title: {
 			type: String,
-			default: ""
+			default: '',
 		},
 		label: {
 			type: String,
-			default: ""
+			default: '',
 		},
 		id: {
 			type: String,
-			default: ""
-		}
+			default: '',
+		},
 	},
 	data() {
 		return {
@@ -36,9 +36,9 @@ export default {
 	},
 	methods: {
 		hideTip() {
-			localStorage.setItem(this.id, "hide");
+			localStorage.setItem(this.id, 'hide')
 			this.active = false
-		}
+		},
 	},
 
 }

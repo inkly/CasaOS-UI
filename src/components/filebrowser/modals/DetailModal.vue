@@ -12,7 +12,7 @@
 			<div class="node-card ">
 				<div class="cover is-unselectable is-flex is-justify-content-center is-align-items-center">
 					<div :class="coverType(item)">
-						<img :class="iconType(item)" :src="getIconFile(item)" alt="folder"/>
+						<img :class="iconType(item)" :src="getIconFile(item)" alt="folder">
 					</div>
 				</div>
 				<div class="info mt-3 is-flex is-flex-direction-column is-justify-content-center">
@@ -30,23 +30,23 @@
 </template>
 
 <script>
-import {mixin} from '@/mixins/mixin';
+import { mixin } from '@/mixins/mixin'
 
 export default {
 	mixins: [mixin],
 	props: {
-		item: Object
+		item: Object,
 	},
 	data() {
 		return {}
 	},
 	methods: {
 		download() {
-			this.downloadFile(this.item);
+			this.downloadFile(this.item)
 			this.$emit('close')
 			// this.$parent.fullScreen = true
 			// console.log(this.$parent);
-		}
+		},
 	},
 }
 </script>

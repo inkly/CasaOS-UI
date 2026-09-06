@@ -13,7 +13,7 @@
  * @Date: 2022-02-23 17:08:21
  * @LastEditors: Jerryk jerry@icewhale.org
  * @LastEditTime: 2022-08-01 18:52:38
- * @Description: 
+ * @Description:
  * @FilePath: /CasaOS-UI/src/components/filebrowser/components/ActionButton.vue
 -->
 <template>
@@ -26,6 +26,6 @@
 
 <script>
 export default {
-	emits: ['click']
+	emits: ['click'],
 }
 </script>

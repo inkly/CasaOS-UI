@@ -12,23 +12,23 @@
 
 <script>
 export default {
-	name: "tooltip-vue",
+	name: 'tooltip-vue',
 	props: {
 		modal: {
 			type: String,
-			default: "is-success",
+			default: 'is-success',
 			validator(v) {
-				return ["is-warning", "is-success", "is-danger", "is-info"].includes(v);
-			}
+				return ['is-warning', 'is-success', 'is-danger', 'is-info'].includes(v)
+			},
 		},
-		'isBlock': {
+		isBlock: {
 			type: Boolean,
-			default: false
+			default: false,
 		},
 		content: {
 			type: String,
-			default: "Beta"
-		}
+			default: 'Beta',
+		},
 	},
 	computed: {
 		rootClass() {
@@ -36,8 +36,8 @@ export default {
 				'_has-background-green': this.modal === 'is-success',
 				'_has-background-red': this.modal === 'is-danger',
 				'_tooltip-right-inline': this['isBlock'] === false,
-				'_tooltip-right-block': this['isBlock'] === true
-			}];
+				'_tooltip-right-block': this['isBlock'] === true,
+			}]
 		},
 	},
 }
@@ -83,6 +83,4 @@ span._tooltip-right-block {
 	top: -0.375rem;
 	right: -0.5rem;
 }
-
-
 </style>

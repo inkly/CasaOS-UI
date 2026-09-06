@@ -91,9 +91,9 @@
 										@click="paste('overwrite')" />
 									<!-- Paste Button End -->
 
-									<!-- Operation Status Start-->
+									<!-- Operation Status Start -->
 									<operation-status-bar></operation-status-bar>
-									<!-- Operation Status End-->
+									<!-- Operation Status End -->
 
 									<!-- Upload Button Start -->
 									<global-action-button @showNewFileModal="showNewFileModal"
@@ -119,13 +119,13 @@
 							<!-- Tool Bar Start -->
 							<div v-if="allListData.length > 0" class="tool-bar is-flex mb-2 mt-2 is-flex-shrink-0">
 								<div class="is-flex-grow-1 has-text-left is-flex is-align-items-center">
-									<b-field class="ml-1 is-flex is-size-14px mb-0" expanded >
+									<b-field class="ml-1 is-flex is-size-14px mb-0" expanded>
 										<b-checkbox v-model="isSelectAll" :class="selectState" size="is-small"
 											@update:model-value="handleSelect">
 											{{
 												selectState != "none"
-												? $t("select-items", selectLabel)
-												: $t("total-items", selectLabel)
+													? $t("select-items", selectLabel)
+													: $t("total-items", selectLabel)
 											}}
 										</b-checkbox>
 									</b-field>
@@ -174,7 +174,7 @@
 							</div>
 							<!-- List View End -->
 
-							<!-- Upload List Start-->
+							<!-- Upload List Start -->
 							<div v-show="showUploadList" class="upload-list">
 								<b-collapse ref="uploadList" v-model="openUploadList" animation="slide1"
 									aria-id="contentIdForA11y3" class="card">
@@ -183,7 +183,7 @@
 											class="card-header" role="button">
 											<p class="card-header-title">
 												<b-icon :icon="openUploadList ? 'down-outline' : 'up-outline'
-													" pack="casa" class="mr-2"></b-icon>
+												" pack="casa" class="mr-2"></b-icon>
 												{{ $t(uploaderListHeaderText) }}
 											</p>
 											<a class="card-header-icon" @click.prevent="closeUploaderList">
@@ -199,7 +199,7 @@
 									</div>
 								</b-collapse>
 							</div>
-							<!-- Upload List End-->
+							<!-- Upload List End -->
 						</uploader>
 						<!-- Toolbar Start -->
 						<operation-toolbar v-model="isToolbarShow" @close="handleClose" @copy="handleCopy"
@@ -230,57 +230,57 @@
 </template>
 
 <script>
-import { defineAsyncComponent } from "vue";
-import orderBy from "lodash/orderBy";
-import dropRight from "lodash/dropRight";
+import { defineAsyncComponent } from 'vue'
+import orderBy from 'lodash/orderBy'
+import dropRight from 'lodash/dropRight'
 
-import { mixin } from "@/mixins/mixin";
-import { filterHiddenFiles } from "@/mixins/file_utils";
-import VueBreakpointMixin from "@/mixins/breakpoint";
-import events from "@/events/events";
+import { mixin } from '@/mixins/mixin'
+import { filterHiddenFiles } from '@/mixins/file_utils'
+import VueBreakpointMixin from '@/mixins/breakpoint'
+import events from '@/events/events'
 
-import TreeList from "./sidebar/TreeList.vue";
-import MountList from "./sidebar/MountList.vue";
-import ShareEntryButton from "./shared/ShareEntryButton.vue";
-import ShareListPage from "./shared/ShareListPage.vue";
+import TreeList from './sidebar/TreeList.vue'
+import MountList from './sidebar/MountList.vue'
+import ShareEntryButton from './shared/ShareEntryButton.vue'
+import ShareListPage from './shared/ShareListPage.vue'
 
-import SelectShareModal from "./shared/SelectShareModal.vue";
-import ShareDetial from "./shared/ShareDetial.vue";
+import SelectShareModal from './shared/SelectShareModal.vue'
+import ShareDetial from './shared/ShareDetial.vue'
 
-import GirdView from "./components/GirdView.vue";
-import ListView from "./components/ListView.vue";
-import FileBreadcrumb from "./components/FileBreadcrumb.vue";
-import EmptyHolder from "./components/EmptyHolder.vue";
-import ErrorHolder from "./components/ErrorHolder.vue";
-import SidebarMenuButton from "./components/SidebarMenuButton.vue";
+import GirdView from './components/GirdView.vue'
+import ListView from './components/ListView.vue'
+import FileBreadcrumb from './components/FileBreadcrumb.vue'
+import EmptyHolder from './components/EmptyHolder.vue'
+import ErrorHolder from './components/ErrorHolder.vue'
+import SidebarMenuButton from './components/SidebarMenuButton.vue'
 
-import DetailModal from "./modals/DetailModal.vue";
-import NewFolderModal from "./modals/NewFolderModal.vue";
-import NewFileModal from "./modals/NewFileModal.vue";
-import RenameModal from "./modals/RenameModal.vue";
+import DetailModal from './modals/DetailModal.vue'
+import NewFolderModal from './modals/NewFolderModal.vue'
+import NewFileModal from './modals/NewFileModal.vue'
+import RenameModal from './modals/RenameModal.vue'
 
-import Uploader from "./uploader/components/uploader.vue";
-import UploaderUnsupport from "./uploader/components/unsupport.vue";
-import UploaderList from "./uploader/components/list.vue";
-import OperationToolbar from "./components/OperationToolbar.vue";
-import OperationStatusBar from "./components/OperationStatusBar.vue";
-import GlobalActionButton from "./components/GlobalActionButton.vue";
-import MountActionButton from "./components/MountActionButton.vue";
+import Uploader from './uploader/components/uploader.vue'
+import UploaderUnsupport from './uploader/components/unsupport.vue'
+import UploaderList from './uploader/components/list.vue'
+import OperationToolbar from './components/OperationToolbar.vue'
+import OperationStatusBar from './components/OperationStatusBar.vue'
+import GlobalActionButton from './components/GlobalActionButton.vue'
+import MountActionButton from './components/MountActionButton.vue'
 // storage settings requirement document
-import MergeStorages from "@/components/Storage/MergeStorages.vue";
+import MergeStorages from '@/components/Storage/MergeStorages.vue'
 
 // Drop
-import DropEntryButton from "./drop/DropEntryButton.vue";
+import DropEntryButton from './drop/DropEntryButton.vue'
 
-const SHOW_HIDDEN_FILES_STORAGE_KEY = "casaos-filebrowser-show-hidden-files";
+const SHOW_HIDDEN_FILES_STORAGE_KEY = 'casaos-filebrowser-show-hidden-files'
 
 export default {
-	name: "file-panel",
+	name: 'file-panel',
 	mixins: [mixin, VueBreakpointMixin],
 	provide() {
 		return {
 			filePanel: this,
-		};
+		}
 	},
 	components: {
 		ListView,
@@ -290,13 +290,13 @@ export default {
 		Uploader,
 		UploaderUnsupport,
 		UploaderList,
-		CodeEditor: defineAsyncComponent(() => import("./viewers/CodeEditor.vue")),
-		VideoPlayer: defineAsyncComponent(() => import("./viewers/VideoPlayer.vue")),
-		ImageViewer: defineAsyncComponent(() => import("./viewers/ImageViewer.vue")),
-		MarkDownEditor: defineAsyncComponent(() => import("./viewers/MarkdownEditor.vue")),
-		DocViewer: defineAsyncComponent(() => import("./viewers/DocViewer.vue")),
-		ExcelViewer: defineAsyncComponent(() => import("./viewers/ExcelViewer.vue")),
-		PdfViewer: defineAsyncComponent(() => import("./viewers/PdfViewer.vue")),
+		CodeEditor: defineAsyncComponent(() => import('./viewers/CodeEditor.vue')),
+		VideoPlayer: defineAsyncComponent(() => import('./viewers/VideoPlayer.vue')),
+		ImageViewer: defineAsyncComponent(() => import('./viewers/ImageViewer.vue')),
+		MarkDownEditor: defineAsyncComponent(() => import('./viewers/MarkdownEditor.vue')),
+		DocViewer: defineAsyncComponent(() => import('./viewers/DocViewer.vue')),
+		ExcelViewer: defineAsyncComponent(() => import('./viewers/ExcelViewer.vue')),
+		PdfViewer: defineAsyncComponent(() => import('./viewers/PdfViewer.vue')),
 		EmptyHolder,
 		ErrorHolder,
 		OperationToolbar,
@@ -309,7 +309,7 @@ export default {
 		MountList,
 		MountActionButton,
 		// Drop
-		DropPage: defineAsyncComponent(() => import("./drop/DropPage.vue")),
+		DropPage: defineAsyncComponent(() => import('./drop/DropPage.vue')),
 		DropEntryButton,
 		SidebarMenuButton,
 	},
@@ -322,14 +322,14 @@ export default {
 			isPasting: false,
 			isShowDetial: false,
 			isSideBarOpen: false,
-			pageType: "file",
+			pageType: 'file',
 			panelType: null,
 			currentItem: null,
-			rootPath: "/DATA",
-			currentPath: "",
-			currentPathName: "",
+			rootPath: '/DATA',
+			currentPath: '',
+			currentPathName: '',
 			isViewGird: true,
-			showHiddenFiles: localStorage.getItem(SHOW_HIDDEN_FILES_STORAGE_KEY) === "true",
+			showHiddenFiles: localStorage.getItem(SHOW_HIDDEN_FILES_STORAGE_KEY) === 'true',
 			allListData: [],
 			listData: [],
 			selectedArray: [],
@@ -338,28 +338,28 @@ export default {
 			uploadPercentage: 0,
 			hasPasteData: this.$store.state.operateObject != null,
 			uploaderInstance: {},
-			selectState: "none",
+			selectState: 'none',
 			isSelectAll: false,
 			selectLabel: {},
 			isToolbarShow: false,
 			isEmpty: true,
-			errorMsg: "",
+			errorMsg: '',
 
 			attrs: {
-				accept: "*",
+				accept: '*',
 			},
 			// Uploader List
 			showUploadList: false,
 			openUploadList: true,
-			uploaderListHeaderText: "Uploading",
+			uploaderListHeaderText: 'Uploading',
 			hasMergerFunction: false,
-		};
+		}
 	},
 	async created() {
 		this.options = {
 			target: this.getTargetUrl(),
 			testChunks: false,
-			uploadMethod: "POST",
+			uploadMethod: 'POST',
 			successStatuses: [200, 201, 202, 2002],
 			permanentErrors: [404, 409, 415, 500, 501],
 			allowDuplicateUploads: true,
@@ -369,117 +369,117 @@ export default {
 			query: (file) => {
 				return {
 					path: file.targetPath,
-				};
+				}
 			},
 			// generateUniqueIdentifier: nanoid(),
 			// chunkSize: 1024 * 1024 * 1024 * 1024 * 1024,
 			// forceChunkSize: true,
-		};
+		}
 		// get merge info
 		try {
 			let hasMergeState = await this.$api.local_storage
 				.getMergerfsInfo()
-				.then((res) => res.status);
-			this.hasMergerFunction = hasMergeState == 200;
+				.then(res => res.status)
+			this.hasMergerFunction = hasMergeState == 200
 		} catch (e) {
-			console.error(e);
+			console.error(e)
 		}
 	},
 
 	computed: {
 		viewIcon() {
 			return this.$store.state.isViewGird
-				? "view-grid-outline"
-				: "format-list-bulleted";
+				? 'view-grid-outline'
+				: 'format-list-bulleted'
 		},
 		hiddenFilesIcon() {
-			return this.showHiddenFiles ? "eye-off-outline" : "eye-outline";
+			return this.showHiddenFiles ? 'eye-off-outline' : 'eye-outline'
 		},
 		showHiddenFilesLabel() {
-			return this.$t(this.showHiddenFiles ? "Hide hidden files" : "Show hidden files");
+			return this.$t(this.showHiddenFiles ? 'Hide hidden files' : 'Show hidden files')
 		},
 		listView() {
-			return this.$store.state.isViewGird ? "gird-view" : "list-view";
+			return this.$store.state.isViewGird ? 'gird-view' : 'list-view'
 		},
 		containerClass() {
-			return this.$route.path == "/files" ? "file-panel full-screen " : "";
+			return this.$route.path == '/files' ? 'file-panel full-screen ' : ''
 		},
 		sideBarPosition() {
-			return this.isMobile ? "fixed" : "static";
+			return this.isMobile ? 'fixed' : 'static'
 		},
 		token() {
 			return (
-				this.$store.state.access_token || localStorage.getItem("access_token")
-			);
+				this.$store.state.access_token || localStorage.getItem('access_token')
+			)
 		},
 	},
 	watch: {
-		"$store.state.access_token": {
+		'$store.state.access_token': {
 			handler(val) {
-				this.options.headers.Authorization = val;
+				this.options.headers.Authorization = val
 			},
 			deep: true,
 		},
-		"$store.state.operateObject": {
+		'$store.state.operateObject': {
 			handler(val) {
-				this.hasPasteData = val != null;
+				this.hasPasteData = val != null
 			},
 			deep: true,
 		},
 		pageType(val) {
 			switch (val) {
-				case "file":
+				case 'file':
 					this.$nextTick(() => {
-						this.beforeInit();
-					});
+						this.beforeInit()
+					})
 
-					break;
-				case "share":
-					this.destroyedAction();
-					break;
-				case "drop":
-					this.destroyedAction();
-					break;
+					break
+				case 'share':
+					this.destroyedAction()
+					break
+				case 'drop':
+					this.destroyedAction()
+					break
 				default:
-					break;
+					break
 			}
 		},
 		isMobile(val) {
 			if (val) {
-				this.isSideBarOpen = false;
+				this.isSideBarOpen = false
 			} else {
-				this.isSideBarOpen = true;
+				this.isSideBarOpen = true
 			}
 		},
 	},
 
 	mounted() {
-		this.init();
-		if (this.$route.path == "/files") {
-			this.init();
+		this.init()
+		if (this.$route.path == '/files') {
+			this.init()
 			// this.isLoading = false;
 		}
 
-		if (this.pageType == "file") {
-			this.beforeInit();
+		if (this.pageType == 'file') {
+			this.beforeInit()
 		}
 
-		this.isSideBarOpen = !this.isMobile;
+		this.isSideBarOpen = !this.isMobile
 
-		document.addEventListener("contextmenu", this.hideContextMenu);
+		document.addEventListener('contextmenu', this.hideContextMenu)
 		this.$EventBus.$on(events.GOTO, (event) => {
-			this.getFileList(event.path);
-		});
+			this.getFileList(event.path)
+		})
 
-		this.$EventBus.$on(events.SELECT_SHARE, this.handleSelectShare);
-		this.$EventBus.$on(events.UN_SHARE, this.handleUnShare);
-		this.$EventBus.$on(events.SHOW_FILES_SIDEBAR, this.handleShowSideBar);
-		this.$EventBus.$on(events.HIDE_FILES_SIDEBAR, this.handleHideSideBar);
+		this.$EventBus.$on(events.SELECT_SHARE, this.handleSelectShare)
+		this.$EventBus.$on(events.UN_SHARE, this.handleUnShare)
+		this.$EventBus.$on(events.SHOW_FILES_SIDEBAR, this.handleShowSideBar)
+		this.$EventBus.$on(events.HIDE_FILES_SIDEBAR, this.handleHideSideBar)
 	},
 	unmounted() {
-		this.$EventBus.$off(events.SHOW_FILES_SIDEBAR, this.handleShowSideBar);
-		this.$EventBus.$off(events.HIDE_FILES_SIDEBAR, this.handleHideSideBar);
-		this.destroyedAction();
+		this.$EventBus.$off(events.SHOW_FILES_SIDEBAR, this.handleShowSideBar)
+		this.$EventBus.$off(events.HIDE_FILES_SIDEBAR, this.handleHideSideBar)
+		this.destroyedAction()
 	},
 
 	methods: {
@@ -488,45 +488,45 @@ export default {
 		 **************************************************/
 
 		beforeInit() {
-			this.setUploaderOpts();
+			this.setUploaderOpts()
 			// Listen to ESC button to exit preview
 			document.onkeyup = (e) => {
 				switch (e.code) {
-					case "Escape":
+					case 'Escape':
 						if (this.isShowDetial) {
-							this.$refs.previewPanel.close();
+							this.$refs.previewPanel.close()
 						}
-						break;
-					case "Backspace":
-						this.backLevel();
-						break;
+						break
+					case 'Backspace':
+						this.backLevel()
+						break
 
 					default:
-						break;
+						break
 				}
-			};
+			}
 			// paste
 			document.onpaste = () => {
 				if (!this.isShowDetial && !this.isModalOpen) {
-					this.paste("overwrite");
+					this.paste('overwrite')
 				}
-			};
+			}
 		},
 
 		destroyedAction() {
-			if (this.pageType == "file") {
-				this.uploaderInstance.off("fileSuccess");
-				this.uploaderInstance.off("fileError");
-				this.uploaderInstance.off("fileProgress");
-				this.uploaderInstance.off("dragleave");
-				this.uploaderInstance.off("dragover");
-				this.uploaderInstance.off("uploadStart");
+			if (this.pageType == 'file') {
+				this.uploaderInstance.off('fileSuccess')
+				this.uploaderInstance.off('fileError')
+				this.uploaderInstance.off('fileProgress')
+				this.uploaderInstance.off('dragleave')
+				this.uploaderInstance.off('dragover')
+				this.uploaderInstance.off('uploadStart')
 
-				this.$store.commit("SET_OPERATE_OBJECT", null);
-				document.onpaste = null;
-				document.onkeyup = null;
+				this.$store.commit('SET_OPERATE_OBJECT', null)
+				document.onpaste = null
+				document.onkeyup = null
 			}
-			document.removeEventListener("contextmenu", this.hideContextMenu);
+			document.removeEventListener('contextmenu', this.hideContextMenu)
 			// this.uploaderInstance.off('dragover')
 			// this.uploaderInstance.off('uploadStart')
 			// document.removeEventListener('contextmenu', this.hideContextMenu)
@@ -536,13 +536,13 @@ export default {
 		},
 
 		showSharedList() {
-			this.pageType = "share";
-			this.hideMobileSidebar();
+			this.pageType = 'share'
+			this.hideMobileSidebar()
 		},
 
 		showDropPage() {
-			this.pageType = "drop";
-			this.hideMobileSidebar();
+			this.pageType = 'drop'
+			this.hideMobileSidebar()
 		},
 
 		/**
@@ -550,12 +550,12 @@ export default {
 		 * @return {*}
 		 */
 		init(path) {
-			let initPath = path || this.rootPath;
+			let initPath = path || this.rootPath
 			if (this.isCreated) {
-				this.getFileList(initPath);
+				this.getFileList(initPath)
 				// this.$refs.mountedList.getStorageList();
 			} else {
-				this.isCreated = true;
+				this.isCreated = true
 			}
 		},
 
@@ -565,18 +565,18 @@ export default {
 		 * @return {*}
 		 */
 		getFileList(path) {
-			this.isLoading = true;
+			this.isLoading = true
 			// path = path.replace("//", "/")
-			this.pageType = "file";
-			this.currentPath = path;
-			this.$store.commit("SET_CURRENT_PATH", path);
+			this.pageType = 'file'
+			this.currentPath = path
+			this.$store.commit('SET_CURRENT_PATH', path)
 			this.$api.folder
 				.getList(path)
 				.then((res) => {
 					if (res.data.success == 200) {
-						this.isLoading = false;
-						this.currentPathName = path.split("/").pop();
-						const fileList = res.data.data.content;
+						this.isLoading = false
+						this.currentPathName = path.split('/').pop()
+						const fileList = res.data.data.content
 						this.allListData = fileList.map((item) => {
 							return {
 								date: item.date,
@@ -587,24 +587,24 @@ export default {
 								size: item.size,
 								write: item.write,
 								extensions: item.extensions,
-							};
-						});
-						this.updateVisibleList();
-						this.handelListChange(this.listData);
-						this.errorMsg = "";
-						this.isEmpty = true;
+							}
+						})
+						this.updateVisibleList()
+						this.handelListChange(this.listData)
+						this.errorMsg = ''
+						this.isEmpty = true
 					}
 				})
 				.catch((error) => {
-					this.isLoading = false;
-					this.isEmpty = false;
-					this.allListData = [];
-					this.listData = [];
-					this.errorMsg = error.response.data.data;
-					this.handelListChange(this.listData);
-				});
+					this.isLoading = false
+					this.isEmpty = false
+					this.allListData = []
+					this.listData = []
+					this.errorMsg = error.response.data.data
+					this.handelListChange(this.listData)
+				})
 
-			this.hideMobileSidebar();
+			this.hideMobileSidebar()
 		},
 
 		/**
@@ -612,8 +612,8 @@ export default {
 		 * @return {*}
 		 */
 		reload() {
-			this.getFileList(this.$store.state.currentPath);
-			this.$EventBus.$emit(events.RELOAD_FILE_LIST);
+			this.getFileList(this.$store.state.currentPath)
+			this.$EventBus.$emit(events.RELOAD_FILE_LIST)
 		},
 
 		/**
@@ -621,8 +621,8 @@ export default {
 		 * @return {*}
 		 */
 		changeView() {
-			this.isViewGird = !this.$store.state.isViewGird;
-			this.$store.commit("SET_IS_VIEW_GRID", this.isViewGird);
+			this.isViewGird = !this.$store.state.isViewGird
+			this.$store.commit('SET_IS_VIEW_GRID', this.isViewGird)
 		},
 
 		/**
@@ -630,8 +630,8 @@ export default {
 		 * @return {*}
 		 */
 		updateVisibleList() {
-			const visibleList = filterHiddenFiles(this.allListData, this.showHiddenFiles);
-			this.listData = orderBy(visibleList, ["is_dir"], ["desc"]);
+			const visibleList = filterHiddenFiles(this.allListData, this.showHiddenFiles)
+			this.listData = orderBy(visibleList, ['is_dir'], ['desc'])
 		},
 
 		/**
@@ -640,14 +640,14 @@ export default {
 		 */
 		clearSelection() {
 			this.allListData.forEach((item) => {
-				item.isSelected = false;
-			});
-			this.selectedArray = [];
-			this.selectState = "none";
-			this.isSelectAll = false;
-			this.isToolbarShow = false;
+				item.isSelected = false
+			})
+			this.selectedArray = []
+			this.selectState = 'none'
+			this.isSelectAll = false
+			this.isToolbarShow = false
 			if (this.$refs.listview) {
-				this.$refs.listview.selectList = [];
+				this.$refs.listview.selectList = []
 			}
 		},
 
@@ -656,11 +656,11 @@ export default {
 		 * @return {*}
 		 */
 		toggleHiddenFiles() {
-			this.showHiddenFiles = !this.showHiddenFiles;
-			localStorage.setItem(SHOW_HIDDEN_FILES_STORAGE_KEY, String(this.showHiddenFiles));
-			this.clearSelection();
-			this.updateVisibleList();
-			this.handelListChange(this.listData);
+			this.showHiddenFiles = !this.showHiddenFiles
+			localStorage.setItem(SHOW_HIDDEN_FILES_STORAGE_KEY, String(this.showHiddenFiles))
+			this.clearSelection()
+			this.updateVisibleList()
+			this.handelListChange(this.listData)
 		},
 
 		/**
@@ -671,16 +671,16 @@ export default {
 		handleSelect(bool) {
 			if (bool) {
 				this.listData.forEach((item, index) => {
-					item.isSelected = true;
-					this.$refs.listview.selectList.push(index);
-				});
+					item.isSelected = true
+					this.$refs.listview.selectList.push(index)
+				})
 			} else {
 				this.listData.forEach((item) => {
-					item.isSelected = false;
-				});
-				this.$refs.listview.selectList = [];
+					item.isSelected = false
+				})
+				this.$refs.listview.selectList = []
 			}
-			this.handelListChange(this.listData);
+			this.handelListChange(this.listData)
 		},
 
 		/**
@@ -690,26 +690,26 @@ export default {
 		 */
 		handelListChange(list) {
 			this.selectedArray = list.filter((item) => {
-				return item.isSelected;
-			});
+				return item.isSelected
+			})
 			if (this.selectedArray.length == list.length && list.length > 0) {
-				this.selectState = "all";
-				this.isSelectAll = true;
-				this.selectLabel = { num: list.length };
-				this.isToolbarShow = true;
+				this.selectState = 'all'
+				this.isSelectAll = true
+				this.selectLabel = { num: list.length }
+				this.isToolbarShow = true
 			} else if (
-				this.selectedArray.length < list.length &&
-				this.selectedArray.length > 0
+				this.selectedArray.length < list.length
+				&& this.selectedArray.length > 0
 			) {
-				this.selectState = "part";
-				this.isSelectAll = false;
-				this.selectLabel = { num: this.selectedArray.length };
-				this.isToolbarShow = true;
+				this.selectState = 'part'
+				this.isSelectAll = false
+				this.selectLabel = { num: this.selectedArray.length }
+				this.isToolbarShow = true
 			} else {
-				this.selectState = "none";
-				this.isSelectAll = false;
-				this.selectLabel = { num: list.length };
-				this.isToolbarShow = false;
+				this.selectState = 'none'
+				this.isSelectAll = false
+				this.selectLabel = { num: list.length }
+				this.isToolbarShow = false
 			}
 		},
 
@@ -718,37 +718,39 @@ export default {
 		 * @return {*}
 		 */
 		backLevel() {
-			if (this.isModalOpen) return false;
-			let pathArr = this.$store.state.currentPath.substr(1).split("/");
+			if (this.isModalOpen)
+				return false
+			let pathArr = this.$store.state.currentPath.substr(1).split('/')
 			if (pathArr.length == 1) {
-				return false;
+				return false
 			}
-			let newPath = "/" + dropRight(pathArr).join("/");
-			this.getFileList(newPath);
+			let newPath = '/' + dropRight(pathArr).join('/')
+			this.getFileList(newPath)
 		},
 
 		/**
 		 * @description: Paste Files
 		 * @return {*}
 		 */
-		paste(style = "overwrite") {
-			if (this.$store.state.operateObject == null) return false;
-			this.isPasting = true;
-			let operateObject = this.$store.state.operateObject;
-			operateObject.to = this.$store.state.currentPath;
-			operateObject.style = style;
+		paste(style = 'overwrite') {
+			if (this.$store.state.operateObject == null)
+				return false
+			this.isPasting = true
+			let operateObject = this.$store.state.operateObject
+			operateObject.to = this.$store.state.currentPath
+			operateObject.style = style
 
 			this.$api.batch.task(operateObject).then((res) => {
-				this.isPasting = false;
+				this.isPasting = false
 				if (res.data.success == 200) {
-					this.$store.commit("SET_OPERATE_OBJECT", null);
+					this.$store.commit('SET_OPERATE_OBJECT', null)
 				} else {
 					this.$buefy.toast.open({
 						message: res.data.message,
-						type: "is-danger",
-					});
+						type: 'is-danger',
+					})
 				}
-			});
+			})
 		},
 
 		/**
@@ -757,7 +759,7 @@ export default {
 		 */
 		hideContextMenu() {
 			if (this.$refs.moreBtn) {
-				this.$refs.moreBtn.isActive = false;
+				this.$refs.moreBtn.isActive = false
 			}
 		},
 
@@ -770,7 +772,7 @@ export default {
 		 * @return {*}
 		 */
 		getTargetUrl() {
-			return `${this.$protocol}//${this.$baseURL}/v2/casaos/file/upload`;
+			return `${this.$protocol}//${this.$baseURL}/v2/casaos/file/upload`
 		},
 
 		/**
@@ -778,39 +780,39 @@ export default {
 		 * @return {*}
 		 */
 		setUploaderOpts() {
-			this.uploaderInstance = this.$refs.uploader.uploader;
-			this.assignUploadButtons();
+			this.uploaderInstance = this.$refs.uploader.uploader
+			this.assignUploadButtons()
 
-			this.uploaderInstance.on("fileAdded", (file) => {
-				file.targetPath = this.currentPath;
-			});
+			this.uploaderInstance.on('fileAdded', (file) => {
+				file.targetPath = this.currentPath
+			})
 
 			// Drag Over
-			this.uploaderInstance.on("dragover", (event) => {
-				this.isDragIn = true;
-				this.openUploadList = false;
+			this.uploaderInstance.on('dragover', (event) => {
+				this.isDragIn = true
+				this.openUploadList = false
 				if (this.timeout !== null) {
-					clearTimeout(this.timeout);
+					clearTimeout(this.timeout)
 				}
 				this.timeout = setTimeout(() => {
-					this.isDragIn = false;
-					this.timeout = null;
-				}, 120);
-				event.stopPropagation();
-				event.preventDefault();
-			});
+					this.isDragIn = false
+					this.timeout = null
+				}, 120)
+				event.stopPropagation()
+				event.preventDefault()
+			})
 
-			this.uploaderInstance.on("uploadStart", () => {
-				this.isDragIn = false;
-				this.showUploadList = true;
-				this.openUploadList = true;
-				this.uploaderListHeaderText = "Uploading";
-			});
+			this.uploaderInstance.on('uploadStart', () => {
+				this.isDragIn = false
+				this.showUploadList = true
+				this.openUploadList = true
+				this.uploaderListHeaderText = 'Uploading'
+			})
 
-			this.uploaderInstance.on("complete", () => {
-				this.getFileList(this.currentPath);
-				this.uploaderListHeaderText = "Completed";
-			});
+			this.uploaderInstance.on('complete', () => {
+				this.getFileList(this.currentPath)
+				this.uploaderListHeaderText = 'Completed'
+			})
 		},
 
 		/**
@@ -818,8 +820,8 @@ export default {
 		 * @return {*}
 		 */
 		closeUploaderList() {
-			this.showUploadList = false;
-			this.uploaderInstance.cancel();
+			this.showUploadList = false
+			this.uploaderInstance.cancel()
 		},
 
 		/**
@@ -827,7 +829,7 @@ export default {
 		 * @return {*}
 		 */
 		assignUploadButtons() {
-			this.uploaderInstance.assignDrop(document.getElementById("dropTarget"));
+			this.uploaderInstance.assignDrop(document.getElementById('dropTarget'))
 		},
 
 		/*************************************************
@@ -840,29 +842,29 @@ export default {
 		 * @return {*}
 		 */
 		showDetailModal(item) {
-			this.isModalOpen = true;
-			this.panelType = this.getPanelType(item);
+			this.isModalOpen = true
+			this.panelType = this.getPanelType(item)
 			if (this.panelType !== null) {
-				this.currentItem = item;
-				this.isShowDetial = true;
+				this.currentItem = item
+				this.isShowDetial = true
 			} else {
 				this.$buefy.modal.open({
 					component: DetailModal,
 					hasModalCard: true,
-					customClass: "detail-panel file-modal",
+					customClass: 'detail-panel file-modal',
 					trapFocus: true,
 					canCancel: [],
-					scroll: "keep",
-					animation: "zoom-in",
+					scroll: 'keep',
+					animation: 'zoom-in',
 					props: {
 						item: item,
 					},
 					events: {
 						close: () => {
-							this.isModalOpen = false;
+							this.isModalOpen = false
 						},
 					},
-				});
+				})
 			}
 		},
 
@@ -871,27 +873,27 @@ export default {
 		 * @return {*}
 		 */
 		showNewFolderModal() {
-			this.isModalOpen = true;
+			this.isModalOpen = true
 			this.$buefy.modal.open({
 				component: NewFolderModal,
 				hasModalCard: true,
-				customClass: "new-folder-panel file-modal",
+				customClass: 'new-folder-panel file-modal',
 				trapFocus: true,
-				canCancel: [""],
-				scroll: "keep",
-				animation: "zoom-in",
+				canCancel: [''],
+				scroll: 'keep',
+				animation: 'zoom-in',
 				props: {
 					currentPath: this.currentPath,
 				},
 				events: {
 					reload: () => {
-						this.reload();
+						this.reload()
 					},
 					close: () => {
-						this.isModalOpen = false;
+						this.isModalOpen = false
 					},
 				},
-			});
+			})
 		},
 
 		/**
@@ -899,27 +901,27 @@ export default {
 		 * @return {*}
 		 */
 		showNewFileModal() {
-			this.isModalOpen = true;
+			this.isModalOpen = true
 			this.$buefy.modal.open({
 				component: NewFileModal,
 				hasModalCard: true,
-				customClass: "new-folder-panel file-modal",
+				customClass: 'new-folder-panel file-modal',
 				trapFocus: true,
-				canCancel: [""],
-				scroll: "keep",
-				animation: "zoom-in",
+				canCancel: [''],
+				scroll: 'keep',
+				animation: 'zoom-in',
 				props: {
 					currentPath: this.currentPath,
 				},
 				events: {
 					reload: () => {
-						this.reload();
+						this.reload()
 					},
 					close: () => {
-						this.isModalOpen = false;
+						this.isModalOpen = false
 					},
 				},
-			});
+			})
 		},
 
 		/**
@@ -928,27 +930,27 @@ export default {
 		 * @return {*}
 		 */
 		showRenameModal(item) {
-			this.isModalOpen = true;
+			this.isModalOpen = true
 			this.$buefy.modal.open({
 				component: RenameModal,
 				hasModalCard: true,
-				customClass: "rename-panel file-modal",
+				customClass: 'rename-panel file-modal',
 				trapFocus: true,
-				canCancel: [""],
-				scroll: "keep",
-				animation: "zoom-in",
+				canCancel: [''],
+				scroll: 'keep',
+				animation: 'zoom-in',
 				events: {
 					reload: () => {
-						this.reload();
+						this.reload()
 					},
 					close: () => {
-						this.isModalOpen = false;
+						this.isModalOpen = false
 					},
 				},
 				props: {
 					item: item,
 				},
-			});
+			})
 		},
 
 		/*************************************************
@@ -960,8 +962,8 @@ export default {
 		 * @return {*}
 		 */
 		handleClose() {
-			this.isSelectAll = false;
-			this.handleSelect(this.isSelectAll);
+			this.isSelectAll = false
+			this.handleSelect(this.isSelectAll)
 		},
 
 		/**
@@ -970,18 +972,18 @@ export default {
 		 */
 		handleRemove() {
 			this.$buefy.dialog.confirm({
-				title: this.$t("Deleting files"),
+				title: this.$t('Deleting files'),
 				message: this.$t(
-					"Are you sure you want to <b>delete</b> these files? This action cannot be undone."
+					'Are you sure you want to <b>delete</b> these files? This action cannot be undone.',
 				),
-				confirmText: this.$t("Delete"),
-				type: "is-danger",
+				confirmText: this.$t('Delete'),
+				type: 'is-danger',
 				hasIcon: true,
 				onConfirm: () => {
-					this.deleteItem(this.selectedArray);
-					this.handleClose();
+					this.deleteItem(this.selectedArray)
+					this.handleClose()
 				},
-			});
+			})
 		},
 
 		/**
@@ -989,8 +991,8 @@ export default {
 		 * @return {*}
 		 */
 		handleMove() {
-			this.operate("move", this.selectedArray);
-			this.handleClose();
+			this.operate('move', this.selectedArray)
+			this.handleClose()
 		},
 
 		/**
@@ -998,8 +1000,8 @@ export default {
 		 * @return {*}
 		 */
 		handleCopy() {
-			this.operate("copy", this.selectedArray);
-			this.handleClose();
+			this.operate('copy', this.selectedArray)
+			this.handleClose()
 		},
 
 		/**
@@ -1007,12 +1009,12 @@ export default {
 		 * @return {*}
 		 */
 		handleDownload() {
-			const downItem =
-				this.selectedArray.length == 1
+			const downItem
+				= this.selectedArray.length == 1
 					? this.selectedArray[0]
-					: this.selectedArray;
-			this.downloadFile(downItem);
-			this.handleClose();
+					: this.selectedArray
+			this.downloadFile(downItem)
+			this.handleClose()
 		},
 
 		/*************************************************
@@ -1021,45 +1023,45 @@ export default {
 
 		handleUnShare(item) {
 			this.$buefy.dialog.confirm({
-				title: this.$t("Unsharing Folder"),
-				message: this.$t("Are you sure you want to unshare this Folder?"),
-				confirmText: this.$t("UnShare"),
-				cancelText: this.$t("Cancel"),
-				iconPack: "casa",
-				icon: "danger",
-				type: "is-danger",
+				title: this.$t('Unsharing Folder'),
+				message: this.$t('Are you sure you want to unshare this Folder?'),
+				confirmText: this.$t('UnShare'),
+				cancelText: this.$t('Cancel'),
+				iconPack: 'casa',
+				icon: 'danger',
+				type: 'is-danger',
 				hasIcon: true,
 				onConfirm: () => {
 					this.$api.samba
 						.deleteShare(item.id)
 						.then(() => {
-							this.reloadShare();
+							this.reloadShare()
 							this.$buefy.toast.open({
-								message: this.$t("Folder unshared."),
-								type: "is-success",
-							});
+								message: this.$t('Folder unshared.'),
+								type: 'is-success',
+							})
 						})
 						.catch(() => {
 							this.$buefy.toast.open({
-								message: this.$t("Unshared failed."),
-								type: "is-danger",
-							});
-						});
+								message: this.$t('Unshared failed.'),
+								type: 'is-danger',
+							})
+						})
 				},
-			});
+			})
 		},
 
 		reloadShare() {
 			switch (this.pageType) {
-				case "share":
-					this.$refs.shareList.getSharedList();
-					this.$EventBus.$emit(events.RELOAD_FILE_LIST);
-					break;
-				case "file":
-					this.reload();
-					break;
+				case 'share':
+					this.$refs.shareList.getSharedList()
+					this.$EventBus.$emit(events.RELOAD_FILE_LIST)
+					break
+				case 'file':
+					this.reload()
+					break
 				default:
-					break;
+					break
 			}
 		},
 
@@ -1067,34 +1069,34 @@ export default {
 			this.$buefy.modal.open({
 				component: SelectShareModal,
 				hasModalCard: true,
-				customClass: "share-detial-panel file-modal",
+				customClass: 'share-detial-panel file-modal',
 				trapFocus: true,
-				canCancel: [""],
-				scroll: "keep",
-				animation: "zoom-in",
+				canCancel: [''],
+				scroll: 'keep',
+				animation: 'zoom-in',
 				events: {
 					close: () => {
 						// this.isModalOpen = false
 					},
 					reload: () => {
-						this.reloadShare();
+						this.reloadShare()
 					},
 				},
-			});
+			})
 		},
 		getShareLink(item) {
 			this.$buefy.modal.open({
 				component: ShareDetial,
 				hasModalCard: true,
-				customClass: "share-detial-panel file-modal",
+				customClass: 'share-detial-panel file-modal',
 				trapFocus: true,
-				canCancel: [""],
-				scroll: "keep",
-				animation: "zoom-in",
+				canCancel: [''],
+				scroll: 'keep',
+				animation: 'zoom-in',
 				props: {
 					item: item,
 				},
-			});
+			})
 		},
 
 		/*************************************************
@@ -1109,67 +1111,67 @@ export default {
 			// TODO: the part is repetition
 			//  with APPs Installation Location requirement document
 			// 获取merge信息
-			let mergeStorageList;
+			let mergeStorageList
 			try {
 				mergeStorageList = await this.$api.local_storage
 					.getMergerfsInfo()
-					.then((res) => res.data.data[0]["source_volume_uuids"]);
+					.then(res => res.data.data[0]['source_volume_uuids'])
 			} catch (e) {
-				mergeStorageList = [];
-				console.log(e);
+				mergeStorageList = []
+				console.log(e)
 			}
 			this.$buefy.modal.open({
 				component: MergeStorages,
 				hasModalCard: true,
 				canCancel: false,
-				animation: "zoom-in",
+				animation: 'zoom-in',
 				props: {
 					mergeStorageList,
 				},
 				events: {},
-			});
+			})
 		},
 
 		handleShowSideBar() {
-			this.isSideBarOpen = true;
+			this.isSideBarOpen = true
 		},
 		handleHideSideBar() {
-			this.isSideBarOpen = false;
+			this.isSideBarOpen = false
 		},
 
 		hideMobileSidebar() {
 			if (this.isMobile) {
-				this.$refs.sidebar.close();
+				this.$refs.sidebar.close()
 			}
 		},
 	},
 	sockets: {
-		"casaos:file:operate"(res) {
-			const file_operate = JSON.parse(res.Properties.file_operate);
-			const taskList = file_operate.data;
+		'casaos:file:operate'(res) {
+			const file_operate = JSON.parse(res.Properties.file_operate)
+			const taskList = file_operate.data
 			taskList.forEach((task) => {
 				if (task.finished && task.to === this.currentPath) {
-					this.reload();
+					this.reload()
 				}
-			});
+			})
 		},
-		"casaos:system:utilization"() {
+		'casaos:system:utilization'() {
 			// USB
 			// this.usbDisks = data.body.sys_usb
 		},
 		storage_status() {
 			// Storage
-			this.reload();
+			this.reload()
 		},
-		"local-storage:disk:added"() {
+		'local-storage:disk:added'() {
 			setTimeout(() => {
-				if (this.currentPath == "/DATA") {
-					this.reload();
+				if (this.currentPath == '/DATA') {
+					this.reload()
 				}
-			}, 500);
+			}, 500)
 		},
 	},
-};
+}
 </script>
 
 <style lang="scss" scoped>

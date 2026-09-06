@@ -4,9 +4,9 @@
  * @LastEditors: Jerryk jerry@icewhale.org
  * @LastEditTime: 2022-06-19 22:53:09
  * @FilePath: \CasaOS-UI\src\components\filebrowser\uploader\components\btn.vue
- * @Description: 
- * 
- * Copyright (c) 2022 by IceWhale, All Rights Reserved. 
+ * @Description:
+ *
+ * Copyright (c) 2022 by IceWhale, All Rights Reserved.
 -->
 <template>
 	<label v-show="support" ref="btn" class="uploader-btn">
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import {supportMixin, uploaderMixin} from '../common/mixins'
+import { supportMixin, uploaderMixin } from '../common/mixins'
 
 const COMPONENT_NAME = 'uploader-btn'
 
@@ -25,24 +25,24 @@ export default {
 	props: {
 		directory: {
 			type: Boolean,
-			default: false
+			default: false,
 		},
 		single: {
 			type: Boolean,
-			default: false
+			default: false,
 		},
 		attrs: {
 			type: Object,
 			default() {
 				return {}
-			}
-		}
+			},
+		},
 	},
 	mounted() {
 		this.$nextTick(() => {
 			this.uploader.uploader.assignBrowse(this.$refs.btn, this.directory, this.single, this.attrs)
 		})
-	}
+	},
 }
 </script>
 

@@ -1,4 +1,3 @@
-
 <template>
 	<div class="common-card">
 
@@ -27,83 +26,80 @@
 </template>
 
 <script>
-import events from '@/events/events';
+import events from '@/events/events'
 
 export default {
-	name: "sync-block",
+	name: 'sync-block',
 	data() {
 		return {
 			isLoading: false,
 			isStarting: false,
-			syncBaseURL: "",
+			syncBaseURL: '',
 			isSyncInstalled: false,
 			isSyncRunning: false,
-			syncPort: "",
-			syncId: ""
+			syncPort: '',
+			syncId: '',
 		}
 	},
 	created() {
 		this.checkSyncStatus()
 
 		this.$EventBus.$on(events.UPDATE_SYNC_STATUS, () => {
-			this.checkSyncStatus();
-		});
-
+			this.checkSyncStatus()
+		})
 	},
 	beforeUnmount() {
-		this.$EventBus.$off(events.UPDATE_SYNC_STATUS);
+		this.$EventBus.$off(events.UPDATE_SYNC_STATUS)
 	},
 	computed: {
 		actionText() {
-			return !this.isSyncInstalled ? "Install" : "Open"
-		}
+			return !this.isSyncInstalled ? 'Install' : 'Open'
+		},
 	},
 
 	methods: {
 		async checkSyncStatus() {
 			// const res = await this.$api.sys.getSystemApps()
-			const listRes = await this.$api.container.getMyAppList();
-			const systemApps = listRes.data ? listRes.data.data.casaos_apps : [];
-			const is8384SyncInstalled = systemApps.some(app => {
+			const listRes = await this.$api.container.getMyAppList()
+			const systemApps = listRes.data ? listRes.data.data.casaos_apps : []
+			const is8384SyncInstalled = systemApps.some((app) => {
 				return app.image.includes('syncthing') && app.port === 8384
 			})
 			if (is8384SyncInstalled) {
 				this.isSyncInstalled = true
 				this.syncBaseURL = `http://${this.$baseIp}:8384`
 				this.syncPort = 8384
-				this.syncId = systemApps.find(app => {
+				this.syncId = systemApps.find((app) => {
 					return app.image.includes('syncthing') && app.port === 8384
 				}).port
-				this.isSyncRunning = systemApps.some(app => {
+				this.isSyncRunning = systemApps.some((app) => {
 					return app.image.includes('syncthing') && app.port === 8384 && app.state === 'running'
 				})
 			} else {
-				this.isSyncInstalled = systemApps.some(app => {
+				this.isSyncInstalled = systemApps.some((app) => {
 					return app.image.includes('syncthing')
 				})
 				if (this.isSyncInstalled) {
-					this.isSyncRunning = systemApps.some(app => {
-						return app.image.includes('syncthing') && app.state === "running"
+					this.isSyncRunning = systemApps.some((app) => {
+						return app.image.includes('syncthing') && app.state === 'running'
 					})
-					this.syncPort = systemApps.find(app => {
+					this.syncPort = systemApps.find((app) => {
 						return app.image.includes('syncthing')
 					}).port
-					this.syncId = systemApps.find(app => {
+					this.syncId = systemApps.find((app) => {
 						return app.image.includes('syncthing')
 					}).id
 					this.syncBaseURL = `http://${this.$baseIp}:${this.syncPort}`
 				}
 			}
-
-
 		},
 		async openSyncPanel() {
 			await this.checkSyncStatus()
 			if (!this.isSyncInstalled) {
-				this.$EventBus.$emit(events.OPEN_APP_STORE_AND_GOTO_SYNCTHING);
+				this.$EventBus.$emit(events.OPEN_APP_STORE_AND_GOTO_SYNCTHING)
 			} else {
 				if (this.isSyncRunning) {
-					window.open(this.syncBaseURL, '_blank');
+					window.open(this.syncBaseURL, '_blank')
 				} else {
 					this.$buefy.dialog.confirm({
 						title: ' ',
@@ -115,25 +111,24 @@ export default {
 						onConfirm: (value, { close }) => {
 							this.$buefy.toast.open({
 								message: this.$t(`Starting Syncthing...`),
-								type: 'is-white'
+								type: 'is-white',
 							})
-							this.$api.container.updateState(this.syncId, "start").then((res) => {
+							this.$api.container.updateState(this.syncId, 'start').then((res) => {
 								this.isStarting = false
 								if (res.data.success == 200) {
-									this.$EventBus.$emit(events.RELOAD_APP_LIST);
+									this.$EventBus.$emit(events.RELOAD_APP_LIST)
 									setTimeout(() => {
 										close()
-										window.open(this.syncBaseURL, '_blank');
-
+										window.open(this.syncBaseURL, '_blank')
 									}, 2000)
 								} else {
 									this.$buefy.toast.open({
 										message: this.$t(`Failed to start, please try again.`),
-										type: 'is-danger'
+										type: 'is-danger',
 									})
 								}
 							})
-						}
+						},
 					})
 				}
 			}
@@ -141,13 +136,13 @@ export default {
 
 	},
 	sockets: {
-		"app:install-end"() {
-			this.checkSyncStatus();
+		'app:install-end'() {
+			this.checkSyncStatus()
 		},
-		"app:install-error"() {
-			this.checkSyncStatus();
+		'app:install-error'() {
+			this.checkSyncStatus()
 		},
-	}
+	},
 }
 </script>
 

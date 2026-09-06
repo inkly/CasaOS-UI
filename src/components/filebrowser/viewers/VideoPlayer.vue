@@ -32,7 +32,7 @@
 						title: audioTitle,
 						artist: audioArtist,
 						src: this.getFileUrl(this.item),
-						pic: poster
+						pic: poster,
 					}" />
 			</div>
 		</div>
@@ -44,12 +44,13 @@
 		<!-- Player Footer End -->
 	</div>
 </template>
-  
+
 <script>
-import { mixin } from "@/mixins/mixin";
+import { mixin } from '@/mixins/mixin'
 import Aplayer from 'vue-aplayer'
-import Artplayer from 'artplayer';
-import * as mm from 'music-metadata-browser';
+import Artplayer from 'artplayer'
+import * as mm from 'music-metadata-browser'
+
 Aplayer.disableVersionBadge = true
 export default {
 	mixins: [mixin],
@@ -58,15 +59,15 @@ export default {
 			type: Object,
 			default: () => {
 				return {
-					path: "",
-					name: "",
-				};
+					path: '',
+					name: '',
+				}
 			},
 		},
 		list: {
 			type: Array,
 			default: () => {
-				return [];
+				return []
 			},
 		},
 	},
@@ -75,51 +76,49 @@ export default {
 	},
 	data() {
 		return {
-			type: "",
-			ext: "",
+			type: '',
+			ext: '',
 			instance: null,
-			poster: "",
+			poster: '',
 			audioTitle: this.item.name,
-			audioArtist: "...",
-		};
+			audioArtist: '...',
+		}
 	},
 	computed: {
 		isVideo() {
-			return this.type == "video-x-generic";
+			return this.type == 'video-x-generic'
 		},
 		isAudio() {
-			return this.type == "audio-x-generic";
+			return this.type == 'audio-x-generic'
 		},
 	},
 
 	mounted() {
-
-		this.ext = this.getFileExt(this.item, true);
+		this.ext = this.getFileExt(this.item, true)
 		Object.keys(this.typeMap).forEach((_type) => {
-			const extensions = this.typeMap[_type];
+			const extensions = this.typeMap[_type]
 			if (extensions.indexOf(this.ext) > -1) {
-				this.type = _type;
+				this.type = _type
 			}
-		});
+		})
 		this.$nextTick(() => {
 			if (this.isAudio) {
 				(async () => {
-					const fileUrl = this.getFileUrl(this.item);
-					const metadata = await mm.fetchFromUrl(fileUrl);
+					const fileUrl = this.getFileUrl(this.item)
+					const metadata = await mm.fetchFromUrl(fileUrl)
 					if (metadata.common.picture) {
-						const blob = new Blob([metadata.common.picture[0].data], { type: metadata.common.picture[0].format });
-						const url = URL.createObjectURL(blob);
-						this.poster = url;
-						this.$refs.playerContainer.style.backgroundImage = `url(${this.poster})`;
-						this.$refs.playerContainer.style.backgroundSize = 'cover';
-						this.$refs.playerContainer.style.backgroundPosition = 'center';
+						const blob = new Blob([metadata.common.picture[0].data], { type: metadata.common.picture[0].format })
+						const url = URL.createObjectURL(blob)
+						this.poster = url
+						this.$refs.playerContainer.style.backgroundImage = `url(${this.poster})`
+						this.$refs.playerContainer.style.backgroundSize = 'cover'
+						this.$refs.playerContainer.style.backgroundPosition = 'center'
 					}
 					// 将图片作为div.v-container的背景图，并且增加模糊效果
 
-
-					this.audioTitle = metadata.common.title;
-					this.audioArtist = metadata.common.artist;
-				})();
+					this.audioTitle = metadata.common.title
+					this.audioArtist = metadata.common.artist
+				})()
 			} else {
 				this.instance = new Artplayer({
 					url: this.getFileUrl(this.item),
@@ -139,23 +138,24 @@ export default {
 					airplay: true,
 					playsinline: true,
 					lang: this.$i18n.locale.replace('_', '-'),
-				});
+				})
 			}
-		});
+		})
 	},
 
 	beforeUnmount() {
 		if (this.instance && this.instance.destroy) {
-			this.instance.destroy(false);
+			this.instance.destroy(false)
 		}
 	},
 	methods: {
 		close() {
-			this.$emit("close");
-		}
-	}
-};
+			this.$emit('close')
+		},
+	},
+}
 </script>
+
 <style lang="scss" scoped>
 .player {
 	height: 100%;
@@ -167,7 +167,6 @@ export default {
 	max-width: 80rem;
 	max-height: 4.125rem;
 }
-
 
 .audio-blur-background {
 	width: 100%;
@@ -185,4 +184,3 @@ export default {
 	overflow: hidden;
 }
 </style>
-  

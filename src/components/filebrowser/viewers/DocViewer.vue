@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin';
+import { mixin } from '@/mixins/mixin'
 import VueOfficeDocx from '@vue-office/docx'
 import '@vue-office/docx/lib/index.css'
 
@@ -49,18 +49,18 @@ export default {
 			default: () => {
 				return {
 					path: '/DATA/1.png',
-					name: '1.png'
+					name: '1.png',
 				}
-			}
+			},
 		},
 	},
 	components: {
-		VueOfficeDocx
+		VueOfficeDocx,
 	},
 	data() {
 		return {
-			type: "",
-			ext: "",
+			type: '',
+			ext: '',
 			isLoading: true,
 			docx: this.getFileUrl(this.item),
 		}
@@ -68,10 +68,11 @@ export default {
 	methods: {
 		rendered() {
 			this.isLoading = false
-		}
-	}
+		},
+	},
 }
 </script>
+
 <style lang="scss" scoped>
 ::v-deep .vue-office-docx {
 	height: 100%;

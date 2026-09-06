@@ -24,7 +24,6 @@
 </template>
 
 <script>
-
 export default {
 	name: 'commands-input',
 	components: {},
@@ -32,7 +31,7 @@ export default {
 		return {
 			isLoading: false,
 			items: this.modelValue,
-			min: 0
+			min: 0,
 		}
 	},
 	emits: ['update:modelValue'],
@@ -44,12 +43,12 @@ export default {
 	watch: {
 		modelValue(val) {
 			this.items = val
-		}
+		},
 	},
 
 	methods: {
 		addItem() {
-			this.items.push("")
+			this.items.push('')
 		},
 
 		removeItem(index) {
@@ -65,4 +64,3 @@ export default {
 	},
 }
 </script>
-

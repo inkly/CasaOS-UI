@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin';
+import { mixin } from '@/mixins/mixin'
 import VueOfficePdf from '@vue-office/pdf'
 
 export default {
@@ -48,18 +48,18 @@ export default {
 			default: () => {
 				return {
 					path: '/DATA/1.png',
-					name: '1.png'
+					name: '1.png',
 				}
-			}
+			},
 		},
 	},
 	components: {
-		VueOfficePdf
+		VueOfficePdf,
 	},
 	data() {
 		return {
-			type: "",
-			ext: "",
+			type: '',
+			ext: '',
 			isLoading: true,
 			src: this.getFileUrl(this.item),
 		}
@@ -67,10 +67,11 @@ export default {
 	methods: {
 		rendered() {
 			this.isLoading = false
-		}
-	}
+		},
+	},
 }
 </script>
+
 <style lang="scss" scoped>
 ::v-deep .vue-office-docx {
 	height: 100%;

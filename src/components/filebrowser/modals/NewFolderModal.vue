@@ -14,7 +14,7 @@
 				<div class="cover is-flex is-justify-content-center is-align-items-center">
 					<div class="folder-cover">
 						<img :src="require('@/assets/img/filebrowser/folder-default.svg')" alt="folder"
-							class="folder-icon" />
+							class="folder-icon">
 					</div>
 				</div>
 				<b-field :message="errors" :type="errorType" class="mb-3 mt-5 has-text-light" expanded>
@@ -38,7 +38,7 @@
 
 		</section>
 		<!-- Modal-Card Body End -->
-		<!-- Modal-Card Footer Start-->
+		<!-- Modal-Card Footer Start -->
 		<footer class="modal-card-foot is-flex is-align-items-center">
 			<div class="is-flex-grow-1"></div>
 			<div>
@@ -51,19 +51,19 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin';
+import { mixin } from '@/mixins/mixin'
 import path from 'path'
 
 export default {
 	mixins: [mixin],
 	props: {
-		currentPath: String
+		currentPath: String,
 	},
 	data() {
 		return {
 			folderName: 'New Folder',
-			errorType: "is-success",
-			errors: "",
+			errorType: 'is-success',
+			errors: '',
 			shortcut: false,
 			shared: false,
 			isloading: false,
@@ -72,12 +72,12 @@ export default {
 	computed: {
 		isRootorDATA() {
 			return this.currentPath === '/' || this.currentPath === '/DATA'
-		}
+		},
 	},
 	mounted() {
-		this.isRootorDATA ? this.shortcut = true : this.shortcut = false;
+		this.isRootorDATA ? this.shortcut = true : this.shortcut = false
 		this.$nextTick(() => {
-			this.$refs.inputs.getElement().select();
+			this.$refs.inputs.getElement().select()
 		})
 	},
 	methods: {
@@ -96,7 +96,7 @@ export default {
 							// get shortcut detail
 							// let shortcut = await this.$api.users.getShutcutDetail().then(v => v.data.data);
 							// let shortcut = await this.$store.dispatch('SET_SHORTCUT_DATA').then(v => v.data.data);
-							let shortcut = this.$store.state['shortcutData'];
+							let shortcut = this.$store.state['shortcutData']
 							// shortcut data preprocess
 							if (!shortcut) {
 								shortcut = []
@@ -105,19 +105,19 @@ export default {
 							shortcut.push({
 								name: this.folderName,
 								path: newPath,
-								type: 'folder'
+								type: 'folder',
 							})
 							// save shortcut
 							// await this.$api.users.saveShutcutDetail(shortcut);
 							// LURK BUG: shortcut data not update
-							await this.$store.dispatch('SET_SHORTCUT_DATA', shortcut);
+							await this.$store.dispatch('SET_SHORTCUT_DATA', shortcut)
 						}
 
 						if (this.shared) {
 							// set shared data
 							const data = [{
 								path: newPath,
-								anonymous: true
+								anonymous: true,
 							}]
 							// save shared data
 							await this.$api.samba.createShare(data)
@@ -125,14 +125,14 @@ export default {
 					} catch (e) {
 						console.log(e)
 					}
-					this.$emit("reload")
-					this.$emit("close")
+					this.$emit('reload')
+					this.$emit('close')
 				} else {
-					this.errorType = "is-danger"
+					this.errorType = 'is-danger'
 					this.errors = res.data.message
 				}
 				this.isloading = false
-			}).catch(err => {
+			}).catch((err) => {
 				console.log(err)
 			})
 		},

@@ -4,15 +4,15 @@
  * @LastEditors: Jerryk jerry@icewhale.org
  * @LastEditTime: 2023-03-17 16:47:56
  * @FilePath: /CasaOS-UI/src/components/filebrowser/components/MountActionButton.vue
- * @Description: 
- * 
- * Copyright (c) 2022 by IceWhale, All Rights Reserved. 
+ * @Description:
+ *
+ * Copyright (c) 2022 by IceWhale, All Rights Reserved.
 -->
 <template>
 	<div class="action-btn">
 		<b-dropdown id="location-drop" ref="dropDown" animation="fade1" append-to-body aria-role="list"
-					class="file-dropdown"
-					close-on-click position="is-bottom-left">
+			class="file-dropdown"
+			close-on-click position="is-bottom-left">
 			<template #trigger>
 				<p class=" is-clickable" role="button">
 					<b-icon custom-size="mdi-18px" icon="plus"></b-icon>
@@ -27,7 +27,7 @@
 			</b-dropdown-item>
 			<hr v-if="platforms.length > 0" class="dropdown-divider">
 			<b-dropdown-item v-for="(driver, index) in platforms" :key="index + 'platform'" aria-role="menuitem"
-							 @click="auth(driver)">
+				@click="auth(driver)">
 				<div class="is-flex is-align-items-center">
 					<div class="img-container mr-1">
 						<b-image :src="driver.icon" class="is-16x16"></b-image>
@@ -49,12 +49,12 @@
 
 <script>
 import StorageManagerPanel from '@/components/Storage/StorageManagerPanel.vue'
-import NewNetworkStorage   from '@/components/filebrowser/modals/NewNetworkStorage.vue'
+import NewNetworkStorage from '@/components/filebrowser/modals/NewNetworkStorage.vue'
 
 export default {
 	data() {
 		return {
-			platforms: []
+			platforms: [],
 		}
 	},
 
@@ -67,7 +67,7 @@ export default {
 		async getPlatformList() {
 			try {
 				const res = await this.$api.driver.getDriverList()
-				this.platforms = res.data.data;
+				this.platforms = res.data.data
 			} catch (error) {
 				console.error(error)
 			}
@@ -86,17 +86,17 @@ export default {
 					this.$messageBus('files_addlocation_onedrive')
 				}
 			} else {
-				console.log("open config modal");
+				console.log('open config modal')
 			}
 		},
 
 		openAuthWindow(driver) {
-			const customWidth = 1280;
-			const customHeight = 700;
-			const iTop = (window.screen.height - 30 - customHeight) / 2;
-			const iLeft = (window.screen.width - 10 - customWidth) / 2;
-			const authUrl = driver.auth_url.replace("${HOST}", encodeURI(this.$protocol + "//" + this.$baseURL)).replace("redirect_uri=http%", "redirect_uri=https%")
-			window.open(authUrl, driver.name, 'height=' + customHeight + ',,innerHeight=' + customHeight + ',width=' + customWidth + ',innerWidth=' + customWidth + ',top=' + iTop + ',left=' + iLeft + ',toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no');
+			const customWidth = 1280
+			const customHeight = 700
+			const iTop = (window.screen.height - 30 - customHeight) / 2
+			const iLeft = (window.screen.width - 10 - customWidth) / 2
+			const authUrl = driver.auth_url.replace('${HOST}', encodeURI(this.$protocol + '//' + this.$baseURL)).replace('redirect_uri=http%', 'redirect_uri=https%')
+			window.open(authUrl, driver.name, 'height=' + customHeight + ',,innerHeight=' + customHeight + ',width=' + customWidth + ',innerWidth=' + customWidth + ',top=' + iTop + ',left=' + iLeft + ',toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no')
 		},
 		// Show Disk Management Panel
 		showDiskManagement() {
@@ -106,8 +106,8 @@ export default {
 				customClass: 'storage-modal',
 				trapFocus: true,
 				canCancel: [],
-				scroll: "keep",
-				animation: "zoom-in",
+				scroll: 'keep',
+				animation: 'zoom-in',
 			})
 		},
 
@@ -119,8 +119,8 @@ export default {
 				customClass: 'network-storage-modal',
 				trapFocus: true,
 				canCancel: [],
-				scroll: "keep",
-				animation: "zoom-in",
+				scroll: 'keep',
+				animation: 'zoom-in',
 			})
 		},
 	},

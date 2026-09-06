@@ -77,22 +77,18 @@
 
 		<footer class="modal-card-foot is-flex is-align-items-center">
 			<div class="is-flex-grow-1"></div>
-			<b-button
-				v-if="!isRunning && info.supported !== false"
+			<b-button v-if="!isRunning && info.supported !== false"
 				:loading="isChecking"
 				rounded
 				type="is-light"
-				@click="checkPackages"
-			>
+				@click="checkPackages">
 				{{ $t('Check for updates') }}
 			</b-button>
-			<b-button
-				v-if="hasUpdates && !isRunning && status.state !== 'succeeded'"
+			<b-button v-if="hasUpdates && !isRunning && status.state !== 'succeeded'"
 				:loading="isStarting"
 				rounded
 				type="is-primary"
-				@click="confirmUpdate"
-			>
+				@click="confirmUpdate">
 				{{ $t('Update packages') }}
 			</b-button>
 			<b-button v-if="status.state === 'failed' && !isRunning" rounded type="is-primary" @click="checkPackages">
@@ -138,10 +134,10 @@ export default {
 		},
 		isReconciliationPending() {
 			return this.status.state === 'finalizing' || (
-				this.status.state === 'failed' &&
-				this.status.error === 'The package update stopped before it reported a result.' &&
-				!this.status.exit_code &&
-				!this.status.completed_at
+				this.status.state === 'failed'
+				&& this.status.error === 'The package update stopped before it reported a result.'
+				&& !this.status.exit_code
+				&& !this.status.completed_at
 			)
 		},
 		hasUpdates() {

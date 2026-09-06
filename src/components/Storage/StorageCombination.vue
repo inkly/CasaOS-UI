@@ -15,18 +15,18 @@
 						<span class="is-uppercase">MERGERFS</span>
 					</p>
 					<p class="has-text-left has-text-full-04 mt-1">{{
-							$t("Available Total", {
-								name: '/DATA',
-								avl: renderSize(availableSize),
-								total: renderSize(totalSize)
-							})
-						}}</p>
+						$t("Available Total", {
+							name: '/DATA',
+							avl: renderSize(availableSize),
+							total: renderSize(totalSize),
+						})
+					}}</p>
 				</div>
 			</div>
 			<div class="is-flex is-flex-direction-column is-align-items-flex-end is-justify-content-space-between">
 				<div class="is-flex is-flex-direction-row-reverse">
 					<b-button :type="type" class="width" rounded size="is-small"
-							  @click="showStorageSettingsModal">{{ $t('Merge Storages') }}
+						@click="showStorageSettingsModal">{{ $t('Merge Storages') }}
 					</b-button>
 					<cToolTip isBlock modal="is-success"></cToolTip>
 				</div>
@@ -36,17 +36,17 @@
 			</div>
 		</div>
 		<b-progress :type="getProgressType(usePercent)" :value="usePercent" class="ml-3 mr-3"
-					size="is-small"></b-progress>
+			size="is-small"></b-progress>
 	</div>
 </template>
 
 <script>
-import {mixin}       from '@/mixins/mixin';
-import MergeStorages from "@/components/Storage/MergeStorages.vue";
-import cToolTip      from "@/components/basicComponents/tooltip/tooltip.vue";
+import { mixin } from '@/mixins/mixin'
+import MergeStorages from '@/components/Storage/MergeStorages.vue'
+import cToolTip from '@/components/basicComponents/tooltip/tooltip.vue'
 
 export default {
-	name: "storage-combination",
+	name: 'storage-combination',
 	mixins: [mixin],
 	components: {
 		cToolTip,
@@ -54,11 +54,11 @@ export default {
 	props: {
 		storageData: {
 			type: Array,
-			default: null
+			default: null,
 		},
 		type: {
 			type: String,
-			default: "is-link"
+			default: 'is-link',
 		},
 	},
 	computed: {
@@ -67,18 +67,18 @@ export default {
 		},
 
 		availableSize() {
-			let availableSize = 0;
-			this.storageData.forEach(item => {
-				availableSize += Number(item.availSize);
-			});
-			return availableSize;
+			let availableSize = 0
+			this.storageData.forEach((item) => {
+				availableSize += Number(item.availSize)
+			})
+			return availableSize
 		},
 
 		totalSize() {
-			let totalSize = 0;
-			this.storageData.forEach(item => {
-				totalSize += Number(item.size);
-			});
+			let totalSize = 0
+			this.storageData.forEach((item) => {
+				totalSize += Number(item.size)
+			})
 			return totalSize
 		},
 
@@ -86,7 +86,7 @@ export default {
 			if (!this.totalSize) {
 				return 0
 			}
-			return (this.totalSize - this.availableSize) / this.totalSize * 100;
+			return (this.totalSize - this.availableSize) / this.totalSize * 100
 		},
 	},
 	methods: {
@@ -119,21 +119,22 @@ export default {
 				},
 				events: {
 					'merge-success': () => {
-						this.$emit('merge-success');
+						this.$emit('merge-success')
 					},
-					close: () => {
-						this.$emit("reload");
-					}
+					'close': () => {
+						this.$emit('reload')
+					},
 				},
 				props: {
-					mergeStorageList
-				}
+					mergeStorageList,
+				},
 			})
 		},
 
 	},
 }
 </script>
+
 <style lang="scss" scoped>
 .combination-box {
 	background-color: var(--casa-surface-soft);

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import {supportMixin, uploaderMixin} from '../common/mixins'
+import { supportMixin, uploaderMixin } from '../common/mixins'
 
 const COMPONENT_NAME = 'uploader-drop'
 
@@ -14,7 +14,7 @@ export default {
 	mixins: [uploaderMixin, supportMixin],
 	data() {
 		return {
-			dropClass: ''
+			dropClass: '',
 		}
 	},
 	methods: {
@@ -26,7 +26,7 @@ export default {
 		},
 		onDrop() {
 			this.dropClass = 'uploader-droped'
-		}
+		},
 	},
 	mounted() {
 		this.$nextTick(() => {
@@ -45,7 +45,7 @@ export default {
 		uploader.off('dragleave', this.onDragLeave)
 		uploader.off('drop', this.onDrop)
 		uploader.unAssignDrop(dropEle)
-	}
+	},
 }
 </script>
 

@@ -3,7 +3,7 @@
 		<!-- Modal-Card Body Start -->
 		<section class="modal-card-body ">
 			<div class="close-container">
-				<button class="delete" type="button" @click="$emit('close')" />
+				<button class="delete" type="button" @click="$emit('close')"></button>
 			</div>
 			<h3 class="title is-3">{{ serviceName || appName }}</h3>
 			<div class="is-flex-grow-1">
@@ -23,21 +23,21 @@
 </template>
 
 <script>
-import TerminalCard from '@/components/logsAndTerminal/TerminalCard.vue';
+import TerminalCard from '@/components/logsAndTerminal/TerminalCard.vue'
 import LogsCard from '@/components/logsAndTerminal/LogsCard.vue'
 
 export default {
 	name: 'app-terminal-panel',
 	components: {
 		TerminalCard,
-		LogsCard
+		LogsCard,
 	},
 	data() {
 		return {
 			isLoading: false,
 			wsUrl: `${this.$wsProtocol}//${this.$baseURL}/v1/container/${this.appid}/terminal?token=${this.$store.state.access_token}`,
-			logData: "",
-			timer: "",
+			logData: '',
+			timer: '',
 		}
 	},
 	props: {
@@ -46,10 +46,10 @@ export default {
 		serviceName: String,
 	},
 	mounted() {
-		this.getLogs();
+		this.getLogs()
 		this.timer = setInterval(() => {
-			this.getLogs();
-		}, 1000 * 5);
+			this.getLogs()
+		}, 1000 * 5)
 	},
 	methods: {
 		getLogs() {
@@ -62,17 +62,17 @@ export default {
 			})
 		},
 		onInput(e) {
-			if (e == "terminal") {
+			if (e == 'terminal') {
 				this.$refs.terminal.active(true)
 				this.$refs.logs.active(false)
 			} else {
 				this.$refs.terminal.active(false)
 				this.$refs.logs.active(true)
 			}
-		}
+		},
 	},
 	unmounted() {
-		clearInterval(this.timer);
-	}
+		clearInterval(this.timer)
+	},
 }
 </script>

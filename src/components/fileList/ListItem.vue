@@ -2,7 +2,7 @@
 	<div :class="[{ active: state }]" class="ficon is-flex is-align-items-center" @click="activeSelf" @dblclick="expandDir">
 		<div class="cover">
 			<div :class="coverType(item)">
-				<img :class="iconType(item)" :src="getIconFile(item)" alt="folder" />
+				<img :class="iconType(item)" :src="getIconFile(item)" alt="folder">
 			</div>
 		</div>
 		<div class="one-line">
@@ -13,14 +13,14 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin';
+import { mixin } from '@/mixins/mixin'
 
 export default {
-	name: "list-item",
+	name: 'list-item',
 	mixins: [mixin],
 	data() {
 		return {
-			isActive: this.state
+			isActive: this.state,
 		}
 	},
 	props: {
@@ -30,28 +30,28 @@ export default {
 		state: Boolean,
 		IsDir: {
 			type: Boolean,
-			default: true
-		}
+			default: true,
+		},
 	},
 	computed: {
 		icon() {
 			if (this.IsDir) {
-				return "folder"
+				return 'folder'
 			} else {
-				return "file"
+				return 'file'
 			}
-		}
+		},
 	},
 	methods: {
 		activeSelf() {
-			this.isActive = true;
-			this.$emit("active", this.path)
+			this.isActive = true
+			this.$emit('active', this.path)
 		},
 		expandDir() {
 			if (this.IsDir) {
-				this.$emit("expand", this.path)
+				this.$emit('expand', this.path)
 			}
-		}
+		},
 	},
 
 }

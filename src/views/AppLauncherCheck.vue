@@ -8,41 +8,39 @@
   -->
 <template>
 	<div v-if="isCheckFailed"
-			 class="app-launcher-overlay is-flex is-flex-direction-column is-align-items-center is-justify-content-center is-fullheight">
-		<button
-			class="app-launcher-close"
+		class="app-launcher-overlay is-flex is-flex-direction-column is-align-items-center is-justify-content-center is-fullheight">
+		<button class="app-launcher-close"
 			type="button"
 			:aria-label="$t('Close')"
 			:title="$t('Close')"
-			@click="close"
-		>
+			@click="close">
 			<b-icon custom-size="casa-24px" icon="close-outline" pack="casa" />
 		</button>
 		<b-image :key="appDetailData.icon" :src="appDetailData.icon"
-				 :src-fallback="require('@/assets/img/app/default.svg')"
-				 class="is-64x64 icon-shadow" webp-fallback=".jpg"></b-image>
+			:src-fallback="require('@/assets/img/app/default.svg')"
+			class="is-64x64 icon-shadow" webp-fallback=".jpg"></b-image>
 		<h2 class="has-text-emphasis-01 has-text-white mt-2">{{ appDetailData.name }}</h2>
 		<h1 v-if="status === 'pending'" class="has-text-sub-03 has-text-white mt-6">{{ $t('Preparing for launch') }}
 		</h1>
 		<h1 v-else class="has-text-sub-03 has-text-white mt-6">{{ $t('APP may not be available') }}</h1>
 		<b-image v-if="status === 'pending'" :src="require('@/assets/img/loading/waiting.svg')" alt="pending"
-				 class="is-48x48 mt-6"/>
+			class="is-48x48 mt-6" />
 		<span v-else class="has-text-full-03 has-text-grey-600 mt-6">{{
 				$t('Please')
 			}}
-      <a @click="openThirdApp(appDetailData);">{{ $t('Click here') }}
-      </a> {{ $t('to open the app. If it does not work, please restart or try again later.') }}
-    </span>
-		<img :src="require('@/assets/img/logo/logo.svg')" alt="" class="is-absolute position"/>
+			<a @click="openThirdApp(appDetailData);">{{ $t('Click here') }}
+			</a> {{ $t('to open the app. If it does not work, please restart or try again later.') }}
+		</span>
+		<img :src="require('@/assets/img/logo/logo.svg')" alt="" class="is-absolute position">
 	</div>
 </template>
 
 <script>
-import business_OpenThirdApp from "@/mixins/app/Business_OpenThirdApp";
+import business_OpenThirdApp from '@/mixins/app/Business_OpenThirdApp'
 import events from '@/events/events'
 
 export default {
-	name: "AppLauncherCheck",
+	name: 'AppLauncherCheck',
 	mixins: [business_OpenThirdApp],
 	props: {
 		appDetail: {
@@ -53,10 +51,10 @@ export default {
 	data() {
 		return {
 			appDetailData: {
-				icon: "",
-				name: ""
+				icon: '',
+				name: '',
 			},
-			status: "pending",
+			status: 'pending',
 			timer: null,
 			isCheckFailed: true,
 			checkCounts: 3,
@@ -72,7 +70,8 @@ export default {
 			this.appDetailData = JSON.parse(this.$route.query.appDetailData)
 		}
 		await this.startContainer()
-		if (this.isCancelled) return
+		if (this.isCancelled)
+			return
 		this.timer && clearInterval(this.timer)
 		this.timer = setInterval(this.check, 1000)
 		this.check()
@@ -99,17 +98,17 @@ export default {
 				return res.data.data
 			} catch (error) {
 				return {
-					state: "error"
+					state: 'error',
 				}
 			}
 		},
 		// Start container
 		async startContainer() {
 			try {
-				let res = await this.$openAPI.appManagement.compose.setComposeAppStatus(this.appDetailData.name, "start")
+				let res = await this.$openAPI.appManagement.compose.setComposeAppStatus(this.appDetailData.name, 'start')
 				return res.data
 			} catch (error) {
-				return "error"
+				return 'error'
 			}
 		},
 		// Check container health
@@ -123,20 +122,22 @@ export default {
 		},
 
 		async check() {
-			if (this.isCancelled) return
+			if (this.isCancelled)
+				return
 			this.counter += 1
 			const isOk = await this.healthCheck()
-			if (this.isCancelled) return
+			if (this.isCancelled)
+				return
 			if (isOk) {
 				clearInterval(this.timer)
 				this.openThirdApp(this.appDetailData)
 			} else if (this.counter >= this.checkCounts) {
-				this.status = "reject"
+				this.status = 'reject'
 				clearInterval(this.timer)
 			} else {
 				this.isCheckFailed = true
 			}
-		}
+		},
 	},
 }
 </script>

@@ -26,7 +26,7 @@
 		</section>
 		<!-- Modal-Card Body End -->
 
-		<!-- Modal-Card Footer Start-->
+		<!-- Modal-Card Footer Start -->
 		<footer v-if="!name" class="modal-card-foot is-flex is-align-items-center">
 			<div class="is-flex-grow-1"></div>
 			<div class="is-flex is-flex-direction-row-reverse">
@@ -34,29 +34,29 @@
 				</b-button>
 			</div>
 		</footer>
-		<!-- Modal-Card Footer End-->
+		<!-- Modal-Card Footer End -->
 	</div>
 </template>
 
 <script>
-import YAML from "yaml";
-import merge from "lodash/merge";
-import VMdEditor from '@kangc/v-md-editor';
-import '@kangc/v-md-editor/lib/style/base-editor.css';
-import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
-import '@kangc/v-md-editor/lib/theme/style/github.css';
-import hljs from 'highlight.js';
-import { ice_i18n } from "@/mixins/base/common-i18n";
+import YAML from 'yaml'
+import merge from 'lodash/merge'
+import VMdEditor from '@kangc/v-md-editor'
+import '@kangc/v-md-editor/lib/style/base-editor.css'
+import githubTheme from '@kangc/v-md-editor/lib/theme/github.js'
+import '@kangc/v-md-editor/lib/theme/style/github.css'
+import hljs from 'highlight.js'
+import { ice_i18n } from '@/mixins/base/common-i18n'
 
 VMdEditor.use(githubTheme, {
 	Hljs: hljs,
 	// extend(md) {},
-});
+})
 
 export default {
-	name: "TipEditorModal",
+	name: 'TipEditorModal',
 	components: {
-		VMdEditor
+		VMdEditor,
 	},
 	data() {
 		return {
@@ -64,18 +64,18 @@ export default {
 			tips: '',
 			tempTips: '',
 			controlEditorState: 'preview',
-			icon: 'edit-outline'
+			icon: 'edit-outline',
 		}
 	},
 	props: {
 		composeData: {
 			type: Object,
-			required: true
+			required: true,
 		},
 		name: {
 			type: String,
 			// required: true
-		}
+		},
 	},
 	computed: {
 		isDifferentiation() {
@@ -97,18 +97,18 @@ export default {
 		},
 		composeData: {
 			handler() {
-				//Get tips in compose.
+				// Get tips in compose.
 				let getValueByPath = this.composeData['x-casaos']
 				if (getValueByPath?.['tips']?.['custom'] || getValueByPath?.['tips']?.['before_install']) {
 					this.tips = getValueByPath['tips']['custom'] || ice_i18n(getValueByPath['tips']['before_install'])
 				} else {
-					this.tips = '';
+					this.tips = ''
 				}
 				// init tempTips
-				this.tempTips = this.tips;
+				this.tempTips = this.tips
 			},
-			immediate: true
-		}
+			immediate: true,
+		},
 	},
 	mounted() {
 	},
@@ -121,7 +121,7 @@ export default {
 			this.isEditing = !this.isEditing
 			console.log('isDifferentiaation', this.isDifferentiation)
 			if (this.isDifferentiation) {
-				this.save();
+				this.save()
 			}
 		},
 
@@ -130,27 +130,27 @@ export default {
 			// TODO 因为异步，不清楚是否保存成功
 			this.tempTips = this.tips
 			let realComposeData = this.getCompleteComposeData()
-			this.$openAPI.appManagement.compose.applyComposeAppSettings(this.name, YAML.stringify(realComposeData)).then(res => {
+			this.$openAPI.appManagement.compose.applyComposeAppSettings(this.name, YAML.stringify(realComposeData)).then((res) => {
 				if (res.status === 200) {
 					this.$buefy.toast.open({
 						message: res.data.message,
 						type: 'is-success',
 						position: 'is-top',
-						duration: 5000
+						duration: 5000,
 					})
 				}
-			}).catch(e => {
+			}).catch((e) => {
 				console.log('Error in saving tips:', e)
 				this.$buefy.toast.open({
 					message: e.response.data.data,
 					type: 'is-danger',
 					position: 'is-top',
-					duration: 5000
+					duration: 5000,
 				})
 			})
 		},
 		getCompleteComposeData() {
-			/*let lines = this.tips.split('\n');
+			/* let lines = this.tips.split('\n');
 			let body = [];
 
 			lines.forEach(line => {
@@ -158,17 +158,17 @@ export default {
 				let value = splitArray.length > 1 ? splitArray[0] : 'user input';
 				let content = splitArray.length > 1 ? splitArray[1] : splitArray[0];
 				body.push({value, content: {default: content}});
-			});*/
+			}); */
 
 			let result = merge(this.composeData, {
 				'x-casaos': {
 					tips: {
-						custom: this.tips
-					}
-				}
+						custom: this.tips,
+					},
+				},
 			})
 			return result
-		}
+		},
 	},
 }
 </script>

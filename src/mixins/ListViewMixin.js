@@ -1,13 +1,13 @@
 import pull from 'lodash/pull'
 import Hitbox from 'hitbox-js'
-import events from '@/events/events';
-import VueBreakpointMixin from "@/mixins/breakpoint";
+import events from '@/events/events'
+import VueBreakpointMixin from '@/mixins/breakpoint'
 
 export default {
 	mixins: [VueBreakpointMixin],
 	props: {
 		listData: Array,
-		isLoading: Boolean
+		isLoading: Boolean,
 	},
 	data() {
 		return {
@@ -22,17 +22,17 @@ export default {
 		}
 	},
 	mounted() {
-		this.selectBox = document.getElementById(this.SELECT_BOX);
-		this.parentBox = document.getElementById(this.PARENT_BOX);
-		window.addEventListener('resize', this.onResize);
-		this.$EventBus.$on(events.AFTER_FILES_ENTER, this.onResize);
+		this.selectBox = document.getElementById(this.SELECT_BOX)
+		this.parentBox = document.getElementById(this.PARENT_BOX)
+		window.addEventListener('resize', this.onResize)
+		this.$EventBus.$on(events.AFTER_FILES_ENTER, this.onResize)
 
-		this.hitboxCheck();
+		this.hitboxCheck()
 		window.addEventListener('keydown', this.onKeydown)
 		window.addEventListener('keyup', this.onKeyup)
 		window.addEventListener('blur', this.blur)
 		this.$nextTick(() => {
-			this.onResize();
+			this.onResize()
 		})
 	},
 	methods: {
@@ -47,14 +47,13 @@ export default {
 			if (this.isGird) {
 				const cw = document.getElementById(this.CARD_CONTAINER).clientWidth
 				this.cols = Math.floor(cw / this.CARD_WIDTH)
-				this.colStyle.width = (100 / this.cols).toString() + "%"
+				this.colStyle.width = (100 / this.cols).toString() + '%'
 			}
 		},
 
 		/*************************************************
 		 * PART 2  Select and drag selection
 		 **************************************************/
-
 
 		/**
 		 * @description: Handle Checkbox value change
@@ -88,20 +87,20 @@ export default {
 		onKeydown(event) {
 			switch (event.keyCode) {
 				case 16:
-					this.isShift = true;
-					break;
+					this.isShift = true
+					break
 				case 17: // window Keyboard
-					this.isCtrl = true;
-					break;
-				case 91:  // mac command
-					this.isCtrl = true;
-					break;
+					this.isCtrl = true
+					break
+				case 91: // mac command
+					this.isCtrl = true
+					break
 			}
 		},
 		blur(evnet) {
 			// make sure release shift and ctrl
-			this.isShift = false;
-			this.isCtrl = false;
+			this.isShift = false
+			this.isCtrl = false
 		},
 
 		/**
@@ -129,15 +128,14 @@ export default {
 				this.selectList = []
 				this.process()
 			}
-			this.onScroll();
+			this.onScroll()
 			this.downX = event.clientX - this.lipL
 			this.downY = event.clientY - this.lipT
-			this.selectBox.style.left = this.downX + "px";
-			this.selectBox.style.top = this.downY + "px";
+			this.selectBox.style.left = this.downX + 'px'
+			this.selectBox.style.top = this.downY + 'px'
 			document.body.addEventListener('mousemove', this.onDragSelection)
 			document.body.addEventListener('mouseup', this.onDragSelectionStop)
-			this.parentBox.addEventListener("scroll", this.onScroll)
-
+			this.parentBox.addEventListener('scroll', this.onScroll)
 		},
 
 		/**
@@ -146,11 +144,11 @@ export default {
 		 * @return {*}
 		 */
 		onDragSelection(event) {
-			this.isShowSeBox = true;
-			this.selectBox.style.left = Math.min((event.clientX - this.lipL), this.downX) + "px";
-			this.selectBox.style.top = Math.min((event.clientY - this.lipT), this.downY) + "px";
-			this.selectBox.style.width = Math.abs(this.downX - (event.clientX - this.lipL)) + "px";
-			this.selectBox.style.height = Math.abs(this.downY - (event.clientY - this.lipT)) + "px";
+			this.isShowSeBox = true
+			this.selectBox.style.left = Math.min((event.clientX - this.lipL), this.downX) + 'px'
+			this.selectBox.style.top = Math.min((event.clientY - this.lipT), this.downY) + 'px'
+			this.selectBox.style.width = Math.abs(this.downX - (event.clientX - this.lipL)) + 'px'
+			this.selectBox.style.height = Math.abs(this.downY - (event.clientY - this.lipT)) + 'px'
 		},
 
 		/**
@@ -158,9 +156,9 @@ export default {
 		 * @return {*}
 		 */
 		onDragSelectionStop() {
-			this.isShowSeBox = false;
-			this.selectBox.style.width = 0 + "px";
-			this.selectBox.style.height = 0 + "px";
+			this.isShowSeBox = false
+			this.selectBox.style.width = 0 + 'px'
+			this.selectBox.style.height = 0 + 'px'
 			document.body.removeEventListener('mousemove', this.onDragSelection)
 			document.body.removeEventListener('mouseup', this.onDragSelectionStop)
 		},
@@ -174,45 +172,45 @@ export default {
 		 */
 		onCardClick(event, item, index) {
 			if (this.isShift) {
-				this.handleShiftClick(index);
+				this.handleShiftClick(index)
 			} else if (this.isCtrl) {
-				this.handleCtrlClick(index);
+				this.handleCtrlClick(index)
 			} else {
-				this.handleNormalClick(event, item);
+				this.handleNormalClick(event, item)
 			}
 		},
 
 		handleShiftClick(index) {
 			if (this.selectList.indexOf(index) === -1) {
-				this.selectList.push(index);
+				this.selectList.push(index)
 			}
 			if (this.selectList.length > 1) {
-				const min = Math.min(this.selectList[0], this.selectList[this.selectList.length - 1]);
-				const max = Math.max(this.selectList[0], this.selectList[this.selectList.length - 1]);
-				this.selectList = [];
+				const min = Math.min(this.selectList[0], this.selectList[this.selectList.length - 1])
+				const max = Math.max(this.selectList[0], this.selectList[this.selectList.length - 1])
+				this.selectList = []
 				for (let i = min; i <= max; i++) {
-					this.selectList.push(i);
+					this.selectList.push(i)
 				}
 			}
-			this.process();
+			this.process()
 		},
 
 		handleCtrlClick(index) {
 			if (this.selectList.indexOf(index) === -1) {
-				this.selectList.push(index);
+				this.selectList.push(index)
 			} else {
-				this.selectList.splice(this.selectList.indexOf(index), 1);
+				this.selectList.splice(this.selectList.indexOf(index), 1)
 			}
-			this.process();
+			this.process()
 		},
 
 		handleNormalClick(event, item) {
-			const bounced = event.target.classList.contains('mdi-dots') || event.target.classList.contains('check') || event.target.classList.contains('background');
+			const bounced = event.target.classList.contains('mdi-dots') || event.target.classList.contains('check') || event.target.classList.contains('background')
 			if (!bounced) {
 				if (item.is_dir) {
-					this.$emit('gotoFolder', item.path);
+					this.$emit('gotoFolder', item.path)
 				} else {
-					this.$emit('showDetailModal', item);
+					this.$emit('showDetailModal', item)
 				}
 			}
 		},
@@ -224,17 +222,17 @@ export default {
 		hitboxCheck() {
 			this.hitboxWatcher = new Hitbox({
 				elements: this.selectBox,
-				targetElements: this.SELECT_ITEM
+				targetElements: this.SELECT_ITEM,
 			})
 
 			this.hitboxWatcher.onCollisionStart((collision) => {
-				const index = collision.targetElement.getAttribute("data-rel")
+				const index = collision.targetElement.getAttribute('data-rel')
 				this.selectList.push(Number(index))
 				this.process()
 			})
 
 			this.hitboxWatcher.onCollisionEnd((collision) => {
-				const index = collision.targetElement.getAttribute("data-rel")
+				const index = collision.targetElement.getAttribute('data-rel')
 				if (this.isShowSeBox) {
 					pull(this.selectList, Number(index))
 					this.process()
@@ -249,12 +247,12 @@ export default {
 		process() {
 			this.listData.forEach((item, index) => {
 				item.isSelected = false
-				this.selectList.forEach(o => {
+				this.selectList.forEach((o) => {
 					if (o === index) {
 						item.isSelected = true
 					}
 				})
-			});
+			})
 			this.updateDatas()
 		},
 
@@ -264,7 +262,7 @@ export default {
 		 */
 		updateDatas() {
 			// this.$forceUpdate()
-			this.$emit("change", this.listData)
+			this.$emit('change', this.listData)
 		},
 		/**
 		 * @description: Check file or folder state
@@ -272,8 +270,8 @@ export default {
 		 * @return {void}
 		 */
 		getCardState(item) {
-			if (this.$store.state.operateObject != null && this.$store.state.operateObject.type == "move") {
-				return this.$store.state.operateObject.item.some(obj => {
+			if (this.$store.state.operateObject != null && this.$store.state.operateObject.type == 'move') {
+				return this.$store.state.operateObject.item.some((obj) => {
 					return obj.from == item.path
 				})
 			} else {
@@ -285,10 +283,10 @@ export default {
 	beforeUnmount() {
 		document.body.removeEventListener('mousemove', this.onDragSelection)
 		document.body.removeEventListener('mouseup', this.onDragSelectionStop)
-		this.parentBox.removeEventListener("scroll", this.onScroll)
+		this.parentBox.removeEventListener('scroll', this.onScroll)
 		window.removeEventListener('keydown', this.onKeydown)
 		window.removeEventListener('keyup', this.onKeyup)
-		window.removeEventListener('resize', this.onResize);
-		window.removeEventListener('blur', this.blur);
+		window.removeEventListener('resize', this.onResize)
+		window.removeEventListener('blur', this.blur)
 	},
 }

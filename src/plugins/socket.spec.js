@@ -11,7 +11,8 @@ function fakeSocket() {
 	return {
 		count: event => (listeners.get(event) || []).length,
 		on(event, fn) {
-			if (!listeners.has(event)) listeners.set(event, [])
+			if (!listeners.has(event))
+				listeners.set(event, [])
 			listeners.get(event).push(fn)
 		},
 		off(event, fn) {
@@ -19,7 +20,7 @@ function fakeSocket() {
 		},
 		receive(event, ...args) {
 			for (const fn of [...(listeners.get(event) || [])]) fn(...args)
-		}
+		},
 	}
 }
 
@@ -44,8 +45,8 @@ describe('socket plugin', () => {
 			sockets: {
 				'casaos:system:utilization'(res) {
 					seen.push([this.widget, res])
-				}
-			}
+				},
+			},
 		})
 
 		socket.receive('casaos:system:utilization', { Properties: { sys_cpu: '[]' } })
@@ -90,7 +91,7 @@ describe('socket plugin', () => {
 		const wrapper = mountWith(socket, {
 			beforeCreate() {
 				earlyType = typeof this.$socket.$subscribe
-			}
+			},
 		})
 
 		expect(earlyType).toBe('function')
@@ -105,7 +106,7 @@ describe('socket plugin', () => {
 			sockets: { 'app-store:register-error': declared },
 			mounted() {
 				this.$socket.$subscribe('app-store:register-end', subscribed)
-			}
+			},
 		})
 
 		socket.receive('app-store:register-end')
@@ -124,7 +125,7 @@ describe('socket plugin', () => {
 		const wrapper = mountWith(socket, {
 			mounted() {
 				this.$socket.$subscribe('app-store:register-end', handler)
-			}
+			},
 		})
 
 		wrapper.unmount()
@@ -147,7 +148,7 @@ describe('socket plugin', () => {
 				onMounted(() => subscribe('app-store:register-end', end))
 				onBeforeUnmount(() => unsubscribe('app-store:register-end'))
 				return {}
-			}
+			},
 		})
 
 		socket.receive('app-store:register-end', { ok: 1 })

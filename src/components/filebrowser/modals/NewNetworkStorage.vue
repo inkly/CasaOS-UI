@@ -1,4 +1,3 @@
-
 <template>
 	<div class="modal-card">
 		<!-- Modal-Card Header Start -->
@@ -62,7 +61,7 @@
 
 		</section>
 		<!-- Modal-Card Body End -->
-		<!-- Modal-Card Footer Start-->
+		<!-- Modal-Card Footer Start -->
 		<footer class="modal-card-foot is-flex is-align-items-center">
 			<div class="is-flex-grow-1"></div>
 			<div>
@@ -76,34 +75,34 @@
 
 <script>
 import smoothReflow from '@/mixins/smoothReflow'
-import events from '@/events/events';
+import events from '@/events/events'
 
 export default {
 	mixins: [smoothReflow],
 	props: {
 		item: {
 			type: Object,
-			default: () => ({})
+			default: () => ({}),
 		},
 	},
 	data() {
 		return {
 			isGuest: true,
 			isConnecting: false,
-			host: "",
-			username: "",
-			password: "",
+			host: '',
+			username: '',
+			password: '',
 			selected: null,
 			risk: false,
 			data: [],
-			guestName: "guest",
-			guestPass: "guest"
+			guestName: 'guest',
+			guestPass: 'guest',
 		}
 	},
 	computed: {
 		filteredDataObj() {
 			return this.$store.state.networkStorage
-		}
+		},
 	},
 	watch: {
 		selected(val) {
@@ -112,88 +111,85 @@ export default {
 				this.username = val.username
 				this.password = val.password
 			}
-		}
+		},
 	},
 	created() {
 
 	},
 	mounted() {
-		//Smooth
+		// Smooth
 		this.$smoothReflow({
 			el: '.modal-card',
 			property: ['height', 'width'],
-			transition: 'height .25s ease, width .75s ease-out'
+			transition: 'height .25s ease, width .75s ease-out',
 		})
 
 		this.$nextTick(() => {
 			this.$refs.inputs.focus()
 		})
-
 	},
 	methods: {
 		connect() {
-			if (this.host.startsWith("smb://") || this.host.startsWith("nfs://")) {
-				if (!this.isGuest && (this.username == "" || this.password == "")) {
+			if (this.host.startsWith('smb://') || this.host.startsWith('nfs://')) {
+				if (!this.isGuest && (this.username == '' || this.password == '')) {
 					this.$buefy.toast.open({
 						message: this.$t(`Username or password cannot be empty.`),
-						type: 'is-danger'
+						type: 'is-danger',
 					})
-
 				} else {
-
-					const host = this.host.replace("smb://", "").replace("nfs://", "")
-					const data = this.isGuest ? {
-						host: host,
-						username: this.guestName,
-						password: this.guestPass
-					} : {
-						host: host,
-						username: this.username,
-						password: this.password
-					}
+					const host = this.host.replace('smb://', '').replace('nfs://', '')
+					const data = this.isGuest
+						? {
+								host: host,
+								username: this.guestName,
+								password: this.guestPass,
+							}
+						: {
+								host: host,
+								username: this.username,
+								password: this.password,
+							}
 					this.isConnecting = true
-					this.$api.samba.createConnection(data).then(res => {
+					this.$api.samba.createConnection(data).then((res) => {
 						this.isConnecting = false
 						this.saveNewLoginInfoToLocalStorage()
-						this.$EventBus.$emit(events.RELOAD_MOUNT_LIST);
+						this.$EventBus.$emit(events.RELOAD_MOUNT_LIST)
 						const item = {
-							path: res.data.data.mount_point
+							path: res.data.data.mount_point,
 						}
-						this.$EventBus.$emit(events.GOTO, item);
+						this.$EventBus.$emit(events.GOTO, item)
 						this.$emit('close')
-					}).catch(err => {
+					}).catch((err) => {
 						this.isConnecting = false
 						this.$buefy.toast.open({
 							message: this.$t(err.response.data.data || err.response.data.message),
-							type: 'is-danger'
+							type: 'is-danger',
 						})
 					})
-
-
 				}
-
 			} else {
 				this.$buefy.toast.open({
 					message: this.$t(`Please enter a correct Samba address!`),
-					type: 'is-danger'
+					type: 'is-danger',
 				})
-
 			}
 		},
 
 		saveNewLoginInfoToLocalStorage() {
 			let oldInfo = this.$store.state.networkStorage
-			const loginItem = this.isGuest ? {
-				host: this.host,
-				guest: true,
-				username: "",
-				password: "",
-			} : {
-				host: this.host,
-				guest: false,
-				username: this.username,
-				password: "",
-			}
+			const loginItem = this.isGuest
+				? {
+						host: this.host,
+						guest: true,
+						username: '',
+						password: '',
+					}
+				: {
+						host: this.host,
+						guest: false,
+						username: this.username,
+						password: '',
+					}
 			const isInArray = oldInfo.some(item => item.host === loginItem.host && item.guest === loginItem.guest)
 			if (!isInArray) {
 				oldInfo.push(loginItem)

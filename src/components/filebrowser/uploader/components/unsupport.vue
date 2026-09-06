@@ -12,21 +12,21 @@
 		<slot>
 			<p>
 				Your browser, unfortunately, is not supported by Uploader.js. The library requires support for <a
-				href="http://www.w3.org/TR/FileAPI/">the HTML5 File API</a> along with <a
-				href="http://www.w3.org/TR/FileAPI/#normalization-of-params">file slicing</a>.
+					href="http://www.w3.org/TR/FileAPI/">the HTML5 File API</a> along with <a
+					href="http://www.w3.org/TR/FileAPI/#normalization-of-params">file slicing</a>.
 			</p>
 		</slot>
 	</div>
 </template>
 
 <script>
-import {supportMixin, uploaderMixin} from '../common/mixins'
+import { supportMixin, uploaderMixin } from '../common/mixins'
 
 const COMPONENT_NAME = 'uploader-unsupport'
 
 export default {
 	name: COMPONENT_NAME,
-	mixins: [uploaderMixin, supportMixin]
+	mixins: [uploaderMixin, supportMixin],
 }
 </script>
 

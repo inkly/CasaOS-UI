@@ -72,13 +72,13 @@
 
 <script>
 import StorageManagerPanel from '@/components/Storage/StorageManagerPanel.vue'
-import { mixin } from '@/mixins/mixin';
+import { mixin } from '@/mixins/mixin'
 
 export default {
 	// eslint-disable-next-line vue/multi-word-component-names
 	name: 'disks',
-	icon: "storage-outline",
-	title: "Storage Status",
+	icon: 'storage-outline',
+	title: 'Storage Status',
 	initShow: true,
 	mixins: [mixin],
 
@@ -87,8 +87,8 @@ export default {
 			totalSize: 0,
 			totalUsed: 0,
 			totalPercent: 0,
-			health: "Healthy",
-			usbDisks: []
+			health: 'Healthy',
+			usbDisks: [],
 		}
 	},
 
@@ -121,27 +121,27 @@ export default {
 		},
 
 		showDiskManagement() {
-			this.$messageBus('widget_storagemanager');
+			this.$messageBus('widget_storagemanager')
 			this.$buefy.modal.open({
 				component: StorageManagerPanel,
 				hasModalCard: true,
 				customClass: 'storage-modal',
 				trapFocus: true,
 				canCancel: [],
-				scroll: "keep",
-				animation: "zoom-in",
+				scroll: 'keep',
+				animation: 'zoom-in',
 			})
 		},
 	},
 	sockets: {
-		"casaos:system:utilization"(res) {
+		'casaos:system:utilization'(res) {
 			let data = res.Properties
 			// DISK
 			this.getDiskInfo(JSON.parse(data.sys_disk))
 			// USB
 			this.usbDisks = JSON.parse(data.sys_usb)
-		}
-	}
+		},
+	},
 }
 </script>
 

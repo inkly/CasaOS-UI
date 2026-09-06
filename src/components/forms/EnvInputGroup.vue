@@ -2,7 +2,7 @@
 	<div class="mb-5">
 		<div class="field is-flex is-align-items-center mb-2">
 			<label class="label mb-0 is-flex-grow-1">{{ label }}</label>
-			<b-button  icon-left="plus-outline" icon-pack="casa" rounded size="is-small" @click="addItem">{{ $t('Add') }}</b-button>
+			<b-button icon-left="plus-outline" icon-pack="casa" rounded size="is-small" @click="addItem">{{ $t('Add') }}</b-button>
 		</div>
 		<div v-if="items.length == 0" class="is-flex is-align-items-center mb-5 info">
 			<b-icon icon="warning-solid" size="is-small" pack="casa" class="mr-2 "></b-icon>
@@ -44,7 +44,7 @@ export default {
 	data() {
 		return {
 			isLoading: false,
-			min: 0
+			min: 0,
 		}
 	},
 	emits: ['update:modelValue'],
@@ -54,11 +54,11 @@ export default {
 		message: String,
 		name1: {
 			type: String,
-			default: "Key"
+			default: 'Key',
 		},
 		name2: {
 			type: String,
-			default: "Value"
+			default: 'Value',
 		},
 
 	},
@@ -69,14 +69,14 @@ export default {
 			},
 			set(val) {
 				this.$emit('update:modelValue', val)
-			}
-		}
+			},
+		},
 	},
 	methods: {
 		addItem() {
 			let itemObj = {
-				container: "",
-				host: ""
+				container: '',
+				host: '',
 			}
 			this.items.push(itemObj)
 		},
@@ -87,4 +87,3 @@ export default {
 	},
 }
 </script>
-

@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import {mixin} from '@/mixins/mixin';
+import { mixin } from '@/mixins/mixin'
 
 export default {
 	mixins: [mixin],
@@ -43,13 +43,13 @@ export default {
 		this.$nextTick(() => {
 			this.filePanel.uploaderInstance.assignBrowse(document.getElementById('eUpFileBtn'))
 			this.filePanel.uploaderInstance.assignBrowse(document.getElementById('eUpFolderBtn'), true)
-		});
+		})
 	},
 	methods: {
 		freshPath() {
 			this.filePanel.uploaderInstance.opts.query.path = this.filePanel.currentPath
-		}
-	}
+		},
+	},
 }
 </script>
 

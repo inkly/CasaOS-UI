@@ -8,22 +8,22 @@
 
 			</div>
 			<b-notification v-model="notificationShow" aria-close-label="Close notification" auto-close role="alert"
-							type="is-danger">
+				type="is-danger">
 				{{ message }}
 			</b-notification>
 			<VeeForm v-slot="{ handleSubmit }" as="span">
 				<VeeField v-slot="{ errors, meta }" :model-value="username" name="User" rules="required">
 					<b-field :label="$t('Username')" :message="errors"
-							 :type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
-							 class="mt-3">
+						:type="{ 'is-danger': errors[0], 'is-success': meta.valid }"
+						class="mt-3">
 						<b-input v-model="username" :autofocus="!username" type="text" v-on:keyup.enter="handleSubmit(login)"></b-input>
 					</b-field>
 				</VeeField>
 				<VeeField v-slot="{ errors, meta }" :model-value="password" name="Password" rules="required|min:5">
 					<b-field :label="$t('Password')" :message="errors"
-							 :type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mt-2">
+						:type="{ 'is-danger': errors[0], 'is-success': meta.valid }" class="mt-2">
 						<b-input v-model="password" :autofocus="username" password-reveal
-								 type="password" v-on:keyup.enter="handleSubmit(login)"></b-input>
+							type="password" v-on:keyup.enter="handleSubmit(login)"></b-input>
 					</b-field>
 				</VeeField>
 				<b-button class="mt-5" expanded rounded type="is-primary" @click="handleSubmit(login)">{{ $t('Login') }}
@@ -34,17 +34,17 @@
 </template>
 
 <script>
-import {Field as VeeField, Form as VeeForm} from "vee-validate";
+import { Field as VeeField, Form as VeeForm } from 'vee-validate'
 
 export default {
 
-	name: "login-page",
+	name: 'login-page',
 	data() {
 		return {
 			username: '',
 			password: '',
 			isLoading: false,
-			message: "",
+			message: '',
 			notificationShow: false,
 		}
 	},
@@ -52,41 +52,41 @@ export default {
 		VeeField,
 		VeeForm,
 	},
-	beforeMount(){
+	beforeMount() {
 		let userString = localStorage.getItem('user')
 		if (userString) {
-			let name = JSON.parse(userString).username || '';
-			this.username = name;
+			let name = JSON.parse(userString).username || ''
+			this.username = name
 		}
 	},
 	mounted() {
-		document.querySelector('.modal.is-active ')?.remove();
+		document.querySelector('.modal.is-active ')?.remove()
 	},
 
 	methods: {
 		async login() {
 			try {
 				const userRes = await this.$api.users.login(this.username, this.password)
-				localStorage.setItem("access_token", userRes.data.data.token.access_token);
-				localStorage.setItem("refresh_token", userRes.data.data.token.refresh_token);
-				localStorage.setItem("expires_at", userRes.data.data.token.expires_at);
-				localStorage.setItem("user", JSON.stringify(userRes.data.data.user));
+				localStorage.setItem('access_token', userRes.data.data.token.access_token)
+				localStorage.setItem('refresh_token', userRes.data.data.token.refresh_token)
+				localStorage.setItem('expires_at', userRes.data.data.token.expires_at)
+				localStorage.setItem('user', JSON.stringify(userRes.data.data.user))
 
-				this.$store.commit("SET_USER", userRes.data.data.user);
-				this.$store.commit("SET_ACCESS_TOKEN", userRes.data.data.token.access_token);
-				this.$store.commit("SET_REFRESH_TOKEN", userRes.data.data.token.refresh_token);
+				this.$store.commit('SET_USER', userRes.data.data.user)
+				this.$store.commit('SET_ACCESS_TOKEN', userRes.data.data.token.access_token)
+				this.$store.commit('SET_REFRESH_TOKEN', userRes.data.data.token.refresh_token)
 
-				const versionRes = await this.$api.sys.getVersion();
+				const versionRes = await this.$api.sys.getVersion()
 				if (versionRes.data.success == 200) {
-					localStorage.setItem("version", versionRes.data.data.current_version);
+					localStorage.setItem('version', versionRes.data.data.current_version)
 				}
-				this.$router.push("/");
+				this.$router.push('/')
 			} catch (err) {
 				this.message = this.$t(err.response.data.message)
 				this.notificationShow = true
 			}
-		}
-	}
+		},
+	},
 }
 </script>
 

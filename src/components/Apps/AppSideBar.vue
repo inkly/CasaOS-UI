@@ -10,7 +10,7 @@
 
 <script>
 export default {
-	name: "AppSideBar",
+	name: 'AppSideBar',
 	props: {
 		modelValue: Boolean,
 		type: [String, Object],
@@ -22,31 +22,31 @@ export default {
 				return [
 					'fixed',
 					'absolute',
-					'static'
+					'static',
 				].indexOf(value) >= 0
-			}
+			},
 		},
 		fullheight: Boolean,
 		fullwidth: Boolean,
 		right: Boolean,
 		mobile: {
-			type: String
+			type: String,
 		},
 		reduce: Boolean,
 		expandOnHover: Boolean,
 		expandOnHoverFixed: Boolean,
 		delay: {
 			type: Number,
-			default: () => 0
+			default: () => 0,
 		},
 		canCancel: {
 			type: [Array, Boolean],
-			default: () => ['escape', 'outside']
+			default: () => ['escape', 'outside'],
 		},
 		onCancel: {
 			type: Function,
 			default: () => {
-			}
+			},
 		},
 
 	},
@@ -57,7 +57,7 @@ export default {
 			transitionName: null,
 			animating: true,
 			savedScrollTop: null,
-			hasLeaved: false
+			hasLeaved: false,
 		}
 	},
 	computed: {
@@ -75,17 +75,17 @@ export default {
 				'is-mini-delayed': this.delay !== null,
 				'is-mini-mobile': this.mobile === 'reduce',
 				'is-hidden-mobile': this.mobile === 'hide',
-				'is-fullwidth-mobile': this.mobile === 'fullwidth'
+				'is-fullwidth-mobile': this.mobile === 'fullwidth',
 			}]
 		},
 		cancelOptions() {
-			let options;
+			let options
 			if (typeof this.canCancel === 'boolean') {
-				options = this.canCancel ? ['escape', 'outside'] : [];
+				options = this.canCancel ? ['escape', 'outside'] : []
 			} else {
-				options = this.canCancel;
+				options = this.canCancel
 			}
-			return options;
+			return options
 		},
 		isStatic() {
 			return this.position === 'static'
@@ -95,7 +95,7 @@ export default {
 		},
 		isAbsolute() {
 			return this.position === 'absolute'
-		}
+		},
 	},
 
 	watch: {
@@ -105,8 +105,8 @@ export default {
 				const modelValue = this.right ? !value : value
 				this.transitionName = !modelValue ? 'slide-prev' : 'slide-next'
 			},
-			immediate: true
-		}
+			immediate: true,
+		},
 	},
 	methods: {
 		close() {
@@ -121,11 +121,10 @@ export default {
 			this.animating = false
 		},
 		enter() {
-			let myDiv = document.getElementById('ss-content');
+			let myDiv = document.getElementById('ss-content')
 			if (myDiv) {
-				myDiv.scrollTop = 0;
+				myDiv.scrollTop = 0
 			}
-
 		},
 
 		onHover() {
@@ -145,7 +144,7 @@ export default {
 			this.hasLeaved = true
 			this.timer = null
 			this.isDelayOver = false
-		}
+		},
 	},
 	created() {
 		if (typeof window !== 'undefined') {
@@ -159,17 +158,13 @@ export default {
 				document.body.appendChild(this.$el)
 			}
 		}
-
-
 	},
 	beforeUnmount() {
 		if (typeof window !== 'undefined') {
 			document.removeEventListener('keyup', this.keyPress)
 			document.removeEventListener('click', this.clickedOutside)
-
 		}
-
-	}
+	},
 }
 </script>
 

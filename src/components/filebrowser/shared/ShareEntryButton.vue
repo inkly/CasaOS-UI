@@ -1,7 +1,7 @@
 <template>
 	<div>
 
-		<div :class="{ 'active': active }" class="is-flex list-item new-list-item" @click.prevent="$emit('open')">
+		<div :class="{ active: active }" class="is-flex list-item new-list-item" @click.prevent="$emit('open')">
 
 			<b-tooltip :active="tipVisible" :triggers="[]" always content-class="share-tip" position="is-right">
 				<template #content>
@@ -24,20 +24,19 @@
 </template>
 
 <script>
-
-const sharedInitData = "shared_init_data";
-import events from '@/events/events';
+const sharedInitData = 'shared_init_data'
+import events from '@/events/events'
 
 export default {
 	props: {
 		active: {
 			type: Boolean,
-			default: false
+			default: false,
 		},
 	},
 	data() {
 		return {
-			tipVisible: false
+			tipVisible: false,
 		}
 	},
 	created() {
@@ -59,14 +58,13 @@ export default {
 					}
 				} else {
 					this.showTip()
-
 				}
 			} catch (error) {
-				console.log(error);
+				console.log(error)
 			}
 		},
 		selectShare() {
-			this.$EventBus.$emit(events.SELECT_SHARE);
+			this.$EventBus.$emit(events.SELECT_SHARE)
 			// this.$tours['myTour'].skip()
 		},
 		showTip() {
@@ -77,9 +75,9 @@ export default {
 		hideTip() {
 			this.tipVisible = false
 			this.$api.users.setCustomStorage(sharedInitData, {
-				isInit: true
+				isInit: true,
 			})
-		}
+		},
 	},
 
 }

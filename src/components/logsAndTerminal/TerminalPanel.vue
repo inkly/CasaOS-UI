@@ -1,4 +1,3 @@
-
 <template>
 	<div class="modal-card">
 		<!-- Modal-Card Header Start -->
@@ -37,47 +36,47 @@
 </template>
 
 <script>
-import TerminalCard from './TerminalCard.vue';
-import LogsCard from './LogsCard.vue';
-import qs from "qs";
+import TerminalCard from './TerminalCard.vue'
+import LogsCard from './LogsCard.vue'
+import qs from 'qs'
 
 export default {
 	name: 'terminal-panel',
 	components: {
 		TerminalCard,
-		LogsCard
+		LogsCard,
 	},
 	data() {
 		return {
 			isLoading: false,
 			wsUrl: ``,
-			logData: "",
+			logData: '',
 			timer: '',
-			showTabName: "terminal"
+			showTabName: 'terminal',
 		}
 	},
 	mounted() {
-		this.getLogs();
+		this.getLogs()
 		this.timer = setInterval(() => {
-			this.getLogs();
-		}, 1000 * 5);
+			this.getLogs()
+		}, 1000 * 5)
 	},
 	methods: {
 		getLogs() {
-			this.$api.sys.getLogs().then(res => {
+			this.$api.sys.getLogs().then((res) => {
 				let data = res.data.data
-				let replaceData = data.replace(/\n(.{8})/gu, '\n');
-				this.logData = replaceData.substring(8, replaceData.length - 1);
+				let replaceData = data.replace(/\n(.{8})/gu, '\n')
+				this.logData = replaceData.substring(8, replaceData.length - 1)
 			})
 		},
 		onInput(e) {
-			if (e == "terminal") {
-				this.showTabName = "terminal"
+			if (e == 'terminal') {
+				this.showTabName = 'terminal'
 				this.$refs.terminal.active(true)
 				this.$refs.logs.active(false)
 				this.$messageBus('terminallogs_terminal')
 			} else {
-				this.showTabName = "logs"
+				this.showTabName = 'logs'
 				this.$refs.terminal.active(false)
 				this.$refs.logs.active(true)
 				this.$messageBus('terminallogs_logs')
@@ -85,14 +84,14 @@ export default {
 		},
 		downloadSystemLog() {
 			let parameters = {
-				token: this.$store.state.access_token
+				token: this.$store.state.access_token,
 			}
-			window.open(`/v2/casaos/health/logs?${qs.stringify(parameters)}`, '_self');
+			window.open(`/v2/casaos/health/logs?${qs.stringify(parameters)}`, '_self')
 		},
 	},
 	unmounted() {
-		clearInterval(this.timer);
-	}
+		clearInterval(this.timer)
+	},
 }
 </script>
 

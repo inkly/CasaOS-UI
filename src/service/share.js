@@ -12,31 +12,31 @@ const NETWORKS = {
 		`https://twitter.com/intent/tweet?text=${enc(title)}&url=${enc(url)}${hashtags ? `&hashtags=${hashtags}` : ''}`,
 	reddit: ({ url, title }) =>
 		`https://www.reddit.com/submit?url=${enc(url)}&title=${enc(title)}`,
-};
+}
 
 function enc(value) {
-	return encodeURIComponent(value || '');
+	return encodeURIComponent(value || '')
 }
 
 export function shareLink(network, content) {
-	return NETWORKS[network](content);
+	return NETWORKS[network](content)
 }
 
 export default function shareTo(network, content) {
-	const width = 626;
-	const height = 436;
+	const width = 626
+	const height = 436
 	// Centre on the screen the browser window is actually on, zoom included.
-	const zoom = window.innerWidth / window.screen.availWidth;
-	const left = (window.innerWidth - width) / 2 / zoom + window.screenLeft;
-	const top = (window.innerHeight - height) / 2 / zoom + window.screenTop;
+	const zoom = window.innerWidth / window.screen.availWidth
+	const left = (window.innerWidth - width) / 2 / zoom + window.screenLeft
+	const top = (window.innerHeight - height) / 2 / zoom + window.screenTop
 
 	const popup = window.open(
 		shareLink(network, content),
 		`sharer-${network}`,
-		`height=${height},width=${width},left=${left},top=${top},screenX=${left},screenY=${top}`
-	);
+		`height=${height},width=${width},left=${left},top=${top},screenX=${left},screenY=${top}`,
+	)
 
 	if (popup) {
-		popup.focus();
+		popup.focus()
 	}
 }

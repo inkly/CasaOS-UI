@@ -27,7 +27,8 @@ export default {
 		const handlers = new WeakMap()
 		const listOf = (vm) => {
 			let list = handlers.get(vm)
-			if (!list) handlers.set(vm, (list = []))
+			if (!list)
+				handlers.set(vm, (list = []))
 			return list
 		}
 		// Set while a lifecycle hook runs, which is when the detached
@@ -36,23 +37,26 @@ export default {
 
 		const subscribe = (vm, event, handler) => {
 			const listener = vm ? handler.bind(vm) : handler
-			if (vm) listOf(vm).push([event, listener])
+			if (vm)
+				listOf(vm).push([event, listener])
 			socket.on(event, listener)
 		}
 
 		const unsubscribe = (vm, event) => {
-			if (!vm) return
+			if (!vm)
+				return
 			const kept = []
 			for (const entry of listOf(vm)) {
-				if (entry[0] === event) socket.off(entry[0], entry[1])
+				if (entry[0] === event)
+					socket.off(entry[0], entry[1])
 				else kept.push(entry)
 			}
 			handlers.set(vm, kept)
 		}
 
-		const api = (vm) => ({
+		const api = vm => ({
 			$subscribe: (event, handler) => subscribe(vm || caller(), event, handler),
-			$unsubscribe: (event) => unsubscribe(vm || caller(), event)
+			$unsubscribe: event => unsubscribe(vm || caller(), event),
 		})
 
 		// The setup()-time fallback: no instance is bound to it, so it resolves the
@@ -79,7 +83,7 @@ export default {
 			beforeUnmount() {
 				for (const [event, listener] of listOf(this)) socket.off(event, listener)
 				handlers.set(this, [])
-			}
+			},
 		})
-	}
+	},
 }

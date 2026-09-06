@@ -8,27 +8,23 @@
 			</div>
 			<div class="is-flex is-align-items-center">
 				<!-- Save File Button Start -->
-				<b-button
-					:label="$t('Save')"
+				<b-button :label="$t('Save')"
 					class="mr-3"
 					icon-left="content-save"
 					rounded
 					size="is-small"
 					type="is-dark"
-					@click="saveFile(false)"
-				/>
+					@click="saveFile(false)" />
 				<!-- Save File Button Start -->
 
 				<!-- Download File Button Start -->
-				<b-button
-					:label="$t('Download')"
+				<b-button :label="$t('Download')"
 					class="mr-2"
 					icon-left="download"
 					rounded
 					size="is-small"
 					type="is-primary"
-					@click="download"
-				/>
+					@click="download" />
 				<!-- Download File Button End -->
 
 				<!-- Close Button Start -->
@@ -42,22 +38,18 @@
 		<!-- Editor Breadcrumb Start -->
 		<div class="file-path-bread">
 			<b-breadcrumb size="is-small">
-				<b-breadcrumb-item
-					v-for="(item, index) in pathArray"
+				<b-breadcrumb-item v-for="(item, index) in pathArray"
 					:key="'f-' + index"
-					active
-				>{{ item }}
-				</b-breadcrumb-item
-				>
+					active>{{ item }}
+				</b-breadcrumb-item>
 			</b-breadcrumb>
 		</div>
 		<!-- Editor Breadcrumb End -->
 
 		<!-- Editor Start -->
 		<div
-			class="is-flex is-justify-content-center is-align-items-center is-flex-grow-1 v-container code"
-		>
-			<editor-content :editor="editor" class="mark-container"/>
+			class="is-flex is-justify-content-center is-align-items-center is-flex-grow-1 v-container code">
+			<editor-content :editor="editor" class="mark-container" />
 			<!-- <codemirror v-model="code" ref="cmEditor" :options="cmOptions" @input="onCmCodeChange" @ready="onCmReady" /> -->
 		</div>
 		<!-- Editor End -->
@@ -65,13 +57,13 @@
 </template>
 
 <script>
-import {mixin} from "@/mixins/mixin";
+import { mixin } from '@/mixins/mixin'
 
 // import mime from 'mime'
-import {Editor, EditorContent} from "@tiptap/vue-3";
-import StarterKit              from "@tiptap/starter-kit";
-import Highlight               from "@tiptap/extension-highlight";
-import Typography              from "@tiptap/extension-typography";
+import { Editor, EditorContent } from '@tiptap/vue-3'
+import StarterKit from '@tiptap/starter-kit'
+import Highlight from '@tiptap/extension-highlight'
+import Typography from '@tiptap/extension-typography'
 
 export default {
 	mixins: [mixin],
@@ -83,25 +75,25 @@ export default {
 			type: Object,
 			default: () => {
 				return {
-					path: "",
-					name: "",
-				};
+					path: '',
+					name: '',
+				}
 			},
 		},
 	},
 	data() {
 		return {
 			editor: null,
-			code: "",
-		};
+			code: '',
+		}
 	},
 	computed: {
 		pathArray() {
-			return this.item.path.substr(1).split("/");
+			return this.item.path.substr(1).split('/')
 		},
 	},
 	mounted() {
-		this.readFile();
+		this.readFile()
 		this.editor = new Editor({
 			extensions: [StarterKit, Highlight, Typography],
 			content: `
@@ -121,40 +113,40 @@ export default {
           For example, we added the <code>Typography</code> extension here. Try typing <code>(c)</code> to see how it’s converted to a proper © character. You can also try <code>-></code>, <code>>></code>, <code>1/2</code>, <code>!=</code>, or <code>--</code>.
         </p>
       `,
-		});
+		})
 	},
 	methods: {
 		readFile() {
 			this.$api.file.download(this.item.path).then((res) => {
-				this.code = String(res.data);
+				this.code = String(res.data)
 				this.$nextTick(() => {
-					this.isChange = false;
-				});
-			});
+					this.isChange = false
+				})
+			})
 		},
 		close() {
 			if (this.isChange) {
 				this.$buefy.dialog.confirm({
-					title: this.$t("Want to save?"),
-					message: this.$t("Your changes will be lost if you don’t save them."),
+					title: this.$t('Want to save?'),
+					message: this.$t('Your changes will be lost if you don’t save them.'),
 
 					hasIcon: true,
-					canCancel: ["button"],
-					confirmText: this.$t("Save"),
-					cancelText: this.$t("Don’t Save"),
+					canCancel: ['button'],
+					confirmText: this.$t('Save'),
+					cancelText: this.$t('Don’t Save'),
 					onConfirm: () => {
-						this.saveFile(true);
+						this.saveFile(true)
 					},
 					onCancel: () => {
-						this.$emit("close");
+						this.$emit('close')
 					},
-				});
+				})
 			} else {
-				this.$emit("close");
+				this.$emit('close')
 			}
 		},
 	},
-};
+}
 </script>
 
 <style lang="scss">

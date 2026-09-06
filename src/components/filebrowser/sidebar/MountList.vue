@@ -56,19 +56,19 @@
 </template>
 
 <script>
-import { mixin } from "@/mixins/mixin";
-import events from "@/events/events";
-import TreeListItem from "./TreeListItem.vue";
+import { mixin } from '@/mixins/mixin'
+import events from '@/events/events'
+import TreeListItem from './TreeListItem.vue'
 
 export default {
 	components: { TreeListItem },
 	mixins: [mixin],
-	inject: ["filePanel"],
+	inject: ['filePanel'],
 
 	props: {
 		path: {
 			type: String,
-			default: "",
+			default: '',
 		},
 		autoLoad: {
 			type: Boolean,
@@ -94,193 +94,194 @@ export default {
 			mergeStorageList: [],
 			testMergeMiss: 0,
 			hover: false,
-		};
+		}
 	},
 	computed: {
 		isActived() {
-			return "/DATA" === this.$store.state.currentPath;
+			return '/DATA' === this.$store.state.currentPath
 		},
 	},
 	created() {
-		this.getStorageList();
+		this.getStorageList()
 	},
 
 	async mounted() {
-		this.$EventBus.$on(events.RELOAD_MOUNT_LIST, this.getStorageList);
+		this.$EventBus.$on(events.RELOAD_MOUNT_LIST, this.getStorageList)
 	},
 	methods: {
 		getStorageList() {
-			this.getLocalStorage();
+			this.getLocalStorage()
 			// this.getUsbStorage()
-			this.getNetworkStorage();
-			this.getCloudStorage();
+			this.getNetworkStorage()
+			this.getCloudStorage()
 		},
 		// Local Storage (include Mergerfs)
 		async getLocalStorage() {
-			let mergeRes;
+			let mergeRes
 			try {
 				mergeRes = await this.$api.local_storage
 					.getMergerfsInfo()
-					.then((res) => res.data.data[0].source_volume_uuids);
+					.then(res => res.data.data[0].source_volume_uuids)
 			} catch (error) {
-				mergeRes = [];
-				console.log(error);
+				mergeRes = []
+				console.log(error)
 			}
 
 			// Local Storage
 			try {
-				const storageRes = await this.$api.storage.list();
-				const storageArray = [];
-				const usbStorageArray = [];
+				const storageRes = await this.$api.storage.list()
+				const storageArray = []
+				const usbStorageArray = []
 				storageRes.data.data.forEach((item) => {
 					item.children.forEach((part) => {
-						if (!mergeRes.find((mp) => mp === part.uuid))
-							if (item.type === "usb") {
-								usbStorageArray.push(part);
+						if (!mergeRes.find(mp => mp === part.uuid)) {
+							if (item.type === 'usb') {
+								usbStorageArray.push(part)
 							} else {
-								storageArray.push(part);
+								storageArray.push(part)
 							}
-					});
-				});
+						}
+					})
+				})
 				this.localStorageList = storageArray.map((storage) => {
 					return {
 						name: storage.label,
-						icon: "storage-other",
-						pack: "casa",
+						icon: 'storage-other',
+						pack: 'casa',
 						path: storage.mount_point,
 						visible: true,
 						selected: true,
 						extensions: null,
-					};
-				});
+					}
+				})
 				this.usbStorageList = usbStorageArray.map((storage) => {
 					return {
 						name: storage.label,
-						icon: "storage-USB",
-						pack: "casa",
+						icon: 'storage-USB',
+						pack: 'casa',
 						path: storage.mount_point,
 						visible: true,
 						selected: true,
 						extensions: null,
-					};
-				});
+					}
+				})
 			} catch (error) {
-				this.isLoading = false;
-				console.log(error.reponse.message);
+				this.isLoading = false
+				console.log(error.reponse.message)
 			}
 
 			// Merger Storage
 			try {
-				this.mergeStorageList = [];
-				const storageRes = await this.$api.storage.list();
-				let storageList = [];
+				this.mergeStorageList = []
+				const storageRes = await this.$api.storage.list()
+				let storageList = []
 				storageRes.data.data.forEach((item) => {
 					item.children.forEach((part) => {
-						part.disk = item.path;
-						part.diskName = item.disk_name;
-						storageList.push(part);
-					});
-				});
+						part.disk = item.path
+						part.diskName = item.disk_name
+						storageList.push(part)
+					})
+				})
 				mergeRes.forEach((item) => {
 					let storage = storageList.find((storage) => {
-						return storage.uuid === item;
-					});
+						return storage.uuid === item
+					})
 					if (storage) {
 						this.mergeStorageList.push({
 							uuid: storage.uuid,
 							name: storage.label,
-							icon: "",
-							pack: "casa",
+							icon: '',
+							pack: 'casa',
 							path: storage.mount_point,
 							visible: true,
 							selected: true,
 							extensions: null,
-						});
+						})
 					} else {
-						this.testMergeMiss += 1;
+						this.testMergeMiss += 1
 						this.mergeStorageList.push({
 							uuid: item,
-							name: "undefined",
-							icon: "danger",
-							pack: "casa",
-							path: "",
+							name: 'undefined',
+							icon: 'danger',
+							pack: 'casa',
+							path: '',
 							visible: true,
 							selected: true,
 							extensions: null,
-						});
+						})
 					}
-				});
+				})
 			} catch (error) {
-				this.isLoading = false;
-				console.log(error.reponse.message);
+				this.isLoading = false
+				console.log(error.reponse.message)
 			}
 		},
 		// Network Storage
 		async getNetworkStorage() {
 			try {
-				const networkRes = await this.$api.samba.getConnections();
+				const networkRes = await this.$api.samba.getConnections()
 				this.networkStorageList = networkRes.data.data.map((storage) => {
 					return {
 						id: storage.id,
 						name: storage.host,
-						icon: "storage-network",
-						pack: "casa",
+						icon: 'storage-network',
+						pack: 'casa',
 						path: storage.mount_point,
 						visible: true,
 						selected: true,
 						extensions: null,
-					};
-				});
+					}
+				})
 			} catch (error) {
-				this.isLoading = false;
-				console.log(error.reponse.message);
+				this.isLoading = false
+				console.log(error.reponse.message)
 			}
 		},
 		// USB Storage
 		async getUsbStorage() {
 			try {
-				const usbListRes = await this.$api.disks.getUsbs();
-				const usbStorageArray = [];
+				const usbListRes = await this.$api.disks.getUsbs()
+				const usbStorageArray = []
 				usbListRes.data.data.forEach((item) => {
 					item.children.forEach((part) => {
-						usbStorageArray.push(part);
-					});
-				});
+						usbStorageArray.push(part)
+					})
+				})
 				this.usbStorageList = usbStorageArray.map((storage) => {
 					return {
 						name: storage.name,
-						icon: "storage-USB",
-						pack: "casa",
+						icon: 'storage-USB',
+						pack: 'casa',
 						path: storage.mount_point,
 						visible: true,
 						selected: true,
 						extensions: null,
-					};
-				});
+					}
+				})
 			} catch (error) {
-				this.isLoading = false;
-				console.log(error.reponse.message);
+				this.isLoading = false
+				console.log(error.reponse.message)
 			}
 		},
 		// Cloud Storage
 		async getCloudStorage() {
 			try {
-				const cloudRes = await this.$api.cloud.list();
+				const cloudRes = await this.$api.cloud.list()
 				this.cloudStorageList = cloudRes.data.data.map((storage) => {
 					return {
 						id: storage.fs,
 						name: storage.name,
 						icon: storage.icon,
-						icon_type: "svg",
-						pack: "casa",
+						icon_type: 'svg',
+						pack: 'casa',
 						path: storage.mount_point,
 						visible: true,
 						selected: true,
 						extensions: null,
-					};
-				});
+					}
+				})
 			} catch (error) {
-				console.log(error.reponse.message);
+				console.log(error.reponse.message)
 			}
 		},
 
@@ -289,19 +290,19 @@ export default {
 			this.$api.cloud
 				.umount({ mount_point: item.path })
 				.then(() => {
-					this.getStorageList();
-					this.goToDataFolder(item);
+					this.getStorageList()
+					this.goToDataFolder(item)
 					this.$buefy.toast.open({
-						message: this.$t("Eject Success"),
-						type: "is-success",
-					});
+						message: this.$t('Eject Success'),
+						type: 'is-success',
+					})
 				})
 				.catch(() => {
 					this.$buefy.toast.open({
-						message: this.$t("Eject Failed"),
-						type: "is-danger",
-					});
-				});
+						message: this.$t('Eject Failed'),
+						type: 'is-danger',
+					})
+				})
 		},
 
 		// umount usb storage
@@ -309,19 +310,19 @@ export default {
 			this.$api.disks
 				.umountUsb({ mount_point: item.path })
 				.then(() => {
-					this.getStorageList();
-					this.goToDataFolder(item);
+					this.getStorageList()
+					this.goToDataFolder(item)
 					this.$buefy.toast.open({
-						message: this.$t("Eject Success"),
-						type: "is-success",
-					});
+						message: this.$t('Eject Success'),
+						type: 'is-success',
+					})
 				})
 				.catch(() => {
 					this.$buefy.toast.open({
-						message: this.$t("Eject Failed"),
-						type: "is-danger",
-					});
-				});
+						message: this.$t('Eject Failed'),
+						type: 'is-danger',
+					})
+				})
 		},
 
 		// umount network storage
@@ -329,133 +330,133 @@ export default {
 			this.$api.samba
 				.deleteConnection(item.id)
 				.then(() => {
-					this.getStorageList();
-					this.goToDataFolder(item);
+					this.getStorageList()
+					this.goToDataFolder(item)
 					this.$buefy.toast.open({
-						message: this.$t("Eject Success"),
-						type: "is-success",
-					});
+						message: this.$t('Eject Success'),
+						type: 'is-success',
+					})
 				})
 				.catch(() => {
 					this.$buefy.toast.open({
-						message: this.$t("Eject Failed"),
-						type: "is-danger",
-					});
-				});
+						message: this.$t('Eject Failed'),
+						type: 'is-danger',
+					})
+				})
 		},
 
 		// go to DATA folder
 		goToDataFolder(item) {
 			if (this.$store.state.currentPath.startsWith(item.path)) {
-				this.filePanel.getFileList("/DATA");
+				this.filePanel.getFileList('/DATA')
 			}
 		},
 
 		async warning() {
 			if (this.dorpdown) {
-				this.dorpdown = false;
-				return;
+				this.dorpdown = false
+				return
 			}
 			let notFirst = await this.$api.users
-				.getCustomStorage("notFirstOpenMergerStorage")
-				.then((res) => res.data.data);
+				.getCustomStorage('notFirstOpenMergerStorage')
+				.then(res => res.data.data)
 			if (notFirst) {
-				this.dorpdown = !this.dorpdown;
-				return;
+				this.dorpdown = !this.dorpdown
+				return
 			}
 			this.$buefy.dialog.confirm({
-				title: this.$t("Data Protected"),
+				title: this.$t('Data Protected'),
 				message: this.$t(
-					"Changing internal files may break the structure of the CasaOS HD"
+					'Changing internal files may break the structure of the CasaOS HD',
 				),
-				confirmText: this.$t("Continue"),
-				cancelText: this.$t("Cancel"),
-				iconPack: "casa",
-				icon: "danger",
-				type: "is-danger",
+				confirmText: this.$t('Continue'),
+				cancelText: this.$t('Cancel'),
+				iconPack: 'casa',
+				icon: 'danger',
+				type: 'is-danger',
 				hasIcon: true,
 				onConfirm: () => {
-					this.dorpdown = !this.dorpdown;
-					this.$api.users.setCustomStorage("notFirstOpenMergerStorage", true);
+					this.dorpdown = !this.dorpdown
+					this.$api.users.setCustomStorage('notFirstOpenMergerStorage', true)
 				},
-			});
+			})
 		},
 	},
 	sockets: {
-		"local-storage:disk:added"() {
+		'local-storage:disk:added'() {
 			setTimeout(() => {
 				// this.getUsbStorage()
-				this.getLocalStorage();
-			}, 500);
+				this.getLocalStorage()
+			}, 500)
 		},
-		"local-storage:disk:removed"() {
+		'local-storage:disk:removed'() {
 			setTimeout(() => {
 				// this.getUsbStorage()
-				this.getLocalStorage();
-			}, 500);
+				this.getLocalStorage()
+			}, 500)
 		},
 		storage_status() {
 			setTimeout(() => {
 				this.$api.storage
 					.list()
 					.then((res) => {
-						const storageArray = [];
+						const storageArray = []
 						res.data.data.forEach((item) => {
 							item.children.forEach((part) => {
-								storageArray.push(part);
-							});
-						});
+								storageArray.push(part)
+							})
+						})
 						this.localStorageList = storageArray.map((storage) => {
 							return {
 								name: storage.label,
-								icon: "storage-other",
-								pack: "casa",
+								icon: 'storage-other',
+								pack: 'casa',
 								path: storage.mount_point,
 								visible: true,
 								selected: true,
 								extensions: null,
-							};
-						});
+							}
+						})
 					})
 					.catch((error) => {
-						console.log(error.reponse.message);
-					});
-			}, 500);
+						console.log(error.reponse.message)
+					})
+			}, 500)
 		},
-		"casaos:file:recover"(data) {
-			data = data.Properties;
-			let toastType;
-			const reg = /^["|'](.*)["|']$/g;
-			const status = data.status.replace(reg, "$1");
-			const driver = data.driver.replace(reg, "$1");
+		'casaos:file:recover'(data) {
+			data = data.Properties
+			let toastType
+			const reg = /^["|'](.*)["|']$/g
+			const status = data.status.replace(reg, '$1')
+			const driver = data.driver.replace(reg, '$1')
 			switch (status) {
-				case "warn":
-					toastType = "is-warning";
-					this.getCloudStorage();
-					break;
-				case "fail":
-					toastType = "is-danger";
-					break;
+				case 'warn':
+					toastType = 'is-warning'
+					this.getCloudStorage()
+					break
+				case 'fail':
+					toastType = 'is-danger'
+					break
 				default:
-					toastType = "is-success";
-					if (driver === "Dropbox") {
-						this.$messageBus("files_addlocation_dropbox");
-					} else if (driver === "Google Drive") {
-						this.$messageBus("files_addlocation_googledrive");
-					} else if (driver === "OneDrive") {
-						this.$messageBus("files_addlocation_onedrive");
+					toastType = 'is-success'
+					if (driver === 'Dropbox') {
+						this.$messageBus('files_addlocation_dropbox')
+					} else if (driver === 'Google Drive') {
+						this.$messageBus('files_addlocation_googledrive')
+					} else if (driver === 'OneDrive') {
+						this.$messageBus('files_addlocation_onedrive')
 					}
-					this.getCloudStorage();
-					break;
+					this.getCloudStorage()
+					break
 			}
 			this.$buefy.toast.open({
-				message: this.$t(data.message.replace(reg, "$1")),
+				message: this.$t(data.message.replace(reg, '$1')),
 				duration: 5000,
 				type: toastType,
-			});
+			})
 		},
 	},
-};
+}
 </script>
 
 <style lang="scss" scoped>

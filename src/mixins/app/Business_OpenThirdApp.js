@@ -21,11 +21,11 @@ export default {
 			})
 		},
 		openAppToNewWindow(appInfo) {
-			this.hasNewTag(appInfo.name) ? this.firstOpenThirdApp(appInfo) : this.openThirdApp(appInfo);
+			this.hasNewTag(appInfo.name) ? this.firstOpenThirdApp(appInfo) : this.openThirdApp(appInfo)
 		},
 		openThirdApp(appInfo) {
-			this.$messageBus('apps_open', appInfo.name);
-			if (appInfo.hostname !== "" || appInfo.port !== "" || appInfo.index !== "") {
+			this.$messageBus('apps_open', appInfo.name)
+			if (appInfo.hostname !== '' || appInfo.port !== '' || appInfo.index !== '') {
 				const hostIp = appInfo.hostname || this.$baseIp
 				const scheme = appInfo.scheme || 'http'
 				const port = appInfo.port ? `:${appInfo.port}` : ''
@@ -48,14 +48,14 @@ export default {
 			try {
 				await this.$openAPI.appManagement.compose.setComposeAppStatus(appInfo.id, 'start')
 
-				let allinfo = await this.$openAPI.appManagement.compose.myComposeApp(appInfo.id).then(res => {
+				let allinfo = await this.$openAPI.appManagement.compose.myComposeApp(appInfo.id).then((res) => {
 					return res.data.data
 				})
-				
+
 				let containerInfoV2 = allinfo.store_info
 				let app = {
-					"id": appInfo.id,
-					"name": appInfo.id,
+					id: appInfo.id,
+					name: appInfo.id,
 					scheme: containerInfoV2.scheme,
 					hostname: containerInfoV2.hostname || this.$baseIp,
 					port: containerInfoV2.port_map,
@@ -63,20 +63,19 @@ export default {
 					image: allinfo.compose.services[appInfo.id].image,
 				}
 
-				if (allinfo.status.indexOf('running') === -1) { 
+				if (allinfo.status.indexOf('running') === -1) {
 					await this.$openAPI.appManagement.compose.setComposeAppStatus(allinfo.compose.name, 'start')
 					this.firstOpenThirdApp(app)
-				}else{
+				} else {
 					this.openAppToNewWindow(app)
 				}
 			} catch (e) {
-				console.error(e);
+				console.error(e)
 			}
-
 		},
 		firstOpenThirdApp(appInfo) {
-			this.removeIdFromSessionStorage(appInfo.name);
+			this.removeIdFromSessionStorage(appInfo.name)
 			this.$EventBus.$emit(events.OPEN_APP_LAUNCHER, appInfo)
-		}
-	}
+		},
+	},
 }

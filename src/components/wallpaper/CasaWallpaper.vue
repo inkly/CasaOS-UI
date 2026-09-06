@@ -13,30 +13,29 @@
 		<div id="background" v-animate-css="animate" :style="backgroundStyleObj"></div>
 		<context-menu></context-menu>
 	</div>
-
 </template>
 
 <script>
 import { defineAsyncComponent } from 'vue'
 import ContextMenu from './ContextMenu.vue'
-import events      from '@/events/events';
+import events from '@/events/events'
 
 export default {
-	name: "casa-background",
+	name: 'casa-background',
 	components: {
 		ContextMenu,
 	},
 	props: {
 		animate: {
 			type: Object,
-			default: null
+			default: null,
 		},
 	},
 	data() {
 		return {
 			isWelcome: false,
 			backgroundStyleObj: {
-				backgroundImage: localStorage.getItem("wallpaper") ? `url(${this.parseUrl(localStorage.getItem("wallpaper"))})` : `url(${this.$store.state.wallpaperObject.path})`
+				backgroundImage: localStorage.getItem('wallpaper') ? `url(${this.parseUrl(localStorage.getItem('wallpaper'))})` : `url(${this.$store.state.wallpaperObject.path})`,
 			},
 		}
 	},
@@ -45,14 +44,14 @@ export default {
 			handler(val) {
 				this.backgroundStyleObj.backgroundImage = `url(${this.parseUrl(val.path)})`
 			},
-			deep: true
+			deep: true,
 		},
 
 	},
 	mounted() {
 		this.$EventBus.$on(events.SHOW_CHANGE_WALLPAPER_MODAL, () => {
 			this.showChangeWallpaperModal()
-		});
+		})
 	},
 	methods: {
 		showChangeWallpaperModal() {
@@ -62,20 +61,21 @@ export default {
 				customClass: '',
 				trapFocus: true,
 				canCancel: [''],
-				scroll: "keep",
-				animation: "zoom-in",
+				scroll: 'keep',
+				animation: 'zoom-in',
 				events: {},
 			})
 		},
 		parseUrl(serverUrl) {
 			// serverUrl.replace('/ui', '');
 			let newUrl = serverUrl.replace('SERVER_URL', `${this.$protocol}//${this.$baseURL}`)
-			newUrl = newUrl.replace('/ui', '').replace('/user/', '/users/');
-			return newUrl;
+			newUrl = newUrl.replace('/ui', '').replace('/user/', '/users/')
+			return newUrl
 		},
 	},
 }
 </script>
+
 <style lang="scss">
 #background {
 	position: fixed;

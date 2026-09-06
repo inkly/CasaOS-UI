@@ -1,8 +1,8 @@
 <script setup>
-import { getCurrentInstance, onBeforeUnmount, onMounted, ref } from "vue";
+import { getCurrentInstance, onBeforeUnmount, onMounted, ref } from 'vue'
 
-const emit = defineEmits(["refreshAppStore", "refreshSize", "close"]);
-const props = defineProps(['totalApps']);
+const emit = defineEmits(['refreshAppStore', 'refreshSize', 'close'])
+const props = defineProps(['totalApps'])
 import { vOnClickOutside } from '@vueuse/components'
 /*
 const stateBox = {
@@ -33,35 +33,35 @@ const stateBox = {
 const app = getCurrentInstance().proxy
 const subscribe = app.$socket.$subscribe
 const unsubscribe = app.$socket.$unsubscribe
-const componentState = ref("init")
+const componentState = ref('init')
 const ignoreElRef = ref(null)
 const sourceDorpRef = ref(null)
 const onClickOutsideHandler = [
 	(ev) => {
 		changeInputState(true)
 	},
-	{ ignore: [ignoreElRef] }
+	{ ignore: [ignoreElRef] },
 ]
 
 const addLoadingState = ref(false)
 const removeLoadingState = ref(false)
 const sourceList = ref([])
-const url = ref("");
-const operationSourceName = ref(-1);
+const url = ref('')
+const operationSourceName = ref(-1)
 
 function changeInputState(alwaysNotDisplay = false) {
 	if (componentState.value !== 'active_input_state') {
 		if (alwaysNotDisplay === true) {
 			return
 		}
-		componentState.value = "active_input_state";
-		emit("refreshSize", "active_input_state");
+		componentState.value = 'active_input_state'
+		emit('refreshSize', 'active_input_state')
 	} else if (sourceList.value.length > 0) {
-		componentState.value = "second_list_state";
-		emit("refreshSize", "second_list_state");
+		componentState.value = 'second_list_state'
+		emit('refreshSize', 'second_list_state')
 	} else {
-		componentState.value = "first_add_state";
-		emit("refreshSize", "first_add_state");
+		componentState.value = 'first_add_state'
+		emit('refreshSize', 'first_add_state')
 	}
 }
 
@@ -73,86 +73,86 @@ function registerAppStore(url) {
 }
 
 function unregisterAppStore(id) {
-	removeLoadingState.value = true;
-	app.$openAPI.appManagement.appStore.unregisterAppStore(id).then(res => {
+	removeLoadingState.value = true
+	app.$openAPI.appManagement.appStore.unregisterAppStore(id).then((res) => {
 		if (res.status === 200) {
-			emit("refreshAppStore");
-			getSourceList();
+			emit('refreshAppStore')
+			getSourceList()
 		}
 	}).finally(() => {
-		operationSourceName.value = -1;
-		removeLoadingState.value = false;
+		operationSourceName.value = -1
+		removeLoadingState.value = false
 	})
 }
 
 function redirectURL() {
 	if (sourceDorpRef.value) {
-		sourceDorpRef.value.toggle();
+		sourceDorpRef.value.toggle()
 	}
-	window.open("https://awesome.casaos.io/content/3rd-party-app-stores/list.html", "_blank", "noopener");
+	window.open('https://awesome.casaos.io/content/3rd-party-app-stores/list.html', '_blank', 'noopener')
 }
 
 function activeInput() {
-	if (componentState.value === "active_input_state") {
+	if (componentState.value === 'active_input_state') {
 		app.$refs.inputSourceURL.focus()
 	}
 }
 
 function getSourceList() {
-	app.$openAPI.appManagement.appStore.appStoreList().then(res => {
+	app.$openAPI.appManagement.appStore.appStoreList().then((res) => {
 		if (res.status === 200) {
-			const storeList = res.data.data.filter(item => {
-				console.log(item.url);
-				const isHttp = item.url.includes("http");
-				const pathname = isHttp ? new URL(item.url).pathname : item.url;
-				const pathnameList = pathname.split("/");
-				const sourceName = isHttp ? pathnameList[1] : pathnameList[pathnameList.length - 1].split('.').slice(0, -1).join('.');
-				if (pathnameList[1] === "IceWhaleTech") {
+			const storeList = res.data.data.filter((item) => {
+				console.log(item.url)
+				const isHttp = item.url.includes('http')
+				const pathname = isHttp ? new URL(item.url).pathname : item.url
+				const pathnameList = pathname.split('/')
+				const sourceName = isHttp ? pathnameList[1] : pathnameList[pathnameList.length - 1].split('.').slice(0, -1).join('.')
+				if (pathnameList[1] === 'IceWhaleTech') {
 					return false
 				} else {
 					item.name = sourceName
 					return true
 				}
 			})
-			sourceList.value = storeList.map(item => {
+			sourceList.value = storeList.map((item) => {
 				return {
 					id: item.id,
 					url: item.url,
-					name: item.name
+					name: item.name,
 				}
 			})
-			componentState.value = storeList.length === 0 ? 'first_add_state' : 'second_list_state';
+			componentState.value = storeList.length === 0 ? 'first_add_state' : 'second_list_state'
 		}
 	})
 }
 
 onMounted(() => {
 	getSourceList()
-	subscribe("app-store:register-end", res => {
+	subscribe('app-store:register-end', (res) => {
 		app.$buefy.toast.open({
-			message: "Updating the information source of the app store is complete.",
+			message: 'Updating the information source of the app store is complete.',
 			duration: 5000,
-			type: 'is-success'
+			type: 'is-success',
 		})
-		getSourceList();
-		emit("refreshAppStore");
-		url.value = "";
-		addLoadingState.value = false;
+		getSourceList()
+		emit('refreshAppStore')
+		url.value = ''
+		addLoadingState.value = false
 	})
-	subscribe("app-store:register-error", res => {
+	subscribe('app-store:register-error', (res) => {
 		app.$buefy.toast.open({
-			message: "Failed to update the information source of the app store.",
+			message: 'Failed to update the information source of the app store.',
 			duration: 5000,
-			type: 'is-warning'
+			type: 'is-warning',
 		})
-		url.value = "";
-		addLoadingState.value = false;
+		url.value = ''
+		addLoadingState.value = false
 	})
 })
 
 onBeforeUnmount(() => {
-	unsubscribe("app-store:register-end");
-	unsubscribe("app-store:register-error");
+	unsubscribe('app-store:register-end')
+	unsubscribe('app-store:register-error')
 })
 </script>
 

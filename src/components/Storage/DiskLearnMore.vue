@@ -4,7 +4,7 @@
 			<div class="is-flex-grow-1 ml-2 mt-1">
 				<h3 class="_header-title">{{ $t('Build data station') }}</h3>
 			</div>
-			<!--			<img alt="" src="@/assets/img/learn/learnmore.svg" @click="close">-->
+			<!--			<img alt="" src="@/assets/img/learn/learnmore.svg" @click="close"> -->
 			<b-icon custom-class="mr-1" icon="close-outline" size="is-medium" @click="close"></b-icon>
 		</header>
 		<section>
@@ -37,7 +37,7 @@
 		</section>
 		<footer class="mb-5 mr-5 ml-5 mt-3">
 			<div class="is-flex is-flex-direction-row-reverse">
-				<b-button class="is-flex-shrink-0" rounded size="is-small" type="is-primary" @click="steps+=1">
+				<b-button class="is-flex-shrink-0" rounded size="is-small" type="is-primary" @click="steps += 1">
 					{{ $t(nextTitle) }}
 				</b-button>
 			</div>
@@ -47,26 +47,26 @@
 
 <script>
 export default {
-	name: "diskLearnMore.vue",
+	name: 'diskLearnMore.vue',
 	data() {
 		return {
 			steps: 1,
-			nextTitle: "Next"
-		};
+			nextTitle: 'Next',
+		}
 	},
 	watch: {
 		steps(val) {
 			if (val === 3) {
-				this.nextTitle = "Cancel";
+				this.nextTitle = 'Cancel'
 			}
 			if (val > 3) {
-				this.close();
+				this.close()
 			}
 		},
 	},
 	methods: {
 		close() {
-			this.$emit("close");
+			this.$emit('close')
 		},
 	},
 }

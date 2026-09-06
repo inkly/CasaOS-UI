@@ -2,11 +2,11 @@
 	<div class="common-card">
 		<div class="blur-background"></div>
 		<div class="content widget _card is-flex is-flex-direction-column">
-			<!-- start of section head-->
+			<!-- start of section head -->
 			<div class="widget-header is-flex is-flex-shrink-0">
 				<div class="image is-24x24 is-flex-shrink-0">
-					<img v-if="noticeData.prelude.icon" :src="noticeData.prelude.icon" alt=""/>
-					<img v-else :src="require('@/assets/img/logo/casa-white.svg')" alt=""/>
+					<img v-if="noticeData.prelude.icon" :src="noticeData.prelude.icon" alt="">
+					<img v-else :src="require('@/assets/img/logo/casa-white.svg')" alt="">
 				</div>
 				<div class="header-title pl-2 is-flex-grow-1">
 					{{ $t(noticeData.prelude.title) }}
@@ -15,20 +15,19 @@
 					<b-icon custom-size="casa-24px" icon="close-outline" pack="casa"></b-icon>
 				</div>
 			</div>
-			<!-- end of section head-->
+			<!-- end of section head -->
 
-			<!-- start of section body-->
-			<!-- list-->
-			<div
-				v-if="noticeData.contentType === 'list'"
+			<!-- start of section body -->
+			<!-- list -->
+			<div v-if="noticeData.contentType === 'list'"
 				class="info is-flex is-flex-direction-column is-justify-content-space-around is-flex-grow-1">
 				<div class="_widget-body is-flex mr-0">
 					<div class="image is-24x24 is-flex-shrink-0">
 						<img v-if="!noticeData.content[Object.keys(noticeData.content)[0]].icon"
-							 :src="require(`@/assets/img/logo/casa-white.svg`)" alt=""/>
+							:src="require(`@/assets/img/logo/casa-white.svg`)" alt="">
 						<img v-else
-							 :src="require(`@/assets/img${noticeData.content[Object.keys(noticeData.content)[0]].icon}`)"
-							 alt=""/>
+							:src="require(`@/assets/img${noticeData.content[Object.keys(noticeData.content)[0]].icon}`)"
+							alt="">
 					</div>
 					<div class="body-title is-flex-grow-1 _nowrap ml-2">
 						{{ $t(noticeData.content[Object.keys(noticeData.content)[0]].title) }}
@@ -41,10 +40,10 @@
 				<div v-if="Object.keys(noticeData.content).length > 1" class="_widget-body is-flex mr-0">
 					<div class="image is-24x24 is-flex-shrink-0">
 						<img v-if="!noticeData.content[Object.keys(noticeData.content)[1]].icon"
-							 :src="require(`@/assets/img/logo/casa-white.svg`)" alt=""/>
+							:src="require(`@/assets/img/logo/casa-white.svg`)" alt="">
 						<img v-else
-							 :src="require(`@/assets/img${noticeData.content[Object.keys(noticeData.content)[1]].icon}`)"
-							 alt=""/>
+							:src="require(`@/assets/img${noticeData.content[Object.keys(noticeData.content)[1]].icon}`)"
+							alt="">
 					</div>
 					<div class="body-title is-flex-grow-1 _nowrap ml-2">
 						{{ $t(noticeData.content[Object.keys(noticeData.content)[1]].title) }}
@@ -56,48 +55,48 @@
 			</div>
 			<!-- progress -->
 			<div v-else-if="noticeData.contentType === 'progress'"
-				 class="info is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1">
+				class="info is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1">
 				<div :title="noticeData.content.text"
-					 class="has-text-grey-200 _is-normal mb-2 is-flex-wrap-nowrap _nowrap">
+					class="has-text-grey-200 _is-normal mb-2 is-flex-wrap-nowrap _nowrap">
 					{{ noticeData.content.text }}
 				</div>
 				<b-progress :value="noticeData.content.value" format="percent" size="c-is-small" type="is-primary"></b-progress>
 			</div>
-			<!-- end of section body-->
+			<!-- end of section body -->
 
-			<!-- start of section footer-->
-			<div :style="{height: '24px'}"
-				 class="is-flex is-flex-direction-row-reverse is-flex-shrink-0 is-align-items-end">
+			<!-- start of section footer -->
+			<div :style="{ height: '24px' }"
+				class="is-flex is-flex-direction-row-reverse is-flex-shrink-0 is-align-items-end">
 				<template v-if="noticeData.contentType !== 'progress'">
 					<b-button v-if="!noticeData.operate" :disabled="false" class="width" rounded size="is-small"
-							  type="is-primary"
-							  @click="close">
+						type="is-primary"
+						@click="close">
 						{{ $t('Cancel') }}
 					</b-button>
 					<b-button v-else-if="noticeData.operate.type === 'casaUI:eventBus'" :disabled="false" class="width"
-							  rounded
-							  size="is-small"
-							  type="is-primary"
-							  @click="eventBus">
+						rounded
+						size="is-small"
+						type="is-primary"
+						@click="eventBus">
 						{{ $t(noticeData.operate.title) }}
 					</b-button>
 				</template>
 				<div v-if="Object.keys(noticeData.content).length > 1 && noticeData.contentType === 'list'"
-					 class="is-flex-grow-1 footer-hint">
-					{{ $t('{num} items', {num: Object.keys(noticeData.content).length}) }}
+					class="is-flex-grow-1 footer-hint">
+					{{ $t('{num} items', { num: Object.keys(noticeData.content).length }) }}
 				</div>
 			</div>
-			<!-- end of section footer-->
+			<!-- end of section footer -->
 		</div>
 	</div>
 </template>
 
 <script>
 export default {
-	name: "notice-block",
+	name: 'notice-block',
 	props: {
 		noticeData: {
-			type: Object
+			type: Object,
 		},
 		noticeType: {
 			type: String,
@@ -117,25 +116,25 @@ export default {
 
 	methods: {
 		close() {
-			this.$messageBus('youshouldknow_cardclose');
+			this.$messageBus('youshouldknow_cardclose')
 
 			if (this.noticeData.contentType === 'progress') {
-				this.$emit('delete-notice', this.noticeData, this.noticeType);
+				this.$emit('delete-notice', this.noticeData, this.noticeType)
 				return
 			}
-			let promises = [];
+			let promises = []
 			for (const contentKey in this.noticeData.content) {
-				promises.push(this.$api.users.delLetter(this.noticeData.content[contentKey].messageUUID));
+				promises.push(this.$api.users.delLetter(this.noticeData.content[contentKey].messageUUID))
 			}
 			Promise.all(promises).then(() => {
-				this.$emit('delete-notice', this.noticeData, this.noticeType);
-			});
+				this.$emit('delete-notice', this.noticeData, this.noticeType)
+			})
 		},
 		eventBus() {
-			this.$messageBus('youshouldknow_cardaction');
+			this.$messageBus('youshouldknow_cardaction')
 			this.$EventBus.$emit(this.noticeData.operate.event, this.noticeData.operate.path)
-		}
-	}
+		},
+	},
 }
 </script>
 

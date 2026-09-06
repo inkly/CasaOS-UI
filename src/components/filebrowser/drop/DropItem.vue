@@ -8,16 +8,15 @@
 
   -->
 <template>
-	<div
-		:class="[
-      {
-        'is-floating': isFloat,
-        disabled: isDisabled,
-        'can-upload': !uploadDisabled,
-        hover: isHover,
-      },
-      customClass,
-    ]"
+	<div :class="[
+			{
+				'is-floating': isFloat,
+				'disabled': isDisabled,
+				'can-upload': !uploadDisabled,
+				'hover': isHover,
+			},
+			customClass,
+		]"
 		:style="positionStyle"
 		class="drop-item contextmenu-canvas"
 		@dragend="onDrop"
@@ -26,39 +25,29 @@
 		@dragover="onDrag"
 		@drop="onDrop"
 		@mouseout="isHover = false"
-		@mouseover="isHover = true"
-	>
-		<b-upload
-			v-model="dropFiles"
+		@mouseover="isHover = true">
+		<b-upload v-model="dropFiles"
 			:disabled="isSelf || device.offline || uploadDisabled"
 			drag-drop
 			multiple
-			@update:model-value="fileDroped"
-		>
-			<b-tooltip
-				:always="tipActive"
+			@update:model-value="fileDroped">
+			<b-tooltip :always="tipActive"
 				:label="tipText"
 				:position="tipPosition"
 				multilined
 				size="is-small"
-				type="is-grey"
-			>
-				<div
-					ref="circleArea"
+				type="is-grey">
+				<div ref="circleArea"
 					:class="{ 'drag-over': dragOver }"
 					class="circle-area"
-					@contextmenu.stop.prevent="showContextMenu"
-				>
+					@contextmenu.stop.prevent="showContextMenu">
 					<div :class="{ 'is-online': !device.offline }" class="up-layer">
-						<b-image
-							:alt="device.name.displayName"
+						<b-image :alt="device.name.displayName"
 							:class="stateClass"
 							:src="require(`@/assets/img/drop/${deviceIcon}.svg`)"
-							class="is-48x48 mr-0 ml-0 no-click"
-						></b-image>
+							class="is-48x48 mr-0 ml-0 no-click"></b-image>
 					</div>
-					<vue-ellipse-progress
-						v-show="progress > 0"
+					<vue-ellipse-progress v-show="progress > 0"
 						:emptyThickness="2"
 						:legend="false"
 						:progress="progress"
@@ -66,8 +55,7 @@
 						:thickness="2"
 						animation="default 0 0"
 						emptyColor="#ffffff"
-						lineMode="in-over"
-					></vue-ellipse-progress>
+						lineMode="in-over"></vue-ellipse-progress>
 				</div>
 			</b-tooltip>
 			<div ref="deviceName" class="device-name has-text-full-03">
@@ -78,14 +66,14 @@
 </template>
 
 <script>
-import {VueEllipseProgress} from "vue-ellipse-progress";
-import events               from "@/events/events";
-import {gsap}               from "gsap";
-import CustomEase           from "gsap/CustomEase";
-import delay                from "lodash/delay";
+import { VueEllipseProgress } from 'vue-ellipse-progress'
+import events from '@/events/events'
+import { gsap } from 'gsap'
+import CustomEase from 'gsap/CustomEase'
+import delay from 'lodash/delay'
 
 export default {
-	name: "drop-item",
+	name: 'drop-item',
 	components: {
 		VueEllipseProgress,
 	},
@@ -104,7 +92,7 @@ export default {
 		},
 		customClass: {
 			type: String,
-			default: "",
+			default: '',
 		},
 		radius: {
 			type: Number,
@@ -134,101 +122,101 @@ export default {
 			isDisabled: true,
 			progress: 0,
 			startprogress: 0,
-			progressText: "",
+			progressText: '',
 			totalfiles: 0,
 			receivedfiles: 0,
 			uploadDisabled: false,
 			isHover: false,
-		};
+		}
 	},
 	computed: {
 		positionStyle() {
-			const ratio = 1.86;
-			const angel =
-				this.index < 5 ? 30 * (this.index + 1) : 45 * (this.index % 5);
-			const realRadius = this.index < 5 ? this.radius : this.radius / ratio;
+			const ratio = 1.86
+			const angel
+				= this.index < 5 ? 30 * (this.index + 1) : 45 * (this.index % 5)
+			const realRadius = this.index < 5 ? this.radius : this.radius / ratio
 			return {
 				left:
-					this.center.x +
-					(realRadius / 2) * Math.cos((angel * Math.PI) / 180) +
-					"px",
+					this.center.x
+					+ (realRadius / 2) * Math.cos((angel * Math.PI) / 180)
+					+ 'px',
 				top:
-					this.center.y -
-					(realRadius / 2) * Math.sin((angel * Math.PI) / 180) +
-					"px",
-			};
+					this.center.y
+					- (realRadius / 2) * Math.sin((angel * Math.PI) / 180)
+					+ 'px',
+			}
 		},
 		tipPosition() {
 			if (!this.isFloat) {
-				return "is-top";
+				return 'is-top'
 			} else {
 				if (this.index % 5 == 0) {
-					return "is-left";
+					return 'is-left'
 				} else {
-					return "is-right";
+					return 'is-right'
 				}
 			}
 		},
 		tipText() {
 			if (this.isSelf) {
-				return this.$t("You are using the device");
+				return this.$t('You are using the device')
 			} else {
 				if (this.device.offline) {
-					return this.$t("The device is offline");
+					return this.$t('The device is offline')
 				} else {
 					if (this.progress > 0) {
-						return this.progressText;
+						return this.progressText
 					} else {
-						return this.$t("Click to send the file to the device.");
+						return this.$t('Click to send the file to the device.')
 					}
 				}
 			}
 		},
 		stateClass() {
 			if (this.device.offline) {
-				return "off-line";
+				return 'off-line'
 			} else {
 				if (this.isSelf) {
-					return "";
+					return ''
 				} else {
-					return "on-line";
+					return 'on-line'
 				}
 			}
 		},
 		deviceIcon() {
 			if (this.isSelf) {
-				return "self";
+				return 'self'
 			} else {
-				const onlineStatus = this.device.offline ? "_offline" : "_online";
-				const deviceType = this.device.name.model;
-				return deviceType + onlineStatus;
+				const onlineStatus = this.device.offline ? '_offline' : '_online'
+				const deviceType = this.device.name.model
+				return deviceType + onlineStatus
 			}
 		},
 		isSelf() {
-			return this.device.id === localStorage.getItem("peerid");
+			return this.device.id === localStorage.getItem('peerid')
 		},
 	},
 	beforeUnmount() {
-		this.$EventBus.$off("file-progress", this.handleFileProgress);
-		this.$EventBus.$off("text-received");
-		this.$EventBus.$off("close-connection");
-		this.$EventBus.$off(events.ACTIVE_DROP_UPLOAD);
+		this.$EventBus.$off('file-progress', this.handleFileProgress)
+		this.$EventBus.$off('text-received')
+		this.$EventBus.$off('close-connection')
+		this.$EventBus.$off(events.ACTIVE_DROP_UPLOAD)
 	},
 	watch: {
 		device: {
 			handler: function (val) {
-				this.isDisabled = val.offline;
+				this.isDisabled = val.offline
 			},
 			deep: true,
 		},
 	},
 
 	mounted() {
-		gsap.registerPlugin(CustomEase);
+		gsap.registerPlugin(CustomEase)
 		const esaeFunction = CustomEase.create(
-			"custom",
-			"M0,0 C0.237,0.368 0.128,1.112 0.498,1.112 0.714,1.112 0.813,1.005 1,1 "
-		);
+			'custom',
+			'M0,0 C0.237,0.368 0.128,1.112 0.498,1.112 0.714,1.112 0.813,1.005 1,1 ',
+		)
 
 		gsap.to(this.$refs.circleArea, {
 			duration: 0.66,
@@ -236,118 +224,122 @@ export default {
 			scale: 1,
 			delay: this.showIndex * 0.16,
 			onComplete: () => {
-				this.isDisabled = false;
-				this.$emit("showed", this.index);
+				this.isDisabled = false
+				this.$emit('showed', this.index)
 			},
-		});
+		})
 		gsap.from(this.$refs.deviceName, {
 			duration: 0.16,
-			ease: "none",
+			ease: 'none',
 			autoAlpha: 0,
 			delay: (this.showIndex + 1) * 0.16,
-		});
+		})
 
-		this.$EventBus.$on("file-progress", this.handleFileProgress);
+		this.$EventBus.$on('file-progress', this.handleFileProgress)
 
-		this.$EventBus.$on("text-received", (e) => {
-			const message = e;
-			const peerId = message.sender || message.recipient;
-			if (this.device.id !== peerId) return;
+		this.$EventBus.$on('text-received', (e) => {
+			const message = e
+			const peerId = message.sender || message.recipient
+			if (this.device.id !== peerId)
+				return
 
-			this.receivedfiles = message.text;
-		});
-		this.$EventBus.$on("close-connection", (e) => {
-			this.progress = 0;
-			this.uploadDisabled = false;
-		});
+			this.receivedfiles = message.text
+		})
+		this.$EventBus.$on('close-connection', (e) => {
+			this.progress = 0
+			this.uploadDisabled = false
+		})
 
-		this.$EventBus.$on(events.ACTIVE_DROP_UPLOAD, this.handleUpload);
+		this.$EventBus.$on(events.ACTIVE_DROP_UPLOAD, this.handleUpload)
 	},
 	methods: {
 		handleUpload(e) {
-			if (e.files.length == 0) return;
+			if (e.files.length == 0)
+				return
 
 			if (e.deviceId == this.device.id) {
-				this.fileDroped(e.files);
+				this.fileDroped(e.files)
 			}
 		},
 		handleFileProgress(e) {
-			const progress = e;
-			const peerId = progress.sender || progress.recipient;
-			if (this.device.id !== peerId) return;
+			const progress = e
+			const peerId = progress.sender || progress.recipient
+			if (this.device.id !== peerId)
+				return
 			if (this.progress == 0) {
-				this.activeTipOneSecond();
+				this.activeTipOneSecond()
 			}
-			this.totalfiles = progress.files.length;
-			this.progress = progress.progress * 100;
-			this.startprogress++;
-			this.uploadDisabled = true;
+			this.totalfiles = progress.files.length
+			this.progress = progress.progress * 100
+			this.startprogress++
+			this.uploadDisabled = true
 			if (this.totalfiles > 0) {
-				this.receivedfiles = progress.filesQueue;
-				this.progressText = this.$t("{num} files being sent", {
+				this.receivedfiles = progress.filesQueue
+				this.progressText = this.$t('{num} files being sent', {
 					num: this.receivedfiles,
-				});
+				})
 			} else {
-				this.progressText = this.$t("Receiving {num} files", {
+				this.progressText = this.$t('Receiving {num} files', {
 					num: this.receivedfiles,
-				});
+				})
 			}
 			if (this.startprogress === 1 && progress.progress > 0) {
-				this.activeTipOneSecond();
+				this.activeTipOneSecond()
 			}
 			if (progress.progress === 1) {
-				this.progress = 0;
-				this.startprogress = 0;
-				this.tipActive = false;
-				this.uploadDisabled = false;
+				this.progress = 0
+				this.startprogress = 0
+				this.tipActive = false
+				this.uploadDisabled = false
 				if (this.totalfiles == 0) {
-					this.receivedfiles -= 1;
+					this.receivedfiles -= 1
 				}
 			}
 		},
 		showContextMenu(e) {
-			if (this.device.offline || this.isSelf) return;
-			e.isSending = this.uploadDisabled;
-			e.deviceId = this.device.id;
-			e.sender = localStorage.getItem("peerid");
-			this.$EventBus.$emit(events.SHOW_DROP_CONTEXT_MENU, e);
+			if (this.device.offline || this.isSelf)
+				return
+			e.isSending = this.uploadDisabled
+			e.deviceId = this.device.id
+			e.sender = localStorage.getItem('peerid')
+			this.$EventBus.$emit(events.SHOW_DROP_CONTEXT_MENU, e)
 		},
 		onDrop(e) {
-			e.preventDefault();
-			e.stopPropagation();
-			this.dragOver = false;
-			this.tipActive = false;
+			e.preventDefault()
+			e.stopPropagation()
+			this.dragOver = false
+			this.tipActive = false
 		},
 		onDrag(e) {
-			e.preventDefault();
-			e.stopPropagation();
+			e.preventDefault()
+			e.stopPropagation()
 			if (this.isSelf) {
-				return;
+				return
 			}
-			this.dragOver = true;
+			this.dragOver = true
 		},
 		fileDroped(files) {
-			this.$messageBus("files_filesdrop_start");
-			this.$EventBus.$emit("files-selected", {
+			this.$messageBus('files_filesdrop_start')
+			this.$EventBus.$emit('files-selected', {
 				files: files,
 				to: this.device.id,
-				from: localStorage.getItem("peerid"),
-			});
-			this.dropFiles = [];
+				from: localStorage.getItem('peerid'),
+			})
+			this.dropFiles = []
 		},
 
 		activeTipOneSecond() {
-			this.tipActive = true;
+			this.tipActive = true
 			delay(
 				(bool) => {
-					this.tipActive = bool;
+					this.tipActive = bool
 				},
 				1000,
-				false
-			);
+				false,
+			)
 		},
 	},
-};
+}
 </script>
 
 <style lang="scss">

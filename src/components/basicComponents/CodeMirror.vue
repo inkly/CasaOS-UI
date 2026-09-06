@@ -18,56 +18,56 @@
 import CodeMirror from 'codemirror'
 
 export default {
-  name: 'CodeMirrorEditor',
-  props: {
-    value: {
-      type: String,
-      default: '',
-    },
-    options: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
-  watch: {
-    value(next) {
-      // A parent bound with v-model hands us back the value we just emitted.
-      // Writing it in again would reset the cursor to the end of the document
-      // on every keystroke, so only write a value the editor does not hold.
-      if (this.codemirror && next !== this.codemirror.getValue()) {
-        const scroll = this.codemirror.getScrollInfo()
-        this.codemirror.setValue(next)
-        this.codemirror.scrollTo(scroll.left, scroll.top)
-      }
-    },
-  },
-  mounted() {
-    // Deliberately not in data(): Vue 2 would deep-observe the editor, its
-    // document and its DOM. The library did that, nothing needs it.
-    this.codemirror = CodeMirror.fromTextArea(this.$refs.textarea, this.options)
-    // Before the listener, so mounting with a value does not emit `input`.
-    this.codemirror.setValue(this.value)
-    this.codemirror.on('change', cm => this.$emit('input', cm.getValue()))
-    this.$emit('ready', this.codemirror)
-    // The editor measures itself as it is created, when a container inside a
-    // modal or behind a v-if is often not laid out yet.
-    this.$nextTick(() => this.refresh())
-  },
-  beforeUnmount() {
-    // Puts the textarea back and unhooks the editor, rather than the library's
-    // "remove the wrapper element and leave the instance running".
-    this.codemirror.toTextArea()
-  },
-  methods: {
-    refresh() {
-      this.codemirror.refresh()
-    },
-  },
+	name: 'CodeMirrorEditor',
+	props: {
+		value: {
+			type: String,
+			default: '',
+		},
+		options: {
+			type: Object,
+			default: () => ({}),
+		},
+	},
+	watch: {
+		value(next) {
+			// A parent bound with v-model hands us back the value we just emitted.
+			// Writing it in again would reset the cursor to the end of the document
+			// on every keystroke, so only write a value the editor does not hold.
+			if (this.codemirror && next !== this.codemirror.getValue()) {
+				const scroll = this.codemirror.getScrollInfo()
+				this.codemirror.setValue(next)
+				this.codemirror.scrollTo(scroll.left, scroll.top)
+			}
+		},
+	},
+	mounted() {
+		// Deliberately not in data(): Vue 2 would deep-observe the editor, its
+		// document and its DOM. The library did that, nothing needs it.
+		this.codemirror = CodeMirror.fromTextArea(this.$refs.textarea, this.options)
+		// Before the listener, so mounting with a value does not emit `input`.
+		this.codemirror.setValue(this.value)
+		this.codemirror.on('change', cm => this.$emit('input', cm.getValue()))
+		this.$emit('ready', this.codemirror)
+		// The editor measures itself as it is created, when a container inside a
+		// modal or behind a v-if is often not laid out yet.
+		this.$nextTick(() => this.refresh())
+	},
+	beforeUnmount() {
+		// Puts the textarea back and unhooks the editor, rather than the library's
+		// "remove the wrapper element and leave the instance running".
+		this.codemirror.toTextArea()
+	},
+	methods: {
+		refresh() {
+			this.codemirror.refresh()
+		},
+	},
 }
 </script>
 
 <template>
-  <div class="vue-codemirror">
-    <textarea ref="textarea" />
-  </div>
+	<div class="vue-codemirror">
+		<textarea ref="textarea"></textarea>
+	</div>
 </template>

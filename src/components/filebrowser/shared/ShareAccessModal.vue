@@ -2,147 +2,144 @@
 import SambaUsersModal from './SambaUsersModal.vue'
 
 export default {
-  name: 'ShareAccessModal',
-  props: {
-    share: {
-      type: Object,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      requireAccount: !!this.share.username,
-      username: this.share.username || '',
-      timeMachine: !!this.share.time_machine,
-      users: [],
-      isSaving: false,
-      error: '',
-    }
-  },
-  computed: {
-    canSave() {
-      if (this.isSaving) {
-        return false
-      }
+	name: 'ShareAccessModal',
+	props: {
+		share: {
+			type: Object,
+			required: true,
+		},
+	},
+	data() {
+		return {
+			requireAccount: !!this.share.username,
+			username: this.share.username || '',
+			timeMachine: !!this.share.time_machine,
+			users: [],
+			isSaving: false,
+			error: '',
+		}
+	},
+	computed: {
+		canSave() {
+			if (this.isSaving) {
+				return false
+			}
 
-      const next = this.requireAccount ? this.username : ''
-      const changed = next !== (this.share.username || '') || this.timeMachine !== !!this.share.time_machine
-      return changed && !(this.requireAccount && !this.username)
-    },
-  },
-  created() {
-    this.loadUsers()
-  },
-  methods: {
-    async loadUsers() {
-      try {
-        const response = await this.$api.samba.getUsers()
-        this.users = response.data.data || []
-      }
-      catch {
-        this.users = []
-      }
-    },
+			const next = this.requireAccount ? this.username : ''
+			const changed = next !== (this.share.username || '') || this.timeMachine !== !!this.share.time_machine
+			return changed && !(this.requireAccount && !this.username)
+		},
+	},
+	created() {
+		this.loadUsers()
+	},
+	methods: {
+		async loadUsers() {
+			try {
+				const response = await this.$api.samba.getUsers()
+				this.users = response.data.data || []
+			} catch {
+				this.users = []
+			}
+		},
 
-    manageUsers() {
-      this.$buefy.modal.open({
-        component: SambaUsersModal,
-        hasModalCard: true,
-        trapFocus: true,
-        canCancel: ['escape'],
-        scroll: 'keep',
-        animation: 'zoom-in',
-        events: { close: () => this.loadUsers() },
-      })
-    },
+		manageUsers() {
+			this.$buefy.modal.open({
+				component: SambaUsersModal,
+				hasModalCard: true,
+				trapFocus: true,
+				canCancel: ['escape'],
+				scroll: 'keep',
+				animation: 'zoom-in',
+				events: { close: () => this.loadUsers() },
+			})
+		},
 
-    async save() {
-      if (!this.canSave) {
-        return
-      }
+		async save() {
+			if (!this.canSave) {
+				return
+			}
 
-      this.isSaving = true
-      this.error = ''
+			this.isSaving = true
+			this.error = ''
 
-      try {
-        await this.$api.samba.updateShare(this.share.id, {
-          username: this.requireAccount ? this.username : '',
-          time_machine: this.timeMachine,
-        })
-        this.$emit('reload')
-        this.$emit('close')
-      }
-      catch (e) {
-        this.error = (e && e.response && e.response.data && e.response.data.message) || this.$t('Something went wrong.')
-      }
-      finally {
-        this.isSaving = false
-      }
-    },
-  },
+			try {
+				await this.$api.samba.updateShare(this.share.id, {
+					username: this.requireAccount ? this.username : '',
+					time_machine: this.timeMachine,
+				})
+				this.$emit('reload')
+				this.$emit('close')
+			} catch (e) {
+				this.error = (e && e.response && e.response.data && e.response.data.message) || this.$t('Something went wrong.')
+			} finally {
+				this.isSaving = false
+			}
+		},
+	},
 }
 </script>
 
 <template>
-  <div class="modal-card share-access-modal">
-    <header class="modal-card-head">
-      <h3 class="title is-header">
-        {{ $t('Who can open this folder') }}
-      </h3>
-    </header>
+	<div class="modal-card share-access-modal">
+		<header class="modal-card-head">
+			<h3 class="title is-header">
+				{{ $t('Who can open this folder') }}
+			</h3>
+		</header>
 
-    <section class="modal-card-body">
-      <p class="has-text-full-03 is-size-7 mb-4">
-        {{ share.path }}
-      </p>
+		<section class="modal-card-body">
+			<p class="has-text-full-03 is-size-7 mb-4">
+				{{ share.path }}
+			</p>
 
-      <b-message v-if="error" class="mb-4" size="is-small" type="is-danger">
-        {{ error }}
-      </b-message>
+			<b-message v-if="error" class="mb-4" size="is-small" type="is-danger">
+				{{ error }}
+			</b-message>
 
-      <b-switch v-model="requireAccount">
-        {{ $t('Require an account') }}
-      </b-switch>
+			<b-switch v-model="requireAccount">
+				{{ $t('Require an account') }}
+			</b-switch>
 
-      <p v-if="!requireAccount" class="has-text-full-03 is-size-7 mt-2">
-        {{ $t('Anyone on the network can read and write this folder.') }}
-      </p>
+			<p v-if="!requireAccount" class="has-text-full-03 is-size-7 mt-2">
+				{{ $t('Anyone on the network can read and write this folder.') }}
+			</p>
 
-      <template v-else>
-        <b-field class="mt-3">
-          <b-select v-model="username" :placeholder="$t('Choose an account')" expanded>
-            <option v-for="user in users" :key="user" :value="user">
-              {{ user }}
-            </option>
-          </b-select>
-        </b-field>
+			<template v-else>
+				<b-field class="mt-3">
+					<b-select v-model="username" :placeholder="$t('Choose an account')" expanded>
+						<option v-for="user in users" :key="user" :value="user">
+							{{ user }}
+						</option>
+					</b-select>
+				</b-field>
 
-        <p class="has-text-full-03 is-size-7">
-          <a href="#" @click.prevent="manageUsers">{{ $t('Manage accounts') }}</a>
-        </p>
-      </template>
+				<p class="has-text-full-03 is-size-7">
+					<a href="#" @click.prevent="manageUsers">{{ $t('Manage accounts') }}</a>
+				</p>
+			</template>
 
-      <b-switch v-model="timeMachine" class="mt-4">
-        {{ $t('Use as a Time Machine destination') }}
-      </b-switch>
+			<b-switch v-model="timeMachine" class="mt-4">
+				{{ $t('Use as a Time Machine destination') }}
+			</b-switch>
 
-      <p v-if="timeMachine" class="has-text-full-03 is-size-7 mt-1">
-        {{ $t('Macs on the network will offer this folder as a Time Machine backup disk.') }}
-      </p>
+			<p v-if="timeMachine" class="has-text-full-03 is-size-7 mt-1">
+				{{ $t('Macs on the network will offer this folder as a Time Machine backup disk.') }}
+			</p>
 
-      <p class="has-text-full-03 is-size-7 mt-4">
-        {{ $t('Files already in the folder keep their current permissions.') }}
-      </p>
-    </section>
+			<p class="has-text-full-03 is-size-7 mt-4">
+				{{ $t('Files already in the folder keep their current permissions.') }}
+			</p>
+		</section>
 
-    <footer class="modal-card-foot is-flex is-align-items-center">
-      <div class="is-flex-grow-1" />
-      <div>
-        <b-button :label="$t('Cancel')" rounded @click="$emit('close')" />
-        <b-button :disabled="!canSave" :label="$t('Save')" :loading="isSaving" rounded type="is-primary" @click="save" />
-      </div>
-    </footer>
-  </div>
+		<footer class="modal-card-foot is-flex is-align-items-center">
+			<div class="is-flex-grow-1"></div>
+			<div>
+				<b-button :label="$t('Cancel')" rounded @click="$emit('close')" />
+				<b-button :disabled="!canSave" :label="$t('Save')" :loading="isSaving" rounded type="is-primary" @click="save" />
+			</div>
+		</footer>
+	</div>
 </template>
 
 <style lang="scss" scoped>

@@ -49,32 +49,31 @@
 </template>
 
 <script>
-import find from 'lodash/find';
+import find from 'lodash/find'
 
 const widgetsComponents = require.context(
 	'@/widgets',
 	false,
-	/.vue$/
+	/.vue$/,
 )
-
 
 export default {
 	// eslint-disable-next-line vue/multi-word-component-names
-	name: "settings",
+	name: 'settings',
 	data() {
 		return {
 			apps: [],
 			settingsData: [],
-			position: "is-top-left"
+			position: 'is-top-left',
 		}
 	},
 	props: {
-		modelValue: Array
+		modelValue: Array,
 	},
 	computed: {
 		searchBarShown() {
 			return this.$store.state.searchEngineSwitch
-		}
+		},
 	},
 
 	watch: {
@@ -86,35 +85,34 @@ export default {
 				} else {
 					offsetTop = 251
 				}
-				this.position = offsetTop > 250 ? "is-top-left" : "is-bottom-left"
+				this.position = offsetTop > 250 ? 'is-top-left' : 'is-bottom-left'
 			},
-			deep: true
-		}
+			deep: true,
+		},
 
 	},
 	created() {
 		this.settingsData = JSON.parse(JSON.stringify(this.modelValue))
-		widgetsComponents.keys().forEach(fileName => {
+		widgetsComponents.keys().forEach((fileName) => {
 			const componentConfig = widgetsComponents(fileName)
 			this.apps.push({ app: componentConfig })
-		});
+		})
 	},
 	mounted() {
-		window.addEventListener('resize', this.onRezise);
-
+		window.addEventListener('resize', this.onRezise)
 	},
 	methods: {
 		getIcon(value) {
-			let obj = find(this.apps, o => {
+			let obj = find(this.apps, (o) => {
 				return o.app.default.name === value
-			});
-			return obj.app.default.icon;
+			})
+			return obj.app.default.icon
 		},
 		getTitle(value) {
-			let obj = find(this.apps, o => {
+			let obj = find(this.apps, (o) => {
 				return o.app.default.name === value
-			});
-			return obj.app.default.title;
+			})
+			return obj.app.default.title
 		},
 		handleInput() {
 			this.$emit('update:modelValue', this.settingsData)
@@ -124,13 +122,14 @@ export default {
 			this.$emit('searchBarChange', value)
 		},
 		onRezise() {
-		}
+		},
 	},
 	unmounted() {
-		window.addEventListener('resize', this.onRezise);
+		window.addEventListener('resize', this.onRezise)
 	},
 }
 </script>
+
 <style lang="scss">
 .wsettings {
 	width: 100%;

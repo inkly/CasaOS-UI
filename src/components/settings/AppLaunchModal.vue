@@ -1,114 +1,112 @@
 <script>
 export default {
-  name: 'AppLaunchModal',
-  data() {
-    return {
-      inIframe: this.$store.state.appLaunchInIframe,
-      exceptions: [...(this.$store.state.appLaunchExceptions || [])],
-      apps: [],
-      isLoading: true,
-      loadError: '',
-    }
-  },
-  async mounted() {
-    try {
-      const response = await this.$openAPI.appManagement.compose.myComposeAppList()
-      const list = (response && response.data && response.data.data) || {}
+	name: 'AppLaunchModal',
+	data() {
+		return {
+			inIframe: this.$store.state.appLaunchInIframe,
+			exceptions: [...(this.$store.state.appLaunchExceptions || [])],
+			apps: [],
+			isLoading: true,
+			loadError: '',
+		}
+	},
+	async mounted() {
+		try {
+			const response = await this.$openAPI.appManagement.compose.myComposeAppList()
+			const list = (response && response.data && response.data.data) || {}
 
-      // The endpoint returns a map keyed by app id. Fall back to the key when
-      // an entry carries no readable title, so nothing shows up nameless.
-      this.apps = Object.keys(list)
-        .map(id => ({ id, title: this.titleOf(list[id]) || id }))
-        .sort((a, b) => a.title.localeCompare(b.title))
-    }
-    catch {
-      // The setting itself still works without the list; only the per-app
-      // exceptions need it.
-      this.loadError = this.$t('The list of installed apps could not be loaded.')
-    }
-    finally {
-      this.isLoading = false
-    }
-  },
-  methods: {
-    titleOf(entry) {
-      const title = entry && entry.store_info && entry.store_info.title
-      if (!title) {
-        return ''
-      }
+			// The endpoint returns a map keyed by app id. Fall back to the key when
+			// an entry carries no readable title, so nothing shows up nameless.
+			this.apps = Object.keys(list)
+				.map(id => ({ id, title: this.titleOf(list[id]) || id }))
+				.sort((a, b) => a.title.localeCompare(b.title))
+		} catch {
+			// The setting itself still works without the list; only the per-app
+			// exceptions need it.
+			this.loadError = this.$t('The list of installed apps could not be loaded.')
+		} finally {
+			this.isLoading = false
+		}
+	},
+	methods: {
+		titleOf(entry) {
+			const title = entry && entry.store_info && entry.store_info.title
+			if (!title) {
+				return ''
+			}
 
-      return title[this.$i18n.locale] || title.en_us || Object.values(title)[0] || ''
-    },
+			return title[this.$i18n.locale] || title.en_us || Object.values(title)[0] || ''
+		},
 
-    isExcepted(id) {
-      return this.exceptions.includes(id)
-    },
+		isExcepted(id) {
+			return this.exceptions.includes(id)
+		},
 
-    toggleException(id) {
-      this.exceptions = this.isExcepted(id)
-        ? this.exceptions.filter(entry => entry !== id)
-        : [...this.exceptions, id]
-    },
+		toggleException(id) {
+			this.exceptions = this.isExcepted(id)
+				? this.exceptions.filter(entry => entry !== id)
+				: [...this.exceptions, id]
+		},
 
-    save() {
-      this.$store.commit('SET_APP_LAUNCH_IN_IFRAME', this.inIframe)
-      this.$store.commit('SET_APP_LAUNCH_EXCEPTIONS', this.exceptions)
-      this.$emit('close')
-    },
-  },
+		save() {
+			this.$store.commit('SET_APP_LAUNCH_IN_IFRAME', this.inIframe)
+			this.$store.commit('SET_APP_LAUNCH_EXCEPTIONS', this.exceptions)
+			this.$emit('close')
+		},
+	},
 }
 </script>
 
 <template>
-  <div class="modal-card app-launch-modal">
-    <header class="modal-card-head">
-      <h3 class="title is-header">
-        {{ $t('App launching') }}
-      </h3>
-    </header>
+	<div class="modal-card app-launch-modal">
+		<header class="modal-card-head">
+			<h3 class="title is-header">
+				{{ $t('App launching') }}
+			</h3>
+		</header>
 
-    <section class="modal-card-body">
-      <b-field>
-        <b-switch v-model="inIframe">
-          {{ $t('Open apps inside CasaOS') }}
-        </b-switch>
-      </b-field>
+		<section class="modal-card-body">
+			<b-field>
+				<b-switch v-model="inIframe">
+					{{ $t('Open apps inside CasaOS') }}
+				</b-switch>
+			</b-field>
 
-      <p class="has-text-full-03 is-size-7 mb-4">
-        {{ $t('When this is off, every app opens in a new browser tab.') }}
-      </p>
+			<p class="has-text-full-03 is-size-7 mb-4">
+				{{ $t('When this is off, every app opens in a new browser tab.') }}
+			</p>
 
-      <template v-if="inIframe">
-        <p class="is-size-7 mb-2">
-          {{ $t('Always open these apps in a new tab:') }}
-        </p>
+			<template v-if="inIframe">
+				<p class="is-size-7 mb-2">
+					{{ $t('Always open these apps in a new tab:') }}
+				</p>
 
-        <b-message v-if="loadError" size="is-small" type="is-warning">
-          {{ loadError }}
-        </b-message>
+				<b-message v-if="loadError" size="is-small" type="is-warning">
+					{{ loadError }}
+				</b-message>
 
-        <b-loading v-model="isLoading" :is-full-page="false" />
+				<b-loading v-model="isLoading" :is-full-page="false" />
 
-        <div v-if="!isLoading && !loadError && apps.length === 0" class="has-text-full-03 is-size-7">
-          {{ $t('No app is installed yet.') }}
-        </div>
+				<div v-if="!isLoading && !loadError && apps.length === 0" class="has-text-full-03 is-size-7">
+					{{ $t('No app is installed yet.') }}
+				</div>
 
-        <div v-for="app in apps" :key="app.id" class="app-launch-modal__row">
-          <b-checkbox :model-value="isExcepted(app.id)" @update:model-value="toggleException(app.id)">
-            {{ app.title }}
-          </b-checkbox>
-        </div>
-      </template>
-    </section>
+				<div v-for="app in apps" :key="app.id" class="app-launch-modal__row">
+					<b-checkbox :model-value="isExcepted(app.id)" @update:model-value="toggleException(app.id)">
+						{{ app.title }}
+					</b-checkbox>
+				</div>
+			</template>
+		</section>
 
-    <footer class="modal-card-foot is-flex is-align-items-center">
-      <div class="is-flex-grow-1" />
-      <div>
-        <b-button :label="$t('Cancel')" rounded @click="$emit('close')" />
-        <b-button :label="$t('Save')" rounded type="is-primary" @click="save" />
-      </div>
-    </footer>
-  </div>
+		<footer class="modal-card-foot is-flex is-align-items-center">
+			<div class="is-flex-grow-1"></div>
+			<div>
+				<b-button :label="$t('Cancel')" rounded @click="$emit('close')" />
+				<b-button :label="$t('Save')" rounded type="is-primary" @click="save" />
+			</div>
+		</footer>
+	</div>
 </template>
 
 <style lang="scss" scoped>

@@ -48,55 +48,55 @@ import { Terminal } from 'xterm'
 import { FitAddon } from 'xterm-addon-fit'
 import { AttachAddon } from 'xterm-addon-attach'
 
-const fitAddon = new FitAddon();
+const fitAddon = new FitAddon()
 export default {
-	name: "terminal-card",
+	name: 'terminal-card',
 	props: {
 		id: String,
 		label: String,
-		initWsUrl: String
+		initWsUrl: String,
 	},
 	data() {
 		return {
 			fullscreen: false,
 			isConnecting: false,
-			term: "",
+			term: '',
 			rows: 40,
 			cols: 100,
 			state: true,
 			isVaild: false,
-			wsUrl: "",
-			sshUser: "",
-			sshPassword: "",
+			wsUrl: '',
+			sshUser: '',
+			sshPassword: '',
 			sshPort: 22,
-			message: "",
+			message: '',
 			notificationShow: false,
 		}
 	},
 	computed: {
 		buttonSzie() {
-			return this.$store.state.device == "mobile" ? 'is-small' : ''
+			return this.$store.state.device == 'mobile' ? 'is-small' : ''
 		},
 		buttonIcon() {
-			return this.fullscreen ? "fullscreen-exit" : "fullscreen"
-		}
+			return this.fullscreen ? 'fullscreen-exit' : 'fullscreen'
+		},
 	},
 	mounted() {
-		this.rows = document.getElementById('terminal').offsetHeight / 16 - 6;
-		this.cols = document.getElementById('terminal').offsetWidth / 14;
+		this.rows = document.getElementById('terminal').offsetHeight / 16 - 6
+		this.cols = document.getElementById('terminal').offsetWidth / 14
 
-		if (this.initWsUrl != "") {
+		if (this.initWsUrl != '') {
 			this.isVaild = true
-			this.wsUrl = this.initWsUrl;
-			this.initSocket();
+			this.wsUrl = this.initWsUrl
+			this.initSocket()
 		}
-
 	},
 	beforeUnmount() {
 		if (this.isVaild) {
 			this.socket.close()
 		}
-		if (this.term != "") this.term.dispose()
+		if (this.term != '')
+			this.term.dispose()
 		window.removeEventListener('resize', this.onWindowResize)
 	},
 
@@ -107,7 +107,7 @@ export default {
 			let postData = {
 				username: String(this.sshUser),
 				password: String(this.sshPassword),
-				port: String(this.sshPort)
+				port: String(this.sshPort),
 			}
 			try {
 				await this.$api.sys.checkSshLogin(postData)
@@ -115,13 +115,12 @@ export default {
 				this.isVaild = true
 				postData.token = this.$store.state.access_token
 				this.wsUrl = `${this.$wsProtocol}//${this.$baseURL}/v1/sys/wsssh?${qs.stringify(postData)}`
-				this.initSocket();
+				this.initSocket()
 			} catch (error) {
 				this.notificationShow = true
 				this.isConnecting = false
 				this.message = error.response.data.data
 			}
-
 		},
 		toggleFullScreen() {
 			this.fullscreen = !this.fullscreen
@@ -130,40 +129,40 @@ export default {
 			const term = new Terminal({
 				// rendererType: 'canvas',
 				fontSize: 13,
-				cursorStyle: 'underline', //光标样式
-				cursorBlink: true, //光标闪烁
+				cursorStyle: 'underline', // 光标样式
+				cursorBlink: true, // 光标闪烁
 				theme: { background: '#1E1E1E' },
-				rows: parseInt(this.rows), //行数
+				rows: parseInt(this.rows), // 行数
 				cols: parseInt(this.cols), // 不指定行数，自动回车后光标从下一行开始
-				fontFamily: "Consolas, Monaco, monospace",
-			});
-			const attachAddon = new AttachAddon(this.socket);
+				fontFamily: 'Consolas, Monaco, monospace',
+			})
+			const attachAddon = new AttachAddon(this.socket)
 
-			term.loadAddon(attachAddon);
-			term.loadAddon(fitAddon);
-			term.open(document.getElementById('xterm'));
-			fitAddon.fit();
-			term.focus();
+			term.loadAddon(attachAddon)
+			term.loadAddon(fitAddon)
+			term.open(document.getElementById('xterm'))
+			fitAddon.fit()
+			term.focus()
 			this.term = term
 			window.addEventListener('resize', this.onWindowResize)
 
 			this.socket.send(JSON.stringify({
-				type: "resize",
+				type: 'resize',
 				cols: this.term.cols,
-				rows: this.term.rows
+				rows: this.term.rows,
 			}))
-
 		},
 		initSocket() {
-			this.socket = new WebSocket(this.wsUrl);
-			this.socketOnClose();
-			this.socketOnOpen();
-			this.socketOnError();
+			this.socket = new WebSocket(this.wsUrl)
+			this.socketOnClose()
+			this.socketOnOpen()
+			this.socketOnError()
 
 			this.socket.onmessage = (event) => {
-				if (event.data == "\r\n\u001b[?2004l\rlogout\r\n") {
+				if (event.data == '\r\n\u001b[?2004l\rlogout\r\n') {
 					this.socket.close()
-					if (this.term != "") this.term.dispose()
+					if (this.term != '')
+						this.term.dispose()
 					window.removeEventListener('resize', this.onWindowResize)
 					this.isVaild = false
 				}
@@ -190,30 +189,30 @@ export default {
 			}
 			this.$nextTick(() => {
 				try {
-					fitAddon.fit();
+					fitAddon.fit()
 					this.socket.send(JSON.stringify({
-						type: "resize",
+						type: 'resize',
 						cols: this.term.cols,
-						rows: this.term.rows
+						rows: this.term.rows,
 					}))
 				} catch (e) {
-					console.log("e", e.message);
+					console.log('e', e.message)
 				}
 			})
-
 		},
 		getTop(e) {
-			let offset = e.offsetTop;
-			if (e.offsetParent != null) offset += this.getTop(e.offsetParent);
-			return offset;
+			let offset = e.offsetTop
+			if (e.offsetParent != null)
+				offset += this.getTop(e.offsetParent)
+			return offset
 		},
 		active(state) {
-			this.state = state;
+			this.state = state
 			if (state) {
-				this.onWindowResize();
+				this.onWindowResize()
 			}
-		}
-	}
+		},
+	},
 }
 </script>
 

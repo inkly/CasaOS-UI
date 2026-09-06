@@ -4,9 +4,9 @@
  * @LastEditors: Jerryk jerry@icewhale.org
  * @LastEditTime: 2023-03-14 14:28:53
  * @FilePath: \CasaOS-UI-0.4.2\src\events\events.js
- * @Description: 
- * 
- * Copyright (c) 2022 by IceWhale, All Rights Reserved. 
+ * @Description:
+ *
+ * Copyright (c) 2022 by IceWhale, All Rights Reserved.
  */
 const events = {
 	// Event: 'eventName',
@@ -30,5 +30,5 @@ const events = {
 	OPEN_APP_IFRAME: 'openAppIframe',
 	OPEN_APP_LAUNCHER: 'openAppLauncher',
 	CLOSE_APP_IFRAME: 'closeAppIframe',
-};
-export default events;
+}
+export default events

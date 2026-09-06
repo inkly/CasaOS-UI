@@ -12,7 +12,7 @@
 				<div class="task-info">
 					<div class="cover">
 						<div class="folder-cover">
-							<img :src="getIconFile(file)" alt="folder" class="folder-icon" />
+							<img :src="getIconFile(file)" alt="folder" class="folder-icon">
 						</div>
 					</div>
 					<div class="task-info-wrapper">
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { mixin } from '@/mixins/mixin';
+import { mixin } from '@/mixins/mixin'
 import Uploader from 'simple-uploader.js'
 import events from '../common/file-events'
 import { secondsToStr } from '../common/utils'
@@ -68,12 +68,12 @@ export default {
 			type: Object,
 			default() {
 				return {}
-			}
+			},
 		},
 		list: {
 			type: Boolean,
-			default: false
-		}
+			default: false,
+		},
 	},
 	data() {
 		return {
@@ -91,7 +91,7 @@ export default {
 			timeRemaining: 0,
 			type: '',
 			extension: '',
-			progressingClass: ''
+			progressingClass: '',
 		}
 	},
 	computed: {
@@ -104,7 +104,7 @@ export default {
 				image: ['gif', 'jpg', 'jpeg', 'png', 'bmp', 'webp'],
 				video: ['mp4', 'm3u8', 'rmvb', 'avi', 'swf', '3gp', 'mkv', 'flv'],
 				audio: ['mp3', 'wav', 'wma', 'ogg', 'aac', 'flac'],
-				document: ['doc', 'txt', 'docx', 'pages', 'epub', 'pdf', 'numbers', 'csv', 'xls', 'xlsx', 'keynote', 'ppt', 'pptx']
+				document: ['doc', 'txt', 'docx', 'pages', 'epub', 'pdf', 'numbers', 'csv', 'xls', 'xlsx', 'keynote', 'ppt', 'pptx'],
 			}
 			Object.keys(typeMap).forEach((_type) => {
 				const extensions = typeMap[_type]
@@ -169,7 +169,7 @@ export default {
 				parsedTimeRemaining = parseTimeRemaining(timeRemaining, parsedTimeRemaining)
 			}
 			return parsedTimeRemaining
-		}
+		},
 	},
 	watch: {
 		status(newStatus, oldStatus) {
@@ -181,7 +181,7 @@ export default {
 				clearTimeout(this.tid)
 				this.progressingClass = ''
 			}
-		}
+		},
 	},
 	methods: {
 		_actionCheck() {
@@ -206,7 +206,6 @@ export default {
 			this._actionCheck()
 		},
 		processResponse(message) {
-
 			let res = message
 			try {
 				res = JSON.parse(message)
@@ -214,9 +213,8 @@ export default {
 			} catch (e) {
 
 			}
-			if (message == "") {
-
-				res = { success: 200, message: "ok" }
+			if (message == '') {
+				res = { success: 200, message: 'ok' }
 			}
 			this.response = res
 		},
@@ -258,7 +256,7 @@ export default {
 			this.error = true
 			this.isComplete = false
 			this.isUploading = false
-		}
+		},
 	},
 	mounted() {
 		const staticProps = ['paused', 'error', 'averageSpeed', 'currentSpeed']
@@ -267,28 +265,28 @@ export default {
 			'isUploading',
 			{
 				key: 'size',
-				fn: 'getSize'
+				fn: 'getSize',
 			},
 			{
 				key: 'formatedSize',
-				fn: 'getFormatSize'
+				fn: 'getFormatSize',
 			},
 			{
 				key: 'uploadedSize',
-				fn: 'sizeUploaded'
+				fn: 'sizeUploaded',
 			},
 			'progress',
 			'timeRemaining',
 			{
 				key: 'type',
-				fn: 'getType'
+				fn: 'getType',
 			},
 			{
 				key: 'extension',
-				fn: 'getExtension'
-			}
+				fn: 'getExtension',
+			},
 		]
-		staticProps.forEach(prop => {
+		staticProps.forEach((prop) => {
 			this[prop] = this.file[prop]
 		})
 		fnProps.forEach((fnProp) => {
@@ -315,7 +313,7 @@ export default {
 			this.file.uploader.off(event, this._handlers[event])
 		})
 		this._handlers = null
-	}
+	},
 }
 </script>
 

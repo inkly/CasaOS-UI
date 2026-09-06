@@ -35,37 +35,36 @@
 import FeedbackPanel from './feedback/FeedbackPanel.vue'
 import ShareModal from '@/components/share/ShareModal.vue'
 
-
 export default {
-	name: "contact-bar",
+	name: 'contact-bar',
 	methods: {
 		showFeedback() {
 			// messageBus :: feedback
-			this.$messageBus('connect_feedback');
+			this.$messageBus('connect_feedback')
 			this.$buefy.modal.open({
 				component: FeedbackPanel,
 				hasModalCard: true,
 				customClass: 'feedback-modal',
 				trapFocus: true,
 				canCancel: [],
-				scroll: "keep",
-				animation: "zoom-in",
+				scroll: 'keep',
+				animation: 'zoom-in',
 			})
 		},
 
 		showShareModal() {
 			// messageBus :: share
-			this.$messageBus('connect_sharecasaos');
+			this.$messageBus('connect_sharecasaos')
 			this.$buefy.modal.open({
 				component: ShareModal,
 				hasModalCard: true,
 				customClass: 'network-storage-modal',
 				trapFocus: true,
 				canCancel: [],
-				scroll: "keep",
-				animation: "zoom-in",
+				scroll: 'keep',
+				animation: 'zoom-in',
 			})
-		}
+		},
 	},
 }
 </script>
