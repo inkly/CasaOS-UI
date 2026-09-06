@@ -25,7 +25,8 @@
 			<!-- Header End -->
 			<!-- Chart Start -->
 			<div class="chart-container">
-				<vue-apex-charts ref="chart" :options="chartOptions" :series="networks[networkId]" height="130"
+				<!-- apexcharts 4 rejects render() with no series: wait for the first sample. -->
+				<vue-apex-charts v-if="networks[networkId]" :options="chartOptions" :series="networks[networkId]" height="130"
 					type="area" />
 			</div>
 			<!-- Chart End -->
@@ -213,7 +214,8 @@ export default {
 				this.networks[index][1].cacheTime = el.time
 			})
 			this.networkId = this.networkId > this.networks.length - 1 ? 0 : this.networkId
-			this.$refs.chart?.updateSeries(this.networks[this.networkId])
+			// Vue 3 sees the pushes above; vue3-apexcharts watches the series prop deep
+			// and redraws, so the updateSeries() call Vue 2 needed is gone.
 			if (this.networks) {
 				const upSpeed = this.networks[this.networkId][0].data[this.networks[this.networkId][0].data.length - 1]
 				const downSpeed = this.networks[this.networkId][1].data[this.networks[this.networkId][1].data.length - 1]
