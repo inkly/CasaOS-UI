@@ -298,3 +298,12 @@ button.dropdown-item.is-active {
 .select.is-empty select {
 	color: rgba(var(--bulma-grey-rgb), 0.7);
 }
+
+// Buefy paints a switch's knob var(--bulma-background), which Bulma's dark
+// theme resolves to rgb(36,36,36) - a near-black knob on a near-black track
+// (about 1.5:1). The widget settings pinned it locally; every switch on a
+// dark surface needs the same, and only in dark, so the light theme keeps
+// Bulma's own value untouched.
+html[data-theme="dark"] .switch input[type="checkbox"] + .check::before {
+	background: hsl(0, 0%, 96%);
+}

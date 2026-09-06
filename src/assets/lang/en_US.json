@@ -28,7 +28,7 @@
   "Connect": "Connect",
   "This field is required": "This field is required.",
   "This field must be a valid email": "Please enter a valid email address.",
-  "This field confirmation does not match": "This field confirmation does not match",
+  "This field confirmation does not match": "This field confirmation does not match.",
   "This field must have 2 options": "This field must have 2 options",
   "This field must have more than 5 characters": "This field must have 5 or more characters.",
   "You entered an invalid RFC1123 hostname": "You entered an invalid time. Please use the RFC1123 format.",
