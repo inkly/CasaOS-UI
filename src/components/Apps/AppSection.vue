@@ -30,18 +30,23 @@
 		<!-- Title Bar End -->
 
 		<!-- App List Start -->
+		<!-- vuedraggable 4 renders the list itself through the item slot and
+		     throws without one; the skeletons are not list items, so they get
+		     their own grid while loading. -->
 		<draggable
+			v-if="!isLoading"
 			v-bind="dragOptions"
 			v-model="appList"
 			:draggable="draggable"
 			class="app-list contextmenu-canvas"
+			item-key="name"
 			tag="div"
 			@end="onSortEnd"
 			@start="drag = true"
 		>
 			<!-- App Icon Card Start -->
-			<template v-if="!isLoading">
-				<div v-for="item in appList" :id="'app-' + item.name" :key="'app-' + item.name" class="handle">
+			<template #item="{ element: item }">
+				<div :id="'app-' + item.name" class="handle">
 					<app-card
 						:item="item"
 						@configApp="showConfigPanel"
@@ -50,13 +55,13 @@
 					></app-card>
 				</div>
 			</template>
-			<template v-else>
-				<div v-for="index in skCount" :id="'app-' + index" :key="'app-' + index" class="handle">
-					<app-card-skeleton :index="index"></app-card-skeleton>
-				</div>
-			</template>
 			<!-- App Icon Card End -->
 		</draggable>
+		<div v-else class="app-list contextmenu-canvas">
+			<div v-for="index in skCount" :id="'app-' + index" :key="'app-' + index" class="handle">
+				<app-card-skeleton :index="index"></app-card-skeleton>
+			</div>
+		</div>
 		<!-- App List End -->
 
 		<template v-if="oldAppList.length > 0">
