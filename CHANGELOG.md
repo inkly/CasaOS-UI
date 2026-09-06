@@ -2,7 +2,9 @@
 
 All notable changes to CasaOS UI are documented here.
 
-## [Unreleased]
+## [0.4.40] - 2026-09-06
+
+The contact bar and the app installer point at this distribution, and the news feed from the upstream blog is gone.
 
 ### Removed
 
