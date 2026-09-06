@@ -12,11 +12,8 @@ importers:
         specifier: ^5.0.5
         version: 5.1.0
       '@icewhale/casaos-appmanagement-openapi':
-        specifier: latest
+        specifier: 0.4.17-alpha1
         version: 0.4.17-alpha1
-      '@icewhale/casaos-openapi':
-        specifier: latest
-        version: 0.4.17-alpha1-a6ff39e
       '@kangc/v-md-editor':
         specifier: ^2.3.18
         version: 2.3.18(@vue/compiler-sfc@3.5.42)(vue@3.5.42(typescript@5.7.2))
@@ -1240,9 +1237,6 @@ packages:
 
   '@icewhale/casaos-appmanagement-openapi@0.4.17-alpha1':
     resolution: {integrity: sha512-j2P9820B5DGGIyno/p0l65jeOqoVsmiKKCnGOUxoybuPunSgeYtYyotILnmsE+vgSLi+JQibQ+yvtBW1mrI7VQ==}
-
-  '@icewhale/casaos-openapi@0.4.17-alpha1-a6ff39e':
-    resolution: {integrity: sha512-PdnCNgTAuC+EXhPSBP9fLToBI7bt+qO529Fn4O8JOc6m4lipHp+dzoR8VdMXCe7rZv8MYFiEviWqeTTmJcOgRg==}
 
   '@intlify/core-base@9.14.5':
     resolution: {integrity: sha512-5ah5FqZG4pOoHjkvs8mjtv+gPKYU0zCISaYNjBNNqYiaITxW8ZtVih3GS/oTOqN8d9/mDLyrjD46GBApNxmlsA==}
@@ -9479,12 +9473,6 @@ snapshots:
   '@humanwhocodes/object-schema@2.0.3': {}
 
   '@icewhale/casaos-appmanagement-openapi@0.4.17-alpha1':
-    dependencies:
-      axios: 1.7.8
-    transitivePeerDependencies:
-      - debug
-
-  '@icewhale/casaos-openapi@0.4.17-alpha1-a6ff39e':
     dependencies:
       axios: 1.7.8
     transitivePeerDependencies:

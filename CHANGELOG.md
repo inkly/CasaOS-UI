@@ -2,6 +2,24 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [Unreleased]
+
+The dashboard no longer takes an npm package from IceWhale on trust.
+
+### Removed
+
+- The `@icewhale/casaos-openapi` dependency, which had no import site
+  anywhere in the tree.
+
+### Changed
+
+- `@icewhale/casaos-appmanagement-openapi` is pinned to `0.4.17-alpha1`
+  instead of `latest`, and the new-language build workflow installs with
+  `--frozen-lockfile` like CI and release do. The bare `pnpm install` was
+  the one place a move of IceWhale's `latest` tag could have changed what
+  the dashboard was built against; IceWhale has since published 1.2.2
+  prereleases of that SDK.
+
 ## [0.4.42] - 2026-09-06
 
 ### Fixed
