@@ -2,7 +2,9 @@
 
 All notable changes to CasaOS UI are documented here.
 
-## [Unreleased]
+## [0.4.41] - 2026-09-06
+
+A disk without SMART is no longer shown as damaged, and a machine without sensors shows no CPU wattage or temperature.
 
 ### Fixed
 
