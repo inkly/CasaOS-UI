@@ -1,4 +1,5 @@
 // @vitest-environment happy-dom
+import { readFileSync } from 'node:fs'
 import Buefy from 'buefy'
 import { flushPromises, mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
@@ -67,6 +68,13 @@ describe('twoFactorPanel', () => {
 		// override targets, and the square size attributes it lets through.
 		const img = wrapper.find('img')
 		expect(img.classes()).toContain('qr')
+		// The class alone proves nothing: the rule behind it is the whole fix.
+		// Bulma caps a .navbar-item image at 1.75rem and the panel is rendered in
+		// the top bar's dropdown, so without max-height: none the QR comes back as
+		// a 192x28 band. happy-dom applies no stylesheet, so the rule is read as text
+		// (from the project root: import.meta.url is not a file URL under happy-dom).
+		const style = readFileSync('src/components/account/TwoFactorPanel.vue', 'utf8')
+		expect(style).toMatch(/\.qr\s*\{[^}]*max-height:\s*none/)
 		expect(img.attributes('width')).toBe('192')
 		expect(img.attributes('height')).toBe('192')
 		wrapper.unmount()
