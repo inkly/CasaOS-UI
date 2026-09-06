@@ -8,7 +8,7 @@
  *
  * Copyright (c) 2022 by IceWhale, All Rights Reserved.
  */
-import { api } from './service.js'
+import { api, instance } from './service.js'
 
 const PREFIX = '/container'
 const PREFIX2 = '/v2/app_management/container'
@@ -149,6 +149,25 @@ const container = {
 	// rebuild app
 	archive(id) {
 		return api.put(`${PREFIX}/archive/${id}`)
+	},
+
+	// v2:: read the .env file of an app, as raw text ('' when there is none).
+	// Bypasses `api`, whose get() takes no config: the default transform would
+	// JSON-parse a body such as `123`.
+	getComposeEnv(id) {
+		return instance.get(`${PREFIX2COMPOSE}/${id}/env`, {
+			responseType: 'text',
+			transformResponse: [d => d],
+		})
+	},
+
+	// v2:: replace the .env file of an app with `text`; '' deletes it. Sent as
+	// text/plain: under the instance's JSON default, '' would go out as `""`.
+	applyComposeEnv(id, text, dryRun) {
+		return instance.put(`${PREFIX2COMPOSE}/${id}/env`, text, {
+			params: { dry_run: dryRun },
+			headers: { 'Content-Type': 'text/plain' },
+		})
 	},
 }
 
