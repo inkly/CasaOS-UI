@@ -2,6 +2,16 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [Unreleased]
+
+### Fixed
+
+- The QR code on the two-factor enrolment screen rendered as an unscannable
+  192x28 band. The account panel is mounted inside the top bar's dropdown, so
+  Bulma's `.navbar-item img { max-height: 1.75rem }` clamped the image height
+  while `width="192"` held the width: the QR is now capped-free and square, and
+  it is drawn with the 4-module quiet zone the QR spec asks for.
+
 ## [0.4.41] - 2026-09-06
 
 A disk without SMART is no longer shown as damaged, and a machine without sensors shows no CPU wattage or temperature.

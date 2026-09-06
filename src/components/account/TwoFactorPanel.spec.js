@@ -51,6 +51,27 @@ describe('twoFactorPanel', () => {
 		wrapper.unmount()
 	})
 
+	it('renders the QR square, at its natural size, with a full quiet zone', async () => {
+		const { toDataURL } = await import('qrcode')
+		const setup2FA = () => Promise.resolve({ data: { success: 200, data: { secret: 'ABC', otpauth_url: 'otpauth://totp/CasaOS:root?secret=ABC' } } })
+		const wrapper = mountPanel(false, { setup2FA })
+		await fill(wrapper, 'secret')
+
+		// margin 4 is the quiet zone the QR spec asks for; toDataURL still paints
+		// it opaque white, so the code survives the dark panel behind it.
+		expect(toDataURL).toHaveBeenCalledWith('otpauth://totp/CasaOS:root?secret=ABC', { margin: 4, width: 192 })
+
+		// happy-dom does no layout and never compiles the scoped SCSS, so it cannot
+		// show the 192x28 band Bulma's `.navbar-item img { max-height: 1.75rem }`
+		// produced. What it can hold is the hooks the fix needs: the .qr class the
+		// override targets, and the square size attributes it lets through.
+		const img = wrapper.find('img')
+		expect(img.classes()).toContain('qr')
+		expect(img.attributes('width')).toBe('192')
+		expect(img.attributes('height')).toBe('192')
+		wrapper.unmount()
+	})
+
 	it('keeps the QR code on screen when the code is wrong', async () => {
 		const setup2FA = () => Promise.resolve({ data: { success: 200, data: { secret: 'ABC', otpauth_url: 'otpauth://x' } } })
 		const wrapper = mountPanel(false, { setup2FA, enable2FA: reject(10015, 'wrong code') })

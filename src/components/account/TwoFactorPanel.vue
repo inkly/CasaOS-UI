@@ -15,7 +15,7 @@
 				{{ $t('Scan this QR code with your authenticator app, then enter the 6-digit code it shows.') }}
 			</p>
 			<div class="has-text-centered mb-3">
-				<img :src="qr" :alt="$t('QR code for your authenticator app')" width="192" height="192">
+				<img :src="qr" :alt="$t('QR code for your authenticator app')" class="qr" width="192" height="192">
 			</div>
 			<p class="has-text-emphasis-04 has-text-gray-font mb-1">
 				{{ $t("Can't scan? Enter this key instead") }}
@@ -102,7 +102,7 @@ export default {
 				const res = await this.$api.users.setup2FA({ password: this.password })
 				// Lazy: the QR encoder is only needed on this screen.
 				const { toDataURL } = await import('qrcode')
-				this.qr = await toDataURL(res.data.data.otpauth_url, { margin: 1, width: 192 })
+				this.qr = await toDataURL(res.data.data.otpauth_url, { margin: 4, width: 192 })
 				this.secret = res.data.data.secret
 				this.password = ''
 				this.error = ''
@@ -171,6 +171,15 @@ export default {
 // The account panel sits in the top bar's dropdown, whose items are nowrap.
 .two-factor {
 	white-space: normal;
+}
+
+// Bulma caps any image inside a .navbar-item at 1.75rem, and the account panel
+// is rendered in the top bar's dropdown: that squashed the QR to a 192x28 band.
+// max-height: none lets width="192" and Bulma's height: auto keep it 1:1 square;
+// max-width: 100% still shrinks it, squarely, on a narrow window.
+.qr {
+	max-height: none;
+	image-rendering: pixelated;
 }
 
 .secret {
