@@ -10,6 +10,7 @@ import i18n from '@/plugins/i18n'
 import api from '@/service/api.js'
 import openAPI from '@/service/index.js'
 import socketPlugin from '@/plugins/socket.js'
+import dropdownAppendToBody from '@/plugins/dropdown-append-to-body.js'
 import createEventBus from '@/events/eventBus.js'
 import messageBus from '@/events/index.js'
 // vee-validate 4 throws `No such validator '<name>' exists.` for a rule nobody
@@ -47,6 +48,7 @@ const socket = io({
 const app = createApp(App)
 
 app.use(Buefy)
+app.use(dropdownAppendToBody)
 app.use(VueFullscreen)
 app.use(VAnimateCss)
 app.use(socketPlugin, socket)
