@@ -262,6 +262,19 @@ button.dropdown-item.is-active {
 }
 
 
+// Swiper 14 draws its arrows the full navigation size, 4px from the edge;
+// Swiper 5, which these carousels were laid out against, drew them 27/44 of
+// it, 10px in. Pin both so the swap does not move the arrows. Swiper's own
+// stylesheet arrives in a later chunk, so the pin needs the extra class to
+// outrank it.
+.swiper {
+	--swiper-navigation-sides-offset: 10px;
+
+	.swiper-button-next, .swiper-button-prev {
+		width: calc(var(--swiper-navigation-size) / 44 * 27);
+	}
+}
+
 .swiper-button-next, .swiper-button-prev{
 	transition: opacity 0.3s;
 	&.swiper-button-disabled{
