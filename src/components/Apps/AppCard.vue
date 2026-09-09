@@ -46,10 +46,8 @@
 						</b-loading>
 					</b-button>
 
-					<!-- container only: this endpoint takes a raw container ID and knows nothing
-						of compose, so running it on a container of a compose app would leave the
-						project's own state behind -->
-					<b-button v-if="isContainerApp" :loading="isRecreating" expanded type="is-text"
+					<!-- container only, and only one that belongs to no compose project: see canRecreate -->
+					<b-button v-if="canRecreate" :loading="isRecreating" expanded type="is-text"
 						@click="recreateConfirm">
 						{{
 							$t('Pull image and recreate')
@@ -155,6 +153,12 @@ import business_LinkApp from '@/mixins/app/Business_LinkApp'
 import tipEditorModal from '@/components/Apps/TipEditorModal.vue'
 import commonI18n, { ice_i18n } from '@/mixins/base/common-i18n'
 
+// Query parameter carrying the ID of the container a recreate was asked for. The
+// backend copies every query parameter of the request into the properties of the
+// events it publishes for it, so this comes back on each app:update-* of that
+// recreate and on no other event.
+const RECREATE_TAG = 'recreate:container:id'
+
 export default {
 	name: 'AppCard',
 	components: {
@@ -239,9 +243,19 @@ export default {
 		isLinkApp() {
 			return this.item.app_type === 'LinkApp'
 		},
-		// a container card is keyed by container ID, while the recreate endpoint keys
-		// its events on the container's Docker name -- which is what the grid put in
-		// the title of an imported container
+		// The recreate endpoint takes a raw container ID and knows nothing of compose:
+		// run on a container of a compose app it would clone that container out of the
+		// project and leave the project's own state behind. app_type does not say that
+		// much on its own -- the backend calls `container` anything without a casaos
+		// label that its compose list did not claim, and that list silently skips a
+		// project whose config file it cannot read (a Portainer or Dockge stack whose
+		// config_files path this host cannot reach). The project label the container
+		// itself carries is what says otherwise.
+		canRecreate() {
+			return this.isContainerApp && !this.item.compose_project
+		},
+		// a container card is keyed by container ID, while the grid puts the Docker
+		// name of an imported container in its title -- the name to show a human
 		containerName() {
 			return this.i18n(this.item.title) || this.item.name
 		},
@@ -453,7 +467,7 @@ export default {
 			this.$refs.dro.isActive = false
 			this.$buefy.dialog.confirm({
 				title: this.$t('Attention'),
-				message: this.$t('{name} will be stopped and replaced by a new container running the newest image. Volumes and their data are kept. Its settings are copied from the container as it runs now, and CasaOS keeps no copy of them: this container was imported, not installed by CasaOS. If no newer image is published, nothing is touched.', { name: this.containerName }),
+				message: this.$t('{name} will be stopped and replaced by a new container running the newest image. Its volumes and bind mounts are carried over with the data in them; anything written elsewhere inside the container is lost with it. Its settings are copied from the container as it runs now, and CasaOS keeps no copy of them: this container was imported, not installed by CasaOS. If no newer image is published, nothing is touched.', { name: this.containerName }),
 				type: 'is-dark',
 				confirmText: this.$t('Recreate container'),
 				cancelText: this.$t('Cancel'),
@@ -466,8 +480,12 @@ export default {
 		recreateContainer() {
 			this.isRecreating = true
 			// force stays off: without a newer image there is nothing to gain from
-			// destroying a container whose definition exists nowhere else
-			this.$openAPI.appManagement.container.recreateContainerByID(this.item.name, true).catch((err) => {
+			// destroying a container whose definition exists nowhere else.
+			// Every query parameter of this request comes back as a property on the
+			// app:update-* events it publishes, which is the only way to tell our own
+			// recreate from anything else updating at the same time (see recreateTag).
+			const params = { [RECREATE_TAG]: this.item.name }
+			this.$openAPI.appManagement.container.recreateContainerByID(this.item.name, true, undefined, { params }).catch((err) => {
 				this.isRecreating = false
 				this.$buefy.toast.open({
 					message: err.response?.data?.message || this.$t('Unable to update at the moment!'),
@@ -477,10 +495,14 @@ export default {
 			})
 		},
 
-		// the recreate publishes the same app:update-* events as a compose update, told
-		// apart only by the name they carry
+		// The recreate publishes the same app:update-* events as a compose update, so
+		// they have to be told apart by a property. Not app:name: the backend fills it
+		// from the container's `name` label when there is one, and Config.Labels carries
+		// what the IMAGE declared too -- every Red Hat UBI-derived image sets `name`, and
+		// the event then names the image, not the container. The tag we sent with the
+		// request is ours alone.
 		isRecreateEvent(data) {
-			return this.isRecreating && data.Properties['app:name'] === this.containerName
+			return this.isRecreating && data.Properties[RECREATE_TAG] === this.item.name
 		},
 
 		// What a finished recreate proves, and nothing further. app:updated is set only

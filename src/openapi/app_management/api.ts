@@ -1027,6 +1027,12 @@ export interface WebAppGridItem {
      */
     'app_type': WebAppGridItemAppTypeEnum;
     /**
+     * Name of the compose project this container belongs to, absent when it belongs to none.  Only ever set on an `app_type: container` item. Such an item is not proof that no stack owns the container: a project whose config file cannot be loaded is missing from the compose list, and its containers are reported one by one like any adopted container. This is what the container itself says (`com.docker.compose.project`). 
+     * @type {string}
+     * @memberof WebAppGridItem
+     */
+    'compose_project'?: string;
+    /**
      * 
      * @type {string}
      * @memberof WebAppGridItem

@@ -119,6 +119,14 @@ describe('imported container', () => {
 		return labels().some(l => l.includes('Pull image and recreate'))
 	}
 
+	// the card's menu and the confirmation dialog are both appended to the body
+	function click(label) {
+		document.body.querySelectorAll('button').forEach((b) => {
+			if (b.textContent.trim() === label)
+				b.click()
+		})
+	}
+
 	async function recreateSpy(item) {
 		const recreateContainerByID = vi.fn(() => Promise.resolve({}))
 		const wrapper = await card(item, {
@@ -143,6 +151,17 @@ describe('imported container', () => {
 		}
 	})
 
+	it('does not offer it for a container a compose project owns', async () => {
+		// app_type is 'container' for anything the backend's compose list did not
+		// claim, and that list skips a project whose config file it cannot read -- a
+		// Portainer or Dockge stack lands here with app_type 'container'. Recreating
+		// one of its containers clones it out of the project and leaves the project's
+		// state behind, so the project label the container carries has to win.
+		const wrapper = await card({ ...imported, compose_project: 'immich' })
+		expect(offersRecreate()).toBe(false)
+		wrapper.unmount()
+	})
+
 	it('offers an imported container nothing it cannot do', async () => {
 		// Open, Uninstall and the start/stop pair all route through code that only
 		// handles v1 and v2 apps
@@ -151,43 +170,66 @@ describe('imported container', () => {
 		wrapper.unmount()
 	})
 
-	it('says what a recreate destroys before doing it', async () => {
+	it('recreates nothing until the dialog is confirmed', async () => {
 		const { wrapper, recreateContainerByID } = await recreateSpy(imported)
 
-		document.body.querySelectorAll('button').forEach((b) => {
-			if (b.textContent.includes('Pull image and recreate'))
-				b.click()
-		})
+		click('Pull image and recreate')
 		await nextTick()
-
-		const dialog = document.body.textContent
-		expect(dialog).toContain('plex')
-		expect(dialog).toContain('Volumes and their data are kept')
 		expect(recreateContainerByID).not.toHaveBeenCalled()
 
-		document.body.querySelectorAll('button').forEach((b) => {
-			if (b.textContent.trim() === 'Recreate container')
-				b.click()
-		})
+		click('Cancel')
+		await nextTick()
+		expect(recreateContainerByID).not.toHaveBeenCalled()
+		expect(wrapper.vm.isRecreating).toBe(false)
+		wrapper.unmount()
+	})
+
+	it('asks for a pull, no force, and a tag of its own', async () => {
+		const { wrapper, recreateContainerByID } = await recreateSpy(imported)
+
+		click('Pull image and recreate')
+		await nextTick()
+		click('Recreate container')
 		await nextTick()
 
 		// pull on, force off: without a newer image there is nothing to gain from
-		// destroying a container whose definition exists nowhere else
-		expect(recreateContainerByID).toHaveBeenCalledWith('ab12cd34ef56', true)
+		// destroying a container whose definition exists nowhere else. The tag rides
+		// along as a query parameter and comes back on this recreate's events.
+		expect(recreateContainerByID).toHaveBeenCalledWith('ab12cd34ef56', true, undefined, {
+			params: { 'recreate:container:id': 'ab12cd34ef56' },
+		})
 		expect(wrapper.vm.isRecreating).toBe(true)
 		wrapper.unmount()
 	})
 
-	it('follows the recreate by the name the events carry, not the card key', async () => {
+	it('words the confirmation as both halves of what a recreate does', async () => {
+		// A copy check, not a guarantee: what the clone keeps is decided backend-side.
+		// It is here so the dialog cannot quietly go back to promising only the good
+		// half -- the writable layer does not survive, and the sentence has to say so.
+		const { wrapper } = await recreateSpy(imported)
+
+		click('Pull image and recreate')
+		await nextTick()
+
+		const dialog = document.body.textContent
+		expect(dialog).toContain('volumes and bind mounts are carried over')
+		expect(dialog).toContain('anything written elsewhere inside the container is lost')
+		wrapper.unmount()
+	})
+
+	it('follows the recreate by the tag it sent, not by the name the events carry', async () => {
 		const wrapper = await card(imported, { $EventBus: { $emit: () => {} } })
 		const updateEnd = wrapper.vm.$options.sockets['app:update-end']
 		wrapper.vm.isRecreating = true
 
-		// the container ID keys the card, but the event names the container
-		updateEnd.call(wrapper.vm, { Properties: { 'app:name': 'ab12cd34ef56' } })
+		// another app finishing an update is not our recreate
+		updateEnd.call(wrapper.vm, { Properties: { 'app:name': 'plex', 'recreate:container:id': '99ffee00' } })
 		expect(wrapper.vm.isRecreating).toBe(true)
 
-		updateEnd.call(wrapper.vm, { Properties: { 'app:name': 'plex' } })
+		// app:name is the container's `name` LABEL when it has one, and Config.Labels
+		// carries what the image declared: for any UBI-derived image the event names
+		// the image and never the container. The tag still identifies the recreate.
+		updateEnd.call(wrapper.vm, { Properties: { 'app:name': 'ubi9/nginx-120', 'recreate:container:id': 'ab12cd34ef56' } })
 		expect(wrapper.vm.isRecreating).toBe(false)
 		// the recreate leaves a new container with a new ID behind, so the grid the
 		// card came from has to be read again
@@ -200,7 +242,7 @@ describe('imported container', () => {
 		wrapper.vm.isRecreating = true
 
 		wrapper.vm.$options.sockets['app:update-error'].call(wrapper.vm, {
-			Properties: { 'app:name': 'plex', 'message': 'no space left on device' },
+			Properties: { 'recreate:container:id': 'ab12cd34ef56', 'message': 'no space left on device' },
 		})
 		expect(wrapper.vm.isRecreating).toBe(false)
 		wrapper.unmount()
@@ -283,7 +325,7 @@ describe('what a finished recreate may claim', () => {
 		const wrapper = await card(imported, { $buefy: { toast: { open } }, $EventBus: { $emit: () => {} } })
 		wrapper.vm.isRecreating = true
 		wrapper.vm.$options.sockets['app:update-end'].call(wrapper.vm, {
-			Properties: { 'app:name': 'plex', ...properties },
+			Properties: { 'recreate:container:id': 'ab12cd34ef56', ...properties },
 		})
 		return { wrapper, open }
 	}
