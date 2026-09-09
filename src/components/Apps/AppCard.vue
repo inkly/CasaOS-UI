@@ -483,6 +483,33 @@ export default {
 			return this.isRecreating && data.Properties['app:name'] === this.containerName
 		},
 
+		// What a finished recreate proves, and nothing further. app:updated is set only
+		// when the container was really replaced; docker:image:updated only when a pull
+		// got as far as an answer. A pull that failed leaves both absent, and silence
+		// about a newer image is not evidence that there is none -- claiming there is
+		// none is how a host stops hearing about updates. Null: say nothing, because
+		// app:update-error is already carrying the reason.
+		recreateOutcome(properties) {
+			if (properties['app:updated'] === 'true') {
+				return {
+					message: this.$t('{name} now runs the image that was just pulled.', { name: this.containerName }),
+					type: 'is-success',
+				}
+			}
+			if (properties['docker:image:updated'] === 'false') {
+				return {
+					message: this.$t('{name} already runs the newest image, so it was left as it is.', { name: this.containerName }),
+					type: 'is-success',
+				}
+			}
+			if (properties['docker:image:updated'] === 'true')
+				return null
+			return {
+				message: this.$t('Could not check whether a newer image exists for {name}. It keeps the image it has.', { name: this.containerName }),
+				type: 'is-warning',
+			}
+		},
+
 		/**
 		 * @description: Emit the event that the app has been updated
 		 * @return {*} void
@@ -822,26 +849,22 @@ export default {
 				// a recreated container is a new container with a new ID, and the card
 				// still holds the old one
 				this.updateState()
-				this.$buefy.toast.open({
-					message: data.Properties['docker:image:updated'] === 'true'
-						? this.$t('{name} now runs the image that was just pulled.', { name: this.containerName })
-						: this.$t('No newer image was pulled for {name}, so it was left as it is.', { name: this.containerName }),
-					type: 'is-success',
-					duration: 5000,
-				})
+				const outcome = this.recreateOutcome(data.Properties)
+				if (outcome)
+					this.$buefy.toast.open({ ...outcome, duration: 5000 })
 				return
 			}
 			if (data.Properties['app:name'] !== this.item.name)
 				return
-			if (data.Properties['docker:image:updated'] === 'true') {
+			if (data.Properties['app:updated'] === 'true') {
 				// the section reloads the grid on this one, and this card with it
 				return
 			}
 			this.isUpdating = false
-			// An App Store update publishes update-end whether it worked or failed, and
-			// carries nothing that says which: only the v1 recreate path ever reports
-			// docker:image:updated. Without that, there is no success here to claim --
-			// a failure arrives on its own event, app:update-error.
+			// An App Store update publishes update-end whether it worked or failed:
+			// app:updated is the only thing that tells the two apart, and a failure
+			// also arrives on its own event, app:update-error. docker:image:updated
+			// comes from the v1 recreate path alone.
 			if (data.Properties['docker:image:updated'] === 'false') {
 				this.$buefy.toast.open({
 					message: this.$t(`{appName} is the latest version!`, { appName: this.item.name }),

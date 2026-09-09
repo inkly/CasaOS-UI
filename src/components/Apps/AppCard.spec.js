@@ -12,7 +12,14 @@ import cTooltip from '@/components/basicComponents/tooltip/tooltip.vue'
 // uninterpolated, which would hide whether the backend's reason reaches the toast.
 // It maps to itself, exactly as en_US.json does.
 vi.mock('@/assets/lang', () => ({
-	default: { en_us: { 'Updating {name} failed: {reason}': 'Updating {name} failed: {reason}' } },
+	default: {
+		en_us: {
+			'Updating {name} failed: {reason}': 'Updating {name} failed: {reason}',
+			'{name} now runs the image that was just pulled.': '{name} now runs the image that was just pulled.',
+			'{name} already runs the newest image, so it was left as it is.': '{name} already runs the newest image, so it was left as it is.',
+			'Could not check whether a newer image exists for {name}. It keeps the image it has.': 'Could not check whether a newer image exists for {name}. It keeps the image it has.',
+		},
+	},
 }))
 
 async function card(item, mocks = {}) {
@@ -253,6 +260,69 @@ describe('app store update outcome', () => {
 
 		expect(open).toHaveBeenCalledTimes(1)
 		expect(open.mock.calls[0][0].type).toBe('is-success')
+		wrapper.unmount()
+	})
+
+	it('leaves the word on a successful update to the section that reloads the grid', async () => {
+		// app:updated is the only thing a compose update ends with, and the card is
+		// about to be replaced by the reloaded one: two toasts for one update
+		const { wrapper, open, fire } = await updating()
+
+		fire('app:update-end', { 'app:name': 'syncthing', 'app:updated': 'true' })
+
+		expect(open).not.toHaveBeenCalled()
+		wrapper.unmount()
+	})
+})
+
+describe('what a finished recreate may claim', () => {
+	const imported = { name: 'ab12cd34ef56', app_type: 'container', title: { en_us: 'plex' } }
+
+	async function recreated(properties) {
+		const open = vi.fn()
+		const wrapper = await card(imported, { $buefy: { toast: { open } }, $EventBus: { $emit: () => {} } })
+		wrapper.vm.isRecreating = true
+		wrapper.vm.$options.sockets['app:update-end'].call(wrapper.vm, {
+			Properties: { 'app:name': 'plex', ...properties },
+		})
+		return { wrapper, open }
+	}
+
+	it('says the container runs the new image only when it was really replaced', async () => {
+		const { wrapper, open } = await recreated({ 'app:updated': 'true', 'docker:image:updated': 'true' })
+
+		expect(open).toHaveBeenCalledTimes(1)
+		expect(open.mock.calls[0][0].message).toBe('plex now runs the image that was just pulled.')
+		expect(open.mock.calls[0][0].type).toBe('is-success')
+		wrapper.unmount()
+	})
+
+	it('says nothing newer exists only when the check said so', async () => {
+		const { wrapper, open } = await recreated({ 'docker:image:updated': 'false' })
+
+		expect(open).toHaveBeenCalledTimes(1)
+		expect(open.mock.calls[0][0].message).toBe('plex already runs the newest image, so it was left as it is.')
+		wrapper.unmount()
+	})
+
+	it('does not read a failed pull as proof that nothing newer exists', async () => {
+		// the pull error is swallowed backend-side and the recreate is skipped, so the
+		// event carries neither property: an unreachable registry arriving as green
+		// "nothing newer" is how a host stops hearing about updates
+		const { wrapper, open } = await recreated({})
+
+		expect(open).toHaveBeenCalledTimes(1)
+		expect(open.mock.calls[0][0].message).toBe('Could not check whether a newer image exists for plex. It keeps the image it has.')
+		expect(open.mock.calls[0][0].type).toBe('is-warning')
+		wrapper.unmount()
+	})
+
+	it('claims nothing when the image was pulled but the container was not replaced', async () => {
+		// app:update-error carries the reason; a success toast beside it is the lie
+		const { wrapper, open } = await recreated({ 'docker:image:updated': 'true' })
+
+		expect(open).not.toHaveBeenCalled()
+		expect(wrapper.vm.isRecreating).toBe(false)
 		wrapper.unmount()
 	})
 })

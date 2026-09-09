@@ -583,7 +583,12 @@ export default {
 		 * @return {void}
 		 */
 		'app:update-end': function (data) {
-			if (data.Properties['docker:image:updated'] === 'true') {
+			// app:updated is set only when the update replaced what the app runs, by
+			// either update path. It is what a compose update has instead of
+			// docker:image:updated, which it never carries -- and which says what a
+			// pull found rather than what ended up installed, so a pull that landed
+			// on a recreate that then failed used to reload the grid and call it done.
+			if (data.Properties['app:updated'] === 'true') {
 				// business :: Tagging of new app / scrollIntoView
 				this.addIdToSessionStorage(data.Properties['app:name'])
 
