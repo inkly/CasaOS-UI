@@ -2723,10 +2723,11 @@ export const ComposeMethodsApiAxiosParamCreator = function (configuration?: Conf
          * @summary Get the logs of a compose app
          * @param {string} id App ID of a compose app (equivalent to compose project name)
          * @param {number} [lines] Number of lines to show from the end of the logs for each compose app.  - show all logs if &#x60;-1&#x60; 
+         * @param {string} [service] Name of the compose service to show the logs of.  - show the logs of every service if omitted 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        composeAppLogs: async (id: string, lines?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        composeAppLogs: async (id: string, lines?: number, service?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('composeAppLogs', 'id', id)
             const localVarPath = `/compose/{id}/logs`
@@ -2747,6 +2748,10 @@ export const ComposeMethodsApiAxiosParamCreator = function (configuration?: Conf
 
             if (lines !== undefined) {
                 localVarQueryParameter['lines'] = lines;
+            }
+
+            if (service !== undefined) {
+                localVarQueryParameter['service'] = service;
             }
 
 
@@ -3097,11 +3102,12 @@ export const ComposeMethodsApiFp = function(configuration?: Configuration) {
          * @summary Get the logs of a compose app
          * @param {string} id App ID of a compose app (equivalent to compose project name)
          * @param {number} [lines] Number of lines to show from the end of the logs for each compose app.  - show all logs if &#x60;-1&#x60; 
+         * @param {string} [service] Name of the compose service to show the logs of.  - show the logs of every service if omitted 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async composeAppLogs(id: string, lines?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject13>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.composeAppLogs(id, lines, options);
+        async composeAppLogs(id: string, lines?: number, service?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject13>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.composeAppLogs(id, lines, service, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ComposeMethodsApi.composeAppLogs']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -3260,11 +3266,12 @@ export const ComposeMethodsApiFactory = function (configuration?: Configuration,
          * @summary Get the logs of a compose app
          * @param {string} id App ID of a compose app (equivalent to compose project name)
          * @param {number} [lines] Number of lines to show from the end of the logs for each compose app.  - show all logs if &#x60;-1&#x60; 
+         * @param {string} [service] Name of the compose service to show the logs of.  - show the logs of every service if omitted 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        composeAppLogs(id: string, lines?: number, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject13> {
-            return localVarFp.composeAppLogs(id, lines, options).then((request) => request(axios, basePath));
+        composeAppLogs(id: string, lines?: number, service?: string, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject13> {
+            return localVarFp.composeAppLogs(id, lines, service, options).then((request) => request(axios, basePath));
         },
         /**
          * Install a compose app from the Docker Compose YAML content provided in the request.  > - The request has to be `content-type: application/yaml` and the body has to follow [Compose Specification](https://compose-spec.io). > - When `dry_run=true` is provided in the query string, it only validates the YAML content. 
@@ -3412,12 +3419,13 @@ export class ComposeMethodsApi extends BaseAPI {
      * @summary Get the logs of a compose app
      * @param {string} id App ID of a compose app (equivalent to compose project name)
      * @param {number} [lines] Number of lines to show from the end of the logs for each compose app.  - show all logs if &#x60;-1&#x60; 
+     * @param {string} [service] Name of the compose service to show the logs of.  - show the logs of every service if omitted 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ComposeMethodsApi
      */
-    public composeAppLogs(id: string, lines?: number, options?: RawAxiosRequestConfig) {
-        return ComposeMethodsApiFp(this.configuration).composeAppLogs(id, lines, options).then((request) => request(this.axios, this.basePath));
+    public composeAppLogs(id: string, lines?: number, service?: string, options?: RawAxiosRequestConfig) {
+        return ComposeMethodsApiFp(this.configuration).composeAppLogs(id, lines, service, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -32,6 +32,7 @@ const CALLS = [
 	[() => openAPI.appManagement.compose.checkComposeAppHealthByID('a'), 'GET', '/v2/app_management/compose/a/healthcheck'],
 	[() => openAPI.appManagement.compose.composeAppContainers('a'), 'GET', '/v2/app_management/compose/a/containers'],
 	[() => openAPI.appManagement.compose.composeAppLogs('a', 100), 'GET', '/v2/app_management/compose/a/logs?lines=100'],
+	[() => openAPI.appManagement.compose.composeAppLogs('a', 100, 'web'), 'GET', '/v2/app_management/compose/a/logs?lines=100&service=web'],
 	[() => openAPI.appManagement.compose.installComposeApp('yaml'), 'POST', '/v2/app_management/compose'],
 	[() => openAPI.appManagement.compose.myComposeApp('a'), 'GET', '/v2/app_management/compose/a'],
 	[() => openAPI.appManagement.compose.myComposeAppList(), 'GET', '/v2/app_management/compose'],

@@ -81,7 +81,12 @@ export default {
 	},
 	methods: {
 		getLogs() {
-			this.$openAPI.appManagement.compose.composeAppLogs(this.appName, this.lines).then((res) => {
+			// Opened on one service, ask the endpoint for that service only: unnamed, it
+			// answers for the whole stack, and every service would come back interleaved
+			// under this one's title. The app's own console button names the service its
+			// editor has open; when it has none the whole stack is what this panel shows,
+			// which is what the title and the download filename already fall back to.
+			this.$openAPI.appManagement.compose.composeAppLogs(this.appName, this.lines, this.serviceName || undefined).then((res) => {
 				if (res.status == 200) {
 					this.logData = res.data.data
 				}
