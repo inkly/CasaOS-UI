@@ -31,7 +31,9 @@
 						}}
 					</b-button>
 
-					<b-button v-if="isV2App && !item.is_uncontrolled" expanded type="is-text" @click="checkAppVersion(item.name)">
+					<!-- imported apps too: for those the update is a pull of the tags they already
+						name, which is the only kind of update they can have -->
+					<b-button v-if="isV2App" expanded type="is-text" @click="checkAppVersion(item.name)">
 						{{
 							$t('Check then update')
 						}}

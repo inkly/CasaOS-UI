@@ -20,6 +20,9 @@ async function card(item) {
 			provide: { homeShowFiles: () => {}, openAppStore: () => {} },
 			mocks: { $baseIp: 'localhost' },
 		},
+		// the card's menu is rendered with append-to-body, so it lands outside
+		// the wrapper and has to be looked for in the document
+		attachTo: document.body,
 	})
 	// the NEW marker is read from sessionStorage in mounted(), one tick after
 	// the first render
@@ -59,6 +62,27 @@ describe('app card update badge', () => {
 		const wrapper = await card({ update_available: true })
 		expect(badges(wrapper)).toEqual(['NEW'])
 		sessionStorage.removeItem('newAppTag')
+		wrapper.unmount()
+	})
+})
+
+describe('app card update button', () => {
+	function offersUpdate() {
+		return [...document.body.querySelectorAll('button')]
+			.some(b => b.textContent.includes('Check then update'))
+	}
+
+	it('offers the update to an app installed from a store', async () => {
+		const wrapper = await card({ is_uncontrolled: false })
+		expect(offersUpdate()).toBe(true)
+		wrapper.unmount()
+	})
+
+	it('offers it to an imported app too', async () => {
+		// for those the update is a pull of the tags they already name, which is the
+		// only kind of update they can have; before this they had no update path at all
+		const wrapper = await card({ is_uncontrolled: true })
+		expect(offersUpdate()).toBe(true)
 		wrapper.unmount()
 	})
 })
