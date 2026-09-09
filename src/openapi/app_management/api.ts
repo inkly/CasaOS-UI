@@ -480,6 +480,25 @@ export interface GlobalSetting {
     'description'?: string;
 }
 /**
+ * What one check pass found.
+ * @export
+ * @interface ImageUpdateCheckResult
+ */
+export interface ImageUpdateCheckResult {
+    /**
+     * Apps whose registry holds a different image than the copy on disk.
+     * @type {Array<string>}
+     * @memberof ImageUpdateCheckResult
+     */
+    'updatable': Array<string>;
+    /**
+     * Apps no answer could be obtained for, and why. A registry that cannot be reached is not evidence that nothing changed, so these keep the answer they had rather than being reported as up to date. 
+     * @type {{ [key: string]: string; }}
+     * @memberof ImageUpdateCheckResult
+     */
+    'unchecked': { [key: string]: string; };
+}
+/**
  * 
  * @export
  * @interface Info
@@ -544,10 +563,10 @@ export interface InlineObject10 {
     'message'?: string;
     /**
      * 
-     * @type {ComposeAppWithStoreInfo}
+     * @type {ComposeAppValidationErrors}
      * @memberof InlineObject10
      */
-    'data'?: ComposeAppWithStoreInfo;
+    'data'?: ComposeAppValidationErrors;
 }
 /**
  * 
@@ -563,10 +582,10 @@ export interface InlineObject11 {
     'message'?: string;
     /**
      * 
-     * @type {ComposeAppContainers}
+     * @type {ComposeAppWithStoreInfo}
      * @memberof InlineObject11
      */
-    'data'?: ComposeAppContainers;
+    'data'?: ComposeAppWithStoreInfo;
 }
 /**
  * 
@@ -582,10 +601,10 @@ export interface InlineObject12 {
     'message'?: string;
     /**
      * 
-     * @type {string}
+     * @type {ComposeAppContainers}
      * @memberof InlineObject12
      */
-    'data'?: string;
+    'data'?: ComposeAppContainers;
 }
 /**
  * 
@@ -601,8 +620,27 @@ export interface InlineObject13 {
     'message'?: string;
     /**
      * 
-     * @type {Array<WebAppGridItem>}
+     * @type {string}
      * @memberof InlineObject13
+     */
+    'data'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface InlineObject14
+ */
+export interface InlineObject14 {
+    /**
+     * message returned by server side if there is any
+     * @type {string}
+     * @memberof InlineObject14
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {Array<WebAppGridItem>}
+     * @memberof InlineObject14
      */
     'data'?: Array<WebAppGridItem>;
 }
@@ -639,10 +677,10 @@ export interface InlineObject3 {
     'message'?: string;
     /**
      * 
-     * @type {Array<AppStoreMetadata>}
+     * @type {ImageUpdateCheckResult}
      * @memberof InlineObject3
      */
-    'data'?: Array<AppStoreMetadata>;
+    'data'?: ImageUpdateCheckResult;
 }
 /**
  * 
@@ -658,10 +696,10 @@ export interface InlineObject4 {
     'message'?: string;
     /**
      * 
-     * @type {Array<CategoryInfo>}
+     * @type {Array<AppStoreMetadata>}
      * @memberof InlineObject4
      */
-    'data'?: Array<CategoryInfo>;
+    'data'?: Array<AppStoreMetadata>;
 }
 /**
  * 
@@ -677,10 +715,10 @@ export interface InlineObject5 {
     'message'?: string;
     /**
      * 
-     * @type {ComposeAppStoreInfoLists}
+     * @type {Array<CategoryInfo>}
      * @memberof InlineObject5
      */
-    'data'?: ComposeAppStoreInfoLists;
+    'data'?: Array<CategoryInfo>;
 }
 /**
  * 
@@ -696,10 +734,10 @@ export interface InlineObject6 {
     'message'?: string;
     /**
      * 
-     * @type {ComposeAppStoreTag}
+     * @type {ComposeAppStoreInfoLists}
      * @memberof InlineObject6
      */
-    'data'?: ComposeAppStoreTag;
+    'data'?: ComposeAppStoreInfoLists;
 }
 /**
  * 
@@ -715,10 +753,10 @@ export interface InlineObject7 {
     'message'?: string;
     /**
      * 
-     * @type {ComposeAppStoreInfo}
+     * @type {ComposeAppStoreTag}
      * @memberof InlineObject7
      */
-    'data'?: ComposeAppStoreInfo;
+    'data'?: ComposeAppStoreTag;
 }
 /**
  * 
@@ -734,10 +772,10 @@ export interface InlineObject8 {
     'message'?: string;
     /**
      * 
-     * @type {{ [key: string]: ComposeAppWithStoreInfo; }}
+     * @type {ComposeAppStoreInfo}
      * @memberof InlineObject8
      */
-    'data'?: { [key: string]: ComposeAppWithStoreInfo; };
+    'data'?: ComposeAppStoreInfo;
 }
 /**
  * 
@@ -753,10 +791,10 @@ export interface InlineObject9 {
     'message'?: string;
     /**
      * 
-     * @type {ComposeAppValidationErrors}
+     * @type {{ [key: string]: ComposeAppWithStoreInfo; }}
      * @memberof InlineObject9
      */
-    'data'?: ComposeAppValidationErrors;
+    'data'?: { [key: string]: ComposeAppWithStoreInfo; };
 }
 /**
  * 
@@ -897,6 +935,12 @@ export interface VolumeStoreInfo {
  */
 export interface WebAppGridItem {
     /**
+     * Whether something newer than what this app runs is available.  Read from the cache a check pass fills, never computed here: the grid is on the dashboard\'s first paint and must not wait on a registry. Absent means this app has not been checked since the service started. 
+     * @type {boolean}
+     * @memberof WebAppGridItem
+     */
+    'update_available'?: boolean;
+    /**
      * Store app ID of the compose app (unique across all app stores)  > The `store_app_id` might be same as app name most of the time. However app name might change, due to cloning for example. > If app name has changed, there is no way to associate it with the original app in the app store, unless we use the `store_app_id`. 
      * @type {string}
      * @memberof WebAppGridItem
@@ -984,6 +1028,110 @@ export const WebAppGridItemAppTypeEnum = {
 } as const;
 
 export type WebAppGridItemAppTypeEnum = typeof WebAppGridItemAppTypeEnum[keyof typeof WebAppGridItemAppTypeEnum];
+
+
+/**
+ * AppMethodsApi - axios parameter creator
+ * @export
+ */
+export const AppMethodsApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Asks each image\'s registry for the digest its tag points at now and compares it with the digest of the copy on disk. This sees apps that came from no app store, which the store\'s own upgradable list cannot.  One network round trip per distinct image, so this is a deliberate action rather than something the app grid does on every load. The result is cached and served as `update_available` on each grid item until the next call.  An image no answer can be obtained for -- an unreachable registry, credentials this host does not have, an image never pulled -- is listed in `unchecked` instead of being guessed at, and its app keeps the answer it had. 
+         * @summary Check every installed app for a newer image
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        checkImageUpdates: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/image-updates`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication access_token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * AppMethodsApi - functional programming interface
+ * @export
+ */
+export const AppMethodsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = AppMethodsApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Asks each image\'s registry for the digest its tag points at now and compares it with the digest of the copy on disk. This sees apps that came from no app store, which the store\'s own upgradable list cannot.  One network round trip per distinct image, so this is a deliberate action rather than something the app grid does on every load. The result is cached and served as `update_available` on each grid item until the next call.  An image no answer can be obtained for -- an unreachable registry, credentials this host does not have, an image never pulled -- is listed in `unchecked` instead of being guessed at, and its app keeps the answer it had. 
+         * @summary Check every installed app for a newer image
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async checkImageUpdates(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject3>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.checkImageUpdates(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AppMethodsApi.checkImageUpdates']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * AppMethodsApi - factory interface
+ * @export
+ */
+export const AppMethodsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = AppMethodsApiFp(configuration)
+    return {
+        /**
+         * Asks each image\'s registry for the digest its tag points at now and compares it with the digest of the copy on disk. This sees apps that came from no app store, which the store\'s own upgradable list cannot.  One network round trip per distinct image, so this is a deliberate action rather than something the app grid does on every load. The result is cached and served as `update_available` on each grid item until the next call.  An image no answer can be obtained for -- an unreachable registry, credentials this host does not have, an image never pulled -- is listed in `unchecked` instead of being guessed at, and its app keeps the answer it had. 
+         * @summary Check every installed app for a newer image
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        checkImageUpdates(options?: RawAxiosRequestConfig): AxiosPromise<InlineObject3> {
+            return localVarFp.checkImageUpdates(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * AppMethodsApi - object-oriented interface
+ * @export
+ * @class AppMethodsApi
+ * @extends {BaseAPI}
+ */
+export class AppMethodsApi extends BaseAPI {
+    /**
+     * Asks each image\'s registry for the digest its tag points at now and compares it with the digest of the copy on disk. This sees apps that came from no app store, which the store\'s own upgradable list cannot.  One network round trip per distinct image, so this is a deliberate action rather than something the app grid does on every load. The result is cached and served as `update_available` on each grid item until the next call.  An image no answer can be obtained for -- an unreachable registry, credentials this host does not have, an image never pulled -- is listed in `unchecked` instead of being guessed at, and its app keeps the answer it had. 
+     * @summary Check every installed app for a newer image
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AppMethodsApi
+     */
+    public checkImageUpdates(options?: RawAxiosRequestConfig) {
+        return AppMethodsApiFp(this.configuration).checkImageUpdates(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
 
 
 /**
@@ -1420,7 +1568,7 @@ export const AppStoreMethodsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async appStoreList(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject3>> {
+        async appStoreList(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject4>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.appStoreList(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AppStoreMethodsApi.appStoreList']?.[localVarOperationServerIndex]?.url;
@@ -1432,7 +1580,7 @@ export const AppStoreMethodsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async categoryList(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject4>> {
+        async categoryList(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject5>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.categoryList(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AppStoreMethodsApi.categoryList']?.[localVarOperationServerIndex]?.url;
@@ -1445,7 +1593,7 @@ export const AppStoreMethodsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async composeApp(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject10>> {
+        async composeApp(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject11>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.composeApp(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AppStoreMethodsApi.composeApp']?.[localVarOperationServerIndex]?.url;
@@ -1458,7 +1606,7 @@ export const AppStoreMethodsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async composeAppMainStableTag(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject6>> {
+        async composeAppMainStableTag(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject7>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.composeAppMainStableTag(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AppStoreMethodsApi.composeAppMainStableTag']?.[localVarOperationServerIndex]?.url;
@@ -1472,7 +1620,7 @@ export const AppStoreMethodsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async composeAppServiceStableTag(id: string, serviceName: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject6>> {
+        async composeAppServiceStableTag(id: string, serviceName: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject7>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.composeAppServiceStableTag(id, serviceName, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AppStoreMethodsApi.composeAppServiceStableTag']?.[localVarOperationServerIndex]?.url;
@@ -1485,7 +1633,7 @@ export const AppStoreMethodsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async composeAppStoreInfo(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject7>> {
+        async composeAppStoreInfo(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject8>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.composeAppStoreInfo(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AppStoreMethodsApi.composeAppStoreInfo']?.[localVarOperationServerIndex]?.url;
@@ -1500,7 +1648,7 @@ export const AppStoreMethodsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async composeAppStoreInfoList(category?: string, authorType?: StoreAppAuthorType, recommend?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject5>> {
+        async composeAppStoreInfoList(category?: string, authorType?: StoreAppAuthorType, recommend?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject6>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.composeAppStoreInfoList(category, authorType, recommend, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AppStoreMethodsApi.composeAppStoreInfoList']?.[localVarOperationServerIndex]?.url;
@@ -1573,7 +1721,7 @@ export const AppStoreMethodsApiFactory = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        appStoreList(options?: RawAxiosRequestConfig): AxiosPromise<InlineObject3> {
+        appStoreList(options?: RawAxiosRequestConfig): AxiosPromise<InlineObject4> {
             return localVarFp.appStoreList(options).then((request) => request(axios, basePath));
         },
         /**
@@ -1582,7 +1730,7 @@ export const AppStoreMethodsApiFactory = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        categoryList(options?: RawAxiosRequestConfig): AxiosPromise<InlineObject4> {
+        categoryList(options?: RawAxiosRequestConfig): AxiosPromise<InlineObject5> {
             return localVarFp.categoryList(options).then((request) => request(axios, basePath));
         },
         /**
@@ -1592,7 +1740,7 @@ export const AppStoreMethodsApiFactory = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        composeApp(id: string, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject10> {
+        composeApp(id: string, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject11> {
             return localVarFp.composeApp(id, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1602,7 +1750,7 @@ export const AppStoreMethodsApiFactory = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        composeAppMainStableTag(id: string, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject6> {
+        composeAppMainStableTag(id: string, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject7> {
             return localVarFp.composeAppMainStableTag(id, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1613,7 +1761,7 @@ export const AppStoreMethodsApiFactory = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        composeAppServiceStableTag(id: string, serviceName: string, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject6> {
+        composeAppServiceStableTag(id: string, serviceName: string, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject7> {
             return localVarFp.composeAppServiceStableTag(id, serviceName, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1623,7 +1771,7 @@ export const AppStoreMethodsApiFactory = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        composeAppStoreInfo(id: string, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject7> {
+        composeAppStoreInfo(id: string, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject8> {
             return localVarFp.composeAppStoreInfo(id, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1635,7 +1783,7 @@ export const AppStoreMethodsApiFactory = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        composeAppStoreInfoList(category?: string, authorType?: StoreAppAuthorType, recommend?: boolean, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject5> {
+        composeAppStoreInfoList(category?: string, authorType?: StoreAppAuthorType, recommend?: boolean, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject6> {
             return localVarFp.composeAppStoreInfoList(category, authorType, recommend, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2073,7 +2221,7 @@ export const CommonMethodsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async convert(body: object, type?: ConvertTypeEnum, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject10>> {
+        async convert(body: object, type?: ConvertTypeEnum, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject11>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.convert(body, type, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CommonMethodsApi.convert']?.[localVarOperationServerIndex]?.url;
@@ -2161,7 +2309,7 @@ export const CommonMethodsApiFactory = function (configuration?: Configuration, 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        convert(body: object, type?: ConvertTypeEnum, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject10> {
+        convert(body: object, type?: ConvertTypeEnum, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject11> {
             return localVarFp.convert(body, type, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2881,7 +3029,7 @@ export const ComposeMethodsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async composeAppContainers(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject11>> {
+        async composeAppContainers(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject12>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.composeAppContainers(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ComposeMethodsApi.composeAppContainers']?.[localVarOperationServerIndex]?.url;
@@ -2908,7 +3056,7 @@ export const ComposeMethodsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async composeAppLogs(id: string, lines?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject12>> {
+        async composeAppLogs(id: string, lines?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject13>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.composeAppLogs(id, lines, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ComposeMethodsApi.composeAppLogs']?.[localVarOperationServerIndex]?.url;
@@ -2937,7 +3085,7 @@ export const ComposeMethodsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async myComposeApp(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject10>> {
+        async myComposeApp(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject11>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.myComposeApp(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ComposeMethodsApi.myComposeApp']?.[localVarOperationServerIndex]?.url;
@@ -2949,7 +3097,7 @@ export const ComposeMethodsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async myComposeAppList(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject8>> {
+        async myComposeAppList(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject9>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.myComposeAppList(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ComposeMethodsApi.myComposeAppList']?.[localVarOperationServerIndex]?.url;
@@ -3050,7 +3198,7 @@ export const ComposeMethodsApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        composeAppContainers(id: string, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject11> {
+        composeAppContainers(id: string, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject12> {
             return localVarFp.composeAppContainers(id, options).then((request) => request(axios, basePath));
         },
         /**
@@ -3071,7 +3219,7 @@ export const ComposeMethodsApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        composeAppLogs(id: string, lines?: number, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject12> {
+        composeAppLogs(id: string, lines?: number, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject13> {
             return localVarFp.composeAppLogs(id, lines, options).then((request) => request(axios, basePath));
         },
         /**
@@ -3094,7 +3242,7 @@ export const ComposeMethodsApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        myComposeApp(id: string, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject10> {
+        myComposeApp(id: string, options?: RawAxiosRequestConfig): AxiosPromise<InlineObject11> {
             return localVarFp.myComposeApp(id, options).then((request) => request(axios, basePath));
         },
         /**
@@ -3103,7 +3251,7 @@ export const ComposeMethodsApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        myComposeAppList(options?: RawAxiosRequestConfig): AxiosPromise<InlineObject8> {
+        myComposeAppList(options?: RawAxiosRequestConfig): AxiosPromise<InlineObject9> {
             return localVarFp.myComposeAppList(options).then((request) => request(axios, basePath));
         },
         /**
@@ -3678,7 +3826,7 @@ export const InternalMethodsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAppGrid(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject13>> {
+        async getAppGrid(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject14>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getAppGrid(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['InternalMethodsApi.getAppGrid']?.[localVarOperationServerIndex]?.url;
@@ -3700,7 +3848,7 @@ export const InternalMethodsApiFactory = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAppGrid(options?: RawAxiosRequestConfig): AxiosPromise<InlineObject13> {
+        getAppGrid(options?: RawAxiosRequestConfig): AxiosPromise<InlineObject14> {
             return localVarFp.getAppGrid(options).then((request) => request(axios, basePath));
         },
     };

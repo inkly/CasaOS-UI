@@ -35,6 +35,7 @@ const CALLS = [
 	[() => openAPI.appManagement.compose.setComposeAppStatus('a', 'start'), 'PUT', '/v2/app_management/compose/a/status'],
 	[() => openAPI.appManagement.compose.uninstallComposeApp('a', true), 'DELETE', '/v2/app_management/compose/a?delete_config_folder=true'],
 	[() => openAPI.appManagement.compose.updateComposeApp('a'), 'PATCH', '/v2/app_management/compose/a'],
+	[() => openAPI.appManagement.app.checkImageUpdates(), 'POST', '/v2/app_management/image-updates'],
 	[() => openAPI.appGrid.getAppGrid(), 'GET', '/v2/app_management/web/appgrid'],
 	[() => openAPI.appCompose.setComposeAppStatus('a', 'stop'), 'PUT', '/v2/app_management/compose/a/status'],
 ]

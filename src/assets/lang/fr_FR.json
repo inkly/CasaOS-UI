@@ -517,5 +517,11 @@
   "I have saved these codes": "J'ai enregistré ces codes",
   "Two-factor authentication is on. Confirm your password to turn it off; your recovery codes will stop working.": "L'authentification à deux facteurs est activée. Confirmez votre mot de passe pour la désactiver ; vos codes de récupération cesseront de fonctionner.",
   "Use your password instead": "Utiliser votre mot de passe",
-  "Disable": "Désactiver"
+  "Disable": "Désactiver",
+  "Check for image updates": "Vérifier les mises à jour des images",
+  "{count} apps have a newer image.": "{count} applications ont une image plus récente.",
+  "Every app is running the newest image.": "Toutes les applications utilisent l'image la plus récente.",
+  "{count} apps could not be checked and kept their previous state.": "{count} applications n'ont pas pu être vérifiées et gardent leur état précédent.",
+  "Could not check for image updates.": "Impossible de vérifier les mises à jour des images.",
+  "Update available": "MàJ"
 }

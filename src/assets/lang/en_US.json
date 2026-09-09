@@ -1,5 +1,5 @@
 {
-  "lang_name":"English",
+  "lang_name": "English",
   "OK": "OK",
   "Cancel": "Cancel",
   "Submit": "Submit",
@@ -517,5 +517,11 @@
   "I have saved these codes": "I have saved these codes",
   "Two-factor authentication is on. Confirm your password to turn it off; your recovery codes will stop working.": "Two-factor authentication is on. Confirm your password to turn it off; your recovery codes will stop working.",
   "Use your password instead": "Use your password instead",
-  "Disable": "Disable"
+  "Disable": "Disable",
+  "Check for image updates": "Check for image updates",
+  "{count} apps have a newer image.": "{count} apps have a newer image.",
+  "Every app is running the newest image.": "Every app is running the newest image.",
+  "{count} apps could not be checked and kept their previous state.": "{count} apps could not be checked and kept their previous state.",
+  "Could not check for image updates.": "Could not check for image updates.",
+  "Update available": "Update"
 }

@@ -21,6 +21,9 @@
 				<b-dropdown-item aria-role="menuitem" @click="showExternalLinkPanel">
 					{{ $t('Add external link/APP') }}
 				</b-dropdown-item>
+				<b-dropdown-item :disabled="isCheckingImages" aria-role="menuitem" @click="checkImageUpdates">
+					{{ $t('Check for image updates') }}
+				</b-dropdown-item>
 			</b-dropdown>
 		</div>
 		<!-- Title Bar End -->
@@ -146,6 +149,7 @@ export default {
 			appListErrorMessage: '',
 			skCount: 0,
 			ListRefreshTimer: null,
+			isCheckingImages: false,
 		}
 	},
 	components: {
@@ -201,6 +205,52 @@ export default {
 		this.getSkCount()
 	},
 	methods: {
+		/**
+		 * @description: Ask every app's registry whether its image has moved, then
+		 * reload the grid so the badges reflect the answer. One network round trip
+		 * per distinct image, which is why this is a button and not something the
+		 * grid does on its own.
+		 */
+		async checkImageUpdates() {
+			if (this.isCheckingImages) {
+				return
+			}
+			this.isCheckingImages = true
+
+			try {
+				const result = await this.$openAPI.appManagement.app.checkImageUpdates().then(res => res.data.data)
+				const updatable = result?.updatable?.length ?? 0
+				const unchecked = Object.keys(result?.unchecked ?? {}).length
+
+				await this.getList()
+
+				this.$buefy.toast.open({
+					message: updatable > 0
+						? this.$t('{count} apps have a newer image.', { count: updatable })
+						: this.$t('Every app is running the newest image.'),
+					type: 'is-success',
+				})
+
+				if (unchecked > 0) {
+					// Deliberately a second, louder message: an app nobody could get an
+					// answer for is not an app known to be up to date, and folding the two
+					// together is how a host quietly stops being told about updates.
+					this.$buefy.toast.open({
+						message: this.$t('{count} apps could not be checked and kept their previous state.', { count: unchecked }),
+						type: 'is-warning',
+					})
+				}
+			} catch (error) {
+				console.error(error)
+				this.$buefy.toast.open({
+					message: this.$t('Could not check for image updates.'),
+					type: 'is-danger',
+				})
+			} finally {
+				this.isCheckingImages = false
+			}
+		},
+
 		isMobile() {
 			const userAgent = navigator.userAgent
 			const mobileRegex

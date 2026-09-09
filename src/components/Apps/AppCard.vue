@@ -99,6 +99,10 @@
 								webp-fallback=".jpg" @click="openApp(item)" />
 							<!-- Unstable -->
 							<CTooltip v-if="newAppIds.includes(item.name)" class="__position" content="NEW" />
+							<!-- Shown from what the last image check found, so an app nobody has
+								checked yet carries no badge rather than a claim of being current.
+								v-else so it never stacks on top of the NEW marker. -->
+							<CTooltip v-else-if="item.update_available" class="__position __position-wide" content="Update available" />
 						</div>
 
 						<!-- Loading Bar Start -->
@@ -955,6 +959,12 @@ export default {
   top: -0.75rem !important;
   left: 3rem !important;
   z-index: 30;
+}
+
+// `NEW` is three characters and sits beside the icon; a whole word has to start
+// further left or it runs past the card.
+.__position-wide {
+  left: 1.25rem !important;
 }
 
 // 0.4.4
