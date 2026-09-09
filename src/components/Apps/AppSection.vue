@@ -98,6 +98,7 @@ import AppCardSkeleton from './AppCardSkeleton.vue'
 import AppPanel from './AppPanel.vue'
 import AppSectionTitleTip from './AppSectionTitleTip.vue'
 import ExternalLinkPanel from '@/components/Apps/ExternalLinkPanel'
+import { imageUpdateSummary } from '@/components/Apps/imageUpdateSummary'
 import events from '@/events/events'
 import business_ShowNewAppTag from '@/mixins/app/Business_ShowNewAppTag'
 import business_LinkApp from '@/mixins/app/Business_LinkApp'
@@ -218,26 +219,19 @@ export default {
 			this.isCheckingImages = true
 
 			try {
-				const result = await this.$openAPI.appManagement.app.checkImageUpdates().then(res => res.data.data)
-				const updatable = result?.updatable?.length ?? 0
-				const unchecked = Object.keys(result?.unchecked ?? {}).length
+				// The shared instance gives up after a minute; this fans out one round
+				// trip per distinct image, so a host with a long app list would be cut
+				// off mid-check and the work thrown away with it.
+				const result = await this.$openAPI.appManagement.app
+					.checkImageUpdates({ timeout: 5 * 60 * 1000 })
+					.then(res => res.data.data)
 
 				await this.getList()
 
-				this.$buefy.toast.open({
-					message: updatable > 0
-						? this.$t('{count} apps have a newer image.', { count: updatable })
-						: this.$t('Every app is running the newest image.'),
-					type: 'is-success',
-				})
-
-				if (unchecked > 0) {
-					// Deliberately a second, louder message: an app nobody could get an
-					// answer for is not an app known to be up to date, and folding the two
-					// together is how a host quietly stops being told about updates.
+				for (const toast of imageUpdateSummary(result)) {
 					this.$buefy.toast.open({
-						message: this.$t('{count} apps could not be checked and kept their previous state.', { count: unchecked }),
-						type: 'is-warning',
+						message: this.$t(toast.message, toast.params),
+						type: toast.type,
 					})
 				}
 			} catch (error) {

@@ -519,9 +519,10 @@
   "Use your password instead": "Use your password instead",
   "Disable": "Disable",
   "Check for image updates": "Check for image updates",
-  "{count} apps have a newer image.": "{count} apps have a newer image.",
   "Every app is running the newest image.": "Every app is running the newest image.",
-  "{count} apps could not be checked and kept their previous state.": "{count} apps could not be checked and kept their previous state.",
   "Could not check for image updates.": "Could not check for image updates.",
-  "Update available": "Update"
+  "Update available": "Update",
+  "Apps with a newer image: {count}": "Apps with a newer image: {count}",
+  "Apps that could not be checked: {count}. They keep their previous state.": "Apps that could not be checked: {count}. They keep their previous state.",
+  "The check did not come back with an answer.": "The check did not come back with an answer."
 }
