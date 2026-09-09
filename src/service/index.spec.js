@@ -40,6 +40,8 @@ const CALLS = [
 	[() => openAPI.appManagement.compose.updateComposeApp('a'), 'PATCH', '/v2/app_management/compose/a'],
 	[() => openAPI.appManagement.app.checkImageUpdates(), 'POST', '/v2/app_management/image-updates'],
 	[() => openAPI.appManagement.container.recreateContainerByID('a', true), 'PATCH', '/v2/app_management/container/a?pull=true'],
+	[() => openAPI.appManagement.image.danglingImages(), 'GET', '/v2/app_management/images/dangling'],
+	[() => openAPI.appManagement.image.pruneDanglingImages(), 'DELETE', '/v2/app_management/images/dangling'],
 	[() => openAPI.appGrid.getAppGrid(), 'GET', '/v2/app_management/web/appgrid'],
 	[() => openAPI.appCompose.setComposeAppStatus('a', 'stop'), 'PUT', '/v2/app_management/compose/a/status'],
 ]

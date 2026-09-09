@@ -34,6 +34,14 @@
 						</div>
 						<b-progress :type="getProgressType(totalPercent)" :value="totalPercent" class="mt-2"
 							size="is-small"></b-progress>
+						<div v-if="reclaimable.count > 0" class="is-flex is-align-items-center mt-2">
+							<p class="has-text-left is-size-14px disk-info is-flex-grow-1">
+								{{ $t('Old app versions: {count}', { count: reclaimable.count }) }}
+								&nbsp;&middot;&nbsp;{{ renderSize(reclaimable.size) }}
+							</p>
+							<b-button class="is-flex-shrink-0" size="is-small" type="is-light"
+								@click="confirmReclaim">{{ $t('Free up') }}</b-button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -89,12 +97,14 @@ export default {
 			totalPercent: 0,
 			health: 'passed',
 			usbDisks: [],
+			reclaimable: { count: 0, size: 0 },
 		}
 	},
 
 	mounted() {
 		this.getDiskInfo(this.$store.state.hardwareInfo.sys_disk)
 		this.usbDisks = this.$store.state.hardwareInfo.sys_usb
+		this.loadReclaimable()
 	},
 	methods: {
 		getDiskInfo(diskInfo) {
@@ -118,6 +128,45 @@ export default {
 				return 0
 			}
 			return Math.min(100, Math.floor(this.usbUsed(item) * 100 / size))
+		},
+
+		// Silent on failure. This is an offer, not a reading: a dashboard that pops an
+		// error because it could not reach the Docker socket helps nobody, and the row
+		// simply stays hidden.
+		loadReclaimable() {
+			this.$openAPI.appManagement.image.danglingImages().then((res) => {
+				this.reclaimable = res.data.data ?? { count: 0, size: 0 }
+			}).catch(() => {})
+		},
+
+		confirmReclaim() {
+			this.$buefy.dialog.confirm({
+				title: this.$t('Free up {size}', { size: this.renderSize(this.reclaimable.size) }),
+				message: this.$t('Updating an app leaves the version it replaced on the disk. Deleting those frees the space. No installed app is affected, and nothing has to be downloaded again. Old versions to delete: {count}', { count: this.reclaimable.count }),
+				type: 'is-dark',
+				confirmText: this.$t('Delete'),
+				cancelText: this.$t('Cancel'),
+				onConfirm: () => this.reclaim(),
+			})
+		},
+
+		// The daemon can free less than it was asked to, or nothing at all, so what is
+		// left is re-read rather than assumed empty.
+		reclaim() {
+			this.$openAPI.appManagement.image.pruneDanglingImages().then((res) => {
+				this.$buefy.toast.open({
+					message: this.$t('Freed {size}', { size: this.renderSize(res.data.data?.size ?? 0) }),
+					position: 'is-top',
+					duration: 5000,
+				})
+			}).catch((err) => {
+				this.$buefy.toast.open({
+					message: err.response?.data?.message || err.message,
+					type: 'is-danger',
+					position: 'is-top',
+					duration: 5000,
+				})
+			}).finally(() => this.loadReclaimable())
 		},
 
 		showDiskManagement() {

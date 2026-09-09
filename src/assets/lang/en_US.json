@@ -567,5 +567,10 @@
   "Recreating": "Recreating",
   "{name} will be stopped and replaced by a new container running the newest image. Volumes and their data are kept. Its settings are copied from the container as it runs now, and CasaOS keeps no copy of them: this container was imported, not installed by CasaOS. If no newer image is published, nothing is touched.": "{name} will be stopped and replaced by a new container running the newest image. Volumes and their data are kept. Its settings are copied from the container as it runs now, and CasaOS keeps no copy of them: this container was imported, not installed by CasaOS. If no newer image is published, nothing is touched.",
   "{name} now runs the image that was just pulled.": "{name} now runs the image that was just pulled.",
-  "No newer image was pulled for {name}, so it was left as it is.": "No newer image was pulled for {name}, so it was left as it is."
+  "No newer image was pulled for {name}, so it was left as it is.": "No newer image was pulled for {name}, so it was left as it is.",
+  "Old app versions: {count}": "Old app versions: {count}",
+  "Free up": "Free up",
+  "Free up {size}": "Free up {size}",
+  "Updating an app leaves the version it replaced on the disk. Deleting those frees the space. No installed app is affected, and nothing has to be downloaded again. Old versions to delete: {count}": "Updating an app leaves the version it replaced on the disk. Deleting those frees the space. No installed app is affected, and nothing has to be downloaded again. Old versions to delete: {count}",
+  "Freed {size}": "Freed {size}"
 }

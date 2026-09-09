@@ -1,13 +1,14 @@
 // @vitest-environment happy-dom
 import Buefy from 'buefy'
-import { mount } from '@vue/test-utils'
-import { describe, expect, it, vi } from 'vitest'
+import { flushPromises, mount } from '@vue/test-utils'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import i18n from '@/plugins/i18n'
 import Disks from '@/widgets/Disks.vue'
 import DriveItem from '@/components/Storage/DriveItem.vue'
 
-// require.context has no Vite equivalent; an empty table makes $t return its key.
-vi.mock('@/assets/lang', () => ({ default: { en_us: {} } }))
+// require.context has no Vite equivalent. The real en_US table stands in for it, so
+// the reclaim strings below are checked against the keys that actually ship.
+vi.mock('@/assets/lang', async () => ({ default: { en_us: (await import('@/assets/lang/en_US.json')).default } }))
 // The widget imports the Storage manager for its settings button, and lottie-web
 // paints into a canvas on import - happy-dom has no 2d context.
 vi.mock('lottie-web-vue', () => ({ default: { name: 'lottie-animation', template: '<div/>' } }))
@@ -21,18 +22,27 @@ vi.mock('lottie-web-vue', () => ({ default: { name: 'lottie-animation', template
  */
 const cases = [
 	['a passed disk', { health: true, smart_status: 'passed' }, 'Healthy'],
-	['a failed disk', { health: false, smart_status: 'failed' }, 'Damage'],
+	['a failed disk', { health: false, smart_status: 'failed' }, 'Damaged'],
 	['a disk without SMART data', { health: true, smart_status: 'unavailable' }, 'No SMART data'],
 	['an older LocalStorage without smart_status', { health: true }, 'Healthy'],
-	['an older LocalStorage reporting a failure', { health: false }, 'Damage'],
+	['an older LocalStorage reporting a failure', { health: false }, 'Damaged'],
 ]
+
+const danglingImages = vi.fn()
+const pruneDanglingImages = vi.fn()
+const $openAPI = { appManagement: { image: { danglingImages, pruneDanglingImages } } }
 
 function mountWidget(sys_disk) {
 	const $store = { state: { hardwareInfo: { sys_disk: { size: 100, used: 40, ...sys_disk }, sys_usb: [] } } }
-	return mount(Disks, { global: { plugins: [Buefy, i18n], mocks: { $store } } })
+	return mount(Disks, { global: { plugins: [Buefy, i18n], mocks: { $store, $openAPI } } })
 }
 
 describe('storage widget', () => {
+	beforeEach(() => {
+		danglingImages.mockReset().mockResolvedValue({ data: { data: { count: 0, size: 0 } } })
+		pruneDanglingImages.mockReset().mockResolvedValue({ data: { data: { count: 0, size: 0 } } })
+	})
+
 	// mounted() reads the store after the first render: the tag settles a tick later.
 	it.each(cases)('tags %s', async (_label, sys_disk, tag) => {
 		const wrapper = mountWidget(sys_disk)
@@ -57,10 +67,10 @@ describe('storage widget', () => {
 describe('drive item', () => {
 	const rows = [
 		['a passed disk', { health: true, smart_status: 'passed' }, 'Healthy'],
-		['a failed disk', { health: false, smart_status: 'failed' }, 'Damage'],
+		['a failed disk', { health: false, smart_status: 'failed' }, 'Damaged'],
 		['a disk without SMART data', { health: true, smart_status: 'unavailable' }, 'N/A'],
 		['an older LocalStorage sending health as the string "true"', { health: 'true' }, 'Healthy'],
-		['an older LocalStorage sending health as the string "false"', { health: 'false' }, 'Damage'],
+		['an older LocalStorage sending health as the string "false"', { health: 'false' }, 'Damaged'],
 		['an older LocalStorage without smart_status', { health: true }, 'Healthy'],
 	]
 
@@ -68,6 +78,67 @@ describe('drive item', () => {
 		const item = { name: 'sda', model: 'QEMU HARDDISK', size: 100, disk_type: 'HDD', temperature: 0, ...disk }
 		const wrapper = mount(DriveItem, { props: { item }, global: { plugins: [Buefy, i18n] } })
 		expect(wrapper.find('p b').text()).toBe(text)
+		wrapper.unmount()
+	})
+})
+
+describe('reclaimable disk space', () => {
+	beforeEach(() => {
+		danglingImages.mockReset().mockResolvedValue({ data: { data: { count: 0, size: 0 } } })
+		pruneDanglingImages.mockReset().mockResolvedValue({ data: { data: { count: 0, size: 0 } } })
+	})
+
+	// The dialog is opened programmatically and lands in document.body, not the wrapper.
+	afterEach(() => {
+		document.body.innerHTML = ''
+	})
+
+	it('offers nothing when there is nothing to reclaim', async () => {
+		const wrapper = mountWidget({ health: true })
+		await flushPromises()
+		expect(wrapper.text()).not.toContain('Old app versions')
+		wrapper.unmount()
+	})
+
+	it('stays quiet when the daemon cannot be reached', async () => {
+		danglingImages.mockRejectedValue(new Error('no docker socket'))
+		const wrapper = mountWidget({ health: true })
+		await flushPromises()
+		expect(wrapper.text()).not.toContain('Old app versions')
+		wrapper.unmount()
+	})
+
+	it('names the count and the size before asking, and the dialog says what goes', async () => {
+		danglingImages.mockResolvedValue({ data: { data: { count: 3, size: 4509715660 } } })
+		const wrapper = mountWidget({ health: true })
+		await flushPromises()
+		expect(wrapper.text()).toContain('Old app versions: 3')
+		expect(wrapper.text()).toContain('4.2 GB')
+
+		await wrapper.find('button').trigger('click')
+		await flushPromises()
+		expect(document.body.textContent).toContain('Free up 4.2 GB')
+		expect(document.body.textContent).toContain('Old versions to delete: 3')
+		expect(pruneDanglingImages).not.toHaveBeenCalled()
+		wrapper.unmount()
+	})
+
+	it('prunes on confirmation and re-reads what is left', async () => {
+		danglingImages.mockResolvedValue({ data: { data: { count: 3, size: 4509715660 } } })
+		pruneDanglingImages.mockResolvedValue({ data: { data: { count: 3, size: 4509715660 } } })
+		const wrapper = mountWidget({ health: true })
+		await flushPromises()
+		await wrapper.find('button').trigger('click')
+		await flushPromises()
+
+		const buttons = document.querySelectorAll('.modal-card-foot button')
+		danglingImages.mockResolvedValue({ data: { data: { count: 0, size: 0 } } })
+		buttons[buttons.length - 1].click()
+		await flushPromises()
+
+		expect(pruneDanglingImages).toHaveBeenCalledTimes(1)
+		expect(danglingImages).toHaveBeenCalledTimes(2)
+		expect(wrapper.text()).not.toContain('Old app versions')
 		wrapper.unmount()
 	})
 })

@@ -417,6 +417,25 @@ export interface ComposeAppWithStoreInfo {
     'is_uncontrolled'?: boolean;
 }
 /**
+ * Images no tag points at any more -- either what a prune would free, or what one just freed. 
+ * @export
+ * @interface DanglingImages
+ */
+export interface DanglingImages {
+    /**
+     * How many dangling images.
+     * @type {number}
+     * @memberof DanglingImages
+     */
+    'count': number;
+    /**
+     * Bytes. Unique bytes only, so this is what the disk would actually give back rather than the sum of the images\' full sizes. 
+     * @type {number}
+     * @memberof DanglingImages
+     */
+    'size': number;
+}
+/**
  * 
  * @export
  * @interface DeviceStoreInfo
@@ -639,8 +658,27 @@ export interface InlineObject14 {
     'message'?: string;
     /**
      * 
-     * @type {Array<WebAppGridItem>}
+     * @type {DanglingImages}
      * @memberof InlineObject14
+     */
+    'data'?: DanglingImages;
+}
+/**
+ * 
+ * @export
+ * @interface InlineObject15
+ */
+export interface InlineObject15 {
+    /**
+     * message returned by server side if there is any
+     * @type {string}
+     * @memberof InlineObject15
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {Array<WebAppGridItem>}
+     * @memberof InlineObject15
      */
     'data'?: Array<WebAppGridItem>;
 }
@@ -3666,6 +3704,72 @@ export class ContainerMethodsApi extends BaseAPI {
 export const ImageMethodsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * Dangling images are the layers no tag points at any more -- what a rebuild or a pulled update leaves behind. This answers \"how much would a prune free\", so the dashboard can name the figure before asking, and is read-only.  `size` counts each image\'s *unique* bytes: a dangling image is usually the previous build of one still in use and shares most of its layers with it, and deleting it does not give those back. 
+         * @summary Report the disk dangling images are holding
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        danglingImages: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/images/dangling`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication access_token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Deletes the images no tag points at, and returns what the daemon actually freed -- which can be less than the `get` estimated, if something started using a layer in between.  Only ever dangling images. A stopped app on this box is a normal state, not garbage, and a wider prune would delete its image and leave it unable to start again without a re-pull; the restriction is in the path so no parameter can widen it. 
+         * @summary Delete dangling images
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        pruneDanglingImages: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/images/dangling`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication access_token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Post a request to pull one or more images asynchronously  - by `container_ids` - pull images with the specific container IDs - by `names` - pull images with the specific image names (not implemented yet) 
          * @summary Post a batch pull request specified images
          * @param {string} [containerIds] a list of comma separated container IDs
@@ -3714,6 +3818,30 @@ export const ImageMethodsApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = ImageMethodsApiAxiosParamCreator(configuration)
     return {
         /**
+         * Dangling images are the layers no tag points at any more -- what a rebuild or a pulled update leaves behind. This answers \"how much would a prune free\", so the dashboard can name the figure before asking, and is read-only.  `size` counts each image\'s *unique* bytes: a dangling image is usually the previous build of one still in use and shares most of its layers with it, and deleting it does not give those back. 
+         * @summary Report the disk dangling images are holding
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async danglingImages(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject14>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.danglingImages(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageMethodsApi.danglingImages']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Deletes the images no tag points at, and returns what the daemon actually freed -- which can be less than the `get` estimated, if something started using a layer in between.  Only ever dangling images. A stopped app on this box is a normal state, not garbage, and a wider prune would delete its image and leave it unable to start again without a re-pull; the restriction is in the path so no parameter can widen it. 
+         * @summary Delete dangling images
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async pruneDanglingImages(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject14>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.pruneDanglingImages(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ImageMethodsApi.pruneDanglingImages']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Post a request to pull one or more images asynchronously  - by `container_ids` - pull images with the specific container IDs - by `names` - pull images with the specific image names (not implemented yet) 
          * @summary Post a batch pull request specified images
          * @param {string} [containerIds] a list of comma separated container IDs
@@ -3737,6 +3865,24 @@ export const ImageMethodsApiFactory = function (configuration?: Configuration, b
     const localVarFp = ImageMethodsApiFp(configuration)
     return {
         /**
+         * Dangling images are the layers no tag points at any more -- what a rebuild or a pulled update leaves behind. This answers \"how much would a prune free\", so the dashboard can name the figure before asking, and is read-only.  `size` counts each image\'s *unique* bytes: a dangling image is usually the previous build of one still in use and shares most of its layers with it, and deleting it does not give those back. 
+         * @summary Report the disk dangling images are holding
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        danglingImages(options?: RawAxiosRequestConfig): AxiosPromise<InlineObject14> {
+            return localVarFp.danglingImages(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Deletes the images no tag points at, and returns what the daemon actually freed -- which can be less than the `get` estimated, if something started using a layer in between.  Only ever dangling images. A stopped app on this box is a normal state, not garbage, and a wider prune would delete its image and leave it unable to start again without a re-pull; the restriction is in the path so no parameter can widen it. 
+         * @summary Delete dangling images
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        pruneDanglingImages(options?: RawAxiosRequestConfig): AxiosPromise<InlineObject14> {
+            return localVarFp.pruneDanglingImages(options).then((request) => request(axios, basePath));
+        },
+        /**
          * Post a request to pull one or more images asynchronously  - by `container_ids` - pull images with the specific container IDs - by `names` - pull images with the specific image names (not implemented yet) 
          * @summary Post a batch pull request specified images
          * @param {string} [containerIds] a list of comma separated container IDs
@@ -3756,6 +3902,28 @@ export const ImageMethodsApiFactory = function (configuration?: Configuration, b
  * @extends {BaseAPI}
  */
 export class ImageMethodsApi extends BaseAPI {
+    /**
+     * Dangling images are the layers no tag points at any more -- what a rebuild or a pulled update leaves behind. This answers \"how much would a prune free\", so the dashboard can name the figure before asking, and is read-only.  `size` counts each image\'s *unique* bytes: a dangling image is usually the previous build of one still in use and shares most of its layers with it, and deleting it does not give those back. 
+     * @summary Report the disk dangling images are holding
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ImageMethodsApi
+     */
+    public danglingImages(options?: RawAxiosRequestConfig) {
+        return ImageMethodsApiFp(this.configuration).danglingImages(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Deletes the images no tag points at, and returns what the daemon actually freed -- which can be less than the `get` estimated, if something started using a layer in between.  Only ever dangling images. A stopped app on this box is a normal state, not garbage, and a wider prune would delete its image and leave it unable to start again without a re-pull; the restriction is in the path so no parameter can widen it. 
+     * @summary Delete dangling images
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ImageMethodsApi
+     */
+    public pruneDanglingImages(options?: RawAxiosRequestConfig) {
+        return ImageMethodsApiFp(this.configuration).pruneDanglingImages(options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * Post a request to pull one or more images asynchronously  - by `container_ids` - pull images with the specific container IDs - by `names` - pull images with the specific image names (not implemented yet) 
      * @summary Post a batch pull request specified images
@@ -3826,7 +3994,7 @@ export const InternalMethodsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAppGrid(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject14>> {
+        async getAppGrid(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineObject15>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getAppGrid(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['InternalMethodsApi.getAppGrid']?.[localVarOperationServerIndex]?.url;
@@ -3848,7 +4016,7 @@ export const InternalMethodsApiFactory = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAppGrid(options?: RawAxiosRequestConfig): AxiosPromise<InlineObject14> {
+        getAppGrid(options?: RawAxiosRequestConfig): AxiosPromise<InlineObject15> {
             return localVarFp.getAppGrid(options).then((request) => request(axios, basePath));
         },
     };

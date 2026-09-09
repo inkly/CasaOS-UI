@@ -567,5 +567,10 @@
   "Recreating": "Recréation",
   "{name} will be stopped and replaced by a new container running the newest image. Volumes and their data are kept. Its settings are copied from the container as it runs now, and CasaOS keeps no copy of them: this container was imported, not installed by CasaOS. If no newer image is published, nothing is touched.": "{name} sera arrêté et remplacé par un nouveau conteneur utilisant l'image la plus récente. Les volumes et leurs données sont conservés. Sa configuration est copiée depuis le conteneur tel qu'il tourne actuellement, et CasaOS n'en garde aucune copie : ce conteneur a été importé, pas installé par CasaOS. Si aucune image plus récente n'est publiée, rien n'est modifié.",
   "{name} now runs the image that was just pulled.": "{name} utilise désormais l'image qui vient d'être récupérée.",
-  "No newer image was pulled for {name}, so it was left as it is.": "Aucune image plus récente n'a été récupérée pour {name}, il est donc resté tel quel."
+  "No newer image was pulled for {name}, so it was left as it is.": "Aucune image plus récente n'a été récupérée pour {name}, il est donc resté tel quel.",
+  "Old app versions: {count}": "Anciennes versions d'applications : {count}",
+  "Free up": "Libérer",
+  "Free up {size}": "Libérer {size}",
+  "Updating an app leaves the version it replaced on the disk. Deleting those frees the space. No installed app is affected, and nothing has to be downloaded again. Old versions to delete: {count}": "Mettre à jour une application laisse sur le disque la version qu'elle a remplacée. Les supprimer libère cet espace. Aucune application installée n'est touchée, et rien n'aura à être téléchargé de nouveau. Anciennes versions à supprimer : {count}",
+  "Freed {size}": "{size} libérés"
 }
