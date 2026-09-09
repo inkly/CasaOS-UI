@@ -553,5 +553,9 @@
   "Dead": "Dead",
   "Docker could not remove it, and it will not start again on its own.": "Docker could not remove it, and it will not start again on its own.",
   "Unhealthy": "Unhealthy",
-  "Starting up": "Starting up"
+  "Starting up": "Starting up",
+  "Last 100 lines": "Last 100 lines",
+  "Last 1000 lines": "Last 1000 lines",
+  "Whole log": "Whole log",
+  "The whole log does not refresh on its own.": "The whole log does not refresh on its own."
 }

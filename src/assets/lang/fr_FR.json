@@ -553,5 +553,9 @@
   "Dead": "Mort",
   "Docker could not remove it, and it will not start again on its own.": "Docker n'a pas pu le supprimer, et il ne redémarrera pas tout seul.",
   "Unhealthy": "En mauvaise santé",
-  "Starting up": "Démarrage"
+  "Starting up": "Démarrage",
+  "Last 100 lines": "Les 100 dernières lignes",
+  "Last 1000 lines": "Les 1000 dernières lignes",
+  "Whole log": "Tout le journal",
+  "The whole log does not refresh on its own.": "Le journal complet ne se rafraîchit pas tout seul."
 }

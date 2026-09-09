@@ -12,6 +12,20 @@
 						<terminal-card ref="terminal" :init-ws-url="wsUrl"></terminal-card>
 					</b-tab-item>
 					<b-tab-item :label="$t('Logs')" value="logs">
+						<div class="is-flex is-align-items-center">
+							<b-select :model-value="lines" size="is-small" @update:model-value="onLinesChange">
+								<option :value="100">{{ $t('Last 100 lines') }}</option>
+								<option :value="1000">{{ $t('Last 1000 lines') }}</option>
+								<option :value="-1">{{ $t('Whole log') }}</option>
+							</b-select>
+							<span v-if="isWholeLog" class="ml-3 is-size-7 has-text-grey">
+								{{ $t('The whole log does not refresh on its own.') }}
+							</span>
+							<b-button :disabled="!logData" class="ml-auto" icon-left="download" size="is-small"
+								@click="downloadLogs">
+								{{ $t('Download') }}
+							</b-button>
+						</div>
 						<logs-card ref="logs" :data="logData"></logs-card>
 					</b-tab-item>
 				</b-tabs>
@@ -23,8 +37,12 @@
 </template>
 
 <script>
+import FileSaver from 'file-saver'
 import TerminalCard from '@/components/logsAndTerminal/TerminalCard.vue'
 import LogsCard from '@/components/logsAndTerminal/LogsCard.vue'
+
+// The backend reads -1 as "every line there is".
+const WHOLE_LOG = -1
 
 export default {
 	name: 'app-terminal-panel',
@@ -39,6 +57,7 @@ export default {
 			wsUrl: `${this.$wsProtocol}//${this.$baseURL}/v1/container/${this.appid}/terminal?token=${this.$store.state.access_token}`,
 			logData: '',
 			timer: '',
+			lines: 1000,
 		}
 	},
 	props: {
@@ -47,25 +66,44 @@ export default {
 		serviceName: String,
 		initialTab: { type: String, default: 'terminal' },
 	},
+	computed: {
+		isWholeLog() {
+			return this.lines === WHOLE_LOG
+		},
+	},
 	mounted() {
 		// Opened straight on the logs of one service: the tab strip already shows the
 		// right tab, but the two cards still have to be told which one is on screen.
 		if (this.activeTab !== 'terminal')
 			this.onInput(this.activeTab)
 		this.getLogs()
-		this.timer = setInterval(() => {
-			this.getLogs()
-		}, 1000 * 5)
+		this.startPolling()
 	},
 	methods: {
 		getLogs() {
-			this.$openAPI.appManagement.compose.composeAppLogs(this.appName).then((res) => {
+			this.$openAPI.appManagement.compose.composeAppLogs(this.appName, this.lines).then((res) => {
 				if (res.status == 200) {
 					this.logData = res.data.data
 				}
 			}).catch((err) => {
 				console.log('$openAPI.appManagement.compose.composeAppLogs', err)
 			})
+		},
+		// Re-fetching the whole log every five seconds is a multi-megabyte round trip on
+		// a chatty container, so that choice buys itself out of the polling.
+		startPolling() {
+			clearInterval(this.timer)
+			if (!this.isWholeLog)
+				this.timer = setInterval(() => this.getLogs(), 1000 * 5)
+		},
+		onLinesChange(value) {
+			this.lines = Number(value)
+			this.getLogs()
+			this.startPolling()
+		},
+		downloadLogs() {
+			const blob = new Blob([this.logData], { type: 'text/plain;charset=utf-8' })
+			FileSaver.saveAs(blob, `${this.serviceName || this.appName}-logs.txt`)
 		},
 		onInput(e) {
 			this.activeTab = e
