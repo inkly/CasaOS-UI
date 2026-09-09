@@ -75,7 +75,7 @@
 						:label="$t('Terminal & Logs')"
 						position="is-bottom"
 						type="is-dark">
-						<button class="icon-button mdi mdi-console" type="button" @click="showTerminalPanel"></button>
+						<button class="icon-button mdi mdi-console" type="button" @click="showTerminalPanel()"></button>
 					</b-tooltip>
 
 					<b-tooltip v-if="showExportButton"
@@ -427,12 +427,23 @@
 						{{ $t('Compose') }}
 					</b-button>
 					<b-button :type="editorTab === 'env' ? 'is-primary' : 'is-text'"
+						class="mr-2"
 						rounded
 						size="is-small"
 						@click="setEditorTab('env')">
 						{{ $t('Environment') }}
 					</b-button>
+					<b-button :type="editorTab === 'containers' ? 'is-primary' : 'is-text'"
+						rounded
+						size="is-small"
+						@click="setEditorTab('containers')">
+						{{ $t('Containers') }}
+					</b-button>
 				</div>
+
+				<ContainersTab v-if="isCasa && state == 'update' && editorTab === 'containers'"
+					:app-id="id"
+					@open="openServicePanel" />
 
 				<ComposeEditor v-if="isCasa && state == 'update' && editorTab === 'compose'"
 					ref="composeEditor"
@@ -570,7 +581,7 @@
 					rounded
 					type="is-primary"
 					@click="updateApp()" />
-				<b-button v-if="isCasa && currentSlide == 1 && state == 'update' && editorTab !== 'settings'"
+				<b-button v-if="isCasa && currentSlide == 1 && state == 'update' && (editorTab === 'compose' || editorTab === 'env')"
 					:disabled="!editorState.canApply"
 					:label="$t('Apply')"
 					:loading="editorState.isApplying"
@@ -623,6 +634,7 @@ import AppDetailInfo from '@/components/Apps/AppDetailInfo.vue'
 import ComposeConfig from '@/components/Apps/ComposeConfig.vue'
 import ComposeEditor from '@/components/Apps/ComposeEditor.vue'
 import EnvEditor from '@/components/Apps/EnvEditor.vue'
+import ContainersTab from '@/components/Apps/ContainersTab.vue'
 import business_OpenThirdApp from '@/mixins/app/Business_OpenThirdApp'
 import business_ShowNewAppTag from '@/mixins/app/Business_ShowNewAppTag'
 import AppsInstallationLocation from '@/components/Apps/AppsInstallationLocation'
@@ -669,6 +681,7 @@ export default {
 		ComposeConfig,
 		ComposeEditor,
 		EnvEditor,
+		ContainersTab,
 		VeeField,
 		VeeForm,
 	},
@@ -1559,13 +1572,13 @@ export default {
 		 * @description: Show Terminal & Logs panel
 		 * @return {*} void
 		 */
-		showTerminalPanel() {
+		showTerminalPanel(serviceName = this.dockerComposeServiceName, initialTab = 'terminal') {
 			this.$openAPI.appManagement.compose
 				.composeAppContainers(this.id)
 				.then((res) => {
 					if (res.status == 200) {
 						const containers = res.data.data.containers
-						const containerId = containers[this.dockerComposeServiceName].ID
+						const containerId = containers[serviceName].ID
 						this.$buefy.modal.open({
 							component: AppTerminalPanel,
 							hasModalCard: true,
@@ -1577,7 +1590,8 @@ export default {
 							props: {
 								appid: containerId,
 								appName: this.currentInstallId,
-								serviceName: this.dockerComposeServiceName,
+								serviceName,
+								initialTab,
 							},
 						})
 					}
@@ -1585,6 +1599,10 @@ export default {
 				.catch((err) => {
 					console.log('$openAPI.appManagement.compose.composeAppContainers', err.response)
 				})
+		},
+
+		openServicePanel({ service, tab }) {
+			this.showTerminalPanel(service, tab)
 		},
 
 		async getDiskList() {

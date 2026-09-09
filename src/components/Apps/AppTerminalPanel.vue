@@ -7,7 +7,7 @@
 			</div>
 			<h3 class="title is-3">{{ serviceName || appName }}</h3>
 			<div class="is-flex-grow-1">
-				<b-tabs :animated="false" @update:model-value="onInput">
+				<b-tabs :animated="false" :model-value="activeTab" @update:model-value="onInput">
 					<b-tab-item :label="$t('Terminal')" value="terminal">
 						<terminal-card ref="terminal" :init-ws-url="wsUrl"></terminal-card>
 					</b-tab-item>
@@ -35,6 +35,7 @@ export default {
 	data() {
 		return {
 			isLoading: false,
+			activeTab: this.initialTab,
 			wsUrl: `${this.$wsProtocol}//${this.$baseURL}/v1/container/${this.appid}/terminal?token=${this.$store.state.access_token}`,
 			logData: '',
 			timer: '',
@@ -44,8 +45,13 @@ export default {
 		appid: String,
 		appName: String,
 		serviceName: String,
+		initialTab: { type: String, default: 'terminal' },
 	},
 	mounted() {
+		// Opened straight on the logs of one service: the tab strip already shows the
+		// right tab, but the two cards still have to be told which one is on screen.
+		if (this.activeTab !== 'terminal')
+			this.onInput(this.activeTab)
 		this.getLogs()
 		this.timer = setInterval(() => {
 			this.getLogs()
@@ -62,6 +68,7 @@ export default {
 			})
 		},
 		onInput(e) {
+			this.activeTab = e
 			if (e == 'terminal') {
 				this.$refs.terminal.active(true)
 				this.$refs.logs.active(false)
