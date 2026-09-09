@@ -2,7 +2,7 @@
 import Buefy from 'buefy'
 import { mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import i18n from '@/plugins/i18n'
 import AppCard from '@/components/Apps/AppCard.vue'
 import cTooltip from '@/components/basicComponents/tooltip/tooltip.vue'
@@ -30,6 +30,13 @@ async function card(item) {
 
 	return wrapper
 }
+
+// A failed assertion skips the unmount that follows it, and the button tests below
+// look at the whole document, so one broken card left behind would make them pass
+// on someone else's markup.
+afterEach(() => {
+	document.body.innerHTML = ''
+})
 
 function badges(wrapper) {
 	return wrapper.findAllComponents(cTooltip).map(c => c.props('content'))
