@@ -7,8 +7,13 @@ import i18n from '@/plugins/i18n'
 import AppCard from '@/components/Apps/AppCard.vue'
 import cTooltip from '@/components/basicComponents/tooltip/tooltip.vue'
 
-// require.context has no Vite equivalent; an empty table makes $t return its key.
-vi.mock('@/assets/lang', () => ({ default: { en_us: {} } }))
+// require.context has no Vite equivalent; a near-empty table makes $t return its key.
+// The one entry is the message the update failure needs: $t leaves a MISSING key
+// uninterpolated, which would hide whether the backend's reason reaches the toast.
+// It maps to itself, exactly as en_US.json does.
+vi.mock('@/assets/lang', () => ({
+	default: { en_us: { 'Updating {name} failed: {reason}': 'Updating {name} failed: {reason}' } },
+}))
 
 async function card(item, mocks = {}) {
 	// mount, not shallowMount: the badge sits in a Buefy tooltip's default slot,
@@ -191,6 +196,63 @@ describe('imported container', () => {
 			Properties: { 'app:name': 'plex', 'message': 'no space left on device' },
 		})
 		expect(wrapper.vm.isRecreating).toBe(false)
+		wrapper.unmount()
+	})
+})
+
+describe('app store update outcome', () => {
+	// the App Store update returns 200 straight away and reports what happened over
+	// the socket: update-error carries the reason, update-end carries nothing at all
+	async function updating(item = {}) {
+		const open = vi.fn()
+		const wrapper = await card(item, { $buefy: { toast: { open } } })
+		wrapper.vm.isUpdating = true
+		const fire = (event, Properties) =>
+			wrapper.vm.$options.sockets[event].call(wrapper.vm, { Properties })
+		return { wrapper, open, fire }
+	}
+
+	it('shows the reason a failed update gave, and stops waiting', async () => {
+		const { wrapper, open, fire } = await updating()
+
+		fire('app:update-error', { 'app:name': 'syncthing', 'message': 'no space left on device' })
+
+		expect(wrapper.vm.isUpdating).toBe(false)
+		expect(open).toHaveBeenCalledTimes(1)
+		expect(open.mock.calls[0][0].type).toBe('is-danger')
+		expect(open.mock.calls[0][0].message).toBe('Updating Syncthing failed: no space left on device')
+		wrapper.unmount()
+	})
+
+	it('leaves another app\'s failure to that app\'s card', async () => {
+		const { wrapper, open, fire } = await updating()
+
+		fire('app:update-error', { 'app:name': 'jellyfin', 'message': 'no space left on device' })
+
+		expect(open).not.toHaveBeenCalled()
+		expect(wrapper.vm.isUpdating).toBe(true)
+		wrapper.unmount()
+	})
+
+	it('claims nothing on an update-end that says nothing', async () => {
+		// a compose update publishes this whether it worked or failed; the green
+		// "latest version" toast used to fire on both
+		const { wrapper, open, fire } = await updating()
+
+		fire('app:update-end', { 'app:name': 'syncthing' })
+
+		expect(wrapper.vm.isUpdating).toBe(false)
+		expect(open).not.toHaveBeenCalled()
+		wrapper.unmount()
+	})
+
+	it('still says an app is up to date when the event says so', async () => {
+		const { wrapper, open, fire } = await updating()
+
+		fire('app:update-end', { 'app:name': 'syncthing', 'docker:image:updated': 'false' })
+
+		expect(open).toHaveBeenCalledTimes(1)
+		expect(open.mock.calls[0][0].type).toBe('is-success')
 		wrapper.unmount()
 	})
 })

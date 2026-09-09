@@ -589,7 +589,8 @@ export default {
 
 				this.$buefy.toast.open({
 					message: this.$t(`{name} has been updated to the latest version!`, {
-						name: data.Properties.name,
+						// the publisher sends app:name; there has never been a `name`
+						name: data.Properties['app:name'],
 					}),
 					type: 'is-success',
 				})
@@ -598,15 +599,8 @@ export default {
 				})
 			}
 		},
-		'app:update-error': function (data) {
-			if (data.Properties.cid === this.item.id) {
-				this.isUpdating = false
-				this.$buefy.toast.open({
-					message: this.$t(data.Properties.error),
-					type: 'is-danger',
-				})
-			}
-		},
+		// No app:update-error here: the section has no app to match one against, and the
+		// card of the app that failed reports it.
 	},
 }
 </script>

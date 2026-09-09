@@ -572,5 +572,6 @@
   "Free up": "Free up",
   "Free up {size}": "Free up {size}",
   "Updating an app leaves the version it replaced on the disk. Deleting those frees the space. No installed app is affected, and nothing has to be downloaded again. Old versions to delete: {count}": "Updating an app leaves the version it replaced on the disk. Deleting those frees the space. No installed app is affected, and nothing has to be downloaded again. Old versions to delete: {count}",
-  "Freed {size}": "Freed {size}"
+  "Freed {size}": "Freed {size}",
+  "Updating {name} failed: {reason}": "Updating {name} failed: {reason}"
 }

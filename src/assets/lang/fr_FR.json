@@ -572,5 +572,6 @@
   "Free up": "Libérer",
   "Free up {size}": "Libérer {size}",
   "Updating an app leaves the version it replaced on the disk. Deleting those frees the space. No installed app is affected, and nothing has to be downloaded again. Old versions to delete: {count}": "Mettre à jour une application laisse sur le disque la version qu'elle a remplacée. Les supprimer libère cet espace. Aucune application installée n'est touchée, et rien n'aura à être téléchargé de nouveau. Anciennes versions à supprimer : {count}",
-  "Freed {size}": "{size} libérés"
+  "Freed {size}": "{size} libérés",
+  "Updating {name} failed: {reason}": "La mise à jour de {name} a échoué : {reason}"
 }

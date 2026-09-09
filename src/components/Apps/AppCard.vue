@@ -834,14 +834,21 @@ export default {
 			if (data.Properties['app:name'] !== this.item.name)
 				return
 			if (data.Properties['docker:image:updated'] === 'true') {
+				// the section reloads the grid on this one, and this card with it
 				return
 			}
 			this.isUpdating = false
-			this.$buefy.toast.open({
-				message: this.$t(`{appName} is the latest version!`, { appName: this.item.name }),
-				type: 'is-success',
-				duration: 5000,
-			})
+			// An App Store update publishes update-end whether it worked or failed, and
+			// carries nothing that says which: only the v1 recreate path ever reports
+			// docker:image:updated. Without that, there is no success here to claim --
+			// a failure arrives on its own event, app:update-error.
+			if (data.Properties['docker:image:updated'] === 'false') {
+				this.$buefy.toast.open({
+					message: this.$t(`{appName} is the latest version!`, { appName: this.item.name }),
+					type: 'is-success',
+					duration: 5000,
+				})
+			}
 		},
 		'app:install-end': function (res) {
 			if (res.Properties['dry_run.name'] === this.item.name) {
@@ -865,12 +872,20 @@ export default {
 				})
 			}
 		},
+		// The only word a failed update gets: the update-end that follows carries no
+		// outcome, so if this event is dropped the failure is never shown at all. It is
+		// published by both update paths -- the compose one names the app, the recreate
+		// one names the container.
 		'app:update-error': function (data) {
-			if (!this.isRecreateEvent(data))
+			if (!this.isRecreateEvent(data) && data.Properties['app:name'] !== this.item.name)
 				return
 			this.isRecreating = false
+			this.isUpdating = false
 			this.$buefy.toast.open({
-				message: data.Properties.message,
+				message: this.$t('Updating {name} failed: {reason}', {
+					name: this.containerName,
+					reason: data.Properties.message,
+				}),
 				type: 'is-danger',
 				duration: 5000,
 			})
