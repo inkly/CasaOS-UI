@@ -112,7 +112,11 @@
 						</b-slider>
 					</b-field>
 
-					<b-field :label="$t('CPU Shares')">
+					<b-field :label="$t('CPU Limit')" :message="$t('Cores this app may use at most. Empty means no limit.')">
+						<b-input v-model="service.deploy.resources.limits.cpus" :placeholder="$t('No limit')" min="0" step="0.5" type="number" />
+					</b-field>
+
+					<b-field :label="$t('CPU Shares')" :message="$t('Relative weight when the CPU is busy, not a cap.')">
 						<b-select v-model="service.cpu_shares" :placeholder="$t('Select')" expanded>
 							<option :value="10">
 								{{ $t("Low") }}
@@ -784,6 +788,14 @@ export default {
 				const outputService = ConfigData.services[servicesKey]
 				// memory
 				outputService.deploy.resources.limits.memory = `${service.deploy.resources.limits.memory}M`
+				// cpus is a hard cap, and the field is free text: anything that is not a
+				// positive number of cores means "no limit", which compose spells as absence.
+				const cores = Number.parseFloat(service.deploy.resources.limits.cpus)
+				if (Number.isFinite(cores) && cores > 0) {
+					outputService.deploy.resources.limits.cpus = `${cores}`
+				} else {
+					delete outputService.deploy.resources.limits.cpus
+				}
 				outputService.devices = service.devices
 					.filter((device) => {
 						if (device.container || device.host) {
@@ -815,6 +827,9 @@ export default {
 					yaml.services[key].command = []
 					delete yaml.services[key]?.network_mode
 					delete yaml.services[key]?.networks
+					// merge would otherwise resurrect a cpus limit the user just cleared,
+					// since clearing it means ConfigData no longer carries the key.
+					delete yaml.services[key]?.deploy?.resources?.limits?.cpus
 				})
 
 				ConfigData = merge(yaml, ConfigData)
