@@ -466,7 +466,7 @@
   "This is not valid YAML.": "Ce n'est pas du YAML valide.",
   "A Compose file must be a mapping, starting with keys such as \"name\" and \"services\".": "Un fichier Compose doit être un mapping, commençant par des clés telles que \"name\" et \"services\".",
   "This Compose file declares no services.": "Ce fichier Compose ne déclare aucun service.",
-  "The top-level \"name\" must match one of the services, to designate the main application.": "Le \"name\" de premier niveau doit correspondre à l'un des services, pour désigner l'application principale.",
+  "The app name cannot be changed here: the server matches this file against the installed app \"{name}\". Reinstall the app to give it another name.": "Le nom de l'application ne peut pas être changé ici : le serveur compare ce fichier à l'application installée \"{name}\". Réinstallez l'application pour lui donner un autre nom.",
   "Values defined in the app's .env are kept as {ref}; other environment values are shown resolved.": "Les valeurs définies dans le .env de l'application sont conservées sous la forme {ref} ; les autres valeurs d'environnement sont affichées résolues.",
   "Environment": "Environnement",
   "Edit the .env file of this app. Applying an empty file deletes it.": "Modifiez le fichier .env de cette application. Appliquer un fichier vide le supprime.",

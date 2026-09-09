@@ -100,6 +100,25 @@ describe('compose editor over the wrapper', () => {
 		wrapper.unmount()
 	})
 
+	// The Apply gate: a stack whose project name is nobody's service key used to be
+	// permanently unapplicable, which is what "I cannot update it" meant.
+	it('lets a multi-service stack be applied, and blocks only a renamed one', async () => {
+		const stack = 'name: demo\nservices:\n  gluetun:\n    image: qmcgaw/gluetun\n  qbit:\n    image: qbit\n'
+		const wrapper = composeEditor(stack)
+		const cm = wrapper.findComponent(CodeMirrorEditor).vm.codemirror
+
+		cm.setValue(stack.replace('image: qbit\n', 'image: qbit:latest\n'))
+		await wrapper.vm.$nextTick()
+		expect(wrapper.vm.localError).toBe('')
+		expect(wrapper.vm.canApply).toBe(true)
+
+		cm.setValue(stack.replace('name: demo', 'name: renamed'))
+		await wrapper.vm.$nextTick()
+		expect(wrapper.vm.localError).toContain('app name cannot be changed')
+		expect(wrapper.vm.canApply).toBe(false)
+		wrapper.unmount()
+	})
+
 	it('drops the draft into the editor when the panel reloads the app', async () => {
 		const wrapper = composeEditor('name: demo\n')
 		const cm = wrapper.findComponent(CodeMirrorEditor).vm.codemirror

@@ -42,7 +42,7 @@ const MESSAGES = {
 	'syntax': 'This is not valid YAML.',
 	'not-a-mapping': 'A Compose file must be a mapping, starting with keys such as "name" and "services".',
 	'no-services': 'This Compose file declares no services.',
-	'main-service-missing': 'The top-level "name" must match one of the services, to designate the main application.',
+	'name-changed': 'The app name cannot be changed here: the server matches this file against the installed app "{name}". Reinstall the app to give it another name.',
 }
 
 export default {
@@ -72,14 +72,14 @@ export default {
 	},
 	computed: {
 		validation() {
-			return validateComposeYAML(this.draft)
+			return validateComposeYAML(this.draft, this.appId)
 		},
 
 		localError() {
 			if (this.validation.ok)
 				return ''
 
-			const message = this.$t(MESSAGES[this.validation.code] || MESSAGES.syntax)
+			const message = this.$t(MESSAGES[this.validation.code] || MESSAGES.syntax, { name: this.appId })
 			return this.validation.detail ? `${message} ${this.validation.detail}` : message
 		},
 
