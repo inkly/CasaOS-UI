@@ -2,6 +2,18 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.44] - 2026-09-09
+
+### Added
+
+- **Check for image updates**, in the apps menu. It asks each installed app's registry what its tag points at now, and the apps whose image has moved carry a badge beside their icon afterwards. Until now the only way to ask was to open one app's menu and press "Check then update", one app at a time.
+- The badge is drawn from what that check found, never computed while the grid loads: the app grid is on the dashboard's first paint and must not wait on a registry. An app nobody has checked yet carries no badge, which is deliberately the same as an app known to be current — the difference between the two is a claim the dashboard cannot make, so it makes neither.
+
+### Changed
+
+- "Check then update" is offered for imported apps too. It was hidden for them because the backend had nothing to offer an app with no catalogue entry; for those the update is now a pull of the tags they already name.
+- Apps that could not be checked are reported in their own, louder message rather than folded into the count of apps that are fine. An answer the dashboard cannot read is reported as exactly that, rather than as everything being current.
+
 ## [0.4.43] - 2026-09-07
 
 The dashboard no longer takes an npm package from IceWhale, on trust or
