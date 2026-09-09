@@ -39,6 +39,18 @@ describe('app section update outcome', () => {
 		expect(vm.addIdToSessionStorage).toHaveBeenCalledWith('syncthing')
 	})
 
+	it('leaves a recreate to the card that started it', () => {
+		// the card knows which container was asked for, refreshes the grid and reports
+		// the outcome itself. The section only has app:name, which for an imported
+		// container is the image -- so this toasted `ubi9/nginx-120` next to the card's
+		const { vm, open } = section()
+
+		fire(vm, { 'app:name': 'ubi9/nginx-120', 'app:updated': 'true', 'recreate:container:id': 'ab12cd34ef56' })
+
+		expect(open).not.toHaveBeenCalled()
+		expect(vm.getList).not.toHaveBeenCalled()
+	})
+
 	it('claims nothing on an update-end that does not say it applied', () => {
 		// published on failure too, and a pull that found something newer is not a
 		// recreate that survived it

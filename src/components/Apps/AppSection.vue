@@ -583,6 +583,13 @@ export default {
 		 * @return {void}
 		 */
 		'app:update-end': function (data) {
+			// A recreate belongs to the card that started it: it knows which container
+			// was asked for, and it already refreshes the grid and reports the outcome.
+			// The section only has app:name, which for an imported container is the
+			// image -- so this toast named `ubi9/nginx-120` next to the card's own.
+			if (data.Properties['recreate:container:id'])
+				return
+
 			// app:updated is set only when the update replaced what the app runs, by
 			// either update path. It is what a compose update has instead of
 			// docker:image:updated, which it never carries -- and which says what a
