@@ -76,15 +76,20 @@ export function healthCell(row) {
  * running container beats a stopped replica, because a shell can only be opened
  * in one that runs. An empty answer means the service has nothing to open.
  *
+ * The caller's pick is only honoured while the list still holds it: a container
+ * removed between the moment a row was drawn and the moment it was clicked is a
+ * dead id, and opening a terminal on one gets a socket that closes with nothing
+ * to show for it.
+ *
  * @param {object[]} list the containers of one service
  * @param {string} [wanted] the container the caller already picked, if any
  * @returns {string} a container id, or '' when there is none
  */
 export function pickContainerId(list, wanted) {
-	if (wanted)
+	const containers = list || []
+	if (wanted && containers.some(container => container.ID === wanted))
 		return wanted
 
-	const containers = list || []
 	return (containers.find(container => container.State === 'running') || containers[0] || {}).ID || ''
 }
 

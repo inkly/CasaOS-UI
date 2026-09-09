@@ -94,6 +94,15 @@ describe('pickContainerId', () => {
 		expect(pickContainerId(DATA.containers.worker, 'w2')).toBe('w2')
 	})
 
+	it('falls back when the container the caller named is gone from the list', () => {
+		// The row named it, then Docker removed it, then it was clicked: opening a
+		// terminal on that id gets a socket that closes with nothing to show.
+		expect(pickContainerId(DATA.containers.worker, 'w9')).toBe('w1')
+		expect(pickContainerId(DATA.containers.backup, 'b9')).toBe('b1')
+		expect(pickContainerId([], 'w9')).toBe('')
+		expect(pickContainerId(undefined, 'w9')).toBe('')
+	})
+
 	it('prefers a running container to a stopped replica, since only one of them has a shell', () => {
 		expect(pickContainerId(DATA.containers.worker)).toBe('w1')
 		expect(pickContainerId(DATA.containers.backup)).toBe('b1')
