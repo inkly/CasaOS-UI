@@ -561,5 +561,11 @@
   "Last 100 lines": "Les 100 dernières lignes",
   "Last 1000 lines": "Les 1000 dernières lignes",
   "Whole log": "Tout le journal",
-  "The whole log does not refresh on its own.": "Le journal complet ne se rafraîchit pas tout seul."
+  "The whole log does not refresh on its own.": "Le journal complet ne se rafraîchit pas tout seul.",
+  "Pull image and recreate": "Récupérer l'image et recréer",
+  "Recreate container": "Recréer le conteneur",
+  "Recreating": "Recréation",
+  "{name} will be stopped and replaced by a new container running the newest image. Volumes and their data are kept. Its settings are copied from the container as it runs now, and CasaOS keeps no copy of them: this container was imported, not installed by CasaOS. If no newer image is published, nothing is touched.": "{name} sera arrêté et remplacé par un nouveau conteneur utilisant l'image la plus récente. Les volumes et leurs données sont conservés. Sa configuration est copiée depuis le conteneur tel qu'il tourne actuellement, et CasaOS n'en garde aucune copie : ce conteneur a été importé, pas installé par CasaOS. Si aucune image plus récente n'est publiée, rien n'est modifié.",
+  "{name} now runs the image that was just pulled.": "{name} utilise désormais l'image qui vient d'être récupérée.",
+  "No newer image was pulled for {name}, so it was left as it is.": "Aucune image plus récente n'a été récupérée pour {name}, il est donc resté tel quel."
 }

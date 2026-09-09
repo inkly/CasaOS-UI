@@ -3,6 +3,7 @@ import {
 	AppStoreMethodsApi,
 	ComposeMethodsApiFactory,
 	Configuration,
+	ContainerMethodsApiFactory,
 	InternalMethodsApiFactory,
 } from '@/openapi/app_management'
 import { instance } from '@/service/service'
@@ -16,6 +17,7 @@ appManagement.compose = new ComposeMethodsApiFactory(config, '/v2/app_management
 // appManagement.appStore = new AppStoreMethodsApiFactory(config, '/v2/app_management', instance);
 appManagement.appStore = new AppStoreMethodsApi(config, '/v2/app_management', instance)
 appManagement.app = new AppMethodsApiFactory(config, '/v2/app_management', instance)
+appManagement.container = new ContainerMethodsApiFactory(config, '/v2/app_management', instance)
 const appGrid = new InternalMethodsApiFactory(config, '/v2/app_management', instance)
 const appCompose = new ComposeMethodsApiFactory(config, '/v2/app_management', instance)
 

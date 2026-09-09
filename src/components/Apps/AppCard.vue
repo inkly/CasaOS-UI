@@ -2,7 +2,7 @@
 	<div class="common-card is-flex is-align-items-center is-justify-content-center  app-card"
 		@mouseleave="hover = true" @mouseover="hover = true">
 		<!-- Action Button Start -->
-		<div v-if="item.app_type !== 'system' && !isContainerApp && !isUninstalling" class="action-btn">
+		<div v-if="item.app_type !== 'system' && !isUninstalling" class="action-btn">
 			<b-dropdown ref="dro" :mobile-modal="false" :triggers="['contextmenu', 'click']" animation="fade1"
 				append-to-body aria-role="list" class="app-card-drop" :position="dropdownPosition"
 				@active-change="setDropState">
@@ -13,14 +13,18 @@
 				</template>
 
 				<b-dropdown-item :focusable="false" aria-role="menu-item" custom>
-					<b-button v-if="item.status === 'running'" expanded tag="a" type="is-text" @click="openApp(item)">
-						{{
-							$t('Open') }}
-					</b-button>
-					<b-button v-else expanded tag="a" type="is-text" @click="openApp(item)">
-						{{
-							$t('launch-and-open') }}
-					</b-button>
+					<!-- a container CasaOS did not install has no app to open, start or
+						uninstall: the one thing it can be offered is the recreate below -->
+					<template v-if="!isContainerApp">
+						<b-button v-if="item.status === 'running'" expanded tag="a" type="is-text" @click="openApp(item)">
+							{{
+								$t('Open') }}
+						</b-button>
+						<b-button v-else expanded tag="a" type="is-text" @click="openApp(item)">
+							{{
+								$t('launch-and-open') }}
+						</b-button>
+					</template>
 					<b-button v-if="isV2App" expanded icon-pack="casa" icon-right="question-outline" size="is-16"
 						type="is-text" @click="openTips(item.name)">
 						{{ $t('Tips') }}
@@ -42,6 +46,16 @@
 						</b-loading>
 					</b-button>
 
+					<!-- container only: this endpoint takes a raw container ID and knows nothing
+						of compose, so running it on a container of a compose app would leave the
+						project's own state behind -->
+					<b-button v-if="isContainerApp" :loading="isRecreating" expanded type="is-text"
+						@click="recreateConfirm">
+						{{
+							$t('Pull image and recreate')
+						}}
+					</b-button>
+
 					<b-button v-if="isV1App" expanded type="is-text" @click="exportYAML(item)">
 						{{
 							$t('Export as Compose')
@@ -60,14 +74,15 @@
 							<img :src="require('@/assets/img/loading/waiting.svg')" alt="pending" class="ml-4 is-24x24">
 						</b-loading>
 					</b-button>
-					<b-button v-else class="has-text-red" expanded type="is-text" @click="uninstallConfirm">
+					<b-button v-else-if="!isContainerApp" class="has-text-red" expanded type="is-text"
+						@click="uninstallConfirm">
 						{{ $t('Uninstall') }}
 						<b-loading v-model="isUninstalling" :is-full-page="false">
 							<img :src="require('@/assets/img/loading/waiting.svg')" alt="pending" class="ml-4 is-24x24">
 						</b-loading>
 					</b-button>
 
-					<div v-if="!isLinkApp" class="gap">
+					<div v-if="!isLinkApp && !isContainerApp" class="gap">
 						<div class="columns is-gapless _b-bor is-flex">
 							<div class="column is-flex is-justify-content-center is-align-items-center">
 								<b-button :loading="isRestarting" expanded type="is-text" :disabled="item.status !== 'running'"
@@ -163,6 +178,7 @@ export default {
 			isRestarting: false,
 			isStarting: false,
 			isRebuilding: false,
+			isRecreating: false,
 			// isStoping: false,
 			// Public. Only changes the state of the card, not the state of the button.
 			isSaving: false,
@@ -173,7 +189,9 @@ export default {
 
 	computed: {
 		tooltipLabel() {
-			if (this.isContainerApp) {
+			if (this.isRecreating) {
+				return this.$t('Recreating')
+			} else if (this.isContainerApp) {
 				return this.$t('Import to CasaOS')
 			} else if (this.item.app_type === 'system') {
 				return this.$t('Open')
@@ -206,7 +224,7 @@ export default {
 			// }
 		},
 		isLoading() {
-			const active = this.isUninstalling || this.isUpdating || this.isRestarting || this.isStarting || this.isSaving || this.isRebuilding // || this.isStoping || this.isSaving
+			const active = this.isUninstalling || this.isUpdating || this.isRestarting || this.isStarting || this.isSaving || this.isRebuilding || this.isRecreating // || this.isStoping || this.isSaving
 			return active
 		},
 		isV1App() {
@@ -220,6 +238,12 @@ export default {
 		},
 		isLinkApp() {
 			return this.item.app_type === 'LinkApp'
+		},
+		// a container card is keyed by container ID, while the recreate endpoint keys
+		// its events on the container's Docker name -- which is what the grid put in
+		// the title of an imported container
+		containerName() {
+			return this.i18n(this.item.title) || this.item.name
 		},
 		shutDownClass() {
 			return this.item.status !== 'running' ? 'shutdown-rounded' : ''
@@ -419,6 +443,44 @@ export default {
 					})
 				})
 			}
+		},
+
+		/**
+		 * @description: Confirm before pulling a newer image and recreating an imported container
+		 * @return {*} void
+		 */
+		recreateConfirm() {
+			this.$refs.dro.isActive = false
+			this.$buefy.dialog.confirm({
+				title: this.$t('Attention'),
+				message: this.$t('{name} will be stopped and replaced by a new container running the newest image. Volumes and their data are kept. Its settings are copied from the container as it runs now, and CasaOS keeps no copy of them: this container was imported, not installed by CasaOS. If no newer image is published, nothing is touched.', { name: this.containerName }),
+				type: 'is-dark',
+				confirmText: this.$t('Recreate container'),
+				cancelText: this.$t('Cancel'),
+				onConfirm: () => {
+					this.recreateContainer()
+				},
+			})
+		},
+
+		recreateContainer() {
+			this.isRecreating = true
+			// force stays off: without a newer image there is nothing to gain from
+			// destroying a container whose definition exists nowhere else
+			this.$openAPI.appManagement.container.recreateContainerByID(this.item.name, true).catch((err) => {
+				this.isRecreating = false
+				this.$buefy.toast.open({
+					message: err.response?.data?.message || this.$t('Unable to update at the moment!'),
+					type: 'is-danger',
+					duration: 5000,
+				})
+			})
+		},
+
+		// the recreate publishes the same app:update-* events as a compose update, told
+		// apart only by the name they carry
+		isRecreateEvent(data) {
+			return this.isRecreating && data.Properties['app:name'] === this.containerName
 		},
 
 		/**
@@ -755,6 +817,20 @@ export default {
 		 * @return {void}
 		 */
 		'app:update-end': function (data) {
+			if (this.isRecreateEvent(data)) {
+				this.isRecreating = false
+				// a recreated container is a new container with a new ID, and the card
+				// still holds the old one
+				this.updateState()
+				this.$buefy.toast.open({
+					message: data.Properties['docker:image:updated'] === 'true'
+						? this.$t('{name} now runs the image that was just pulled.', { name: this.containerName })
+						: this.$t('No newer image was pulled for {name}, so it was left as it is.', { name: this.containerName }),
+					type: 'is-success',
+					duration: 5000,
+				})
+				return
+			}
 			if (data.Properties['app:name'] !== this.item.name)
 				return
 			if (data.Properties['docker:image:updated'] === 'true') {
@@ -788,6 +864,16 @@ export default {
 					type: 'is-warning',
 				})
 			}
+		},
+		'app:update-error': function (data) {
+			if (!this.isRecreateEvent(data))
+				return
+			this.isRecreating = false
+			this.$buefy.toast.open({
+				message: data.Properties.message,
+				type: 'is-danger',
+				duration: 5000,
+			})
 		},
 		'app:uninstall-error': function (res) {
 			if (res.Properties.id === this.item.name) {
