@@ -18,6 +18,8 @@ export const CONTAINER_STATES = {
 	created: { label: 'Never started', hint: 'The container exists but has never been started.', type: 'is-light' },
 	removing: { label: 'Being removed', hint: 'Docker is deleting this container.', type: 'is-warning' },
 	dead: { label: 'Dead', hint: 'Docker could not remove it, and it will not start again on its own.', type: 'is-danger' },
+	// Ours, not Docker's: a service declared in the compose file that holds no container.
+	absent: { label: 'No container', hint: 'The compose file declares this service, but Docker runs no container for it.', type: 'is-light' },
 }
 
 export const CONTAINER_HEALTH = {
@@ -68,21 +70,57 @@ export function healthCell(row) {
 }
 
 /**
+ * Which container of a service to open a terminal or a log view on.
+ *
+ * A service holds a list, so something has to choose when the caller did not: a
+ * running container beats a stopped replica, because a shell can only be opened
+ * in one that runs. An empty answer means the service has nothing to open.
+ *
+ * @param {object[]} list the containers of one service
+ * @param {string} [wanted] the container the caller already picked, if any
+ * @returns {string} a container id, or '' when there is none
+ */
+export function pickContainerId(list, wanted) {
+	if (wanted)
+		return wanted
+
+	const containers = list || []
+	return (containers.find(container => container.State === 'running') || containers[0] || {}).ID || ''
+}
+
+/**
  * @param {object} data the `data` of the response: `{main, containers}`
- * @returns {object[]} one row per service, the main service first
+ * @returns {object[]} one row per container, the main service's containers first
  */
 export function containerRows(data) {
 	const containers = data?.containers ?? {}
 	const main = data?.main
 
-	return Object.entries(containers).map(([service, container]) => ({
-		service,
-		id: container.ID,
-		image: container.Image,
-		state: container.State,
-		health: container.Health || '',
-		uptime: uptime(container.Status),
-		ports: publishedPorts(container.Publishers),
-		exitCode: container.State === 'exited' || container.State === 'dead' ? container.ExitCode ?? null : null,
-	})).sort((a, b) => (b.service === main) - (a.service === main) || a.service.localeCompare(b.service))
+	return Object.entries(containers)
+		.sort(([a], [b]) => (b === main) - (a === main) || a.localeCompare(b))
+		.flatMap(([service, list]) => {
+			// A service the compose file declares can be running nothing at all -- the
+			// endpoint reports it as an empty list rather than omitting it. Dropping it
+			// here would hide the half of a stack that failed to come up, which is the
+			// one thing someone opens this tab to find out.
+			if (!list || !list.length)
+				return [{ service, name: '', replicas: 0, id: '', image: '', state: 'absent', health: '', uptime: '', ports: [], exitCode: null }]
+
+			// Docker answers in no particular order; by name keeps a scaled service's
+			// replicas from swapping rows between two refreshes.
+			return [...list]
+				.sort((a, b) => String(a.Name || a.ID).localeCompare(String(b.Name || b.ID)))
+				.map(container => ({
+					service,
+					name: container.Name || container.ID,
+					replicas: list.length,
+					id: container.ID,
+					image: container.Image,
+					state: container.State,
+					health: container.Health || '',
+					uptime: uptime(container.Status),
+					ports: publishedPorts(container.Publishers),
+					exitCode: container.State === 'exited' || container.State === 'dead' ? container.ExitCode ?? null : null,
+				}))
+		})
 }

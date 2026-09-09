@@ -635,6 +635,7 @@ import ComposeConfig from '@/components/Apps/ComposeConfig.vue'
 import ComposeEditor from '@/components/Apps/ComposeEditor.vue'
 import EnvEditor from '@/components/Apps/EnvEditor.vue'
 import ContainersTab from '@/components/Apps/ContainersTab.vue'
+import { pickContainerId } from '@/components/Apps/containerSummary'
 import business_OpenThirdApp from '@/mixins/app/Business_OpenThirdApp'
 import business_ShowNewAppTag from '@/mixins/app/Business_ShowNewAppTag'
 import AppsInstallationLocation from '@/components/Apps/AppsInstallationLocation'
@@ -1572,13 +1573,22 @@ export default {
 		 * @description: Show Terminal & Logs panel
 		 * @return {*} void
 		 */
-		showTerminalPanel(serviceName = this.dockerComposeServiceName, initialTab = 'terminal') {
+		showTerminalPanel(serviceName = this.dockerComposeServiceName, initialTab = 'terminal', wantedContainerId = null) {
 			this.$openAPI.appManagement.compose
 				.composeAppContainers(this.id)
 				.then((res) => {
 					if (res.status == 200) {
 						const containers = res.data.data.containers
-						const containerId = containers[serviceName].ID
+						// A service holds a LIST of containers: the Containers tab names the one it
+						// was clicked on, and this panel's own console button has to choose.
+						const containerId = pickContainerId(containers && containers[serviceName], wantedContainerId)
+						if (!containerId) {
+							this.$buefy.toast.open({
+								message: this.$t('The compose file declares this service, but Docker runs no container for it.'),
+								type: 'is-warning',
+							})
+							return
+						}
 						this.$buefy.modal.open({
 							component: AppTerminalPanel,
 							hasModalCard: true,
@@ -1601,8 +1611,8 @@ export default {
 				})
 		},
 
-		openServicePanel({ service, tab }) {
-			this.showTerminalPanel(service, tab)
+		openServicePanel({ service, containerId, tab }) {
+			this.showTerminalPanel(service, tab, containerId)
 		},
 
 		async getDiskList() {

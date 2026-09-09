@@ -2,7 +2,7 @@
 	<section class="modal-card-body containers-tab">
 		<div class="is-flex is-align-items-center mb-2">
 			<p class="has-text-full-03 is-size-7 is-flex-grow-1">
-				{{ $t('One row per service of this app, as Docker sees it right now.') }}
+				{{ $t('One row per container of this app, as Docker sees it right now.') }}
 			</p>
 			<b-button :loading="isLoading" rounded size="is-small" @click="load">
 				{{ $t('Refresh') }}
@@ -16,6 +16,11 @@
 		<b-table v-else :data="rows" :loading="isLoading" :mobile-cards="false" class="is-size-7">
 			<b-table-column v-slot="{ row }" :label="$t('Service')" field="service">
 				<span class="has-text-weight-medium">{{ row.service }}</span>
+				<!-- Almost every service holds a single container and naming it would say
+					nothing; a scaled one needs the name to tell its replicas apart. -->
+				<div v-if="row.replicas > 1" class="containers-tab__mono has-text-full-03">
+					{{ row.name }}
+				</div>
 			</b-table-column>
 
 			<b-table-column v-slot="{ row }" :label="$t('State')" field="state">
@@ -57,19 +62,20 @@
 
 			<b-table-column v-slot="{ row }" :label="$t('Actions')">
 				<div class="containers-tab__actions">
-					<b-tooltip :label="$t('Logs')" position="is-left" type="is-dark">
-						<b-button class="mr-1"
+					<b-tooltip :label="logsTooltip(row)" position="is-left" type="is-dark">
+						<b-button :disabled="!row.id"
+							class="mr-1"
 							icon-left="text-box-outline"
 							rounded
 							size="is-small"
-							@click="$emit('open', { service: row.service, tab: 'logs' })" />
+							@click="open(row, 'logs')" />
 					</b-tooltip>
 					<b-tooltip :label="terminalTooltip(row)" position="is-left" type="is-dark">
 						<b-button :disabled="row.state !== 'running'"
 							icon-left="console"
 							rounded
 							size="is-small"
-							@click="$emit('open', { service: row.service, tab: 'terminal' })" />
+							@click="open(row, 'terminal')" />
 					</b-tooltip>
 				</div>
 			</b-table-column>
@@ -114,7 +120,20 @@ export default {
 		terminalTooltip(row) {
 			// A shell can only be opened inside a process that is running; saying so
 			// beats a button that fails when pressed.
+			if (!row.id)
+				return this.$t('The compose file declares this service, but Docker runs no container for it.')
+
 			return row.state === 'running' ? this.$t('Terminal') : this.$t('Only a running service has a terminal.')
+		},
+
+		logsTooltip(row) {
+			return row.id ? this.$t('Logs') : this.$t('The compose file declares this service, but Docker runs no container for it.')
+		},
+
+		// The row names the exact container, so a service with several of them opens the
+		// one that was clicked instead of whichever the panel would have guessed.
+		open(row, tab) {
+			this.$emit('open', { service: row.service, containerId: row.id, tab })
 		},
 
 		async load() {

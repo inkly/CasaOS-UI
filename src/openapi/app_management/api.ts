@@ -148,11 +148,11 @@ export interface ComposeAppContainers {
      */
     'main'?: string;
     /**
-     * 
-     * @type {{ [key: string]: object; }}
+     * The key is the name of a docker compose `service`, and the value is the list of every container currently belonging to that service.  A service can hold more than one container (see https://docs.docker.com/compose/compose-file/deploy/#replicas), and a service declared in the compose file can hold none at all when the app is down, so the list can be empty.
+     * @type {{ [key: string]: Array<object>; }}
      * @memberof ComposeAppContainers
      */
-    'containers'?: { [key: string]: object; };
+    'containers'?: { [key: string]: Array<object>; };
 }
 /**
  * 
