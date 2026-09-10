@@ -13,8 +13,8 @@ describe('contact bar', () => {
 		const wrapper = mount(ContactBar, { global: { plugins: [Buefy, i18n] } })
 		const links = wrapper.findAll('a')
 		expect(links.map(a => a.attributes('href'))).toEqual([
-			'https://github.com/inkly/CasaOS/issues',
-			'https://github.com/inkly/CasaOS',
+			'https://github.com/ReCasaOS/CasaOS/issues',
+			'https://github.com/ReCasaOS/CasaOS',
 		])
 		for (const a of links) {
 			expect(a.attributes('rel')).toBe('noopener')

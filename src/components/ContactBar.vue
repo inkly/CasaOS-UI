@@ -2,13 +2,13 @@
 	<div class="contact-bar is-flex is-align-items-center has-text-white">
 
 		<b-tooltip :label="$t('Report an issue')" content-class="contact-tip" position="is-top" type="is-primary">
-			<a rel="noopener" href="https://github.com/inkly/CasaOS/issues" target="_blank">
+			<a rel="noopener" href="https://github.com/ReCasaOS/CasaOS/issues" target="_blank">
 				<b-icon icon="eedback" pack="casa"></b-icon>
 			</a>
 		</b-tooltip>
 
 		<b-tooltip :label="$t('Visit our Github')" content-class="contact-tip" position="is-top" type="is-primary">
-			<a rel="noopener" href="https://github.com/inkly/CasaOS" target="_blank">
+			<a rel="noopener" href="https://github.com/ReCasaOS/CasaOS" target="_blank">
 				<b-icon icon="github" pack="casa"></b-icon>
 			</a>
 		</b-tooltip>

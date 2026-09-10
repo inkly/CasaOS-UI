@@ -1,12 +1,12 @@
 # CasaOS-UI
 
-> **Not affiliated with IceWhale.** An independent, community-maintained distribution of CasaOS, not produced or endorsed by Shanghai IceWhale Technology Limited. CASAOS is their trademark, used here only to say what this is a release of. The original project is [IceWhaleTech/CasaOS](https://github.com/IceWhaleTech/CasaOS); report problems with this distribution at [inkly/CasaOS/issues](https://github.com/inkly/CasaOS/issues).
+> **Not affiliated with IceWhale.** An independent, community-maintained distribution of CasaOS, not produced or endorsed by Shanghai IceWhale Technology Limited. CASAOS is their trademark, used here only to say what this is a release of. The original project is [IceWhaleTech/CasaOS](https://github.com/IceWhaleTech/CasaOS); report problems with this distribution at [inkly/CasaOS/issues](https://github.com/ReCasaOS/CasaOS/issues).
 
 The CasaOS dashboard: the single-page application served at the root of a CasaOS box. It is the app grid, the App Store, the file browser, the storage and share screens, the settings and the sidebar widgets. This repository is the dashboard of the **inkly distribution of CasaOS**, a maintained release of the project after upstream [IceWhaleTech/CasaOS-UI](https://github.com/IceWhaleTech/CasaOS-UI) stopped shipping in 2025. It descends from that repository through [alvins82's fork](https://github.com/alvins82/CasaOS-UI), whose commits are in this history.
 
 ## What it does
 
-A Vue 2.7 application with Buefy and Bulma, built by vue-cli-service. It has no server and no backend code of its own: everything it shows comes from the CasaOS services, reached on the same origin through [CasaOS-Gateway](https://github.com/inkly/CasaOS-Gateway).
+A Vue 2.7 application with Buefy and Bulma, built by vue-cli-service. It has no server and no backend code of its own: everything it shows comes from the CasaOS services, reached on the same origin through [CasaOS-Gateway](https://github.com/ReCasaOS/CasaOS-Gateway).
 
 Four routes, hash mode, in [`src/router/route.js`](src/router/route.js):
 
@@ -36,10 +36,10 @@ A release publishes that tree as `linux-all-casaos-<tag>.tar.gz`, which is what 
 Components are not installed individually. One command installs the whole distribution, dashboard included:
 
 ```sh
-curl -fsSL https://github.com/inkly/CasaOS-Install/releases/latest/download/install.sh | sudo bash
+curl -fsSL https://github.com/ReCasaOS/CasaOS-Install/releases/latest/download/install.sh | sudo bash
 ```
 
-What a release contains, and how it is built, is described in [CasaOS-Install](https://github.com/inkly/CasaOS-Install#readme).
+What a release contains, and how it is built, is described in [CasaOS-Install](https://github.com/ReCasaOS/CasaOS-Install#readme).
 
 ## What this fork changed
 

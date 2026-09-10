@@ -37,7 +37,7 @@ export default {
 				confirmText: this.$t('Go'),
 				cancelText: this.$t('Cancel'),
 				onConfirm: () => {
-					window.open('https://github.com/inkly/CasaOS/issues/new', '_blank', 'noopener')
+					window.open('https://github.com/ReCasaOS/CasaOS/issues/new', '_blank', 'noopener')
 				},
 			})
 		},

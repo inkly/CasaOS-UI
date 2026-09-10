@@ -180,8 +180,8 @@ The contact bar and the app installer point at this distribution, and the news f
   hint of the app installer pointed at the upstream Discord; they point
   at the issues of inkly/CasaOS now.
 - Two links remain in the contact bar: the feedback icon, "Report an
-  issue", opens https://github.com/inkly/CasaOS/issues, and the GitHub
-  icon, "Visit our GitHub", opens https://github.com/inkly/CasaOS, both in
+  issue", opens https://github.com/ReCasaOS/CasaOS/issues, and the GitHub
+  icon, "Visit our GitHub", opens https://github.com/ReCasaOS/CasaOS, both in
   a new tab with rel="noopener".
 
 ### Fixed
