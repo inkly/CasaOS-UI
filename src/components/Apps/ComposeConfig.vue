@@ -521,6 +521,16 @@ export default {
 				// set top level x-casaos data
 				this.configData['x-casaos'] = merge(this.configData['x-casaos'], yaml['x-casaos'])
 
+				// A stack somebody wrote by hand carries no `x-casaos` at all, so App Name
+				// arrived here blank -- and it is a required field, which is why the settings
+				// of such an app could not be saved until a name was invented for it, and why
+				// renaming one was a field that started empty rather than one holding the
+				// current name. The app already HAS a name everywhere else: the grid shows the
+				// compose project name for these apps, and so does the backend when it builds
+				// store info out of a YAML that declares none. Start from the same name.
+				if (!ice_i18n(this.configData['x-casaos'].title))
+					this.configData['x-casaos'].title.custom = this.configData.name || this.current_service
+
 				for (const serviceKey in yaml.services) {
 					this.configData.services[serviceKey] = this.parseComposeItem(yaml.services[serviceKey])
 				}

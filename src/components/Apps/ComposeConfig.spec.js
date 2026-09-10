@@ -1,8 +1,9 @@
+// @vitest-environment happy-dom
 import { describe, expect, it } from 'vitest'
 import YAML from 'yaml'
 import ComposeConfig from './ComposeConfig.vue'
 
-const { parseComposeItem, outputConfigDataCommands, makeArray, volumeAutoCheck } = ComposeConfig.methods
+const { parseComposeItem, outputConfigDataCommands, makeArray, volumeAutoCheck, parseComposeYaml } = ComposeConfig.methods
 
 const composeYaml = `name: jellyfin
 services:
@@ -86,5 +87,51 @@ describe('composeConfig cpu limit', () => {
 		const model = editorModel()
 		model.services.jellyfin.ports.pop()
 		expect(emitYaml(model).services.jellyfin.ports).toHaveLength(1)
+	})
+})
+
+// App Name is a required field, and a stack somebody wrote by hand carries no
+// `x-casaos` for it to be filled from -- so its settings could not be saved at all
+// until a name was invented, and renaming one started from an empty box rather than
+// from the name the dashboard was already showing on the card.
+describe('the app name of a hand-written stack', () => {
+	const handWritten = `name: gluetun-stack
+services:
+  gluetun:
+    image: qmcgaw/gluetun:latest
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+`
+
+	function load(yamlText) {
+		const context = {
+			makeArray,
+			volumeAutoCheck,
+			parseComposeItem,
+			volumes: {},
+			totalMemory: 4096,
+			current_service: '',
+			configData: { 'name': '', 'services': {}, 'x-casaos': { title: { custom: '' } } },
+		}
+		parseComposeYaml.call(context, yamlText)
+		return context.configData
+	}
+
+	it('falls back to the compose project name', () => {
+		const configData = load(handWritten)
+		expect(configData['x-casaos'].title.custom).toBe('gluetun-stack')
+	})
+
+	it('leaves a declared name alone', () => {
+		const configData = load(`name: jellyfin
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+x-casaos:
+  title:
+    en_us: Jellyfin Media Server
+`)
+		expect(configData['x-casaos'].title.custom).toBe('')
+		expect(configData['x-casaos'].title.en_us).toBe('Jellyfin Media Server')
 	})
 })
