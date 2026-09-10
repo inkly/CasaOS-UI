@@ -162,6 +162,14 @@ describe('imported container', () => {
 		wrapper.unmount()
 	})
 
+	it('shows no menu at all where it has nothing to offer', async () => {
+		// with the recreate refused, every remaining entry is for an app CasaOS
+		// installed -- so the dots button opened onto an empty menu
+		const wrapper = await card({ ...imported, compose_project: 'immich' })
+		expect(wrapper.find('.action-btn').exists()).toBe(false)
+		wrapper.unmount()
+	})
+
 	it('offers an imported container nothing it cannot do', async () => {
 		// Open, Uninstall and the start/stop pair all route through code that only
 		// handles v1 and v2 apps

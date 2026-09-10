@@ -2,7 +2,7 @@
 	<div class="common-card is-flex is-align-items-center is-justify-content-center  app-card"
 		@mouseleave="hover = true" @mouseover="hover = true">
 		<!-- Action Button Start -->
-		<div v-if="item.app_type !== 'system' && !isUninstalling" class="action-btn">
+		<div v-if="item.app_type !== 'system' && !isUninstalling && hasActions" class="action-btn">
 			<b-dropdown ref="dro" :mobile-modal="false" :triggers="['contextmenu', 'click']" animation="fade1"
 				append-to-body aria-role="list" class="app-card-drop" :position="dropdownPosition"
 				@active-change="setDropState">
@@ -253,6 +253,13 @@ export default {
 		// itself carries is what says otherwise.
 		canRecreate() {
 			return this.isContainerApp && !this.item.compose_project
+		},
+		// Every entry of the menu is for an app CasaOS installed, except the recreate,
+		// which is refused for a container a compose project owns -- so that container
+		// had a dots button that opened onto nothing at all. No menu says the same thing
+		// and does not ask to be clicked first.
+		hasActions() {
+			return !this.isContainerApp || this.canRecreate
 		},
 		// a container card is keyed by container ID, while the grid puts the Docker
 		// name of an imported container in its title -- the name to show a human
