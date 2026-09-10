@@ -22,7 +22,14 @@ it('shows the upgrade log as text, without the installer colour codes', async ()
 	expect(wrapper.find('pre').text()).toBe('[ INFO ] Downloading...\n[  OK  ] Verified')
 })
 
-it('clears the session and reloads once the backend answers again, without going through the router', async () => {
+// The session is deliberately NOT cleared any more. It was, from v0.4.49, to avoid a
+// /logout that settled late through the router guard -- but this runs from an interval
+// that outlived the dialog, so it could fire after the owner had signed in again and
+// then deleted a live session. The tokens the upgrade killed are dead either way: the
+// first request after the reload 401s and the interceptor lands on the login page. What
+// still has to hold is the rest -- the reload waits for the backend, goes through
+// location.reload rather than the router, and happens exactly once.
+it('reloads once the backend answers again, without going through the router or touching the session', async () => {
 	vi.useFakeTimers()
 	const replace = vi.fn(() => Promise.resolve())
 	const reload = vi.spyOn(window.location, 'reload').mockImplementation(() => {})
@@ -43,9 +50,10 @@ it('clears the session and reloads once the backend answers again, without going
 		await wrapper.vm.updateSystem()
 		await vi.advanceTimersByTimeAsync(200)
 		expect(localStorage.getItem('is_update')).toBe('true')
-		expect(localStorage.getItem('access_token')).toBeNull()
-		expect(localStorage.getItem('refresh_token')).toBeNull()
-		expect(localStorage.getItem('user')).toBeNull()
+		// left exactly as they were: this code cannot tell whose session it is looking at
+		expect(localStorage.getItem('access_token')).toBe('old')
+		expect(localStorage.getItem('refresh_token')).toBe('old')
+		expect(localStorage.getItem('user')).toBe('{}')
 		await vi.advanceTimersByTimeAsync(1000)
 		expect(getUserStatus).toHaveBeenCalledTimes(1)
 		expect(reload).not.toHaveBeenCalled()

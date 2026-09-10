@@ -45,6 +45,23 @@ describe('the update dialog leaves nothing running', () => {
 		expect(getContent.mock.calls.length).toBe(before)
 	})
 
+	it('never deletes the session, whoever is signed in by then', () => {
+		// The dashboard that drives an upgrade is the OLD one -- the version being
+		// replaced -- so the unmount hook above only protects the upgrade AFTER this one.
+		// Not clearing is what makes it safe regardless: the tokens the upgrade killed are
+		// dead anyway and the first 401 lands on the login page, while a session someone
+		// signed in with since must survive.
+		const { wrapper } = open()
+		localStorage.setItem('access_token', 'signed-in-again')
+		localStorage.setItem('refresh_token', 'also-fresh')
+
+		wrapper.vm.reloadWhenBackendIsBack()
+
+		expect(localStorage.getItem('access_token')).toBe('signed-in-again')
+		expect(localStorage.getItem('refresh_token')).toBe('also-fresh')
+		wrapper.unmount()
+	})
+
 	it('keeps no session-clearing timer alive either', () => {
 		const { wrapper } = open()
 

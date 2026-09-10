@@ -121,19 +121,23 @@ export default {
 			}, 200)
 		},
 		/**
-		 * The upgrade restarts every service and rotates the token keys, so this
-		 * session is over either way. Signing out through the router awaited an
-		 * API call in its guard; started while the services restarted, that call
-		 * settled only after the user had signed in again, and the guard's /logout
-		 * branch then removed the fresh tokens. The session is cleared here, and
-		 * the page reloads - into the UI just installed - once the backend answers,
-		 * or after two minutes regardless. Each probe is given three seconds: a
-		 * probe left pending by a restarting service must not hold the reload.
+		 * The upgrade restarts every service and rotates the token keys, so the session
+		 * that started it is over either way. The page reloads - into the UI just
+		 * installed - once the backend answers, or after two minutes regardless. Each
+		 * probe is given three seconds: a probe left pending by a restarting service
+		 * must not hold the reload.
+		 *
+		 * It does NOT clear the session, and that is the point. The tokens are already
+		 * dead, so clearing them changes nothing in the case this was written for -- the
+		 * first request after the reload 401s and the interceptor lands on the login page
+		 * anyway. What it did change was the case nobody meant: this runs from an interval
+		 * that used to outlive the dialog, so it could fire AFTER the owner had signed in
+		 * again, and then it deleted a session that was alive. The unmount hook below stops
+		 * that interval, but only in the dashboard doing the reloading -- and the dashboard
+		 * doing the reloading is the OLD one, the version being replaced. Not clearing is
+		 * what makes this safe no matter which version drove the upgrade.
 		 */
 		reloadWhenBackendIsBack() {
-			for (const key of ['access_token', 'refresh_token', 'user', 'wallpaper'])
-				localStorage.removeItem(key)
-
 			const deadline = Date.now() + 120000
 			const probe = () => Promise.race([
 				this.$api.users.getUserStatus(),
