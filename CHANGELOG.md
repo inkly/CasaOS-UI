@@ -2,6 +2,31 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.45] - 2026-09-10
+
+The release that stops treating an app as one container. A stack is what most people actually run — a VPN with services routed through it, a database with a migration sidecar — and the dashboard showed it as a single row with a single dot.
+
+### Added
+
+- **A Containers tab** in the app settings panel: one row per container of every service, with its state in plain words, Docker health, image, published host ports, uptime and, once it has stopped, its exit code. The endpoint already returned all of it and the panel read the container ID and threw the rest away. Health has four cases rather than three — an image that declares no `HEALTHCHECK` reports nothing while running, and a container that is not running reports nothing at all; neither is shown as unhealthy.
+- **A line-count selector and a Download button** in the log viewer. It always asked for the backend's default of 1000 lines and offered no way out. 100, 1000 or the whole log, and the whole log turns the five-second polling off rather than repeating a multi-megabyte round trip — the toolbar says so instead of changing behaviour silently. Lines now carry the time the daemon wrote them.
+- **A CPU Limit field** in the compose editor, writing `deploy.resources.limits.cpus`. CPU Shares is a relative weight: it changes nothing while the host has spare capacity, so it could not express "this transcoder gets at most two cores".
+- **Pull and recreate** for a container CasaOS did not install. Such a container had no action at all — the card hid the whole dropdown. It is offered nowhere else: on a container of a compose app it would clone it out of its project and leave the project's own state behind.
+- **An offer to free the disk old app versions hold**, in the Storage widget, where someone is already reading how full the disk is. It stays hidden until there is something to reclaim, names the count and the size before the button is pressed, and only ever touches images no app runs any more.
+
+### Fixed
+
+- The compose editor rejected every hand-assembled stack whose project name is nobody's service key: red bar, Apply greyed out, no way to edit the file at all. That was never a rule the backend had — it takes the main service from `x-casaos.main` and otherwise the alphabetically first one, and never looks at the project name.
+- A failed App Store update opened a green "is the latest version!" toast. The update answers 200 at once and finishes in a goroutine, so the outcome only ever arrives over the message bus; the card read a missing property as "nothing to report" and congratulated itself either way. Failures now arrive on their own event and are reported as failures.
+- The card claims only what the events prove. A recreate whose pull had failed was announced as "No newer image was pulled" — an unreachable registry arriving as proof that nothing newer exists — while a successful App Store update said nothing at all and left the grid stale.
+- Every container of a stack is shown, not one per service. A service scaled to several replicas drew one row and hid the rest, which is exactly the multi-service stack the report was about. Replicas are told apart by their container name, put under the service name only when there is more than one.
+- The Logs tab follows the row the panel was opened on. It called the app-wide endpoint, so one row of a multi-service stack showed the whole stack interleaved under one service's name and saved it under one service's filename.
+- The terminal no longer opens on a container that is gone. A container removed between the tab drawing its row and someone clicking it opened a websocket on a dead ID: a blank terminal and no message.
+- The pull-and-recreate entry is offered only where it is safe. The backend calls `container` anything without a CasaOS label that its compose list did not claim, and that list silently skips a project whose config file it cannot load — so a Portainer or Dockge stack reached the card with the button on it.
+- A recreate is reported once, by the card that started it. The grid toasted it too, under the wrong name: the section only has the app name, which for an imported container is the image, so a recreate of a container called `nginx` announced `ubi9/nginx-120 has been updated`.
+- A failed recreate is reported whichever of its two events lands first. The backend publishes the error from a goroutine and the end-of-update from a defer, so the order is a race, and the card dropped whichever arrived second — a recreate whose pull worked and whose clone then failed said nothing at all, and the spinner just stopped.
+- A container owned by a compose project CasaOS cannot read no longer carries a dots button that opens onto an empty menu. Every entry there is for an app CasaOS installed, and the one exception, the recreate, is refused for exactly that container.
+
 ## [0.4.44] - 2026-09-09
 
 ### Added
