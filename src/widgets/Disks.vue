@@ -39,7 +39,7 @@
 								{{ $t('Old app versions: {count}', { count: reclaimable.count }) }}
 								&nbsp;&middot;&nbsp;{{ renderSize(reclaimable.size) }}
 							</p>
-							<b-button class="is-flex-shrink-0" size="is-small" type="is-light"
+							<b-button :loading="isReclaiming" class="is-flex-shrink-0" size="is-small" type="is-light"
 								@click="confirmReclaim">{{ $t('Free up') }}</b-button>
 						</div>
 					</div>
@@ -98,6 +98,11 @@ export default {
 			health: 'passed',
 			usbDisks: [],
 			reclaimable: { count: 0, size: 0 },
+			// The prune is synchronous and answers with the bytes it actually freed, so
+			// there is nothing to report until the daemon has finished walking the layers
+			// -- which on a box with a few dozen old images is seconds of a button that
+			// looked like it had done nothing.
+			isReclaiming: false,
 		}
 	},
 
@@ -153,6 +158,7 @@ export default {
 		// The daemon can free less than it was asked to, or nothing at all, so what is
 		// left is re-read rather than assumed empty.
 		reclaim() {
+			this.isReclaiming = true
 			this.$openAPI.appManagement.image.pruneDanglingImages().then((res) => {
 				this.$buefy.toast.open({
 					message: this.$t('Freed {size}', { size: this.renderSize(res.data.data?.size ?? 0) }),
@@ -166,7 +172,10 @@ export default {
 					position: 'is-top',
 					duration: 5000,
 				})
-			}).finally(() => this.loadReclaimable())
+			}).finally(() => {
+				this.isReclaiming = false
+				this.loadReclaimable()
+			})
 		},
 
 		showDiskManagement() {

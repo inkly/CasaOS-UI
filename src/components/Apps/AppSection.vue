@@ -232,6 +232,8 @@ export default {
 					this.$buefy.toast.open({
 						message: this.$t(toast.message, toast.params),
 						type: toast.type,
+						// a toast that names apps and reasons needs longer than an acknowledgement
+						...(toast.duration ? { duration: toast.duration } : {}),
 					})
 				}
 			} catch (error) {

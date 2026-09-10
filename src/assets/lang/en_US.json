@@ -527,7 +527,6 @@
   "Could not check for image updates.": "Could not check for image updates.",
   "Update available": "Update",
   "Apps with a newer image: {count}": "Apps with a newer image: {count}",
-  "Apps that could not be checked: {count}. They keep their previous state.": "Apps that could not be checked: {count}. They keep their previous state.",
   "The check did not come back with an answer.": "The check did not come back with an answer.",
   "Containers": "Containers",
   "One row per container of this app, as Docker sees it right now.": "One row per container of this app, as Docker sees it right now.",
@@ -576,5 +575,7 @@
   "Free up {size}": "Free up {size}",
   "Updating an app leaves the version it replaced on the disk. Deleting those frees the space. No installed app is affected, and nothing has to be downloaded again. Old versions to delete: {count}": "Updating an app leaves the version it replaced on the disk. Deleting those frees the space. No installed app is affected, and nothing has to be downloaded again. Old versions to delete: {count}",
   "Freed {size}": "Freed {size}",
-  "Updating {name} failed: {reason}": "Updating {name} failed: {reason}"
+  "Updating {name} failed: {reason}": "Updating {name} failed: {reason}",
+  "Could not check {detail}. They keep their previous state.": "Could not check {detail}. They keep their previous state.",
+  "Could not check {detail}, and {rest} more. They keep their previous state.": "Could not check {detail}, and {rest} more. They keep their previous state."
 }

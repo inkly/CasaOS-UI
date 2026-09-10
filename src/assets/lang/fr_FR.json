@@ -527,7 +527,6 @@
   "Could not check for image updates.": "Impossible de vérifier les mises à jour des images.",
   "Update available": "MàJ",
   "Apps with a newer image: {count}": "Applications avec une image plus récente : {count}",
-  "Apps that could not be checked: {count}. They keep their previous state.": "Applications non vérifiables : {count}. Elles gardent leur état précédent.",
   "The check did not come back with an answer.": "La vérification n'a pas renvoyé de réponse exploitable.",
   "Containers": "Conteneurs",
   "One row per container of this app, as Docker sees it right now.": "Une ligne par conteneur de cette application, tel que Docker le voit maintenant.",
@@ -576,5 +575,7 @@
   "Free up {size}": "Libérer {size}",
   "Updating an app leaves the version it replaced on the disk. Deleting those frees the space. No installed app is affected, and nothing has to be downloaded again. Old versions to delete: {count}": "Mettre à jour une application laisse sur le disque la version qu'elle a remplacée. Les supprimer libère cet espace. Aucune application installée n'est touchée, et rien n'aura à être téléchargé de nouveau. Anciennes versions à supprimer : {count}",
   "Freed {size}": "{size} libérés",
-  "Updating {name} failed: {reason}": "La mise à jour de {name} a échoué : {reason}"
+  "Updating {name} failed: {reason}": "La mise à jour de {name} a échoué : {reason}",
+  "Could not check {detail}. They keep their previous state.": "Vérification impossible pour {detail}. Ces applications gardent leur état précédent.",
+  "Could not check {detail}, and {rest} more. They keep their previous state.": "Vérification impossible pour {detail}, et {rest} autre(s). Ces applications gardent leur état précédent."
 }

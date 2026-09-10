@@ -8,6 +8,9 @@
  * @param {object} data the `data` of the check response: `{updatable: string[], unchecked: {}}`
  * @returns {{message: string, params?: object, type: string}[]} toasts, in order
  */
+// How many apps to name before falling back to a count for the rest.
+const MAX_NAMED = 3
+
 export function imageUpdateSummary(data) {
 	const updatable = data?.updatable
 	const unchecked = data?.unchecked
@@ -27,15 +30,29 @@ export function imageUpdateSummary(data) {
 		type: 'is-success',
 	}]
 
-	const uncheckedCount = Object.keys(unchecked).length
-	if (uncheckedCount > 0) {
+	const uncheckedNames = Object.keys(unchecked).sort()
+	if (uncheckedNames.length > 0) {
 		// Deliberately its own, louder message: an app nobody could get an answer for
 		// is not an app known to be up to date, and folding the two together loses
 		// the only part the user can act on.
+		//
+		// And it names them, with what the backend said about each. A count alone is
+		// something to worry about and nothing to do: which app, and whether it was a
+		// registry that would not answer or an image nobody can resolve, is the whole
+		// of what the reader can act on. Three at a time, so one unreachable registry
+		// behind twenty apps does not fill the screen.
+		const shown = uncheckedNames.slice(0, MAX_NAMED)
+		const detail = shown.map(name => `${name}: ${unchecked[name]}`).join(' / ')
+		const rest = uncheckedNames.length - shown.length
+
 		toasts.push({
-			message: 'Apps that could not be checked: {count}. They keep their previous state.',
-			params: { count: uncheckedCount },
+			message: rest > 0
+				? 'Could not check {detail}, and {rest} more. They keep their previous state.'
+				: 'Could not check {detail}. They keep their previous state.',
+			params: { detail, rest },
 			type: 'is-warning',
+			// long enough to read a reason, where the others are an acknowledgement
+			duration: 15000,
 		})
 	}
 
