@@ -1,5 +1,7 @@
 # CasaOS-UI
 
+> **Not affiliated with IceWhale.** An independent, community-maintained distribution of CasaOS, not produced or endorsed by Shanghai IceWhale Technology Limited. CASAOS is their trademark, used here only to say what this is a release of. The original project is [IceWhaleTech/CasaOS](https://github.com/IceWhaleTech/CasaOS); report problems with this distribution at [inkly/CasaOS/issues](https://github.com/inkly/CasaOS/issues).
+
 The CasaOS dashboard: the single-page application served at the root of a CasaOS box. It is the app grid, the App Store, the file browser, the storage and share screens, the settings and the sidebar widgets. This repository is the dashboard of the **inkly distribution of CasaOS**, a maintained release of the project after upstream [IceWhaleTech/CasaOS-UI](https://github.com/IceWhaleTech/CasaOS-UI) stopped shipping in 2025. It descends from that repository through [alvins82's fork](https://github.com/alvins82/CasaOS-UI), whose commits are in this history.
 
 ## What it does
