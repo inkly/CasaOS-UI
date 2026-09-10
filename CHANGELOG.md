@@ -2,6 +2,13 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.48] - 2026-09-10
+
+### Fixed
+
+- **The upgrade dialog no longer deletes a session it cannot identify.** The unmount hook added in 0.4.47 stops the orphaned log poll, but only in the dashboard doing the reloading — and the dashboard doing the reloading is the old one, the version being replaced. So the upgrade that installed that fix still ran the bug, and cost one last double login. The reload now leaves the session alone entirely, which is safe whatever version drove the upgrade. Clearing was never load-bearing: the upgrade rotates the token keys, so those tokens are dead whether or not they are deleted, and the first request after the reload lands on the login page anyway. What clearing did change is the case nobody meant — firing late, after the owner had signed in again, and deleting a session that was alive.
+- **The message naming apps a check could not verify is readable.** Four apps behind one unreachable registry produced four lines, each with the app's full image reference including its `@sha256:` pin — sixty-four characters of hex apiece — and the same cause repeated four times. Apps are grouped by cause now, up to three named with the rest counted, so that reads as one fact with four names on it. A reason the dashboard cannot split is shown whole rather than guessed at.
+
 ## [0.4.47] - 2026-09-10
 
 ### Fixed
