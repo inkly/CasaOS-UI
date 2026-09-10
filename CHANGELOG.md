@@ -2,6 +2,13 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.47] - 2026-09-10
+
+### Fixed
+
+- **A check now names the apps it could not verify, and says why.** "Apps that could not be checked: 3" is something to worry about and nothing to do. The backend has said which apps and for what reason all along — its answer carries a map of app name to reason — and the dashboard was reducing it to its length. Three are named with their reason, so one unreachable registry behind twenty apps does not fill the screen, and the message stays up long enough to read.
+- The storage widget's **Free up** button shows that it is working. The prune is synchronous and answers with the bytes it actually freed, so nothing appeared until the daemon had finished walking the layers — seconds, on a box with a few dozen old versions, of a button that looked like it had done nothing.
+
 ## [0.4.46] - 2026-09-10
 
 Four things a box reported in one sitting, all of them the same shape: a stack somebody wrote by hand is not a second-class app, and an update is not a reason to lose your seat.
