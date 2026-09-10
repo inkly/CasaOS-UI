@@ -2,6 +2,17 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.46] - 2026-09-10
+
+Four things a box reported in one sitting, all of them the same shape: a stack somebody wrote by hand is not a second-class app, and an update is not a reason to lose your seat.
+
+### Fixed
+
+- **An update no longer costs two logins.** The update dialog is opened outside the router view, so closing it unmounts the component — and its upgrade-log poll went on running anyway, because unlike the system-package dialog it had no `beforeUnmount`. The installer restarts the user service, which generates its signing key in memory at every start, so the browser's tokens stop verifying; the orphaned poll took a 401, the interceptor's refresh failed, and you were sent to the login page. You signed in, a session was created — and that same poll, now carrying a valid token, finally read `CasaOS upgrade successfully` and cleared the session it never knew about. The dashboard appeared and was taken away about two hundred milliseconds later. Landing on the login page after an update is correct, because the old tokens really are dead. Landing there twice was not.
+- A failed token refresh no longer poisons the page. It left the refresh flag raised with the queue full, so every later 401 was parked behind a refresh that would never be attempted again and hung for as long as the page lived — which is why the poll above never reported its own error and never stopped itself.
+- Signing in navigates as soon as the session is stored. It used to fetch the system version first, for a router-guard cache nothing else read: when that call failed the throw skipped the navigation and left you on the login page, signed in and unable to tell. The guard's other half went with it — it deleted the access token on arrival whenever that same cache was missing, so the only way to fill it was the login it sent you back to.
+- **A stack written by hand opens with the name it already has.** App Name is required and is filled from the `x-casaos` section, which such a stack does not have, so the field was blank on every service tab: the settings could not be saved until a name was invented, and renaming started from an empty box rather than from the name on the card. The grid has always shown the compose project name for these apps; the editor now starts from the same one. A title the compose already carries is left alone.
+
 ## [0.4.45] - 2026-09-10
 
 The release that stops treating an app as one container. A stack is what most people actually run — a VPN with services routed through it, a database with a migration sidecar — and the dashboard showed it as a single row with a single dot.
