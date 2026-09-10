@@ -58,6 +58,21 @@ function logout() {
 	})
 }
 
+// A refresh that failed used to sign the user out and leave `isRefreshing` true
+// with the queue full: every later 401 was parked in `requests` behind a refresh
+// that would never be attempted again, so those requests hung for the lifetime of
+// the page and their callers' error handling never ran. The flag goes back and the
+// queue is turned away, so the next 401 gets a refresh of its own.
+function giveUp() {
+	isRefreshing = false
+
+	const waiting = requests
+	requests = []
+	waiting.forEach(cb => cb(null))
+
+	logout()
+}
+
 instance.interceptors.response.use(
 	(response) => {
 		return response
@@ -85,20 +100,28 @@ instance.interceptors.response.use(
 						isRefreshing = false
 						return tokenRes.data.data.access_token
 					} else {
-						logout()
+						giveUp()
 					}
 				}).then((token) => {
 					requests.forEach(cb => cb(token))
 					requests = []
 				}).catch((error) => {
-					logout()
+					giveUp()
 					console.log(error)
 				})
 			} else if (originalConfig.url === '/v1/users/refresh' && error?.response?.status === 401) {
 				logout()
 			}
-			return new Promise((resolve) => {
+			return new Promise((resolve, reject) => {
 				requests.push((token) => {
+					// null means the refresh gave up: fail the call rather than replaying
+					// it unauthenticated, which would 401 again and start the whole dance
+					// a second time.
+					if (!token) {
+						reject(error)
+						return
+					}
+
 					// The request keeps its own headers: a text/plain body retried
 					// under the JSON default would be re-encoded as a JSON string.
 					originalConfig.headers.Authorization = token

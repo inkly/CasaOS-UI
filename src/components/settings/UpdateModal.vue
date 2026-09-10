@@ -48,6 +48,18 @@ export default {
 			updateLogs: ``,
 		}
 	},
+	// This modal is opened programmatically, outside the router view, so closing it
+	// unmounts the component while its two intervals go on running. The log poll
+	// then outlives the dialog by however long the update takes -- and its success
+	// branch calls reloadWhenBackendIsBack, which DELETES the session. The restart
+	// rotates the token keys, so that poll 401s, the interceptor bounces the browser
+	// to /login, the owner signs in -- and the poll, still running, finally gets its
+	// success line with the NEW token and clears the session it never knew about.
+	// That is the second login. The sibling dialog has had this hook all along.
+	beforeUnmount() {
+		clearInterval(this.updateTimer)
+		clearInterval(this.timer)
+	},
 	computed: {
 		markdownToHtml() {
 			return marked.parse(this.changeLog)
