@@ -8,6 +8,15 @@
  * @param {object} data the `data` of the check response: `{updatable: string[], unchecked: {}}`
  * @returns {{message: string, params?: object, type: string}[]} toasts, in order
  */
+// The backend answers `<image>: <why>`. The image identifies the service inside a
+// multi-service stack, which matters when debugging and not at all in a toast: what
+// the reader needs is which apps, and the one reason they share. Anything we cannot
+// split is shown whole rather than guessed at.
+function causeOf(reason) {
+	const at = String(reason ?? '').lastIndexOf(': ')
+	return at > 0 ? reason.slice(at + 2) : String(reason ?? '')
+}
+
 // How many apps to name before falling back to a count for the rest.
 const MAX_NAMED = 3
 
@@ -41,15 +50,27 @@ export function imageUpdateSummary(data) {
 		// registry that would not answer or an image nobody can resolve, is the whole
 		// of what the reader can act on. Three at a time, so one unreachable registry
 		// behind twenty apps does not fill the screen.
-		const shown = uncheckedNames.slice(0, MAX_NAMED)
-		const detail = shown.map(name => `${name}: ${unchecked[name]}`).join(' / ')
-		const rest = uncheckedNames.length - shown.length
+		// Grouped by cause, not one line per app. Four apps behind one unreachable
+		// registry is one fact, and repeating it four times -- each with its own image
+		// reference -- was a wall of text that buried the app names, which are the part
+		// anyone can act on.
+		const byCause = new Map()
+		for (const name of uncheckedNames) {
+			const cause = causeOf(unchecked[name])
+			if (!byCause.has(cause))
+				byCause.set(cause, [])
+			byCause.get(cause).push(name)
+		}
+
+		const detail = [...byCause].map(([cause, names]) => {
+			const shown = names.slice(0, MAX_NAMED).join(', ')
+			const more = names.length - MAX_NAMED
+			return `${shown}${more > 0 ? ` +${more}` : ''} (${cause})`
+		}).join(' · ')
 
 		toasts.push({
-			message: rest > 0
-				? 'Could not check {detail}, and {rest} more. They keep their previous state.'
-				: 'Could not check {detail}. They keep their previous state.',
-			params: { detail, rest },
+			message: 'Could not check {detail}. They keep their previous state.',
+			params: { detail },
 			type: 'is-warning',
 			// long enough to read a reason, where the others are an acknowledgement
 			duration: 15000,

@@ -24,36 +24,58 @@ describe('image update summary', () => {
 
 	it('names what could not be checked, and why, in its own louder message', () => {
 		// a count alone is something to worry about and nothing to do
-		const toasts = imageUpdateSummary({ updatable: [], unchecked: { plex: 'not pulled on this host' } })
+		const toasts = imageUpdateSummary({ updatable: [], unchecked: { plex: 'plex/inc:latest: not pulled on this host' } })
 		expect(toasts).toHaveLength(2)
 		expect(toasts[1]).toEqual({
 			message: 'Could not check {detail}. They keep their previous state.',
-			params: { detail: 'plex: not pulled on this host', rest: 0 },
+			params: { detail: 'plex (not pulled on this host)' },
 			type: 'is-warning',
 			duration: 15000,
 		})
 	})
 
-	it('gives each app its own reason', () => {
+	it('says one shared reason once, and leads with the apps', () => {
+		// what a real box answered: four apps behind one unreachable registry, each
+		// carrying a digest-pinned image reference. Repeating the cause four times with
+		// 64 characters of hex apiece buried the only part anyone can act on.
+		const unreachable = 'its registry could not be reached'
 		const toasts = imageUpdateSummary({
 			updatable: [],
-			unchecked: { plex: 'not pulled on this host', gluetun: 'registry did not answer' },
+			unchecked: {
+				'big-bear-dockhand': `fnsys/dockhand:latest: ${unreachable}`,
+				'big-bear-dozzle': `amir20/dozzle:v10.7.1: ${unreachable}`,
+				'big-bear-wud': `fmartinou/whats-up-docker:6.6.1: ${unreachable}`,
+				'big-bear-portainer': `portainer/portainer-ce:2.21.0: ${unreachable}`,
+			},
 		})
-		// sorted, so the same check twice reads the same way
-		expect(toasts[1].params.detail).toBe('gluetun: registry did not answer / plex: not pulled on this host')
+
+		expect(toasts[1].params.detail).toBe(
+			`big-bear-dockhand, big-bear-dozzle, big-bear-portainer +1 (${unreachable})`,
+		)
+		// the cause appears once, not once per app
+		expect(toasts[1].params.detail.split(unreachable)).toHaveLength(2)
 	})
 
-	it('stops naming after three, so one dead registry does not fill the screen', () => {
-		const unchecked = {}
-		for (const name of ['a', 'b', 'c', 'd', 'e'])
-			unchecked[name] = 'registry did not answer'
+	it('keeps distinct reasons apart', () => {
+		const toasts = imageUpdateSummary({
+			updatable: [],
+			unchecked: {
+				plex: 'plex/inc:latest: not pulled on this host',
+				gluetun: 'qmcgaw/gluetun:latest: its registry could not be reached',
+				qbit: 'lscr.io/qbittorrent:latest: its registry could not be reached',
+			},
+		})
 
-		const toasts = imageUpdateSummary({ updatable: [], unchecked })
-		expect(toasts[1].message).toBe('Could not check {detail}, and {rest} more. They keep their previous state.')
-		expect(toasts[1].params.rest).toBe(2)
-		expect(toasts[1].params.detail.split(' / ')).toHaveLength(3)
+		const groups = toasts[1].params.detail.split(' · ')
+		expect(groups).toHaveLength(2)
+		expect(groups).toContain('gluetun, qbit (its registry could not be reached)')
+		expect(groups).toContain('plex (not pulled on this host)')
 	})
 
+	it('shows a reason it cannot split whole rather than guessing', () => {
+		const toasts = imageUpdateSummary({ updatable: [], unchecked: { odd: 'something went wrong' } })
+		expect(toasts[1].params.detail).toBe('odd (something went wrong)')
+	})
 	for (const [name, data] of [
 		['no data at all', undefined],
 		['a null body', null],
