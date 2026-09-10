@@ -567,7 +567,7 @@
   "Recreate container": "Recreate container",
   "Recreating": "Recreating",
   "{name} will be stopped and replaced by a new container running the newest image. Its volumes and bind mounts are carried over with the data in them; anything written elsewhere inside the container is lost with it. Its settings are copied from the container as it runs now, and CasaOS keeps no copy of them: this container was imported, not installed by CasaOS. If no newer image is published, nothing is touched.": "{name} will be stopped and replaced by a new container running the newest image. Its volumes and bind mounts are carried over with the data in them; anything written elsewhere inside the container is lost with it. Its settings are copied from the container as it runs now, and CasaOS keeps no copy of them: this container was imported, not installed by CasaOS. If no newer image is published, nothing is touched.",
-  "{name} publishes no web interface, so there is nothing to open. Its containers are in Settings.": "{name} publishes no web interface, so there is nothing to open. Its containers are in Settings.",
+  "{name} has no web interface to open. If it has one, set its port under Settings › Web UI.": "{name} has no web interface to open. If it has one, set its port under Settings › Web UI.",
   "{name} now runs the image that was just pulled.": "{name} now runs the image that was just pulled.",
   "{name} already runs the newest image, so it was left as it is.": "{name} already runs the newest image, so it was left as it is.",
   "Could not check whether a newer image exists for {name}. It keeps the image it has.": "Could not check whether a newer image exists for {name}. It keeps the image it has.",

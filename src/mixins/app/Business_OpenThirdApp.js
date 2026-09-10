@@ -20,7 +20,9 @@ export default {
 				exceptions: this.$store.state.appLaunchExceptions,
 			})
 		},
-		// An app says where its web interface is with a published port or an index. A
+		// An app says where its web interface is with a published port or an index. The
+		// grid fills one in from the ports Docker reports when the compose file names
+		// none, so reaching here means there was nothing to fill in either. A
 		// stack written by hand says neither, and the URL built from nothing came out
 		// as `http://<the box>` -- the dashboard itself, opened inside the dashboard.
 		// Having nothing to open is an answer, and saying so beats opening the wrong
@@ -30,7 +32,7 @@ export default {
 		},
 		warnNothingToOpen(appInfo) {
 			this.$buefy.toast.open({
-				message: this.$t('{name} publishes no web interface, so there is nothing to open. Its containers are in Settings.', { name: appInfo.name }),
+				message: this.$t('{name} has no web interface to open. If it has one, set its port under Settings › Web UI.', { name: appInfo.name }),
 				type: 'is-warning',
 				position: 'is-top',
 				duration: 4000,
