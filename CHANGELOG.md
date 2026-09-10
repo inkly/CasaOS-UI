@@ -2,6 +2,12 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.49] - 2026-09-10
+
+### Fixed
+
+- **An app that publishes no web interface says so, rather than opening the dashboard inside itself.** A stack written by hand declares neither a port nor an index, and the card is told the app's own address only after the grid has already defaulted it to the box's. So the URL built from those three came out as `http://<the box>` — the dashboard, opened in the frame. It was unreachable until now only because such an app arrived with no status at all and every click fell into the "not running" branch instead, which sent `start` to a stack that was already up. Having nothing to open is an answer; the card gives it, and the app launcher no longer waits on a URL that will never answer.
+
 ## [0.4.48] - 2026-09-10
 
 ### Fixed

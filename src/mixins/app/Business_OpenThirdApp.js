@@ -20,7 +20,27 @@ export default {
 				exceptions: this.$store.state.appLaunchExceptions,
 			})
 		},
+		// An app says where its web interface is with a published port or an index. A
+		// stack written by hand says neither, and the URL built from nothing came out
+		// as `http://<the box>` -- the dashboard itself, opened inside the dashboard.
+		// Having nothing to open is an answer, and saying so beats opening the wrong
+		// thing.
+		hasWebUI(appInfo) {
+			return Boolean(appInfo.port || appInfo.index)
+		},
+		warnNothingToOpen(appInfo) {
+			this.$buefy.toast.open({
+				message: this.$t('{name} publishes no web interface, so there is nothing to open. Its containers are in Settings.', { name: appInfo.name }),
+				type: 'is-warning',
+				position: 'is-top',
+				duration: 4000,
+			})
+		},
 		openAppToNewWindow(appInfo) {
+			if (!this.hasWebUI(appInfo)) {
+				this.warnNothingToOpen(appInfo)
+				return
+			}
 			this.hasNewTag(appInfo.name) ? this.firstOpenThirdApp(appInfo) : this.openThirdApp(appInfo)
 		},
 		openThirdApp(appInfo) {
@@ -75,6 +95,12 @@ export default {
 		},
 		firstOpenThirdApp(appInfo) {
 			this.removeIdFromSessionStorage(appInfo.name)
+			// the launcher exists to wait for a URL to answer; with no URL it would
+			// wait on nothing
+			if (!this.hasWebUI(appInfo)) {
+				this.warnNothingToOpen(appInfo)
+				return
+			}
 			this.$EventBus.$emit(events.OPEN_APP_LAUNCHER, appInfo)
 		},
 	},
