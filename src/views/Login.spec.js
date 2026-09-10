@@ -32,7 +32,10 @@ const session = {
 function mountWithApi(login, verify2FA) {
 	const $api = {
 		users: { login, verify2FA },
-		sys: { getVersion: () => Promise.resolve({ data: { success: 200, data: { current_version: '0.4.37' } } }) },
+		// Every other service is down, which is what the minute after an update looks
+		// like: the user service is back -- that is what the update dialog waited for --
+		// and the core is still restarting. Signing in must not depend on any of it.
+		sys: { getVersion: () => Promise.reject(new Error('502 Bad Gateway')) },
 	}
 	const $router = { push: vi.fn() }
 	const wrapper = mount(Login, { global: { plugins: [Buefy, i18n], mocks: { $api, $router, $store: { commit: vi.fn() } } } })
@@ -46,6 +49,28 @@ async function submitPassword(wrapper) {
 	await wrapper.find('button.is-primary').trigger('click')
 	await flushPromises()
 }
+
+// The session is written to localStorage and then the router is told to go. Between
+// those two the code used to await the system version, for a router-guard cache that
+// nothing else read: when that call failed the await threw, the navigation never ran,
+// and the person was left on the login page holding a valid session and an error
+// message. Signing in again once the core answered is what made an update cost two
+// logins.
+describe('a login that lands', () => {
+	beforeEach(() => localStorage.clear())
+
+	it('reaches the dashboard while the rest of the box is still coming back', async () => {
+		const noSecondFactor = () => Promise.resolve({ data: { success: 200, data: { ...session, user: { ...session.user, totp_enabled: false } } } })
+		const { wrapper, $router } = mountWithApi(noSecondFactor)
+
+		await submitPassword(wrapper)
+
+		expect($router.push).toHaveBeenCalledWith('/')
+		expect(localStorage.getItem('access_token')).toBe('a')
+		expect(localStorage.getItem('refresh_token')).toBe('r')
+		wrapper.unmount()
+	})
+})
 
 describe('login with two-factor authentication', () => {
 	const preAuth = () => Promise.resolve({ data: { success: 10014, data: { pre_auth_token: 't', expires_at: Date.now() / 1000 + 300 } } })

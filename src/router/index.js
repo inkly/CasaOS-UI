@@ -50,7 +50,6 @@ async function needInit() {
 
 router.beforeEach(async (to, from, next) => {
 	const accessToken = localStorage.getItem('access_token')
-	const version = localStorage.getItem('version')
 	const requireAuth = to.matched.some(record => record.meta.requireAuth)
 
 	// 判断是否需要初始化
@@ -63,11 +62,10 @@ router.beforeEach(async (to, from, next) => {
 			if (requireAuth && !accessToken) {
 				next('/login')
 			} else {
-				// The `return`s matter: all three of these used to fall through to
-				// the unconditional next() below. v4 applies only the first call,
-				// so behaviour is unchanged, but it warns `The "next" callback was
-				// called more than once` on every login, logout and version-less
-				// boot.
+				// The `return`s matter: both of these used to fall through to the
+				// unconditional next() below. v4 applies only the first call, so
+				// behaviour is unchanged, but it warns `The "next" callback was
+				// called more than once` on every login and logout.
 				switch (to.path) {
 					case '/login':
 						if (accessToken) {
@@ -82,12 +80,15 @@ router.beforeEach(async (to, from, next) => {
 						localStorage.removeItem('user')
 						return next('/login')
 
-					default:
-						if (version == null) {
-							localStorage.removeItem('access_token')
-							return next('/login')
-						}
-						break
+					// No `default` that throws the session away when `version` is not in
+					// localStorage. Which CasaOS version this is says nothing about
+					// whether the person driving the browser is signed in, and nothing
+					// else ever read that key: the only way to fill it was to be sent to
+					// the login page, so the branch existed to undo itself. What it did
+					// in practice was delete the token of somebody who had just signed
+					// in, whenever the version call behind it had not answered -- which
+					// is exactly the minute after an update, and is why signing in took
+					// two attempts.
 				}
 				next()
 			}

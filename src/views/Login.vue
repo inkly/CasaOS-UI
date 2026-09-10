@@ -149,10 +149,13 @@ export default {
 			this.$store.commit('SET_ACCESS_TOKEN', data.token.access_token)
 			this.$store.commit('SET_REFRESH_TOKEN', data.token.refresh_token)
 
-			const versionRes = await this.$api.sys.getVersion()
-			if (versionRes.data.success == 200) {
-				localStorage.setItem('version', versionRes.data.data.current_version)
-			}
+			// Straight to the dashboard. This used to await the system version first
+			// and store it for the router guard: the session was already written, so
+			// a version call that failed threw out of here BEFORE the navigation and
+			// left the person on the login page looking at an error, signed in and
+			// not knowing it. The minute after an update is precisely when the core
+			// is still restarting and that call fails, and signing in again once it
+			// answered is what made an update cost two logins.
 			this.$router.push('/')
 		},
 		showError(err) {

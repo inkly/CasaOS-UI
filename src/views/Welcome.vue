@@ -184,10 +184,9 @@ export default {
 				this.$store.commit('SET_ACCESS_TOKEN', userRes.data.data.token.access_token)
 				this.$store.commit('SET_REFRESH_TOKEN', userRes.data.data.token.refresh_token)
 
-				const versionRes = await this.$api.sys.getVersion()
-				if (versionRes.data.success == 200) {
-					localStorage.setItem('version', versionRes.data.data.current_version)
-				}
+				// no version fetch here either: nothing reads that key, and awaiting it
+				// between storing the session and finishing put a first install one
+				// failed request away from stopping half-done
 				sessionStorage.setItem('fromWelcome', true)
 				this.isLogin = true
 			} else {
