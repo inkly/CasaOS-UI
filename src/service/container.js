@@ -173,6 +173,18 @@ const container = {
 		})
 	},
 
+	// v2:: start, stop or restart ONE container of an app, rather than the whole
+	// stack. The body is a bare JSON string, like the app-level status route it
+	// sits beside -- so it is encoded here: handed a plain string, axios would
+	// send it unquoted, which is not JSON.
+	setContainerStatus(id, containerId, action) {
+		return instance.put(
+			`${PREFIX2COMPOSE}/${encodeURIComponent(id)}/containers/${encodeURIComponent(containerId)}/status`,
+			JSON.stringify(action),
+			{ headers: { 'Content-Type': 'application/json' } },
+		)
+	},
+
 	// v2:: replace the .env file of an app with `text`; '' deletes it. Sent as
 	// text/plain: under the instance's JSON default, '' would go out as `""`.
 	applyComposeEnv(id, text, dryRun) {

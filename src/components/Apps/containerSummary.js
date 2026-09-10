@@ -129,3 +129,36 @@ export function containerRows(data) {
 				}))
 		})
 }
+
+/**
+ * What can be done to a container, given the state Docker reports for it.
+ *
+ * Restart is always paired with one of start or stop rather than offered alone,
+ * because the pair is what someone opens this tab to do: a stack whose database
+ * wedged needs that one service bounced, not the whole app taken down and
+ * brought back.
+ *
+ * Two states are deliberately offered nothing. A service the compose file
+ * declares but Docker runs no container for has no id to act on; and one being
+ * removed is already going away, so every button on it is a race the caller
+ * loses.
+ *
+ * `paused` counts as running: Docker reports a paused container as running, it
+ * can be stopped, and starting it does nothing at all.
+ *
+ * @param {object} row a row from containerRows()
+ * @returns {{action: string, icon: string, label: string}[]} the buttons to draw, in order, or none
+ */
+export function containerActions(row) {
+	if (!row.id || row.state === 'removing')
+		return []
+
+	const up = row.state === 'running' || row.state === 'restarting' || row.state === 'paused'
+
+	return [
+		up
+			? { action: 'stop', icon: 'stop', label: 'Stop' }
+			: { action: 'start', icon: 'play', label: 'Start' },
+		{ action: 'restart', icon: 'restart', label: 'Restart' },
+	]
+}

@@ -39,17 +39,23 @@ const DATA = {
 	},
 }
 
-async function setup(response = { data: { data: DATA } }) {
+async function setup(response = { data: { data: DATA } }, overrides = {}) {
 	const composeAppContainers = vi.fn().mockResolvedValue(response)
+	const setContainerStatus = overrides.setContainerStatus || vi.fn().mockResolvedValue({})
+	const toast = overrides.toast
 	const wrapper = mount(ContainersTab, {
 		props: { appId: 'jellyfin' },
 		global: {
 			plugins: [Buefy, i18n],
-			mocks: { $openAPI: { appManagement: { compose: { composeAppContainers } } } },
+			mocks: {
+				$openAPI: { appManagement: { compose: { composeAppContainers } } },
+				$api: { container: { setContainerStatus } },
+				...(toast ? { $buefy: { toast: { open: toast } } } : {}),
+			},
 		},
 	})
 	await flushPromises()
-	return { wrapper, composeAppContainers }
+	return { wrapper, composeAppContainers, setContainerStatus }
 }
 
 describe('containersTab', () => {
@@ -93,10 +99,12 @@ describe('containersTab', () => {
 
 	it('asks for the logs of the container that was clicked, and for its terminal', async () => {
 		const { wrapper } = await setup()
-		const buttons = wrapper.findAll('tbody tr')[4].findAll('button')
+		// by name, not by position: the row grew start/stop/restart buttons in front
+		// of these two, and an index would have moved with them
+		const row = wrapper.findAll('tbody tr')[4]
 
-		await buttons[0].trigger('click')
-		await buttons[1].trigger('click')
+		await row.find('[data-action="logs"]').trigger('click')
+		await row.find('[data-action="terminal"]').trigger('click')
 		// The second replica: naming the service alone would have opened the first one.
 		expect(wrapper.emitted('open')).toEqual([
 			[{ service: 'worker', containerId: 'w2', tab: 'logs' }],
@@ -107,10 +115,48 @@ describe('containersTab', () => {
 
 	it('offers no terminal on a service that is not running', async () => {
 		const { wrapper } = await setup()
-		const stopped = wrapper.findAll('tbody tr')[1].findAll('button')
+		const stopped = wrapper.findAll('tbody tr')[1]
 
-		expect(stopped[0].attributes('disabled')).toBeUndefined()
-		expect(stopped[1].attributes('disabled')).toBeDefined()
+		expect(stopped.find('[data-action="logs"]').attributes('disabled')).toBeUndefined()
+		expect(stopped.find('[data-action="terminal"]').attributes('disabled')).toBeDefined()
+		wrapper.unmount()
+	})
+
+	it('acts on one container rather than on the whole stack', async () => {
+		const { wrapper, composeAppContainers, setContainerStatus } = await setup()
+
+		await wrapper.findAll('tbody tr')[0].find('[data-action="restart"]').trigger('click')
+		await flushPromises()
+
+		// the container's own id, not the service name: a scaled service holds several
+		expect(setContainerStatus).toHaveBeenCalledWith('jellyfin', 'j1', 'restart')
+		// and the row has to show what happened, so the tab re-reads instead of guessing
+		expect(composeAppContainers).toHaveBeenCalledTimes(2)
+		wrapper.unmount()
+	})
+
+	it('offers stop to a running container and start to a stopped one', async () => {
+		const { wrapper } = await setup()
+		const rows = wrapper.findAll('tbody tr')
+
+		expect(rows[0].find('[data-action="stop"]').exists()).toBe(true)
+		expect(rows[0].find('[data-action="start"]').exists()).toBe(false)
+		expect(rows[1].find('[data-action="start"]').exists()).toBe(true)
+		expect(rows[1].find('[data-action="stop"]').exists()).toBe(false)
+		// a service Docker runs no container for has nothing to act on
+		expect(rows[2].find('[data-action="restart"]').exists()).toBe(false)
+		wrapper.unmount()
+	})
+
+	it('says why an action failed rather than leaving the row unchanged and silent', async () => {
+		const toast = vi.fn()
+		const setContainerStatus = vi.fn().mockRejectedValue({ response: { data: { message: 'container is being removed' } } })
+		const { wrapper } = await setup(undefined, { setContainerStatus, toast })
+
+		await wrapper.findAll('tbody tr')[0].find('[data-action="stop"]').trigger('click')
+		await flushPromises()
+
+		expect(toast).toHaveBeenCalledWith(expect.objectContaining({ message: 'container is being removed' }))
 		wrapper.unmount()
 	})
 

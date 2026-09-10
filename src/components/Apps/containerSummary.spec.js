@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { containerRows, healthCell, pickContainerId, publishedPorts, uptime } from './containerSummary'
+import { containerActions, containerRows, healthCell, pickContainerId, publishedPorts, uptime } from './containerSummary'
 
 // A real answer, trimmed to the fields the tab reads: each service holds a LIST of
 // containers, `worker` is scaled to two and `idle` is declared but running nothing.
@@ -161,5 +161,31 @@ describe('containerRows', () => {
 	it('survives an app with no container at all', () => {
 		expect(containerRows({})).toEqual([])
 		expect(containerRows(undefined)).toEqual([])
+	})
+})
+
+describe('what can be done to a container', () => {
+	const row = (state, id = '3f1c') => ({ id, state })
+
+	it('offers stop and restart to anything that is up', () => {
+		for (const state of ['running', 'restarting', 'paused']) {
+			expect(containerActions(row(state)).map(a => a.action)).toEqual(['stop', 'restart'])
+		}
+	})
+
+	it('offers start and restart to anything that is not', () => {
+		for (const state of ['exited', 'created', 'dead']) {
+			expect(containerActions(row(state)).map(a => a.action)).toEqual(['start', 'restart'])
+		}
+	})
+
+	it('offers nothing on a service Docker runs no container for', () => {
+		// the row the tab draws for a service declared in the compose file but absent
+		expect(containerActions({ id: '', state: 'absent' })).toEqual([])
+	})
+
+	it('offers nothing while Docker is removing the container', () => {
+		// every button here is a race the caller loses
+		expect(containerActions(row('removing'))).toEqual([])
 	})
 })

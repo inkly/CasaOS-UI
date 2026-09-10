@@ -62,9 +62,23 @@
 
 			<b-table-column v-slot="{ row }" :label="$t('Actions')">
 				<div class="containers-tab__actions">
+					<!-- One service at a time: the app-level buttons take the whole stack
+						down, which is a bigger outage than the fault they usually fix. -->
+					<b-tooltip v-for="act in actionsFor(row)" :key="act.action" :label="$t(act.label)"
+						position="is-left" type="is-dark">
+						<b-button :data-action="act.action"
+							:disabled="!!busy[row.id]"
+							:icon-left="act.icon"
+							:loading="busy[row.id] === act.action"
+							class="mr-1"
+							rounded
+							size="is-small"
+							@click="run(row, act.action)" />
+					</b-tooltip>
 					<b-tooltip :label="logsTooltip(row)" position="is-left" type="is-dark">
 						<b-button :disabled="!row.id"
 							class="mr-1"
+							data-action="logs"
 							icon-left="text-box-outline"
 							rounded
 							size="is-small"
@@ -72,6 +86,7 @@
 					</b-tooltip>
 					<b-tooltip :label="terminalTooltip(row)" position="is-left" type="is-dark">
 						<b-button :disabled="row.state !== 'running'"
+							data-action="terminal"
 							icon-left="console"
 							rounded
 							size="is-small"
@@ -90,7 +105,7 @@
 </template>
 
 <script>
-import { CONTAINER_STATES, containerRows, healthCell } from './containerSummary'
+import { CONTAINER_STATES, containerActions, containerRows, healthCell } from './containerSummary'
 
 export default {
 	name: 'ContainersTab',
@@ -103,12 +118,43 @@ export default {
 			rows: [],
 			isLoading: false,
 			error: '',
+			// container id -> the action running on it, so one row's button spins
+			// without disabling the tab
+			busy: {},
 		}
 	},
 	mounted() {
 		this.load()
 	},
 	methods: {
+		actionsFor(row) {
+			return containerActions(row)
+		},
+
+		// Synchronously, then reload: the row has to show what actually happened, and
+		// the endpoint answers once Docker has done it rather than promising to.
+		async run(row, action) {
+			if (!row.id || this.busy[row.id])
+				return
+
+			this.busy = { ...this.busy, [row.id]: action }
+			try {
+				await this.$api.container.setContainerStatus(this.appId, row.id, action)
+				await this.load()
+			} catch (error) {
+				const data = error.response && error.response.data
+				this.$buefy.toast.open({
+					message: (data && data.message) || error.message,
+					type: 'is-danger',
+					position: 'is-top',
+					duration: 5000,
+				})
+			} finally {
+				const { [row.id]: _done, ...rest } = this.busy
+				this.busy = rest
+			}
+		},
+
 		stateOf(row) {
 			return CONTAINER_STATES[row.state]
 		},
