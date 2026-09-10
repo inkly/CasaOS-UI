@@ -183,7 +183,7 @@ export default {
 				this.isLoading = false
 				if (res.status == 200) {
 					this.name = ''
-					this.icon = 'https://avatars.githubusercontent.com/u/91336243?s=200&v=4'
+					this.icon = require('@/assets/img/app/default.svg')
 				} else {
 					this.$buefy.toast.open({
 						message: res.data.message,

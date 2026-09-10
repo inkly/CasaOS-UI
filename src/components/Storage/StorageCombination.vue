@@ -31,7 +31,7 @@
 					<cToolTip is-block modal="is-success"></cToolTip>
 				</div>
 				<p v-if="usePercent >= 80" class="has-text-right">
-					<a rel="noopener" href="https://wiki.casaos.io/zh/guides" target="_blank">{{ $t("Free up storage") }}</a>
+					<span>{{ $t("Free up storage") }}</span>
 				</p>
 			</div>
 		</div>

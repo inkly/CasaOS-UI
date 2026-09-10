@@ -49,7 +49,7 @@ export default {
 			timer: 0,
 			updateTimer: 0,
 			markdown: ``,
-			githubUrl: `https://github.com/IceWhaleTech/CasaOS`,
+			githubUrl: `https://github.com/ReCasaOS/CasaOS`,
 			shareTitle: `I'm using CasaOS, a simple, easy-to-use, elegant open-source home cloud system, try it like me.`,
 			shareSites: [
 				'facebook',

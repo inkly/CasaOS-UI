@@ -6,6 +6,10 @@ All notable changes to CasaOS UI are documented here.
 
 ### Fixed
 
+- **The dashboard says who publishes it.** The footer read "Made with ❤️ by IceWhale and YOU!" on every page of a distribution whose own README says it is not affiliated with IceWhale. It now names this distribution and credits the project it is built on, on a second line, which is the thing the old line was trying to say and got backwards. The console banner printed on every load said the same and says the same now.
+- The "what's new" panel shown after an update linked to IceWhale's repository rather than to the one the update came from.
+- The default icon for an external link whose site offers none was IceWhale's GitHub organisation avatar, fetched from GitHub at the moment of adding. It is the dashboard's own default app icon now, and nothing leaves the box to draw it.
+- A disk at 80% offered **Free up storage** as a link to `wiki.casaos.io/zh/guides` — IceWhale's wiki, and its Chinese half, whatever language the reader had chosen. The hint stays; the link is gone, because this distribution has no wiki to send anyone to instead.
 - **An app that publishes no web interface says so, rather than opening the dashboard inside itself.** A stack written by hand declares neither a port nor an index, and the card is told the app's own address only after the grid has already defaulted it to the box's. So the URL built from those three came out as `http://<the box>` — the dashboard, opened in the frame. It was unreachable until now only because such an app arrived with no status at all and every click fell into the "not running" branch instead, which sent `start` to a stack that was already up. Having nothing to open is an answer; the card gives it, and the app launcher no longer waits on a URL that will never answer.
 
 ## [0.4.48] - 2026-09-10

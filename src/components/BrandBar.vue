@@ -3,8 +3,13 @@
 		<figure class="image _is-136x26 mb-3">
 			<img alt="logo" srcset="../assets/img/logo/logo.svg 2x, ../assets/img/logo/logo.png 1x">
 		</figure>
-		<span class="intro-text ml-4">Made with ❤️ by IceWhale and YOU!</span>
-
+		<!-- Two lines, because they answer two different questions: who publishes this
+			build, and whose work it stands on. The README says the same thing in more
+			words; a footer reading "Made by IceWhale" on a fork says the opposite. -->
+		<div class="brand-text ml-4">
+			<span class="intro-text">Made with ❤️ by ReCasaOS and YOU!</span>
+			<span class="upstream-text">Built on CasaOS by IceWhale</span>
+		</div>
 	</div>
 </template>
 
@@ -21,9 +26,13 @@ export default {
 	bottom: 0;
 	//z-index: 10;
 
-	span {
-		//font-size: 1.125rem;
+	// the 7px used to sit on the span itself; it belongs on whatever the bar's last
+	// flex item is, which is now the column rather than a single line of text
+	.brand-text {
+		display: flex;
+		flex-direction: column;
 		margin-bottom: 7px;
+		min-width: 0;
 	}
 
 	.intro-text {
@@ -35,8 +44,18 @@ export default {
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+	}
 
-		vertical-align: text-bottom;
+	.upstream-text {
+		font-weight: 400;
+		font-size: 0.75rem;
+		line-height: 1rem;
+		color: var(--casa-on-glass-dim);
+		opacity: 0.7;
+
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 }
 

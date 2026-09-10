@@ -123,7 +123,7 @@ _____             _____ _____
 |     |___ ___ ___|     |   __|
 |   --| .'|_ -| .'|  |  |__   |
 |_____|__,|___|__,|_____|_____|
--- Made by IceWhale with YOU --
+-- ReCasaOS, built on CasaOS by IceWhale --
 `, `font-family: monospace`)
 
 		this.$buefy.config.setOptions(customIconConfig)
