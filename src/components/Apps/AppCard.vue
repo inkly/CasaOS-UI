@@ -501,8 +501,13 @@ export default {
 		// what the IMAGE declared too -- every Red Hat UBI-derived image sets `name`, and
 		// the event then names the image, not the container. The tag we sent with the
 		// request is ours alone.
+		// Not `this.isRecreating &&`: the backend publishes app:update-error from a
+		// goroutine and app:update-end from a defer, so which arrives first is a race.
+		// Whichever came first cleared the flag, and the second was then dropped -- a
+		// recreate that pulled and then failed to clone said nothing at all. The tag is
+		// the container id we asked for, which identifies the recreate on its own.
 		isRecreateEvent(data) {
-			return this.isRecreating && data.Properties[RECREATE_TAG] === this.item.name
+			return data.Properties[RECREATE_TAG] === this.item.name
 		},
 
 		// What a finished recreate proves, and nothing further. app:updated is set only

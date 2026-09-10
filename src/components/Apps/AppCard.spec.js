@@ -237,6 +237,28 @@ describe('imported container', () => {
 		wrapper.unmount()
 	})
 
+	it('reports the failure whichever of the two events lands first', async () => {
+		// the backend publishes update-error from a goroutine and update-end from a
+		// defer, so the order is a race. Gating on isRecreating meant whichever arrived
+		// first cleared the flag and the second was dropped: a recreate that pulled and
+		// then failed to clone reported nothing at all, and the spinner just stopped.
+		const open = vi.fn()
+		const wrapper = await card(imported, { $buefy: { toast: { open } }, $EventBus: { $emit: () => {} } })
+		wrapper.vm.isRecreating = true
+
+		const fire = (event, Properties) =>
+			wrapper.vm.$options.sockets[event].call(wrapper.vm, { Properties })
+
+		// update-end first, carrying a pull that worked and so saying nothing itself
+		fire('app:update-end', { 'recreate:container:id': 'ab12cd34ef56', 'docker:image:updated': 'true' })
+		expect(open).not.toHaveBeenCalled()
+
+		fire('app:update-error', { 'recreate:container:id': 'ab12cd34ef56', 'message': 'no space left on device' })
+		expect(open).toHaveBeenCalledTimes(1)
+		expect(open.mock.calls[0][0].message).toContain('no space left on device')
+		expect(open.mock.calls[0][0].type).toBe('is-danger')
+		wrapper.unmount()
+	})
 	it('stops waiting when the recreate reports an error', async () => {
 		const wrapper = await card(imported)
 		wrapper.vm.isRecreating = true
