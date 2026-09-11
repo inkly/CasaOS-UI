@@ -582,5 +582,17 @@
   "Freed {size}": "{size} libérés",
   "Updating {name} failed: {reason}": "La mise à jour de {name} a échoué : {reason}",
   "Could not check {detail}. They keep their previous state.": "Vérification impossible pour {detail}. Ces applications gardent leur état précédent.",
-  "Could not check {detail}, and {rest} more. They keep their previous state.": "Vérification impossible pour {detail}, et {rest} autre(s). Ces applications gardent leur état précédent."
+  "Could not check {detail}, and {rest} more. They keep their previous state.": "Vérification impossible pour {detail}, et {rest} autre(s). Ces applications gardent leur état précédent.",
+  "Backup destinations": "Destinations de sauvegarde",
+  "Where backups are sent. Credentials are kept by rclone, alongside the cloud drives this box already mounts.": "Où partent les sauvegardes. Les identifiants sont conservés par rclone, à côté des disques cloud que cette box monte déjà.",
+  "No destination yet. Add one below.": "Aucune destination pour l'instant. Ajoutez-en une ci-dessous.",
+  "Forget": "Oublier",
+  "Backend": "Type de stockage",
+  "These are rclone's own option names. Leave blank what you do not need; add a row for anything not listed.": "Ce sont les noms d'options de rclone. Laissez vide ce dont vous n'avez pas besoin ; ajoutez une ligne pour ce qui n'est pas listé.",
+  "Option": "Option",
+  "Save destination": "Enregistrer la destination",
+  "Forget this destination?": "Oublier cette destination ?",
+  "{name} will be removed from this box, along with the credentials for it. Backups already sent there are not touched.": "{name} sera retirée de cette box, avec ses identifiants. Les sauvegardes déjà envoyées là-bas ne sont pas touchées.",
+  "Reachable": "Joignable",
+  "Reachable, {free} free": "Joignable, {free} libres"
 }

@@ -160,6 +160,21 @@
 					</div>
 					<!-- WebUI Port End -->
 
+					<!-- Backup destinations Start -->
+					<div
+						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
+						<div class="is-flex is-align-items-center is-flex-grow-1 _is-normal">
+							<b-icon class="mr-1 ml-2" icon="cloud-outline" pack="casa" size="is-20" />
+							{{ $t("Backup destinations") }}
+						</div>
+						<div class="ml-2">
+							<b-button rounded size="is-small" type="is-dark" @click="showBackupDestinations">
+								{{ $t("Change") }}
+							</b-button>
+						</div>
+					</div>
+					<!-- Backup destinations End -->
+
 					<!-- Background Start -->
 					<div
 						class="is-flex is-align-items-center mb-1 _is-large _box hover-effect _is-radius pr-2 mr-4 ml-4">
@@ -379,6 +394,7 @@
 <script>
 import AccountPanel from './account/AccountPanel.vue'
 import TerminalPanel from './logsAndTerminal/TerminalPanel.vue'
+import BackupDestinations from './settings/BackupDestinations.vue'
 import PortPanel from './settings/PortPanel.vue'
 import UpdateModal from './settings/UpdateModal.vue'
 import SystemPackageUpdateModal from './settings/SystemPackageUpdateModal.vue'
@@ -600,6 +616,19 @@ export default {
 				if (res.data.success == 200) {
 					this.port = res.data.data
 				}
+			})
+		},
+
+		showBackupDestinations() {
+			this.$refs.settingsDrop.toggle()
+			this.$buefy.modal.open({
+				component: BackupDestinations,
+				hasModalCard: true,
+				customClass: 'account-modal',
+				trapFocus: true,
+				canCancel: ['escape'],
+				scroll: 'keep',
+				animation: 'zoom-in',
 			})
 		},
 

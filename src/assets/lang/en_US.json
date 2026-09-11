@@ -582,5 +582,17 @@
   "Freed {size}": "Freed {size}",
   "Updating {name} failed: {reason}": "Updating {name} failed: {reason}",
   "Could not check {detail}. They keep their previous state.": "Could not check {detail}. They keep their previous state.",
-  "Could not check {detail}, and {rest} more. They keep their previous state.": "Could not check {detail}, and {rest} more. They keep their previous state."
+  "Could not check {detail}, and {rest} more. They keep their previous state.": "Could not check {detail}, and {rest} more. They keep their previous state.",
+  "Backup destinations": "Backup destinations",
+  "Where backups are sent. Credentials are kept by rclone, alongside the cloud drives this box already mounts.": "Where backups are sent. Credentials are kept by rclone, alongside the cloud drives this box already mounts.",
+  "No destination yet. Add one below.": "No destination yet. Add one below.",
+  "Forget": "Forget",
+  "Backend": "Backend",
+  "These are rclone's own option names. Leave blank what you do not need; add a row for anything not listed.": "These are rclone's own option names. Leave blank what you do not need; add a row for anything not listed.",
+  "Option": "Option",
+  "Save destination": "Save destination",
+  "Forget this destination?": "Forget this destination?",
+  "{name} will be removed from this box, along with the credentials for it. Backups already sent there are not touched.": "{name} will be removed from this box, along with the credentials for it. Backups already sent there are not touched.",
+  "Reachable": "Reachable",
+  "Reachable, {free} free": "Reachable, {free} free"
 }
