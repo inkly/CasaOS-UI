@@ -140,6 +140,13 @@
 							{{ i18n(item.title) }}
 						</a>
 					</p>
+
+					<!-- Docker hands out names like `adoring_antonelli`, and a container
+						whose name it never set falls back to its id. For those cards the
+						name identifies nothing, and the image does. -->
+					<p v-if="facts.length" class="one-line has-text-full-03 _facts">
+						{{ facts.join(' · ') }}
+					</p>
 				</div>
 			</b-tooltip>
 			<!-- Card Content End -->
@@ -151,6 +158,7 @@
 import isNull from 'lodash/isNull'
 import YAML from 'yaml'
 import FileSaver from 'file-saver'
+import { ageKey, containerFacts } from './legacyApps'
 import BackupAppModal from './BackupAppModal.vue'
 import events from '@/events/events'
 import cTooltip from '@/components/basicComponents/tooltip/tooltip.vue'
@@ -244,6 +252,16 @@ export default {
 		isV2App() {
 			return this.item.app_type === 'v2app'
 		},
+		// Only for the cards whose name says nothing: an app installed from the
+		// catalogue has a title, an icon and a place, and repeating its image under
+		// it would be noise on every tile of the grid.
+		facts() {
+			if (this.item.app_type !== 'container' && this.item.app_type !== 'v1app')
+				return []
+
+			return containerFacts(this.item, seconds => this.$t(ageKey(seconds)))
+		},
+
 		isContainerApp() {
 			return this.item.app_type === 'container'
 		},

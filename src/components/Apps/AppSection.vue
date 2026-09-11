@@ -59,30 +59,29 @@
 		</div>
 		<!-- App List End -->
 
-		<template v-if="oldAppList.length > 0">
-			<!-- Title Bar Start -->
-			<div class="title-bar is-flex is-align-items-center mt-2rem mb-5">
-				<app-section-title-tip id="appTitle2"
-					class="is-flex-grow-1 has-text-sub-04"
-					label="To be rebuilt."
-					title="Legacy app (To be rebuilt).">
-				</app-section-title-tip>
-			</div>
-			<!-- Title Bar End -->
-
-			<!-- App List Start -->
-			<div class="app-list contextmenu-canvas">
-				<!-- Application not imported Start -->
-				<div v-for="item in oldAppList" :id="`app-${item.name}`" :key="`app-${item.name}`" class="handle">
-					<app-card :is-casa="false"
-						:item="item"
-						@configApp="showConfigPanel"
-						@importApp="showContainerPanel"
-						@updateState="getList"></app-card>
+		<!-- Three groups, because one heading covered three populations and was a
+			wrong instruction for two of them: a container Portainer started is
+			managed, and one somebody ran by hand is not an app to rebuild. -->
+		<template v-for="group in legacyGroups" :key="group.id">
+			<template v-if="group.items.length > 0">
+				<div class="title-bar is-flex is-align-items-center mt-2rem mb-5">
+					<app-section-title-tip :id="`appTitle-${group.id}`"
+						:label="$t(group.label)"
+						:title="$t(group.title)"
+						class="is-flex-grow-1 has-text-sub-04">
+					</app-section-title-tip>
 				</div>
-				<!-- Application not imported End -->
-			</div>
-			<!-- App List End -->
+
+				<div class="app-list contextmenu-canvas">
+					<div v-for="item in group.items" :id="`app-${item.name}`" :key="`app-${item.name}`" class="handle">
+						<app-card :is-casa="false"
+							:item="item"
+							@configApp="showConfigPanel"
+							@importApp="showContainerPanel"
+							@updateState="getList"></app-card>
+					</div>
+				</div>
+			</template>
 		</template>
 	</div>
 </template>
@@ -93,6 +92,7 @@ import xor from 'lodash/xor'
 import concat from 'lodash/concat'
 import last from 'lodash/last'
 import isEqual from 'lodash/isEqual'
+import { groupLegacyApps } from './legacyApps'
 import AppCard from './AppCard.vue'
 import AppCardSkeleton from './AppCardSkeleton.vue'
 import AppPanel from './AppPanel.vue'
@@ -133,7 +133,18 @@ const builtInApplications = [
 const orderConfig = 'app_order'
 
 export default {
+	components: {
+		AppCard,
+		Draggable: draggable,
+		AppSectionTitleTip,
+		AppCardSkeleton,
+	},
 	mixins: [business_ShowNewAppTag, business_LinkApp],
+	provide() {
+		return {
+			openAppStore: this.showInstall,
+		}
+	},
 	data() {
 		return {
 			user_id: localStorage.getItem('user_id'),
@@ -153,17 +164,6 @@ export default {
 			isCheckingImages: false,
 		}
 	},
-	components: {
-		AppCard,
-		Draggable: draggable,
-		AppSectionTitleTip,
-		AppCardSkeleton,
-	},
-	provide() {
-		return {
-			openAppStore: this.showInstall,
-		}
-	},
 	computed: {
 		dragOptions() {
 			return {
@@ -178,6 +178,16 @@ export default {
 		},
 		exsitingAppsShow() {
 			return this.$store.state.existingAppsSwitch
+		},
+		// The backend already tells these apart -- app_type, compose_project and
+		// is_uncontrolled are all on the grid item. This only reads them.
+		legacyGroups() {
+			const groups = groupLegacyApps(this.oldAppList)
+			return [
+				{ id: 'rebuild', items: groups.rebuild, label: 'To be rebuilt.', title: 'Legacy app (To be rebuilt).' },
+				{ id: 'elsewhere', items: groups.managedElsewhere, label: 'Running, but managed outside CasaOS.', title: 'Managed elsewhere.' },
+				{ id: 'loose', items: groups.loose, label: 'Containers nothing here manages.', title: 'Unmanaged containers.' },
+			]
 		},
 	},
 	created() {

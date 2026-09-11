@@ -631,5 +631,10 @@
   "Wednesday": "Wednesday",
   "Thursday": "Thursday",
   "Friday": "Friday",
-  "Saturday": "Saturday"
+  "Saturday": "Saturday",
+  "today": "today",
+  "Running, but managed outside CasaOS.": "Running, but managed outside CasaOS.",
+  "Managed elsewhere.": "Managed elsewhere.",
+  "Containers nothing here manages.": "Containers nothing here manages.",
+  "Unmanaged containers.": "Unmanaged containers."
 }
