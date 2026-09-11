@@ -2,6 +2,18 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.51] - 2026-09-11
+
+### Added
+
+- **Three headings on the dashboard where there was one wrong instruction.** "Legacy app (To be rebuilt)" covered three populations that have nothing in common but being outside the compose list, and for two of them the instruction was wrong: a container Portainer or Dockge started is managed, just not from here, and rebuilding it invites a second copy of something already running; one somebody ran by hand is not an app and has nothing to rebuild. The three sections are read from `app_type`, `compose_project` and `is_uncontrolled`, all of which the backend already sent and none of which was being used.
+- **Cards that carry what identifies them.** Docker hands out `adoring_antonelli`, and a container whose name it never set falls back to a 64-character id -- for those the name is not an identity and the image is. Image, published port and a rough age, only on the cards whose name says nothing; repeating the image under an app installed from the catalogue would be noise on every tile. The age is deliberately rough: nobody deciding whether to delete a stray container needs the minute, and a container created in the future is a clock that disagrees, not an age.
+- **A panel that says what a container is, and removes it.** Image, state, age, command, restart policy, networks, published ports, host paths, named volumes with their size, and the environment -- hidden until asked for, because these routinely carry passwords and a panel somebody opens to find out what a container is should not put them on screen on the way past. Removal shows the volumes before anything is deleted, with their size, and shows the ones that cannot go saying why: a container comes back from its image, a volume does not. A volume the server then refuses is reported as kept rather than swallowed. A container belonging to a compose project gets the panel and nothing else -- its stack is removed by uninstalling the app.
+
+### Fixed
+
+- **Two panels had no width rule at all.** Both were opened with `customClass` `account-modal`, copied from the panels beside them, and that class has no rule anywhere in the tree -- so every modal using it fell back to Buefy's default, around 640px. The container panel holds host paths and environment variables, which wrapped a word per line; the backups panel holds a schedule row that folded into something unreadable. Each now has a class of its own and a real width.
+
 ## [0.4.50] - 2026-09-11
 
 ### Added
