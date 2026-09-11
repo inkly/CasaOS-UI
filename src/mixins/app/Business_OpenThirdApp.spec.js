@@ -15,11 +15,11 @@ function harness(overrides = {}) {
 		$t: (s, params) => (params ? s.replace('{name}', params.name) : s),
 		$messageBus: vi.fn(),
 		$baseIp: '192.168.1.50',
-		$buefy: { toast: { open: (o) => calls.toasts.push(o) } },
+		$buefy: { toast: { open: o => calls.toasts.push(o) } },
 		$EventBus: { $emit: (event, payload) => calls.launcher.push([event, payload]) },
 		$store: { state: { appLaunchInIframe: true, appLaunchExceptions: [] } },
 		hasNewTag: () => false,
-		removeIdFromSessionStorage: (name) => calls.removed.push(name),
+		removeIdFromSessionStorage: name => calls.removed.push(name),
 		...overrides,
 	}
 	return { ctx, calls }

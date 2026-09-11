@@ -35,6 +35,7 @@
   "Stop": "Arrêter",
   "CPU": "Processeur",
   "Memory": "Mémoire",
+  "Volume name": "Nom du volume",
   "Connect": "Connecter",
   "This field is required": "Ce champ est requis.",
   "This field must be a valid email": "Veuillez entrer une adresse e-mail valide.",

@@ -189,6 +189,7 @@ import InputGroup from '../forms/InputGroup.vue'
 import EnvInputGroup from '../forms/EnvInputGroup.vue'
 import CommandsInput from '../forms/CommandsInput.vue'
 import Ports from '../forms/Ports.vue'
+import { normalizeVolume } from './composeVolumes'
 import { ice_i18n } from '@/mixins/base/common-i18n'
 import VolumesInputGroup from '@/components/forms/VolumesInputGroup.vue'
 
@@ -307,8 +308,6 @@ export default {
 			// error info
 			ports_in_use: { udp: [], tcp: [] },
 
-			// other level_config
-			volumes: [],
 		}
 	},
 	computed: {
@@ -507,7 +506,6 @@ export default {
 					return
 				}
 				// 其他配置
-				this.volumes = yaml.volumes || {}
 
 				// set main app name
 				this.configData.name = yaml?.name || ''
@@ -607,40 +605,17 @@ export default {
 			isNil(composeServicesItem.ports) && (composeServicesItem.ports = [])
 
 			// Volume
-			// https://yeasy.gitbook.io/docker_practice/compose/compose_file#volumes
-			composeServicesItem.volumes = this.makeArray(composeServicesItemInput.volumes).map((item) => {
-				if (isString(item)) {
-					// 1\ replace variable in string for example: ${VOLUME_PATH}:/data
-					// this.volumes 可能为空。
-					Object.keys(this.volumes || {}).forEach((key) => {
-						item = item.replace(key, this.volumes[key] || '')
-					})
-					// 2\ split string
-					const ii = item.split(':')
-					if (ii.length > 1) {
-						return {
-							type: 'bind',
-							target: ii[1],
-							source: this.volumeAutoCheck(ii[1], ii[0], lowerFirst(this.configData['x-casaos'].title.en_us)),
-						}
-					} else {
-						return {
-							type: 'bind',
-							target: ii[0],
-							source: this.volumeAutoCheck(ii[0], '', lowerFirst(this.configData['x-casaos'].title.en_us)),
-						}
-					}
-				} else if (item) {
-					// 1\ replace value in object for example: {type: 'bind', source: '${VOLUME_PATH}', target: '/data'}
-					Object.keys(this.volumes || {}).forEach((key) => {
-						item.source = item?.source.replace(key, this?.volumes[key] || '')
-						// item.target = item?.target
-					})
-
-					return item
-				}
-				return undefined
-			})
+			// https://docs.docker.com/reference/compose-file/services/#volumes
+			//
+			// Both shapes used to be run through a substitution against the compose
+			// file's top-level `volumes:` block. That block maps a volume NAME to its
+			// DEFINITION, not a variable to a value, so `source.replace(name, definition)`
+			// handed String.replace an object and wrote `[object Object]` into the field --
+			// and a volume declared with nothing under it replaced the name with an empty
+			// string, losing it without a word.
+			const appName = lowerFirst(this.configData['x-casaos'].title.en_us)
+			composeServicesItem.volumes = this.makeArray(composeServicesItemInput.volumes)
+				.map(item => normalizeVolume(item, (containerPath, hostPath) => this.volumeAutoCheck(containerPath, hostPath, appName)))
 			isNil(composeServicesItem.volumes) && (composeServicesItem.volumes = [])
 
 			// Devices

@@ -17,8 +17,10 @@
 			<template v-if="index < 1">
 				<b-field grouped>
 					<b-field :label="$t(name2)" expanded>
-						<icon-input v-model="item.source" :placeholder="$t(name2)" :type="type" expanded></icon-input>
-
+						<!-- A named volume's source is a NAME, and the picker browses the host:
+							choosing a folder in it would quietly turn the volume into a bind. -->
+						<b-input v-if="isNamedVolume(item)" v-model="item.source" :placeholder="$t('Volume name')" expanded></b-input>
+						<icon-input v-else v-model="item.source" :placeholder="$t(name2)" :type="type" expanded></icon-input>
 					</b-field>
 					<b-field :label="$t(name1)" expanded>
 						<b-input v-model="item.target" :placeholder="$t(name1)" expanded></b-input>
@@ -29,7 +31,8 @@
 			<template v-else>
 				<b-field grouped>
 					<b-field expanded>
-						<icon-input v-model="item.source" :placeholder="$t(name2)" :type="type" expanded></icon-input>
+						<b-input v-if="isNamedVolume(item)" v-model="item.source" :placeholder="$t('Volume name')" expanded></b-input>
+						<icon-input v-else v-model="item.source" :placeholder="$t(name2)" :type="type" expanded></icon-input>
 					</b-field>
 					<b-field expanded>
 						<b-input v-model="item.target" :placeholder="$t(name1)" expanded></b-input>
@@ -86,6 +89,10 @@ export default {
 		},
 	},
 	methods: {
+		isNamedVolume(item) {
+			return item && item.type === 'volume'
+		},
+
 		addItem() {
 			const itemObj = {
 				type: 'bind',
