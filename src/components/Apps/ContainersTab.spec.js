@@ -42,6 +42,7 @@ const DATA = {
 async function setup(response = { data: { data: DATA } }, overrides = {}) {
 	const composeAppContainers = vi.fn().mockResolvedValue(response)
 	const setContainerStatus = overrides.setContainerStatus || vi.fn().mockResolvedValue({})
+	const getContainerStats = overrides.getContainerStats || vi.fn().mockResolvedValue({ data: { data: [] } })
 	const toast = overrides.toast
 	const wrapper = mount(ContainersTab, {
 		props: { appId: 'jellyfin' },
@@ -49,13 +50,13 @@ async function setup(response = { data: { data: DATA } }, overrides = {}) {
 			plugins: [Buefy, i18n],
 			mocks: {
 				$openAPI: { appManagement: { compose: { composeAppContainers } } },
-				$api: { container: { setContainerStatus } },
+				$api: { container: { setContainerStatus, getContainerStats } },
 				...(toast ? { $buefy: { toast: { open: toast } } } : {}),
 			},
 		},
 	})
 	await flushPromises()
-	return { wrapper, composeAppContainers, setContainerStatus }
+	return { wrapper, composeAppContainers, setContainerStatus, getContainerStats }
 }
 
 describe('containersTab', () => {
@@ -158,6 +159,42 @@ describe('containersTab', () => {
 
 		expect(toast).toHaveBeenCalledWith(expect.objectContaining({ message: 'container is being removed' }))
 		wrapper.unmount()
+	})
+
+	it('shows what a container is using, and nothing for one the daemon could not sample', async () => {
+		const getContainerStats = vi.fn().mockResolvedValue({
+			data: {
+				data: [{ container_id: 'j1', service: 'jellyfin', cpu_percent: 212.34, memory_used: 268435456, memory_limit: 8589934592 }],
+			},
+		})
+		const { wrapper } = await setup(undefined, { getContainerStats })
+		await flushPromises()
+		const rows = wrapper.findAll('tbody tr')
+
+		// percent of ONE cpu, like docker stats: two whole cores reads over 100
+		expect(rows[0].text()).toContain('212.3%')
+		expect(rows[0].text()).toContain('256 MB / 8 GB')
+		// `backup` is stopped, so it was never sampled -- and "not measured" is not
+		// the same answer as "using nothing"
+		expect(rows[1].text()).not.toContain('0.0%')
+		wrapper.unmount()
+	})
+
+	it('stops sampling once the tab is gone', async () => {
+		vi.useFakeTimers()
+		try {
+			const { wrapper, getContainerStats } = await setup()
+			const before = getContainerStats.mock.calls.length
+
+			wrapper.unmount()
+			vi.advanceTimersByTime(60_000)
+
+			// an interval outliving its component is how this dashboard once made
+			// people log in twice
+			expect(getContainerStats.mock.calls.length).toBe(before)
+		} finally {
+			vi.useRealTimers()
+		}
 	})
 
 	it('says so when the containers could not be read, instead of showing an empty app', async () => {

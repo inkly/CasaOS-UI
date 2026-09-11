@@ -26,6 +26,8 @@
   "Check": "Check",
   "Start": "Start",
   "Stop": "Stop",
+  "CPU": "CPU",
+  "Memory": "Memory",
   "Connect": "Connect",
   "This field is required": "This field is required.",
   "This field must be a valid email": "Please enter a valid email address.",

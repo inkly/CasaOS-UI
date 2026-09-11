@@ -173,6 +173,13 @@ const container = {
 		})
 	},
 
+	// v2:: what the app's running containers are using. Takes about a second
+	// whatever the size of the app: CPU is a counter, so the daemon has to be read
+	// twice before it means anything.
+	getContainerStats(id) {
+		return api.get(`${PREFIX2COMPOSE}/${encodeURIComponent(id)}/containers/stats`)
+	},
+
 	// v2:: start, stop or restart ONE container of an app, rather than the whole
 	// stack. The body is a bare JSON string, like the app-level status route it
 	// sits beside -- so it is encoded here: handed a plain string, axios would

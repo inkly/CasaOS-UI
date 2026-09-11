@@ -41,6 +41,16 @@
 				<span class="containers-tab__mono">{{ row.image }}</span>
 			</b-table-column>
 
+			<b-table-column v-slot="{ row }" :label="$t('CPU')" field="cpu" numeric>
+				<span v-if="statsOf(row)">{{ cpuText(statsOf(row)) }}</span>
+				<span v-else class="has-text-full-03">-</span>
+			</b-table-column>
+
+			<b-table-column v-slot="{ row }" :label="$t('Memory')" field="memory">
+				<span v-if="statsOf(row)" class="containers-tab__mono">{{ memoryText(statsOf(row)) }}</span>
+				<span v-else class="has-text-full-03">-</span>
+			</b-table-column>
+
 			<b-table-column v-slot="{ row }" :label="$t('Published ports')" field="ports">
 				<span v-if="!row.ports.length" class="has-text-full-03">{{ $t('None') }}</span>
 				<template v-else>
@@ -106,6 +116,7 @@
 
 <script>
 import { CONTAINER_STATES, containerActions, containerRows, healthCell } from './containerSummary'
+import { renderSize } from '@/mixins/file_utils'
 
 export default {
 	name: 'ContainersTab',
@@ -121,14 +132,59 @@ export default {
 			// container id -> the action running on it, so one row's button spins
 			// without disabling the tab
 			busy: {},
+			// container id -> its last sample. Kept apart from the rows, which are
+			// rebuilt on every reload: merged in, a refresh would blank both columns
+			// for as long as the sample takes, which is most of the time between two.
+			stats: {},
+			statsTimer: null,
 		}
 	},
 	mounted() {
 		this.load()
+		// Numbers nobody refreshes are not worth a column. Cleared below -- an
+		// interval that outlives its component is how this dashboard once made
+		// people log in twice.
+		this.statsTimer = setInterval(this.loadStats, 5000)
+	},
+	beforeUnmount() {
+		clearInterval(this.statsTimer)
 	},
 	methods: {
 		actionsFor(row) {
 			return containerActions(row)
+		},
+
+		statsOf(row) {
+			return row.id ? this.stats[row.id] : null
+		},
+
+		cpuText(stat) {
+			// Percent of ONE CPU, like `docker stats`: a container using two whole
+			// cores reads 200%, which is information rather than an error.
+			return `${stat.cpu_percent.toFixed(1)}%`
+		},
+
+		memoryText(stat) {
+			if (!stat.memory_limit)
+				return renderSize(stat.memory_used)
+
+			return `${renderSize(stat.memory_used)} / ${renderSize(stat.memory_limit)}`
+		},
+
+		// Failure here is silent on purpose: this runs every few seconds in the
+		// background, and a toast per tick would bury the tab. The columns fall back
+		// to showing nothing, which is what "not measured" looks like.
+		async loadStats() {
+			try {
+				const res = await this.$api.container.getContainerStats(this.appId)
+				const byId = {}
+				for (const stat of res.data.data || [])
+					byId[stat.container_id] = stat
+
+				this.stats = byId
+			} catch {
+				// keep the last sample rather than blanking the columns on one bad tick
+			}
 		},
 
 		// Synchronously, then reload: the row has to show what actually happened, and
@@ -188,6 +244,7 @@ export default {
 			try {
 				const res = await this.$openAPI.appManagement.compose.composeAppContainers(this.appId)
 				this.rows = containerRows(res.data.data)
+				this.loadStats()
 			} catch (error) {
 				const data = error.response && error.response.data
 				this.error = (data && data.message) || error.message
