@@ -209,3 +209,23 @@ export default {
   }
 }
 </style>
+
+<style lang="scss">
+// Not scoped: .animation-content is Buefy's wrapper, outside this component.
+//
+// The customClass these panels were given, `account-modal`, has no rule anywhere
+// in the tree -- so every one of them fell back to Buefy's default width, around
+// 640px. This panel holds host paths and environment variables, which are long
+// strings that then wrapped one word per line.
+@media screen and (min-width: 769px) {
+  .container-detail-modal {
+    .animation-content {
+      max-width: 94% !important;
+    }
+
+    .modal-card {
+      width: min(94vw, 64rem) !important;
+    }
+  }
+}
+</style>

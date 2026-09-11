@@ -220,6 +220,24 @@ export default {
 }
 </script>
 
+<style lang="scss">
+// Not scoped, and for the same reason as the container panel: `account-modal`
+// styles nothing, so this fell back to Buefy's ~640px. A schedule row holds two
+// selects, a frequency, a weekday, a time, a retention and two switches, which at
+// that width wrapped into something unreadable.
+@media screen and (min-width: 769px) {
+  .backup-modal {
+    .animation-content {
+      max-width: 94% !important;
+    }
+
+    .modal-card {
+      width: min(94vw, 60rem) !important;
+    }
+  }
+}
+</style>
+
 <style lang="scss" scoped>
 .backup-destinations {
   .destination {

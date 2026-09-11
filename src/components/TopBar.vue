@@ -624,7 +624,7 @@ export default {
 			this.$buefy.modal.open({
 				component: BackupDestinations,
 				hasModalCard: true,
-				customClass: 'account-modal',
+				customClass: 'backup-modal',
 				trapFocus: true,
 				canCancel: ['escape'],
 				scroll: 'keep',

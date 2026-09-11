@@ -375,7 +375,7 @@ export default {
 			this.$buefy.modal.open({
 				component: ContainerDetailPanel,
 				hasModalCard: true,
-				customClass: 'account-modal',
+				customClass: 'container-detail-modal',
 				trapFocus: true,
 				canCancel: ['escape'],
 				animation: 'zoom-in',
