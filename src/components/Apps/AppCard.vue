@@ -54,6 +54,12 @@
 						}}
 					</b-button>
 
+					<b-button v-if="isV2App" expanded type="is-text" @click="backupApp()">
+						{{
+							$t('Back up')
+						}}
+					</b-button>
+
 					<b-button v-if="isV1App" expanded type="is-text" @click="exportYAML(item)">
 						{{
 							$t('Export as Compose')
@@ -145,6 +151,7 @@
 import isNull from 'lodash/isNull'
 import YAML from 'yaml'
 import FileSaver from 'file-saver'
+import BackupAppModal from './BackupAppModal.vue'
 import events from '@/events/events'
 import cTooltip from '@/components/basicComponents/tooltip/tooltip.vue'
 import business_ShowNewAppTag from '@/mixins/app/Business_ShowNewAppTag'
@@ -331,6 +338,19 @@ export default {
 					this.firstOpenThirdApp(item)
 				}
 			}
+		},
+
+		backupApp() {
+			this.$refs.dro.isActive = false
+			this.$buefy.modal.open({
+				component: BackupAppModal,
+				hasModalCard: true,
+				customClass: 'account-modal',
+				trapFocus: true,
+				canCancel: ['escape'],
+				animation: 'zoom-in',
+				props: { appId: this.item.name, appName: this.i18n(this.item.title) },
+			})
 		},
 
 		openSystemApps(item) {

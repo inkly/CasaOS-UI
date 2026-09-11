@@ -594,5 +594,12 @@
   "Forget this destination?": "Forget this destination?",
   "{name} will be removed from this box, along with the credentials for it. Backups already sent there are not touched.": "{name} will be removed from this box, along with the credentials for it. Backups already sent there are not touched.",
   "Reachable": "Reachable",
-  "Reachable, {free} free": "Reachable, {free} free"
+  "Reachable, {free} free": "Reachable, {free} free",
+  "Back up": "Back up",
+  "Back up {name}": "Back up {name}",
+  "No destination is configured. Add one under Settings, then come back.": "No destination is configured. Add one under Settings, then come back.",
+  "Destination": "Destination",
+  "Stop the app while it is copied": "Stop the app while it is copied",
+  "The app will be unavailable until the copy finishes, and comes back on its own afterwards.": "The app will be unavailable until the copy finishes, and comes back on its own afterwards.",
+  "The app keeps running. Anything writing while it is copied — a database above all — may not restore.": "The app keeps running. Anything writing while it is copied — a database above all — may not restore."
 }
