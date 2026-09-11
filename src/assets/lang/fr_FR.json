@@ -636,5 +636,20 @@
   "Running, but managed outside CasaOS.": "En marche, mais gérées hors de CasaOS.",
   "Managed elsewhere.": "Gérées ailleurs.",
   "Containers nothing here manages.": "Des conteneurs que rien ici ne gère.",
-  "Unmanaged containers.": "Conteneurs non gérés."
+  "Unmanaged containers.": "Conteneurs non gérés.",
+  "Details": "Détails",
+  "Command": "Commande",
+  "Networks": "Réseaux",
+  "Compose project": "Projet compose",
+  "Host paths": "Chemins hôte",
+  "Show": "Afficher",
+  "Hide": "Masquer",
+  "Part of a compose project — remove the app instead.": "Fait partie d'un projet compose — supprimez l'app plutôt.",
+  "Remove this container?": "Supprimer ce conteneur ?",
+  "The container goes. It also uses these volumes, which nothing else is using:": "Le conteneur part. Il utilise aussi ces volumes, que rien d'autre n'utilise :",
+  "Delete those too? Cancel removes nothing.": "Les supprimer aussi ? Annuler ne supprime rien.",
+  "The container goes. None of its volumes can be deleted with it, so nothing else is touched.": "Le conteneur part. Aucun de ses volumes ne peut être supprimé avec lui, rien d'autre n'est touché.",
+  "Remove container and volumes": "Supprimer le conteneur et les volumes",
+  "Remove container": "Supprimer le conteneur",
+  "Container removed. These volumes were kept: {names}": "Conteneur supprimé. Ces volumes ont été conservés : {names}"
 }

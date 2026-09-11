@@ -173,6 +173,19 @@ const container = {
 		})
 	},
 
+	// v2:: everything known about one container. For one CasaOS did not install,
+	// where Docker invented the name, this is the only identity there is.
+	getDetail(id) {
+		return api.get(`${PREFIX2}/${encodeURIComponent(id)}/detail`)
+	},
+
+	// v2:: remove a container, and the named volumes listed with it. The server
+	// decides again whether each volume may go -- this list is a request, not an
+	// instruction.
+	remove(id, volumes) {
+		return instance.delete(`${PREFIX2}/${encodeURIComponent(id)}`, { data: { volumes } })
+	},
+
 	// v2:: what the app's running containers are using. Takes about a second
 	// whatever the size of the app: CPU is a counter, so the daemon has to be read
 	// twice before it means anything.

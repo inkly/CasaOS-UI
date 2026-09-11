@@ -162,11 +162,15 @@ describe('imported container', () => {
 		wrapper.unmount()
 	})
 
-	it('shows no menu at all where it has nothing to offer', async () => {
-		// with the recreate refused, every remaining entry is for an app CasaOS
-		// installed -- so the dots button opened onto an empty menu
+	it('offers a compose-owned container the one thing it can do', async () => {
+		// It used to have no menu at all: with the recreate refused, every remaining
+		// entry was for an app CasaOS installed. That left these cards with no way to
+		// find out what they even were, which is what the details panel is for --
+		// and it is still the only entry, because everything else would act on a
+		// project this dashboard does not manage.
 		const wrapper = await card({ ...imported, compose_project: 'immich' })
-		expect(wrapper.find('.action-btn').exists()).toBe(false)
+		expect(wrapper.find('.action-btn').exists()).toBe(true)
+		expect(labels()).toEqual(['Details'])
 		wrapper.unmount()
 	})
 
@@ -174,7 +178,7 @@ describe('imported container', () => {
 		// Open, Uninstall and the start/stop pair all route through code that only
 		// handles v1 and v2 apps
 		const wrapper = await card(imported)
-		expect(labels()).toEqual(['Pull image and recreate'])
+		expect(labels()).toEqual(['Details', 'Pull image and recreate'])
 		wrapper.unmount()
 	})
 

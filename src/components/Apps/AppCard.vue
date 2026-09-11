@@ -46,6 +46,12 @@
 						</b-loading>
 					</b-button>
 
+					<b-button v-if="isContainerApp" expanded type="is-text" @click="showContainerDetail()">
+						{{
+							$t('Details')
+						}}
+					</b-button>
+
 					<!-- container only, and only one that belongs to no compose project: see canRecreate -->
 					<b-button v-if="canRecreate" :loading="isRecreating" expanded type="is-text"
 						@click="recreateConfirm">
@@ -160,6 +166,7 @@ import YAML from 'yaml'
 import FileSaver from 'file-saver'
 import { ageKey, containerFacts } from './legacyApps'
 import BackupAppModal from './BackupAppModal.vue'
+import ContainerDetailPanel from './ContainerDetailPanel.vue'
 import events from '@/events/events'
 import cTooltip from '@/components/basicComponents/tooltip/tooltip.vue'
 import business_ShowNewAppTag from '@/mixins/app/Business_ShowNewAppTag'
@@ -283,8 +290,11 @@ export default {
 		// which is refused for a container a compose project owns -- so that container
 		// had a dots button that opened onto nothing at all. No menu says the same thing
 		// and does not ask to be clicked first.
+		// A container card now always has a menu: even one a compose project owns can
+		// be looked at, which is the whole point of the panel -- the old rule left
+		// those cards with no way to find out what they were.
 		hasActions() {
-			return !this.isContainerApp || this.canRecreate
+			return true
 		},
 		// a container card is keyed by container ID, while the grid puts the Docker
 		// name of an imported container in its title -- the name to show a human
@@ -356,6 +366,22 @@ export default {
 					this.firstOpenThirdApp(item)
 				}
 			}
+		},
+
+		// Where "what is this" and "get rid of it" both live. Docker invented the
+		// name on these cards, so there was nowhere to answer either question.
+		showContainerDetail() {
+			this.$refs.dro.isActive = false
+			this.$buefy.modal.open({
+				component: ContainerDetailPanel,
+				hasModalCard: true,
+				customClass: 'account-modal',
+				trapFocus: true,
+				canCancel: ['escape'],
+				animation: 'zoom-in',
+				props: { containerId: this.item.name },
+				events: { removed: () => this.$emit('updateState') },
+			})
 		},
 
 		backupApp() {
