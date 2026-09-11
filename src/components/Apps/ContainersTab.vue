@@ -54,7 +54,7 @@
 			<b-table-column v-slot="{ row }" :label="$t('Published ports')" field="ports">
 				<span v-if="!row.ports.length" class="has-text-full-03">{{ $t('None') }}</span>
 				<template v-else>
-					<div v-for="port in row.ports" :key="port" class="containers-tab__mono">
+					<div v-for="port in row.ports" :key="port" class="containers-tab__port">
 						{{ port }}
 					</div>
 				</template>
@@ -258,9 +258,23 @@ export default {
 
 <style lang="scss" scoped>
 .containers-tab {
+  // ten columns: on a narrow window the table scrolls rather than crushing every
+  // cell to fit, and the page itself never scrolls sideways
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
   &__mono {
     font-family: 'Monaco', 'Consolas', monospace;
     word-break: break-all;
+  }
+
+  // An image reference is long and has to break somewhere; a port mapping is
+  // short and breaking it mid-token turned `6881 -> 6881/tcp` into a column one
+  // character wide.
+  &__port {
+    font-family: 'Monaco', 'Consolas', monospace;
+    white-space: nowrap;
   }
 
   &__actions {

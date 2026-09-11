@@ -1998,8 +1998,12 @@ export default {
             width: 90vw;
             transition: all 0.3s;
 
+            // The settings panel is meant to be narrower than the store list behind
+            // it, not narrow: 50rem held whatever the screen, and the Containers tab
+            // has ten columns to fit into it. Still under the 90vw above on a wide
+            // screen, so the two are still telling apart.
             &.narrow {
-                width: 50rem !important;
+                width: min(92vw, 72rem) !important;
             }
 
             ._pl {
