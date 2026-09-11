@@ -457,7 +457,7 @@ export default {
 				this.$buefy.modal.open({
 					component: AppPanel,
 					hasModalCard: true,
-					customClass: '',
+					customClass: 'app-panel',
 					trapFocus: true,
 					canCancel: [''],
 					scroll: 'keep',
@@ -496,7 +496,7 @@ export default {
 			this.$buefy.modal.open({
 				component: AppPanel,
 				hasModalCard: true,
-				customClass: '',
+				customClass: 'app-panel',
 				trapFocus: true,
 				canCancel: [''],
 				scroll: 'keep',
