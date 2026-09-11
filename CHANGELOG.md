@@ -2,6 +2,12 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.52] - 2026-09-11
+
+### Fixed
+
+- **The app settings panel was opened with no class at all**, so every rule written for it applied to nothing -- including the width widened in 0.4.50 for the Containers tab, and the `.animation-content` cap without which Buefy holds any modal at its default 640px. Ten columns rendered into that width put one character per line under Image and Memory. The install flow passes the class, which is why that one has always been wide. A guard now reads the source and checks that every call site opening this panel passes a class the panel actually styles: the two halves live in different files, nothing links them, and no unit test computes a width.
+
 ## [0.4.51] - 2026-09-11
 
 ### Added
