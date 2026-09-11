@@ -2,6 +2,20 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.50] - 2026-09-11
+
+### Added
+
+- **Start, stop and restart one container** of an app, from the Containers tab, instead of taking the whole stack down to fix one of its parts. Which two buttons a row offers comes from the state Docker reports; a service the compose file declares but Docker runs nothing for, and one being removed, are offered nothing on purpose.
+- **CPU and memory per container**, re-sampled every five seconds while the tab is open and stopped the moment it closes. The CPU figure is percent of one CPU, as `docker stats` reports it, so a container using two whole cores reads over 100. A container the daemon could not sample shows nothing rather than zero.
+- **Backups**: a Backups panel in the settings menu with destinations, schedules and history, and a **Back up** entry in each app's menu. A destination is an rclone remote, so credentials are kept where this box already keeps the ones for its cloud drives. Options are typed as rows rather than a fixed form, because rclone decides what each backend needs and gains options between releases; picking a backend fills in the names it usually wants. History shows failures beside successes, and whether the app was stopped for each run — the column that decides whether a backup of a database can be trusted to restore.
+
+### Fixed
+
+- **A named volume is a name, not a folder.** A volume in the long syntax rendered as `[object Object]` in the compose editor: every entry was run through a substitution against the file's top-level `volumes:` block, which maps a volume name to its definition rather than a variable to a value. A volume declared with nothing under it — the common way to write one — had its name replaced with an empty string and lost it without a word. The short syntax had the same defect from the other end, reading `backend-storage:/data` as a bind and inventing a host path for it. The host picker no longer appears on those rows either: it browses the host, so choosing a folder turned the volume into a bind on save and detached whatever was in it.
+- **The settings modal has room for its widest tab.** It was pinned at 50rem whatever the screen, and the Containers tab has ten columns — on the reported box a port mapping came out one character wide. Part of that was this dashboard's own doing: the monospace class carries `word-break: break-all`, which an image reference needs and a port mapping does not.
+- An app that publishes no web interface says where to set one — Settings › Web UI — rather than only that there is none.
+
 ## [0.4.49] - 2026-09-10
 
 ### Fixed
