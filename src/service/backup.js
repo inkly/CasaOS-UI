@@ -29,6 +29,23 @@ const backup = {
 		return api.post(`${PREFIX}/backup/destinations/${encodeURIComponent(name)}/check`)
 	},
 
+	// The standing arrangements.
+	getSchedules() {
+		return api.get(`${PREFIX}/backup/schedules`)
+	},
+
+	// The whole list at once, which is how the screen that edits it works. A
+	// schedule's last_run is not sent: the server keeps it, and losing it would
+	// make every schedule fire again at the next tick.
+	saveSchedules(schedules) {
+		return api.put(`${PREFIX}/backup/schedules`, schedules)
+	},
+
+	// What happened, newest first, failures included.
+	getRuns() {
+		return api.get(`${PREFIX}/backup/runs`)
+	},
+
 	// Returns as soon as the copy has started; it takes as long as it takes.
 	// `holdStill` stops the app for the length of the copy -- leaving it running
 	// takes a copy that may not restore.

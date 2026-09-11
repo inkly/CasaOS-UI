@@ -1,77 +1,89 @@
 <template>
 	<div class="modal-card backup-destinations">
 		<header class="modal-card-head b-line">
-			<h3 class="title is-5 has-text-black">{{ $t('Backup destinations') }}</h3>
+			<h3 class="title is-5 has-text-black">{{ $t('Backups') }}</h3>
 		</header>
 		<section class="modal-card-body">
-			<div class="is-flex is-align-items-center mb-2">
-				<p class="has-text-full-03 is-size-7 is-flex-grow-1">
-					{{ $t('Where backups are sent. Credentials are kept by rclone, alongside the cloud drives this box already mounts.') }}
-				</p>
-				<b-button :loading="isLoading" rounded size="is-small" @click="load">
-					{{ $t('Refresh') }}
-				</b-button>
-			</div>
+			<b-tabs v-model="tab" size="is-small" type="is-boxed">
+				<b-tab-item :label="$t('Destinations')">
+					<div class="is-flex is-align-items-center mb-2">
+						<p class="has-text-full-03 is-size-7 is-flex-grow-1">
+							{{ $t('Where backups are sent. Credentials are kept by rclone, alongside the cloud drives this box already mounts.') }}
+						</p>
+						<b-button :loading="isLoading" rounded size="is-small" @click="load">
+							{{ $t('Refresh') }}
+						</b-button>
+					</div>
 
-			<b-message v-if="error" class="mb-2" size="is-small" type="is-danger">
-				{{ error }}
-			</b-message>
+					<b-message v-if="error" class="mb-2" size="is-small" type="is-danger">
+						{{ error }}
+					</b-message>
 
-			<p v-if="!isLoading && !destinations.length" class="has-text-full-03 is-size-7 mb-4">
-				{{ $t('No destination yet. Add one below.') }}
-			</p>
+					<p v-if="!isLoading && !destinations.length" class="has-text-full-03 is-size-7 mb-4">
+						{{ $t('No destination yet. Add one below.') }}
+					</p>
 
-			<div v-for="name in destinations" :key="name" class="destination is-flex is-align-items-center mb-2">
-				<span class="is-flex-grow-1 has-text-weight-medium">{{ name }}</span>
+					<div v-for="name in destinations" :key="name" class="destination is-flex is-align-items-center mb-2">
+						<span class="is-flex-grow-1 has-text-weight-medium">{{ name }}</span>
 
-				<span v-if="checked[name]" class="has-text-full-03 is-size-7 mr-3">{{ checked[name] }}</span>
+						<span v-if="checked[name]" class="has-text-full-03 is-size-7 mr-3">{{ checked[name] }}</span>
 
-				<b-button :loading="busy === `check:${name}`" class="mr-1" rounded size="is-small"
-					@click="check(name)">
-					{{ $t('Check') }}
-				</b-button>
-				<b-button :loading="busy === `delete:${name}`" rounded size="is-small" type="is-danger"
-					@click="confirmForget(name)">
-					{{ $t('Forget') }}
-				</b-button>
-			</div>
+						<b-button :loading="busy === `check:${name}`" class="mr-1" rounded size="is-small"
+							@click="check(name)">
+							{{ $t('Check') }}
+						</b-button>
+						<b-button :loading="busy === `delete:${name}`" rounded size="is-small" type="is-danger"
+							@click="confirmForget(name)">
+							{{ $t('Forget') }}
+						</b-button>
+					</div>
 
-			<hr>
+					<hr>
 
-			<b-field :label="$t('Name')" label-position="on-border">
-				<b-input v-model="draft.name" placeholder="offsite" expanded size="is-small" />
-			</b-field>
+					<b-field :label="$t('Name')" label-position="on-border">
+						<b-input v-model="draft.name" placeholder="offsite" expanded size="is-small" />
+					</b-field>
 
-			<b-field :label="$t('Backend')" label-position="on-border">
-				<b-select v-model="draft.backend" expanded size="is-small" @update:model-value="fillSuggestions">
-					<option v-for="backend in backends" :key="backend.id" :value="backend.id">
-						{{ backend.label }}
-					</option>
-				</b-select>
-			</b-field>
+					<b-field :label="$t('Backend')" label-position="on-border">
+						<b-select v-model="draft.backend" expanded size="is-small" @update:model-value="fillSuggestions">
+							<option v-for="backend in backends" :key="backend.id" :value="backend.id">
+								{{ backend.label }}
+							</option>
+						</b-select>
+					</b-field>
 
-			<p class="has-text-full-03 is-size-7 mb-2">
-				{{ $t('These are rclone\'s own option names. Leave blank what you do not need; add a row for anything not listed.') }}
-			</p>
+					<p class="has-text-full-03 is-size-7 mb-2">
+						{{ $t('These are rclone\'s own option names. Leave blank what you do not need; add a row for anything not listed.') }}
+					</p>
 
-			<div v-for="(row, index) in draft.rows" :key="index" class="is-flex mb-1">
-				<b-input v-model="row.key" :placeholder="$t('Option')" class="mr-1" expanded size="is-small" />
-				<b-input v-model="row.value" :placeholder="$t('Value')" :type="isSecret(row.key) ? 'password' : 'text'"
-					expanded password-reveal size="is-small" />
-				<b-button class="ml-1" icon-left="close-outline" icon-pack="casa" rounded size="is-small"
-					@click="draft.rows.splice(index, 1)" />
-			</div>
+					<div v-for="(row, index) in draft.rows" :key="index" class="is-flex mb-1">
+						<b-input v-model="row.key" :placeholder="$t('Option')" class="mr-1" expanded size="is-small" />
+						<b-input v-model="row.value" :placeholder="$t('Value')" :type="isSecret(row.key) ? 'password' : 'text'"
+							expanded password-reveal size="is-small" />
+						<b-button class="ml-1" icon-left="close-outline" icon-pack="casa" rounded size="is-small"
+							@click="draft.rows.splice(index, 1)" />
+					</div>
 
-			<div class="is-flex is-align-items-center mt-2">
-				<b-button class="mr-2" rounded size="is-small" @click="draft.rows.push({ key: '', value: '' })">
-					{{ $t('Add') }}
-				</b-button>
-				<div class="is-flex-grow-1"></div>
-				<b-button :disabled="!draft.name || !draft.backend" :loading="busy === 'save'" rounded size="is-small"
-					type="is-primary" @click="save">
-					{{ $t('Save destination') }}
-				</b-button>
-			</div>
+					<div class="is-flex is-align-items-center mt-2">
+						<b-button class="mr-2" rounded size="is-small" @click="draft.rows.push({ key: '', value: '' })">
+							{{ $t('Add') }}
+						</b-button>
+						<div class="is-flex-grow-1"></div>
+						<b-button :disabled="!draft.name || !draft.backend" :loading="busy === 'save'" rounded size="is-small"
+							type="is-primary" @click="save">
+							{{ $t('Save destination') }}
+						</b-button>
+					</div>
+				</b-tab-item>
+
+				<b-tab-item :label="$t('Schedules')">
+					<BackupSchedules v-if="tab === 1" />
+				</b-tab-item>
+
+				<b-tab-item :label="$t('History')">
+					<BackupHistory v-if="tab === 2" />
+				</b-tab-item>
+			</b-tabs>
 		</section>
 		<footer class="modal-card-foot is-flex is-justify-content-flex-end">
 			<b-button rounded @click="$emit('close')">{{ $t('Close') }}</b-button>
@@ -80,14 +92,18 @@
 </template>
 
 <script>
+import BackupHistory from './BackupHistory.vue'
+import BackupSchedules from './BackupSchedules.vue'
 import { BACKUP_BACKENDS, parametersFrom, suggestedFields } from './backupBackends'
 import { renderSize } from '@/mixins/file_utils'
 
 export default {
 	name: 'backup-destinations',
+	components: { BackupSchedules, BackupHistory },
 	emits: ['close'],
 	data() {
 		return {
+			tab: 0,
 			destinations: [],
 			// name -> what the last check said about it
 			checked: {},
