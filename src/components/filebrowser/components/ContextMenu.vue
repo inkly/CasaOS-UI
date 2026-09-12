@@ -108,6 +108,7 @@
 <script>
 import has from 'lodash/has'
 import { mixin, wallpaperType } from '@/mixins/mixin'
+import ShareAccessModal from '../shared/ShareAccessModal.vue'
 
 export default {
 	mixins: [mixin],
@@ -226,23 +227,28 @@ export default {
 			const downItem = (this.items.length == 1) ? this.items[0] : this.items
 			this.downloadFile(downItem)
 		},
-		async shareFoler() {
+		// Sharing from the folder's own menu used to post `anonymous: true` and
+		// nothing else: the folder went onto the network readable and writable by
+		// anyone, with no dialog and no way to say otherwise. The account switch
+		// existed, but only on the other route -- the multi-folder picker -- so the
+		// obvious path was also the one that could not protect anything.
+		shareFoler() {
 			this.$refs.dropDown.toggle()
-			const data = [{
-				path: this.item.path,
-				anonymous: true,
-			}]
-			try {
-				await this.$api.samba.createShare(data)
-				this.filePanel.reloadShare()
-				this.filePanel.getShareLink(this.item)
-			} catch (error) {
-				this.isSaving = false
-				this.$buefy.toast.open({
-					message: error.response.data.message,
-					type: 'is-danger',
-				})
-			}
+			this.$buefy.modal.open({
+				component: ShareAccessModal,
+				hasModalCard: true,
+				trapFocus: true,
+				canCancel: ['escape'],
+				scroll: 'keep',
+				animation: 'zoom-in',
+				props: { share: { path: this.item.path } },
+				events: {
+					reload: () => {
+						this.filePanel.reloadShare()
+						this.filePanel.getShareLink(this.item)
+					},
+				},
+			})
 		},
 
 		unShare() {

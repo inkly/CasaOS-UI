@@ -2,7 +2,7 @@
 	<div class="modal-card share-access-modal">
 		<header class="modal-card-head">
 			<h3 class="title is-header">
-				{{ $t('Who can open this folder') }}
+				{{ isNew ? $t('Share this folder') : $t('Who can open this folder') }}
 			</h3>
 		</header>
 
@@ -54,7 +54,8 @@
 			<div class="is-flex-grow-1"></div>
 			<div>
 				<b-button :label="$t('Cancel')" rounded @click="$emit('close')" />
-				<b-button :disabled="!canSave" :label="$t('Save')" :loading="isSaving" rounded type="is-primary" @click="save" />
+				<b-button :disabled="!canSave" :label="isNew ? $t('Share') : $t('Save')" :loading="isSaving" rounded
+					type="is-primary" @click="save" />
 			</div>
 		</footer>
 	</div>
@@ -82,14 +83,24 @@ export default {
 		}
 	},
 	computed: {
+		// The same dialog creates a share and edits one. A folder that has no id
+		// yet is being shared for the first time, which is the case the context
+		// menu used to skip entirely -- it posted a guest share and never asked.
+		isNew() {
+			return !this.share.id
+		},
+
 		canSave() {
-			if (this.isSaving) {
+			if (this.isSaving || (this.requireAccount && !this.username)) {
 				return false
 			}
 
+			if (this.isNew) {
+				return true
+			}
+
 			const next = this.requireAccount ? this.username : ''
-			const changed = next !== (this.share.username || '') || this.timeMachine !== !!this.share.time_machine
-			return changed && !(this.requireAccount && !this.username)
+			return next !== (this.share.username || '') || this.timeMachine !== !!this.share.time_machine
 		},
 	},
 	created() {
@@ -125,11 +136,24 @@ export default {
 			this.isSaving = true
 			this.error = ''
 
+			const username = this.requireAccount ? this.username : ''
+
 			try {
-				await this.$api.samba.updateShare(this.share.id, {
-					username: this.requireAccount ? this.username : '',
-					time_machine: this.timeMachine,
-				})
+				if (this.isNew) {
+					await this.$api.samba.createShare([{
+						path: this.share.path,
+						anonymous: username === '',
+						username,
+						time_machine: this.timeMachine,
+					}])
+				}
+				else {
+					await this.$api.samba.updateShare(this.share.id, {
+						username,
+						time_machine: this.timeMachine,
+					})
+				}
+
 				this.$emit('reload')
 				this.$emit('close')
 			} catch (e) {
