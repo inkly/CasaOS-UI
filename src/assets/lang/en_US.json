@@ -390,6 +390,8 @@
   "Installing app": "Installing app",
   "Installation completed": "Installation completed",
   "Starting installation": "Starting installation",
+  "Installing {progress}%": "Installing {progress}%",
+  "Starting update": "Starting update",
   "New": "New",
   "NEW": "NEW",
   "Check then update": "Check then update",

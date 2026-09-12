@@ -427,6 +427,23 @@ export default {
 			delete this.noticesData[rootName]
 		},
 
+		// The title is JSON and it is optional: it comes from the app's store entry,
+		// and an app whose compose file has no `x-casaos` has none. Parsing it
+		// unguarded threw inside the socket handler, which is a card that never
+		// appears rather than a card with a poor name.
+		appTitle(res) {
+			const raw = res.Properties['app:title']
+			if (raw) {
+				try {
+					return ice_i18n(JSON.parse(raw))
+				} catch {
+					// fall through to the name
+				}
+			}
+
+			return res.Properties['app:name']
+		},
+
 		transformAppInstallationProgress(res) {
 			if (res.finished) {
 				if (this.noticesData[res.name]) {
@@ -445,11 +462,13 @@ export default {
 						const progress = Number(res.message) < 0 ? 0 : Number(res.message)
 						let currentInstallAppText = ''
 						if (progress?.toString() === '0') {
-							currentInstallAppText = 'Starting installation'
+							currentInstallAppText = this.$t('Starting installation')
 						} else if (progress?.toString() === '100') {
-							currentInstallAppText = 'Installation completed'
+							currentInstallAppText = this.$t('Installation completed')
 						} else {
-							currentInstallAppText = `Installing ${progress}%`
+							// shown as written rather than through $t at the other end,
+							// so it has to arrive translated
+							currentInstallAppText = this.$t('Installing {progress}%', { progress })
 						}
 						this.noticesData[res.name].content = {
 							text: currentInstallAppText,
@@ -478,7 +497,7 @@ export default {
 	},
 	sockets: {
 		'app:apply-changes-begin': function (res) {
-			const title = ice_i18n(JSON.parse(res.Properties['app:title']))
+			const title = this.appTitle(res)
 			this.transformAppInstallationProgress({
 				finished: false,
 				name: res.Properties['app:name'],
@@ -521,7 +540,7 @@ export default {
 			})
 		},
 		'app:install-begin': function (res) {
-			const title = ice_i18n(JSON.parse(res.Properties['app:title']))
+			const title = this.appTitle(res)
 			this.transformAppInstallationProgress({
 				finished: false,
 				name: res.Properties['app:name'],
@@ -557,25 +576,57 @@ export default {
 			})
 		},
 
+		// These two read `name` and `cid`, which no event has ever carried: the
+		// properties are `app:name`, `app:title` and `app:icon`, as everywhere else.
+		// So an update opened a second card with no name under the key `undefined`,
+		// and removed that one at the end, while the real card -- opened by
+		// app:install-progress under the app's name -- stayed on screen at whatever
+		// percentage it had reached, for ever.
 		'app:update-begin': function (res) {
 			this.transformAppInstallationProgress({
 				finished: false,
-				name: res.Properties.name,
-				id: res.Properties.cid,
-				icon: '',
+				name: res.Properties['app:name'],
+				title: this.appTitle(res),
+				id: res.Properties['app:name'],
+				icon: res.Properties['app:icon'] || '',
+				message: this.$t('Starting update'),
 			})
 		},
 		'app:update-end': function (res) {
 			this.transformAppInstallationProgress({
 				finished: true,
-				name: res.Properties.name,
-				id: res.Properties.cid,
-				icon: '',
-				isNewTag: res.Properties['docker:image:updated'] === 'true',
+				name: res.Properties['app:name'],
+				id: res.Properties['app:name'],
+				icon: res.Properties['app:icon'] || '',
+				// `app:updated` is set only when the app really was replaced.
+				// `docker:image:updated`, which this read before, says a newer image was
+				// pulled -- which is also true of a pull that then failed to start.
+				isNewTag: res.Properties['app:updated'] === 'true',
+			})
+		},
+		// Without this an update that failed left its card on screen at the percentage
+		// it died on, saying nothing, until the page was reloaded.
+		'app:update-error': function (res) {
+			this.$buefy.toast.open({
+				message: res.Properties.message,
+				duration: 5000,
+				type: 'is-danger',
+			})
+			this.transformAppInstallationProgress({
+				finished: true,
+				name: res.Properties['app:name'],
+			})
+			this.transformAppInstallationProgress({
+				finished: false,
+				name: `${res.Properties['app:name']}error`,
+				success: false,
+				title: `${this.appTitle(res)} Error Info`,
+				message: res.Properties.message,
+				icon: res.Properties['app:icon'],
 			})
 		},
 		'app:install-progress': function (res) {
-			const title = ice_i18n(JSON.parse(res.Properties['app:title']))
+			const title = this.appTitle(res)
 			this.transformAppInstallationProgress({
 				finished: false,
 				name: res.Properties['app:name'],

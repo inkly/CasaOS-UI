@@ -355,6 +355,8 @@
   "Installing app": "Installation de l'application",
   "Installation completed": "Installation terminée",
   "Starting installation": "Démarrage de l'installation",
+  "Installing {progress}%": "Installation {progress}%",
+  "Starting update": "Démarrage de la mise à jour",
   "New": "Nouveau",
   "NEW": "NOUVEAU",
   "Check then update": "Vérifier puis mettre à jour",
