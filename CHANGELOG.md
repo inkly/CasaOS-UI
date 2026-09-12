@@ -2,6 +2,16 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.55] - 2026-09-12
+
+### Fixed
+
+- **Updating an app drew two cards, and the real one never went away.** The two update handlers read properties no event has ever carried, so the update opened a nameless card with an empty bar under the key `undefined` while the pull filled the real one; at the end the nameless one was removed and the app's own card sat at whatever percentage it had reached until the page was reloaded. Every app event names its app in `app:name`, as the other seven handlers in that file already read it.
+- **A failed update says why.** `app:update-error` had no handler at all, so an update that died left its card on screen at the percentage it stopped on, silent.
+- **The New badge after an update means the app was replaced.** It was keyed on a newer image having been pulled, which is also true of a pull that then fails to start.
+- **An app the catalogue knows nothing about gets a progress card.** The title was parsed with a bare `JSON.parse`, and an app whose compose file has no `x-casaos` has no title, so the parse threw inside the socket handler and no card appeared at all. It falls back to the app's own name.
+- **The progress line is translated.** "Installing 88%" was shown exactly as written, in English, under a title that had been translated.
+
 ## [0.4.54] - 2026-09-12
 
 ### Added
