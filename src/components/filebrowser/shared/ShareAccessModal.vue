@@ -154,7 +154,9 @@ export default {
 					})
 				}
 
-				this.$emit('reload')
+				// The caller shows the share's paths next; it should also say who can
+				// open them, and it cannot read that back from a file item.
+				this.$emit('reload', { username })
 				this.$emit('close')
 			} catch (e) {
 				this.error = (e && e.response && e.response.data && e.response.data.message) || this.$t('Something went wrong.')

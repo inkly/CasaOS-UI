@@ -159,6 +159,7 @@
   "Your custom icon URL": "Your custom icon URL",
   "Installing": "Installing",
   "Everyone": "Everyone",
+  "Opens only with the account {name}.": "Opens only with the account {name}.",
   "Export ComposeFile": "Export ComposeFile",
   "AppFile": "AppFile",
   "Drop your Docker Compose here or click to upload": "Drop your Docker Compose here or click to upload",

@@ -39,7 +39,7 @@ describe('sharing a folder that is not shared yet', () => {
 			username: 'plex',
 			time_machine: false,
 		}])
-		expect(vm.$emit).toHaveBeenCalledWith('reload')
+		expect(vm.$emit).toHaveBeenCalledWith('reload', { username: 'plex' })
 	})
 
 	// Leaving the switch off has to keep working: it is what every share created

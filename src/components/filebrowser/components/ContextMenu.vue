@@ -243,9 +243,9 @@ export default {
 				animation: 'zoom-in',
 				props: { share: { path: this.item.path } },
 				events: {
-					reload: () => {
+					reload: (access) => {
 						this.filePanel.reloadShare()
-						this.filePanel.getShareLink(this.item)
+						this.filePanel.getShareLink({ ...this.item, username: (access && access.username) || '' })
 					},
 				},
 			})

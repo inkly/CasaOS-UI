@@ -26,6 +26,16 @@
 				<div class="is-size-14px mt-5 mb-5">
 					{{ $t('Enter the following link to access the shared folder ( Samba ) .') }}
 				</div>
+				<!-- Only when the caller knows: the shared-folders list carries the
+					account, and a share just created is told which one it got. A file
+					item from the browser carries nothing, and guessing "everyone" from
+					nothing is the lie this line exists to prevent. -->
+				<b-message v-if="typeof item.username === 'string'" :type="item.username ? 'is-light' : 'is-warning'"
+					class="mb-5" size="is-small">
+					{{ item.username
+						? $t('Opens only with the account {name}.', { name: item.username })
+						: $t('Anyone on the network can read and write this folder.') }}
+				</b-message>
 				<b-field :label="$t('PC ( Windows explorer )')" class="mb-5" horizontal>
 					<b-input :model-value="pcPath" expanded icon-pack="casa" icon-right="copy" icon-right-clickable name="subject"
 						readonly @icon-right-click="copyToClipboard(pcPath)"></b-input>

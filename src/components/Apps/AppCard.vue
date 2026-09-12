@@ -1011,8 +1011,10 @@ export default {
 				duration: 5000,
 			})
 		},
+		// `id` is not a property any event carries, so a failed uninstall never
+		// reset the spinner. The event names its app the way every event does.
 		'app:uninstall-error': function (res) {
-			if (res.Properties.id === this.item.name) {
+			if (res.Properties['app:name'] === this.item.name) {
 				this.isUninstalling = false
 			}
 		},

@@ -147,6 +147,7 @@
   "Your custom icon URL": "URL de l'icône personnalisée",
   "Installing": "Installation de",
   "Everyone": "Tout le monde",
+  "Opens only with the account {name}.": "S'ouvre uniquement avec le compte {name}.",
   "Export ComposeFile": "Exporter ComposeFile",
   "AppFile": "Fichier d'application",
   "Drop your Docker Compose here or click to upload": "Déposez votre Docker Compose ici ou cliquez pour télécharger",
