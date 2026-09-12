@@ -32,6 +32,24 @@
 							{{ $t('Shared') }}
 						</b-checkbox>
 					</b-field>
+					<!-- Ticking Shared used to put the folder on the network readable and
+						writable by anyone, with nothing on screen saying so. -->
+					<template v-if="shared">
+						<b-field>
+							<b-checkbox v-model="requireAccount" type="is-info">
+								{{ $t('Require an account') }}
+							</b-checkbox>
+						</b-field>
+						<b-field v-if="requireAccount" class="mb-2">
+							<b-select v-model="username" :placeholder="$t('Choose an account')" expanded size="is-small">
+								<option v-for="user in users" :key="user" :value="user">{{ user }}</option>
+							</b-select>
+						</b-field>
+						<p class="has-text-full-03 is-size-7">
+							<a v-if="requireAccount" href="#" @click.prevent="manageUsers">{{ $t('Manage accounts') }}</a>
+							<template v-else>{{ $t('Anyone on the network can read and write this folder.') }}</template>
+						</p>
+					</template>
 				</div>
 
 			</div>
@@ -42,8 +60,8 @@
 		<footer class="modal-card-foot is-flex is-align-items-center">
 			<div class="is-flex-grow-1"></div>
 			<div>
-				<b-button :label="$t('Submit')" :loading="isloading" expaned rounded type="is-primary"
-					@click="createFolder" />
+				<b-button :disabled="shared && requireAccount && !username" :label="$t('Submit')" :loading="isloading"
+					expaned rounded type="is-primary" @click="createFolder" />
 			</div>
 		</footer>
 		<!-- Modal-Card Footer End -->
@@ -53,6 +71,7 @@
 <script>
 import path from 'path'
 import { mixin } from '@/mixins/mixin'
+import SambaUsersModal from '@/components/filebrowser/shared/SambaUsersModal.vue'
 
 export default {
 	mixins: [mixin],
@@ -66,6 +85,9 @@ export default {
 			errors: '',
 			shortcut: false,
 			shared: false,
+			requireAccount: false,
+			username: '',
+			users: [],
 			isloading: false,
 		}
 	},
@@ -75,12 +97,34 @@ export default {
 		},
 	},
 	mounted() {
+		this.loadUsers()
 		this.isRootorDATA ? this.shortcut = true : this.shortcut = false
 		this.$nextTick(() => {
 			this.$refs.inputs.getElement().select()
 		})
 	},
 	methods: {
+
+		async loadUsers() {
+			try {
+				const response = await this.$api.samba.getUsers()
+				this.users = response.data.data || []
+			} catch {
+				this.users = []
+			}
+		},
+
+		manageUsers() {
+			this.$buefy.modal.open({
+				component: SambaUsersModal,
+				hasModalCard: true,
+				trapFocus: true,
+				canCancel: ['escape'],
+				scroll: 'keep',
+				animation: 'zoom-in',
+				events: { close: () => this.loadUsers() },
+			})
+		},
 
 		async createFolder() {
 			this.isloading = true
@@ -114,13 +158,13 @@ export default {
 						}
 
 						if (this.shared) {
-							// set shared data
-							const data = [{
+							const username = this.requireAccount ? this.username : ''
+							await this.$api.samba.createShare([{
 								path: newPath,
-								anonymous: true,
-							}]
-							// save shared data
-							await this.$api.samba.createShare(data)
+								anonymous: username === '',
+								username,
+								time_machine: false,
+							}])
 						}
 					} catch (e) {
 						console.log(e)
