@@ -146,6 +146,7 @@
   "Your custom App Name": "Nom de votre application personnalisée",
   "Your custom icon URL": "URL de l'icône personnalisée",
   "Installing": "Installation de",
+  "Everyone": "Tout le monde",
   "Export ComposeFile": "Exporter ComposeFile",
   "AppFile": "Fichier d'application",
   "Drop your Docker Compose here or click to upload": "Déposez votre Docker Compose ici ou cliquez pour télécharger",

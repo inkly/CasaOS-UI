@@ -9,6 +9,11 @@
 				class="is-flex-grow-1 is-flex breadcrumb-container">
 				<h3 class="title is-header mb-0">{{ $t("Shared Folders") }}</h3>
 			</div>
+			<!-- The accounts had no door of their own anywhere in the dashboard: the
+				only way in was a link inside the dialog that assigns one, which is no
+				use to somebody who has not made one yet. -->
+			<b-button class="mr-2" icon-left="account-multiple-outline" rounded size="is-small"
+				@click="manageUsers">{{ $t('Manage accounts') }}</b-button>
 			<b-icon class="close-button" icon="close-outline" pack="casa" @click="$emit('close');" />
 		</header>
 		<!-- Header End -->
@@ -40,6 +45,7 @@
 import { defineAsyncComponent } from 'vue'
 import ShareListView from './ShareListView.vue'
 import ShareAccessModal from './ShareAccessModal.vue'
+import SambaUsersModal from './SambaUsersModal.vue'
 import events from '@/events/events'
 
 export default {
@@ -91,10 +97,7 @@ export default {
 						date: '',
 						isSelected: false,
 						is_dir: true,
-						// A protected share is unusable to anyone who does not know
-						// which account opens it, so the account is surfaced here
-						// rather than dropped with the rest of the response.
-						name: item.username ? `${name} (${item.username})` : name,
+						name,
 						path: item.path,
 						username: item.username || '',
 						time_machine: !!item.time_machine,
@@ -106,6 +109,18 @@ export default {
 				this.isLoading = false
 				this.list = []
 			}
+		},
+
+		manageUsers() {
+			this.$buefy.modal.open({
+				component: SambaUsersModal,
+				hasModalCard: true,
+				trapFocus: true,
+				canCancel: ['escape'],
+				scroll: 'keep',
+				animation: 'zoom-in',
+				events: { close: () => this.getSharedList() },
+			})
 		},
 
 		selectShare() {

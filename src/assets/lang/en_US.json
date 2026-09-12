@@ -158,6 +158,7 @@
   "Your custom App Name": "Your custom app name",
   "Your custom icon URL": "Your custom icon URL",
   "Installing": "Installing",
+  "Everyone": "Everyone",
   "Export ComposeFile": "Export ComposeFile",
   "AppFile": "AppFile",
   "Drop your Docker Compose here or click to upload": "Drop your Docker Compose here or click to upload",
