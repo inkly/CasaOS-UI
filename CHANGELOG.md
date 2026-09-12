@@ -2,6 +2,17 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.56] - 2026-09-12
+
+### Added
+
+- **The panel shown after sharing a folder says who can open it.** The account chosen a moment earlier, or a warning that anyone on the network can read and write it. A file item from the browser carries no such information, and the line is left out rather than guessed.
+
+### Fixed
+
+- **A failed uninstall resets its button.** The handler compared a property no event carries, so the spinner stayed until the page was reloaded.
+- **Every property the dashboard reads off an event is now checked against the names the services publish.** The message bus validates nothing, and a misspelt name here was not an error anywhere: it read as `undefined` and the handler quietly did the wrong thing, which is how the update handlers read `name` and `cid` for three years. A test walks every component and fails on a name nothing sends.
+
 ## [0.4.55] - 2026-09-12
 
 ### Fixed
