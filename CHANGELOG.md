@@ -2,6 +2,12 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.53] - 2026-09-12
+
+### Fixed
+
+- **Sharing a folder could only ever make it public.** Right-click a folder, Share, and the dashboard posted the share with `anonymous: true` and opened no dialog at all: the folder went onto the network readable and writable by anyone, with no opportunity to say otherwise. Ticking **Shared** in the New Folder dialog did the same. The account switch existed, but only on the third route -- the multi-folder picker reached from the sidebar -- so the two obvious paths were the ones that could not protect anything. Both now ask, with the same controls the picker has, and guest access says what it means instead of leaving it to be discovered. The default is still guest, now visible rather than implied. Reported as [ReCasaOS/CasaOS#1](https://github.com/ReCasaOS/CasaOS/issues/1).
+
 ## [0.4.52] - 2026-09-11
 
 ### Fixed
