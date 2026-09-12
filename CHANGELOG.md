@@ -2,6 +2,13 @@
 
 All notable changes to CasaOS UI are documented here.
 
+## [0.4.54] - 2026-09-12
+
+### Added
+
+- **Every shared folder says who can open it.** The list showed an account only when a share had one, glued onto the folder's name, which left a guest share saying nothing at all -- and nothing is exactly what somebody scanning for an unprotected share cannot see. Each row now carries a tag of its own: the account, or **Everyone** in warning colours.
+- **Share accounts have an entrance.** The only way to reach them was a link inside the dialog that assigns one to a folder, which is no use to somebody who has not made an account yet. **Shared folders** has a **Manage accounts** button. Completes [ReCasaOS/CasaOS#1](https://github.com/ReCasaOS/CasaOS/issues/1).
+
 ## [0.4.53] - 2026-09-12
 
 ### Fixed
